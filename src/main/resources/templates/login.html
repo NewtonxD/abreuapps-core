@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html
+	lang="es"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+>
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, shrink-to-fit=no"
+		/>
+		<meta name="description" content="" />
+		<meta name="author" content="" />
+		<title>Login</title>
+		<link th:href="@{/content/css/styles.css}" rel="stylesheet" />
+		<script th:src="@{/content/js/font-awesome6.4.0all.min.js}"></script>
+	</head>
+	<body class="secondary-color fondo-bonito">
+		<div id="layoutAuthentication" class="h-100">
+			<div id="layoutAuthentication_content" class="h-100">
+				<main class="h-100 d-flex align-items-center justify-content-center">
+					<div class="container">
+						<div
+							class="row h-100 d-flex align-items-center justify-content-center"
+						>
+							<div class="col-lg-5">
+								<div class="card shadow-lg border-0 rounded-lg mt-5">
+									<form method="post">
+										<div class="card-header">
+											<h3 class="text-center font-weight-light my-4">Login</h3>
+										</div>
+										<div class="card-body">
+											<div class="form-floating mb-3">
+												<input
+													class="form-control"
+													id="username"
+													name="username"
+													type="text"
+													placeholder="Nombre de Usuario"
+													required="required"
+												/>
+												<label for="username" class="text-muted"
+													>Nombre de Usuario</label
+												>
+											</div>
+											<div class="form-floating mb-3">
+												<input
+													class="form-control"
+													id="password"
+													name="password"
+													type="password"
+													placeholder="Password"
+													required="required"
+												/>
+												<label for="password" class="text-muted"
+													>Contraseña</label
+												>
+											</div>
+											<div
+												th:if="${error_msg!=null}"
+												class="alert alert-danger"
+											>
+												<span th:text="${error_msg}"></span>
+											</div>
+                                                                                    
+                                                                                        <div th:if="${param.error}" class="alert alert-danger" th:text="${session?.SPRING_SECURITY_LAST_EXCEPTION?.message}">    
+                                                                                            
+                                                                                        </div>
+                                                                                    
+											<div
+												th:if="${success_msg!=null}"
+												class="alert alert-success"
+											>
+												<span th:text="${success_msg}"></span>
+											</div>
+											<!--<div class="form-check mb-3">
+                                                <input class="form-check-input" id="inputRememberPassword" type="checkbox" value="" />
+                                                <label class="form-check-label" for="inputRememberPassword">Recordar Contraseña</label>
+                                            </div>-->
+										</div>
+										<div class="card-footer text-center py-3">
+											<!--<div class="small"><a th:href="@{register.html}">Necesitas una Cuenta? Creala aquí!</a></div>-->
+											<div
+												class="d-flex align-items-center justify-content-end mb-0"
+											>
+												<!--<a class="small" href="/password">Olvido su Contraseña?</a>-->
+												<button type="submit" class="btn btn-primary">
+													<b
+														>Iniciar Sesión&nbsp;<i
+															class="fa-regular fa-id-badge"
+														></i
+													></b>
+												</button>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</main>
+			</div>
+			<div id="layoutAuthentication_footer">
+				<footer class="py-4 mt-auto transparente-light">
+					<div class="container-fluid px-4">
+						<div
+							class="d-flex align-items-center justify-content-between small"
+						>
+							<div class="text-muted">
+								Copyright &copy; Sistema Administrativo OMSA 2023
+							</div>
+							<div>
+								<a href="#" class="text-muted">Politicas de Privacidad</a>
+								&middot;
+								<a href="#" class="text-muted">Terminos &amp; Condiciones</a>
+							</div>
+						</div>
+					</div>
+				</footer>
+			</div>
+		</div>
+		<script th:src="@{/content/js/bootstrap.bundle.min.js}"></script>
+		<script th:src="@{/content/js/scripts.js}"></script>
+	</body>
+</html>

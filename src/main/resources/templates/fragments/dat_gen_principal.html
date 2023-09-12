@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    </head>
+    <body>
+        <main th:fragment="content-default" id="content-page">
+            <th:block th:if="${dat_gen_principal}">
+                <div class="container-fluid px-4">
+                    <div
+                        class="row d-flex align-items-center justify-content-center mt-5 mb-5"
+                        >
+                        <div class="card col-12 col-md-10 col-lg-8">
+                            <div class="card-header blanco-obligao row">
+                                <div class="col-10">
+                                    <h3 class="mt-3">Datos del Sistema</h3>
+                                </div>
+                            </div>
+                            <div class="card-body mt-3 mb-5">
+                                <div class="row d-flex align-items-center justify-content-center">
+                                    <div class="col-12 col-md-6 col-lg-5">
+                                        <th:block th:if="${dat_gen_consulta_datos}">
+                                            <div
+                                                class="card text-center h-50"
+                                                onclick="
+                                                                                        event.preventDefault();
+                                                                                        cargar_contenido('dat_gen_consulta_datos');
+                                                "
+                                                >
+                                                <div
+                                                    class="card-header bg-primary btn btn-primary btn-lg"
+                                                    >
+                                                    <a><b>Datos Generales</b></a>
+                                                </div>
+                                        </th:block>
+                                        <th:block th:unless="${dat_gen_consulta_datos}">
+                                            <div
+                                                class="card text-center h-50 bloqueado"
+                                                >
+                                                <div
+                                                    class="card-header bg-secondary btn btn-secondary btn-lg bloqueado"
+                                                    >
+                                                    <a><b>Datos Generales&nbsp;&nbsp;<i class="fa-solid fa-lock"></i></b></a>
+                                                </div>
+                                        </th:block>
+
+                                        <div class="card-body">
+                                            <p class="card-text text-muted">
+                                                Registre, consulte y edite los Datos principales.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6 col-lg-5">
+                                    <th:block th:if="${dat_gen_consulta_grupos}">
+                                        <div
+                                            class="card text-center h-50"
+                                            onclick="
+                                                                                        event.preventDefault();
+                                                                                        cargar_contenido('dat_gen_consulta_grupos');
+                                            "
+                                            >
+                                            <div
+                                                class="card-header bg-primary btn btn-primary btn-lg"
+                                                >
+                                                <a><b>Grupos de Datos</b></a>
+                                            </div>
+                                    </th:block>
+                                    <th:block th:unless="${dat_gen_consulta_grupos}">
+                                        <div
+                                            class="card text-center h-50 bloqueado"
+                                            >
+                                            <div
+                                                class="card-header bg-secondary btn btn-secondary btn-lg bloqueado"
+                                                >
+                                                <a><b>Grupos de Datos&nbsp;&nbsp;<i class="fa-solid fa-lock"></i></b></a>
+                                            </div>
+                                    </th:block>
+                                    <div class="card-body">
+                                        <p class="card-text text-muted">
+                                            Registre, consulte y edite las Categorías de los Datos.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                </div>
+            </th:block>
+            <th:block th:unless="${dat_gen_principal}">
+                <div class="container-fluid px-4">
+                    <div class="row d-flex align-items-center justify-content-center mt-5 mb-5">
+                        <div class="col-lg-6">
+                            <div class="text-center mt-4">
+                                <h1 class="display-1">403</h1>
+                                <p class="lead">Acceso No Autorizado!</p>
+                                <p>El acceso a este recurso ha sido denegado.</p>
+                                <a th:href="@{/auth/login}">
+                                    <i class="fas fa-arrow-left me-1"></i>
+                                    Volver a Inicio
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+        </main>
+    </body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <main th:fragment="content-default" id="content-page">
+            <div class="container-fluid px-4">
+                
+                <div class="row d-flex align-items-center justify-content-center mt-5 mb-5">
+                    <div class="card col-12 col-md-10 col-lg-8">
+                        <div class="card-header blanco-obligao row">
+                            <div class="col-10">
+                                <h3 class="mt-3">(CNT) Informes y Reportes Financieros</h3>
+                            </div>
+                        </div>
+                        <div class="card-body mt-3 mb-3">
+                            <div class="row">
+                                <div class="col-xl-6">
+                                    <div class="card mb-4">
+                                        <div class="card-header text-muted">
+                                            <i class="fas fa-chart-area me-1"></i>
+                                            Ganancias
+                                        </div>
+                                        <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-6">
+                                    <div class="card mb-4">
+                                        <div class="card-header text-muted" >
+                                            <i class="fas fa-chart-bar me-1"></i>
+                                            Beneficio Neto
+                                        </div>
+                                        <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <form class="form-group">
+                                <div class="row">  
+                                    
+                                    <div class="mb-3 col-12 col-sm-6">
+                                        <label for="fecha1" class="form-label text-muted">Fecha Inicio:</label>
+                                        <input type="date" class="form-control" id="fecha1">
+                                    </div>
+                                    
+                                    <div class="mb-3 col-12 col-sm-6">
+                                        <label for="fecha2" class="form-label text-muted">Fecha Fin:</label>
+                                        <input type="date" class="form-control" id="fecha2">
+                                    </div>
+                                    
+                                    
+                                    
+                                    <div class="mb-3 col-12 col-sm-6">
+                                        <label for="tipo-informe" class="form-label text-muted">Tipo de informe:</label>
+                                        <select class="form-control" id="tipo-informe" required>
+                                          <option value="0" selected disabled>--Seleccione--</option>
+                                          <option value="1">Balance General</option>
+                                          <option value="2">Estado de Resultados</option>
+                                          <option value="3">Flujo de Efectivo</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="mb-3 col-12 col-sm-6">
+                                        <label for="formato-informe" class="form-label text-muted">Formato de informe:</label>
+                                        <select class="form-control" id="formato-informe" required>
+                                          <option value="0" selected disabled>--Seleccione--</option>
+                                          <option value="1">PDF</option>
+                                          <option value="2">Excel</option>
+                                        </select>
+                                    </div>
+                                    
+                                <div class="col-12 d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-outline-primary"><b><i class="fa-regular fa-newspaper"></i> Generar Reporte</b></button>
+                                </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script th:src="@{/content/assets/demo/chart-area-demo.js}"></script>
+            <script th:src="@{/content/assets/demo/chart-bar-demo.js}"></script>
+        </main>
+    </body>
+</html>

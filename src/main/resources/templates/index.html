@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html
+	lang="es"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+>
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, shrink-to-fit=no"
+		/>
+		<meta name="description" content="" />
+		<meta name="author" content="" />
+		<title>Dashboard - Proyecto</title>
+		<link
+			th:href="@{/content/css/jquery.dataTables.min.css}"
+			rel="stylesheet"
+		/>
+		<link th:href="@{/content/css/styles.css}" rel="stylesheet" />
+		<script th:src="@{/content/js/font-awesome6.4.0all.min.js}"></script>
+	</head>
+
+	<body class="sb-nav-fixed fondo-bonito-paginas">
+		<div th:replace="~{fragments/general.html :: header}"></div>
+		<div id="layoutSidenav">
+			<div th:replace="~{fragments/general.html :: menu}"></div>
+			<div id="layoutSidenav_content">
+				<main th:replace="~{fragments/general.html :: content-default}"></main>
+				<div th:replace="~{fragments/general.html :: footer}"></div>
+			</div>
+		</div>
+		<script th:src="@{/content/js/bootstrap.bundle.min.js}"></script>
+		<script th:src="@{/content/js/scripts.js}"></script>
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"
+			crossorigin="anonymous"
+		></script>
+		<script th:src="@{/content/assets/demo/chart-area-demo.js}"></script>
+		<script th:src="@{/content/assets/demo/chart-bar-demo.js}"></script>
+		<script th:src="@{/content/js/jquery-3.6.4.min.js}"></script>
+		<script th:src="@{/content/js/jquery.dataTables.min.js}"></script>
+		<script th:src="@{/content/js/datatables-simple-demo.js}"></script>
+		<script th:src="@{/content/js/context-loading.js}"></script>
+		<script th:src="@{/content/js/access.js}"></script>
+	</body>
+</html>
