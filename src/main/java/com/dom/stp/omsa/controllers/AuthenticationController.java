@@ -8,16 +8,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping("/auth")
 @RequiredArgsConstructor
 @Slf4j
 public class AuthenticationController {
 
-    @GetMapping("/login")
+    @GetMapping("/auth/login")
     public String Login(
             HttpServletRequest request,
             @RequestParam(name = "invalidSession", required = false,defaultValue = "false") boolean invalidSession,
@@ -35,6 +33,12 @@ public class AuthenticationController {
             model.addAttribute("success_msg","Sesión cerrada exitosamente!");
         
         return "login";
+    }
+    
+    @GetMapping("/")
+    public String redirectLogin(HttpServletRequest request,Model model
+    ){
+        return "redirect:/auth/login";
     }
 
 }
