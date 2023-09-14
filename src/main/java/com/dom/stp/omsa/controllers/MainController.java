@@ -43,11 +43,7 @@ public class MainController {
         Usuario u=(Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         model.addAttribute("user",u);
         
-        List<Integer> Acc=AccService.consultarAccesosMenuUsuario(u.getId());
-        for (Integer Acc1 : Acc) {
-            if (Acc1==1)
-                model.addAttribute("dat_gen_principal",true);
-        }
+        model.addAllAttributes(AccService.consultarAccesosMenuUsuario(u.getId()));
         
         return "index";
     }
