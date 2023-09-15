@@ -72,6 +72,12 @@ public class DataModelService {
             }
         );
         
+        this.actions.put("usr_mgr_principal", ()->{
+                Map<String, Object> acc=AccService.consultarAccesosPantallaUsuario(userId, "usr_mgr_principal");
+                dataModel.addAllAttributes(acc);                
+            }
+        );
+        
     }
     
     public void load(String idPage,Model model,Integer idUser){

@@ -51,9 +51,18 @@ public class AccesosService {
         return accUsrRepo.findAllByidUsuario(id_usuario);
     }
     
-    public List<Integer> consultarAccesosMenuUsuario(Integer id_usuario){
+    public Map<String, Object> consultarAccesosMenuUsuario(Integer id_usuario){
         
-        return accUsrRepo.ListadoMenuUsuario(id_usuario);
+        List<Object[]> results=accUsrRepo.ListadoMenuUsuario(id_usuario);
+        Map<String, Object> convert=new HashMap<>();
+        
+        for (Object[] result : results) {
+            String nombre = (String) result[0];
+            Object valor = convertirValor(result[1]);
+            convert.put(nombre, valor);
+        }
+        
+        return convert;
     }
     
     public Map<String, Object> consultarAccesosPantallaUsuario(Integer id_usuario,String pantalla){

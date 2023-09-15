@@ -23,13 +23,13 @@ public interface AccesosUsuarioRepository extends JpaRepository<AccesosUsuario, 
     
     @Query( value ="""
                    SELECT 
-                       u.acc_id
+                       a.acc_nam,u.val
                    FROM
                        usr_acc u
                            INNER JOIN
-                       acc a ON u.usr_id=:idusuario and a.acc_tpe = 'Menu' AND u.acc_id = a.id;
+                       acc a ON u.usr_id=:idusuario and (a.scr is null or a.fat_scr is null) AND u.acc_id = a.id and a.act and u.act;
                    """,nativeQuery = true)
-    public List<Integer> ListadoMenuUsuario(@Param("idusuario") Integer idUsuario);
+    public List<Object[]> ListadoMenuUsuario(@Param("idusuario") Integer idUsuario);
     
     @Query( value ="""
                    SELECT 
