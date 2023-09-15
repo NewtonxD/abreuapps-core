@@ -52,7 +52,6 @@ public class AccesosService {
     }
     
     public Map<String, Object> consultarAccesosMenuUsuario(Integer id_usuario){
-        
         List<Object[]> results=accUsrRepo.ListadoMenuUsuario(id_usuario);
         Map<String, Object> convert=new HashMap<>();
         

@@ -42,8 +42,8 @@ public class MainController {
     ){
         Usuario u=(Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         model.addAttribute("user",u);
-        model.addAllAttributes(AccService.consultarAccesosMenuUsuario(u.getId()));
         
+        model.addAllAttributes(AccService.consultarAccesosMenuUsuario(u.getId()));
         
         return "index";
     }
