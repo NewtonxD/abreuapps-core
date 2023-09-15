@@ -92,10 +92,16 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.manacondos.project.ProjectApplication</mainClass>
+                    <mainClass>com.dom.stp.omsa.ProjectApplication</mainClass>
                     <layout>JAR</layout>
                 </configuration>
             </plugin>
         </plugins>
+        
+        <resources>
+            <resource>
+                <directory>src/main/resources/</directory>
+            </resource>
+        </resources>
         </build>
 </project>
