@@ -36,6 +36,8 @@ public class SeeController {
 
     private final CopyOnWriteArrayList<SseEmitter> dtGrpEmitters = new CopyOnWriteArrayList<>();
     
+    private final CopyOnWriteArrayList<SseEmitter> usrMgrEmitters = new CopyOnWriteArrayList<>();
+    
     private final Map<String,Runnable> actions=new HashMap<>();
     
     private HashMap<String, Object> Datos;
@@ -48,6 +50,11 @@ public class SeeController {
         
         this.actions.put("dtgrp", ()->{
                 seeServ.emitir(dtGrpEmitters, Datos);
+            }
+        );
+        
+        this.actions.put("usrmgr", ()->{
+                seeServ.emitir(usrMgrEmitters, Datos);
             }
         );
     }
@@ -64,6 +71,13 @@ public class SeeController {
             HttpServletRequest request
     ) {
         return seeServ.agregar(dtGrpEmitters);
+    }
+    
+    @GetMapping(value="/usrmgr", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter consultarUsuarios(
+            HttpServletRequest request
+    ) {
+        return seeServ.agregar(usrMgrEmitters);
     }
     
     public void publicar(String nombre,HashMap<String, Object> datos){

@@ -28,7 +28,10 @@ public class DataModelService {
     private DatosGeneralesService dtgnrServ;
     
     @Autowired
-    private AccesosService AccService;
+    private AccesosService AccServ;
+    
+    @Autowired
+    private UsuarioService usrServ;
     
     private final Map<String,Runnable> actions=new HashMap<>();
     
@@ -38,21 +41,21 @@ public class DataModelService {
     
     public DataModelService(){
         this.actions.put("dat_gen_consulta_grupos", ()->{
-                Map<String, Object> acc=AccService.consultarAccesosPantallaUsuario(userId, "dat_gen_consulta_grupos");
+                Map<String, Object> acc=AccServ.consultarAccesosPantallaUsuario(userId, "dat_gen_consulta_grupos");
                 dataModel.addAllAttributes(acc);
                 dataModel.addAttribute("grupos", dtgrpServ.consultar());
             }
         );
         
         this.actions.put("dat_gen_consulta_datos", ()->{
-                Map<String, Object> acc=AccService.consultarAccesosPantallaUsuario(userId, "dat_gen_consulta_datos");
+                Map<String, Object> acc=AccServ.consultarAccesosPantallaUsuario(userId, "dat_gen_consulta_datos");
                 dataModel.addAllAttributes(acc);
                 dataModel.addAttribute("datos", dtgnrServ.consultar());
             }
         );
         
         this.actions.put("dat_gen_registro_datos", ()->{
-                Map<String, Object> acc=AccService.consultarAccesosPantallaUsuario(userId, "dat_gen_registro_datos");
+                Map<String, Object> acc=AccServ.consultarAccesosPantallaUsuario(userId, "dat_gen_registro_datos");
                 dataModel.addAllAttributes(acc);                
                 dataModel.addAttribute("grupos", dtgrpServ.consultar());
                 dataModel.addAttribute("update", false);
@@ -60,20 +63,21 @@ public class DataModelService {
         );
         
         this.actions.put("dat_gen_registro_grupos", ()->{
-                Map<String, Object> acc=AccService.consultarAccesosPantallaUsuario(userId, "dat_gen_registro_grupos");
+                Map<String, Object> acc=AccServ.consultarAccesosPantallaUsuario(userId, "dat_gen_registro_grupos");
                 dataModel.addAllAttributes(acc);
                 dataModel.addAttribute("update", false);
             }
         );
         
         this.actions.put("dat_gen_principal", ()->{
-                Map<String, Object> acc=AccService.consultarAccesosPantallaUsuario(userId, "dat_gen_principal");
+                Map<String, Object> acc=AccServ.consultarAccesosPantallaUsuario(userId, "dat_gen_principal");
                 dataModel.addAllAttributes(acc);                
             }
         );
         
         this.actions.put("usr_mgr_principal", ()->{
-                Map<String, Object> acc=AccService.consultarAccesosPantallaUsuario(userId, "usr_mgr_principal");
+                Map<String, Object> acc=AccServ.consultarAccesosPantallaUsuario(userId, "usr_mgr_principal");
+                dataModel.addAttribute("usuarios", usrServ.consultar());
                 dataModel.addAllAttributes(acc);                
             }
         );
