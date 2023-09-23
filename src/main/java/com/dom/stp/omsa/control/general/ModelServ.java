@@ -85,6 +85,13 @@ public class ModelServ {
             }
         );
         
+        this.actions.put("usr_mgr_registro", ()->{
+                Map<String, Object> acc=AccServ.consultarAccesosPantallaUsuario(userId, "usr_mgr_registro");
+                dataModel.addAttribute("update",false);
+                dataModel.addAllAttributes(acc);                
+            }
+        );
+        
     }
     
     public void load(String idPage,Model model,Integer idUser){
