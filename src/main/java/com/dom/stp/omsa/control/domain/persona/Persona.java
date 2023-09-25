@@ -29,7 +29,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "usr")
+@Table(name = "ppl_inf")
 public class Persona{
 
     @Id

@@ -181,8 +181,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 				<div class="sb-sidenav-footer">
 					<div class="small">Bienvenido:</div>
 					<span
-						th:if="${user}"
-						th:text="${user.getNombre()+' '+user.getApellido()}"
+						th:if="${datos_personales}"
+						th:text="${datos_personales.getNombre()+' '+datos_personales.getApellido()}"
 					></span>
 				</div>
 			</nav>

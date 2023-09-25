@@ -38,6 +38,10 @@ public class PersonaServ {
         return repo.save(gd);
     }
     
+    public List<Persona> consultarUsuarios(){
+        return repo.findByUsuarioIsNotNull();
+    }
+    
     public List<Persona> consultar(){
         return repo.findAll();
     }
