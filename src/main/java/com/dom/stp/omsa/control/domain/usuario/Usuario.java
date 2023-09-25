@@ -39,12 +39,6 @@ public class Usuario implements UserDetails {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "nom", nullable = false)
-    private String nombre;
-
-    @Column(name = "apl", nullable = false)
-    private String apellido;
-
     @Column(name = "usr", nullable = false, unique = true)
     private String usuario;
 

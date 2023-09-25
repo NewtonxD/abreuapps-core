@@ -17,6 +17,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,10 +66,10 @@ public class DatosCntr {
     ) throws ParseException {
 
         Usuario u = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        
+        Map<String,Object> m=accserv.consultarAccesosPantallaUsuario(u.getId(),"dat_gen_consulta_grupos");
 
-        dmService.load("dat_gen_consulta_grupos", model, u.getId());
-
-        if (model.getAttribute("dat_gen_registro_grupos") == null || (!(Boolean) model.getAttribute("dat_gen_registro_grupos"))) {
+        if (m.get("dat_gen_registro_grupos") == null || (!(Boolean) m.get("dat_gen_registro_grupos"))) {
             model.addAttribute("status", false);
             model.addAttribute("msg", "No tiene permisos para realizar esta acción!");
             return "fragments/dat_gen_consulta_grupos :: content-default";
@@ -117,6 +118,8 @@ public class DatosCntr {
             model.addAttribute("msg", "Al parecer alguien ha realizado cambios en la información primero. Por favor, inténtalo otra vez. COD: 00535");
 
         }
+        
+        dmService.load("dat_gen_consulta_grupos", model, u.getId());
 
         if (!map.isEmpty()) {
             seeCnt.publicar("dtgrp", map);
@@ -167,10 +170,10 @@ public class DatosCntr {
     ) throws ParseException {
 
         Usuario u = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        
+        Map<String,Object> m=accserv.consultarAccesosPantallaUsuario(u.getId(),"dat_gen_consulta_datos");
 
-        dmService.load("dat_gen_consulta_datos", model, u.getId());
-
-        if (model.getAttribute("dat_gen_registro_datos") == null || (!(Boolean) model.getAttribute("dat_gen_registro_datos"))) {
+        if (m.get("dat_gen_registro_datos") == null || (!(Boolean) m.get("dat_gen_registro_datos"))) {
             model.addAttribute("status", false);
             model.addAttribute("msg", "No tiene permisos para realizar esta acción!");
             return "fragments/dat_gen_consulta_datos :: content-default";
@@ -218,6 +221,8 @@ public class DatosCntr {
             model.addAttribute("msg", "Hubo un inconveniente al actualizar el registro. Parece que alguien más ha realizado cambios en la información. Por favor, inténtalo otra vez. COD: 00535");
 
         }
+        
+        dmService.load("dat_gen_consulta_datos", model, u.getId());
 
         if (!map.isEmpty()) {
             seeCnt.publicar("dtgnr", map);

@@ -4,6 +4,7 @@
  */
 package com.dom.stp.omsa.control;
 
+import com.dom.stp.omsa.control.domain.persona.PersonaServ;
 import com.dom.stp.omsa.control.domain.usuario.Usuario;
 import com.dom.stp.omsa.control.domain.usuario.AccesoServ;
 import com.dom.stp.omsa.control.general.ModelServ;
@@ -31,6 +32,9 @@ public class MainCntr {
 
     @Autowired
     private AccesoServ AccService;
+    
+    @Autowired
+    private PersonaServ perService;
 
     @RequestMapping({"/", "index"})
     public String MainPage(
@@ -38,8 +42,7 @@ public class MainCntr {
             Model model
     ) {
         Usuario u = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        model.addAttribute("user", u);
-
+        model.addAttribute("datos_personales",perService.obtener(u).get());
         model.addAllAttributes(AccService.consultarAccesosMenuUsuario(u.getId()));
 
         return "index";

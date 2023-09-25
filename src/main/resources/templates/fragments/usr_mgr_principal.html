@@ -17,13 +17,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                 <div class="row d-flex align-items-center justify-content-center mt-5 mb-5">
                     <div class="card col-12 col-md-10 col-lg-8">            
                         <div class="card-header blanco-obligao row">
-                            <div class="col-8 mb-2 mt-3 d-flex align-items-start justify-content-start">
-                                <h4>
-                                    Usuarios&nbsp;&nbsp;<i class="fa-solid fa-magnifying-glass"></i>
-                                </h4>
+                            <div class="col-10 d-flex align-items-start justify-content-start">
+                                <h3 class="mt-3">
+                                    Usuarios&nbsp;&nbsp;<i class="fa-solid fa-users"></i>
+                                </h3>
                             </div>
                             <div
-                                class="col-4 mb-2 mt-3 d-flex align-items-end justify-content-end"
+                                class="col-2 d-flex align-items-end justify-content-end"
                                 >
                                 <button th:if="${usr_mgr_registro}"
                                     type="button"
@@ -69,11 +69,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr th:each="u: ${usuarios}" th:attr="data-id=${u.id}">
-                                                    <th scope="row" th:text="${u.id}"></th>
+                                                <tr th:each="u: ${personas}" th:attr="data-id=${u.usuario.id}">
+                                                    <th scope="row" th:text="${u.usuario.id}"></th>
                                                     <td th:text="${u.nombre+' '+u.apellido}"></td>
-                                                    <td th:text="${u.correo}"></td>
-                                                    <td th:text="${u.activo?'Activo':'Inactivo'}"></td>
+                                                    <td th:text="${u.usuario.correo}"></td>
+                                                    <td th:text="${u.usuario.activo?'Activo':'Inactivo'}"></td>
                                                 </tr>
                                             </tbody>
                                         </table>

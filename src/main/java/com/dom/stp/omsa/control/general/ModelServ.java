@@ -4,10 +4,10 @@
  */
 package com.dom.stp.omsa.control.general;
 
-import com.dom.stp.omsa.control.domain.usuario.UsuarioServ;
 import com.dom.stp.omsa.control.domain.usuario.AccesoServ;
 import com.dom.stp.omsa.control.domain.dato.DatoServ;
 import com.dom.stp.omsa.control.domain.dato.GrupoDatoServ;
+import com.dom.stp.omsa.control.domain.persona.PersonaServ;
 import jakarta.transaction.Transactional;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,7 +34,7 @@ public class ModelServ {
     private AccesoServ AccServ;
     
     @Autowired
-    private UsuarioServ usrServ;
+    private PersonaServ perServ;
     
     private final Map<String,Runnable> actions=new HashMap<>();
     
@@ -80,7 +80,14 @@ public class ModelServ {
         
         this.actions.put("usr_mgr_principal", ()->{
                 Map<String, Object> acc=AccServ.consultarAccesosPantallaUsuario(userId, "usr_mgr_principal");
-                dataModel.addAttribute("usuarios", usrServ.consultar());
+                dataModel.addAttribute("personas", perServ.consultarUsuarios());
+                dataModel.addAllAttributes(acc);                
+            }
+        );
+        
+        this.actions.put("usr_mgr_registro", ()->{
+                Map<String, Object> acc=AccServ.consultarAccesosPantallaUsuario(userId, "usr_mgr_registro");
+                dataModel.addAttribute("update",false);
                 dataModel.addAllAttributes(acc);                
             }
         );
