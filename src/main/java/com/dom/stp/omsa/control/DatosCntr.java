@@ -37,22 +37,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class DatosCntr {
 
     @Autowired
-    private DateUtils dtUtils;
+    DateUtils FechaUtils;
 
     @Autowired
-    private GrupoDatoServ gdserv;
+    GrupoDatoServ GrupoServicio;
 
     @Autowired
-    private AccesoServ accserv;
+    AccesoServ AccesoServicio;
 
     @Autowired
-    private ModelServ dmService;
+    ModelServ ModeloServicio;
 
     @Autowired
-    private DatoServ dtserv;
+    DatoServ DatoServicio;
 
     @Autowired
-    private SSECntr seeCnt;
+    SSECntr SSEControlador;
     
     
     /*----Grupos de Datos-----*/
@@ -67,7 +67,7 @@ public class DatosCntr {
 
         Usuario u = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         
-        Map<String,Object> m=accserv.consultarAccesosPantallaUsuario(u.getId(),"dat_gen_consulta_grupos");
+        Map<String,Object> m=AccesoServicio.consultarAccesosPantallaUsuario(u.getId(),"dat_gen_consulta_grupos");
 
         if (m.get("dat_gen_registro_grupos") == null || (!(Boolean) m.get("dat_gen_registro_grupos"))) {
             model.addAttribute("status", false);
@@ -79,11 +79,11 @@ public class DatosCntr {
 
         if (dateInput != null && !dateInput.equals("")) {
 
-            grpdt.setFecha_actualizacion(dtUtils.Formato2ToDate(dateInput));
+            grpdt.setFecha_actualizacion(FechaUtils.Formato2ToDate(dateInput));
 
         }
 
-        Optional<GrupoDato> grupo = gdserv.obtener(grpdt.getGrupo_dato());
+        Optional<GrupoDato> grupo = GrupoServicio.obtener(grpdt.getGrupo_dato());
 
         boolean ext = false, ss = true;
 
@@ -91,7 +91,7 @@ public class DatosCntr {
 
             ext = true;
 
-            if (!dtUtils.FechaFormato2.format(grupo.get().getFecha_actualizacion()).equals(dateInput)) {
+            if (!FechaUtils.FechaFormato2.format(grupo.get().getFecha_actualizacion()).equals(dateInput)) {
 
                 ss = false;
 
@@ -106,11 +106,11 @@ public class DatosCntr {
 
         if (ss) {
 
-            GrupoDato d = gdserv.guardar(grpdt, u.getId(), ext);
+            GrupoDato d = GrupoServicio.guardar(grpdt, u.getId(), ext);
             model.addAttribute("status", true);
             model.addAttribute("msg", "Registro guardado exitosamente!");
             map.put(ext ? "U" : "I", d);
-            map.put("date", dtUtils.FechaFormato1.format(new Date()));
+            map.put("date", FechaUtils.FechaFormato1.format(new Date()));
 
         } else {
 
@@ -119,10 +119,10 @@ public class DatosCntr {
 
         }
         
-        dmService.load("dat_gen_consulta_grupos", model, u.getId());
+        ModeloServicio.load("dat_gen_consulta_grupos", model, u.getId());
 
         if (!map.isEmpty()) {
-            seeCnt.publicar("dtgrp", map);
+            SSEControlador.publicar("dtgrp", map);
         }
 
         return "fragments/dat_gen_consulta_grupos :: content-default";
@@ -139,7 +139,7 @@ public class DatosCntr {
 
         Usuario u = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        Optional<GrupoDato> g = gdserv.obtener(idGrupo);
+        Optional<GrupoDato> g = GrupoServicio.obtener(idGrupo);
 
         if (g.isEmpty()) {
 
@@ -152,7 +152,7 @@ public class DatosCntr {
 
         model.addAttribute("grupo", g.get());
         model.addAttribute("update", true);
-        model.addAllAttributes(accserv.consultarAccesosPantallaUsuario(u.getId(), "dat_gen_registro_grupos"));
+        model.addAllAttributes(AccesoServicio.consultarAccesosPantallaUsuario(u.getId(), "dat_gen_registro_grupos"));
 
         return "fragments/dat_gen_registro_grupos :: content-default";
     }
@@ -171,7 +171,7 @@ public class DatosCntr {
 
         Usuario u = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         
-        Map<String,Object> m=accserv.consultarAccesosPantallaUsuario(u.getId(),"dat_gen_consulta_datos");
+        Map<String,Object> m=AccesoServicio.consultarAccesosPantallaUsuario(u.getId(),"dat_gen_consulta_datos");
 
         if (m.get("dat_gen_registro_datos") == null || (!(Boolean) m.get("dat_gen_registro_datos"))) {
             model.addAttribute("status", false);
@@ -183,18 +183,18 @@ public class DatosCntr {
 
         if (dateInput != null && !dateInput.equals("")) {
 
-            dtgnr.setFecha_actualizacion(dtUtils.Formato2ToDate(dateInput));
+            dtgnr.setFecha_actualizacion(FechaUtils.Formato2ToDate(dateInput));
 
         }
 
-        Optional<Dato> dato = dtserv.obtener(dtgnr.getDato());
+        Optional<Dato> dato = DatoServicio.obtener(dtgnr.getDato());
         boolean ext = false, ss = true;
 
         if (dato.isPresent()) {
 
             ext = true;
 
-            if (!dtUtils.FechaFormato2.format(dato.get().getFecha_actualizacion()).equals(dateInput)) {
+            if (!FechaUtils.FechaFormato2.format(dato.get().getFecha_actualizacion()).equals(dateInput)) {
 
                 ss = false;
 
@@ -209,11 +209,11 @@ public class DatosCntr {
 
         if (ss) {
 
-            Dato d = dtserv.guardar(dtgnr, u.getId(), ext);
+            Dato d = DatoServicio.guardar(dtgnr, u.getId(), ext);
             model.addAttribute("status", true);
             model.addAttribute("msg", "Registro guardado exitosamente!");
             map.put(ext ? "U" : "I", d);
-            map.put("date", dtUtils.FechaFormato1.format(new Date()));
+            map.put("date", FechaUtils.FechaFormato1.format(new Date()));
 
         } else {
 
@@ -222,10 +222,10 @@ public class DatosCntr {
 
         }
         
-        dmService.load("dat_gen_consulta_datos", model, u.getId());
+        ModeloServicio.load("dat_gen_consulta_datos", model, u.getId());
 
         if (!map.isEmpty()) {
-            seeCnt.publicar("dtgnr", map);
+            SSEControlador.publicar("dtgnr", map);
         }
 
         return "fragments/dat_gen_consulta_datos :: content-default";
@@ -241,7 +241,7 @@ public class DatosCntr {
 
         Usuario u = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        Optional<Dato> d = dtserv.obtener(idDato);
+        Optional<Dato> d = DatoServicio.obtener(idDato);
 
         if (d.isEmpty()) {
 
@@ -253,8 +253,8 @@ public class DatosCntr {
 
         model.addAttribute("dato", d.get());
         model.addAttribute("update", true);
-        model.addAttribute("grupos", gdserv.consultar());
-        model.addAllAttributes(accserv.consultarAccesosPantallaUsuario(u.getId(), "dat_gen_registro_datos"));
+        model.addAttribute("grupos", GrupoServicio.consultar());
+        model.addAllAttributes(AccesoServicio.consultarAccesosPantallaUsuario(u.getId(), "dat_gen_registro_datos"));
 
         return "fragments/dat_gen_registro_datos :: content-default";
 

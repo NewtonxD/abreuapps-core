@@ -7,7 +7,7 @@ package com.dom.stp.omsa.control.general;
 import com.dom.stp.omsa.control.domain.usuario.AccesoServ;
 import com.dom.stp.omsa.control.domain.dato.DatoServ;
 import com.dom.stp.omsa.control.domain.dato.GrupoDatoServ;
-import com.dom.stp.omsa.control.domain.persona.PersonaServ;
+import com.dom.stp.omsa.control.domain.usuario.PersonaServ;
 import jakarta.transaction.Transactional;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,8 +16,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 /**
+ *  
+ * Servicio para manejar las pantallas usando 1 solo endpoint.
  *
- * @author cabreu
+ * @author Carlos Abreu Pérez
+ *  
  */
 
 @Transactional
@@ -25,16 +28,16 @@ import org.springframework.ui.Model;
 public class ModelServ {
     
     @Autowired
-    private GrupoDatoServ dtgrpServ;
+    GrupoDatoServ GrupoServicio;
     
     @Autowired
-    private DatoServ dtgnrServ;
+    DatoServ DatoServicio;
     
     @Autowired
-    private AccesoServ AccServ;
+    AccesoServ AccesoServicio;
     
     @Autowired
-    private PersonaServ perServ;
+    PersonaServ PersonaServicio;
     
     private final Map<String,Runnable> actions=new HashMap<>();
     
@@ -44,49 +47,49 @@ public class ModelServ {
     
     public ModelServ(){
         this.actions.put("dat_gen_consulta_grupos", ()->{
-                Map<String, Object> acc=AccServ.consultarAccesosPantallaUsuario(userId, "dat_gen_consulta_grupos");
+                Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "dat_gen_consulta_grupos");
                 dataModel.addAllAttributes(acc);
-                dataModel.addAttribute("grupos", dtgrpServ.consultar());
+                dataModel.addAttribute("grupos", GrupoServicio.consultar());
             }
         );
         
         this.actions.put("dat_gen_consulta_datos", ()->{
-                Map<String, Object> acc=AccServ.consultarAccesosPantallaUsuario(userId, "dat_gen_consulta_datos");
+                Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "dat_gen_consulta_datos");
                 dataModel.addAllAttributes(acc);
-                dataModel.addAttribute("datos", dtgnrServ.consultar());
+                dataModel.addAttribute("datos", DatoServicio.consultar());
             }
         );
         
         this.actions.put("dat_gen_registro_datos", ()->{
-                Map<String, Object> acc=AccServ.consultarAccesosPantallaUsuario(userId, "dat_gen_registro_datos");
+                Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "dat_gen_registro_datos");
                 dataModel.addAllAttributes(acc);                
-                dataModel.addAttribute("grupos", dtgrpServ.consultar());
+                dataModel.addAttribute("grupos", GrupoServicio.consultar());
                 dataModel.addAttribute("update", false);
             }
         );
         
         this.actions.put("dat_gen_registro_grupos", ()->{
-                Map<String, Object> acc=AccServ.consultarAccesosPantallaUsuario(userId, "dat_gen_registro_grupos");
+                Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "dat_gen_registro_grupos");
                 dataModel.addAllAttributes(acc);
                 dataModel.addAttribute("update", false);
             }
         );
         
         this.actions.put("dat_gen_principal", ()->{
-                Map<String, Object> acc=AccServ.consultarAccesosPantallaUsuario(userId, "dat_gen_principal");
+                Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "dat_gen_principal");
                 dataModel.addAllAttributes(acc);                
             }
         );
         
         this.actions.put("usr_mgr_principal", ()->{
-                Map<String, Object> acc=AccServ.consultarAccesosPantallaUsuario(userId, "usr_mgr_principal");
-                dataModel.addAttribute("personas", perServ.consultarUsuarios());
+                Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "usr_mgr_principal");
+                dataModel.addAttribute("personas", PersonaServicio.consultarUsuarios());
                 dataModel.addAllAttributes(acc);                
             }
         );
         
         this.actions.put("usr_mgr_registro", ()->{
-                Map<String, Object> acc=AccServ.consultarAccesosPantallaUsuario(userId, "usr_mgr_registro");
+                Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "usr_mgr_registro");
                 dataModel.addAttribute("update",false);
                 dataModel.addAllAttributes(acc);                
             }

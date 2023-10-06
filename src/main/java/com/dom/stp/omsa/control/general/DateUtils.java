@@ -10,8 +10,11 @@ import java.util.Date;
 import org.springframework.stereotype.Service;
 
 /**
+ *  
+ * Utilidades para manejar y convertir fechas de un formato a otro.
  *
- * @author cabreu
+ * @author Carlos Abreu Pérez
+ *  
  */
 
 @Service

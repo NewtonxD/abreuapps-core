@@ -4,7 +4,7 @@
  */
 package com.dom.stp.omsa.control;
 
-import com.dom.stp.omsa.control.domain.persona.PersonaServ;
+import com.dom.stp.omsa.control.domain.usuario.PersonaServ;
 import com.dom.stp.omsa.control.domain.usuario.Usuario;
 import com.dom.stp.omsa.control.domain.usuario.AccesoServ;
 import com.dom.stp.omsa.control.general.ModelServ;
@@ -28,13 +28,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class MainCntr {
 
     @Autowired
-    private ModelServ DataModelService;
+    ModelServ DataModelServicio;
 
     @Autowired
-    private AccesoServ AccService;
+    AccesoServ AccesosServicio;
     
     @Autowired
-    private PersonaServ perService;
+    PersonaServ PersonaServicio;
 
     @RequestMapping({"/", "index"})
     public String MainPage(
@@ -42,8 +42,8 @@ public class MainCntr {
             Model model
     ) {
         Usuario u = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        model.addAttribute("datos_personales",perService.obtener(u).get());
-        model.addAllAttributes(AccService.consultarAccesosMenuUsuario(u.getId()));
+        model.addAttribute("datos_personales",PersonaServicio.obtener(u).get());
+        model.addAllAttributes(AccesosServicio.consultarAccesosMenuUsuario(u.getId()));
 
         return "index";
     }
@@ -56,7 +56,7 @@ public class MainCntr {
     ) {
 
         Usuario u = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        DataModelService.load(idPage, model, u.getId());
+        DataModelServicio.load(idPage, model, u.getId());
 
         return "fragments/" + idPage + " :: content-default";
     }

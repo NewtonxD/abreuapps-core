@@ -37,19 +37,19 @@ public class UsuariosCntr {
 
     
     @Autowired
-    private DateUtils dtUtils;
+    DateUtils FechaUtils;
 
     @Autowired
-    private GrupoDatoServ gdserv;
+    GrupoDatoServ gdserv;
     
     @Autowired
-    private AccesoServ accserv;
+    AccesoServ accserv;
     
     @Autowired
-    private ModelServ dmService;
+    ModelServ dmService;
     
     @Autowired
-    private SSECntr seeCnt;
+    SSECntr seeCnt;
 
     @PostMapping("/save")
     public String GuardarGrupoDato(
@@ -72,7 +72,7 @@ public class UsuariosCntr {
         
         if (dateInput != null && !dateInput.equals("")) {
             
-            grpdt.setFecha_actualizacion(dtUtils.Formato2ToDate(dateInput));
+            grpdt.setFecha_actualizacion(FechaUtils.Formato2ToDate(dateInput));
             
         }
         
@@ -84,7 +84,7 @@ public class UsuariosCntr {
             
             ext = true;
             
-            if (!dtUtils.FechaFormato2.format(grupo.get().getFecha_actualizacion()).equals(dateInput)) {
+            if (!FechaUtils.FechaFormato2.format(grupo.get().getFecha_actualizacion()).equals(dateInput)) {
                 
                 ss = false;
                 
@@ -103,7 +103,7 @@ public class UsuariosCntr {
             model.addAttribute("status", true);
             model.addAttribute("msg", "Registro guardado exitosamente!");
             map.put(ext ? "U" : "I", d);
-            map.put("date", dtUtils.FechaFormato1.format(new Date()));
+            map.put("date", FechaUtils.FechaFormato1.format(new Date()));
             
         } else {
             

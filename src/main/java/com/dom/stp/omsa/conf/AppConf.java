@@ -12,16 +12,18 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import com.dom.stp.omsa.control.domain.usuario.UsuarioRepo;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Configuration
 @RequiredArgsConstructor
 public class AppConf {
-
-    private final UsuarioRepo repository;
+    
+    @Autowired
+    UsuarioRepo UsuarioRepositorio;
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> repository.findByUsuario(username)
+        return username -> UsuarioRepositorio.findByUsuario(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no existe!"));
     }
 

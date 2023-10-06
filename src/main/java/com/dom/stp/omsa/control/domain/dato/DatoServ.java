@@ -11,14 +11,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
+ *  
+ * Servicio para manipular y consultar los datos generales.
  *
- * @author cabreu
+ * @author Carlos Abreu Pérez
+ *  
  */
 @Service
 public class DatoServ {
     
     @Autowired
-    private DatoRepo dtrepo;
+    DatoRepo repo;
     
     public Dato guardar(Dato gd, Integer idUsuario,boolean existe){
         
@@ -29,15 +32,15 @@ public class DatoServ {
             gd.setFecha_registro(new Date());
         }
         gd.setFecha_actualizacion(new Date());
-        return dtrepo.save(gd);
+        return repo.save(gd);
     }
     
     public List<Dato> consultar(){
-        return dtrepo.findAll();
+        return repo.findAll();
     }
     
     public Optional<Dato> obtener(String dato){
-        return dtrepo.findById(dato);
+        return repo.findById(dato);
     }
 }
 

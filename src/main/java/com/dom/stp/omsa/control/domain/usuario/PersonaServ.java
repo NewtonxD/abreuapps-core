@@ -2,9 +2,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.dom.stp.omsa.control.domain.persona;
+package com.dom.stp.omsa.control.domain.usuario;
 
-import com.dom.stp.omsa.control.domain.usuario.Usuario;
 import jakarta.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
@@ -13,17 +12,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
+ *  
+ * Servicio para manipular y consultar los datos personales.
  *
- * @author cabreu
+ * @author Carlos Abreu Pérez
+ *  
  */
-
 
 @Transactional
 @Service
 public class PersonaServ {
     
     @Autowired
-    private PersonaRepo repo;
+    PersonaRepo repo;
     
     public Persona guardar(Persona gd, Integer idUsuario,boolean existe){
         

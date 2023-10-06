@@ -1,6 +1,5 @@
-package com.dom.stp.omsa.control.domain.persona;
+package com.dom.stp.omsa.control.domain.usuario;
 
-import com.dom.stp.omsa.control.domain.usuario.Usuario;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,7 +18,7 @@ import lombok.Setter;
 
 /**
  *
- * Esta entidad representa las personas que manejan el sistema.
+ * Esta entidad representa los datos personales que se manejan el sistema.
  *
  * @author Carlos Abreu Pérez
  *
