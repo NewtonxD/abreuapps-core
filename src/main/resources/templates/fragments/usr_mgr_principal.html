@@ -62,15 +62,15 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                             >
                                             <thead class="bg-secondary text-white">
                                                 <tr>
-                                                    <th scope="col">Código</th>
+                                                    <th scope="col">Usuario</th>
                                                     <th scope="col">Nombre</th>
                                                     <th scope="col">Correo</th>
                                                     <th scope="col">Estado</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr th:each="u: ${personas}" th:attr="data-id=${u.usuario.id}">
-                                                    <th scope="row" th:text="${u.usuario.id}"></th>
+                                                <tr th:each="u: ${personas}" th:attr="data-id=${u.usuario.usuario}">
+                                                    <th th:text="${u.usuario.usuario}"></th>
                                                     <td th:text="${u.nombre+' '+u.apellido}"></td>
                                                     <td th:text="${u.usuario.correo}"></td>
                                                     <td th:text="${u.usuario.activo?'Activo':'Inactivo'}"></td>

@@ -47,7 +47,7 @@ public class PersonaServ {
         return repo.findAll();
     }
     
-    public Optional<Persona> obtener(Usuario usuario){
+    public Optional<Persona> obtenerPorUsuario(Usuario usuario){
         return repo.findByUsuario(usuario);
     }
 }

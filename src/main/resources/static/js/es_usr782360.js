@@ -46,10 +46,11 @@ function closeEventSource(){
 }
 
 function createTableRow(d) {
-    var row = '<tr data-id="' + d.id + '">';
-    row += '<th>'+ d.nombre+' '+d.apellido + '</th>';
-    row += '<td>' + d.correo + '</td>';
-    row += '<td>' + (d.activo?'Activo':'Inactivo') + '</td>'; 
+    var row = '<tr data-id="' + d.usuario.usuario + '">';
+    row += '<th>' + d.usuario.usuario + '</th>';
+    row += '<td>'+ d.nombre+' '+d.apellido + '</td>';
+    row += '<td>' + d.usuario.correo + '</td>';
+    row += '<td>' + (d.usuario.activo?'Activo':'Inactivo') + '</td>'; 
     row += '</tr>';
     return row;
 

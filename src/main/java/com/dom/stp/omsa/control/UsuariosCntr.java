@@ -9,6 +9,9 @@ import com.dom.stp.omsa.control.domain.usuario.Usuario;
 import com.dom.stp.omsa.control.domain.usuario.AccesoServ;
 import com.dom.stp.omsa.control.general.ModelServ;
 import com.dom.stp.omsa.control.domain.dato.GrupoDatoServ;
+import com.dom.stp.omsa.control.domain.usuario.Persona;
+import com.dom.stp.omsa.control.domain.usuario.PersonaServ;
+import com.dom.stp.omsa.control.domain.usuario.UsuarioServ;
 import com.dom.stp.omsa.control.general.DateUtils;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
@@ -47,6 +50,12 @@ public class UsuariosCntr {
     
     @Autowired
     ModelServ dmService;
+    
+    @Autowired
+    PersonaServ PersonaServicio;
+    
+    @Autowired
+    UsuarioServ UsuarioServicio;
     
     @Autowired
     SSECntr seeCnt;
@@ -122,26 +131,28 @@ public class UsuariosCntr {
     }
 
     @PostMapping("/update")
-    public String ActualizarGrupo(
+    public String ActualizarUsuario(
             HttpServletRequest request, 
             Model model, 
-            String idGrupo
+            String idUsuario
     ) {  
         
         Usuario u =(Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-         
-        Optional<GrupoDato> g = gdserv.obtener(idGrupo);
+        Optional<Usuario> us=UsuarioServicio.obtener(idUsuario); 
 
-        if(g.isEmpty()){
+        if(us.isEmpty()){
 
-            log.error("Error COD: 00537 al editar grupos de datos.");
+            log.error("Error COD: 00537 al editar Usuario. Usuario no encontrado ("+idUsuario+")");
             request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, HttpStatus.NOT_FOUND.value());
             
             return "redirect:/error";
 
         }
+        
+        
+        Optional<Persona> g = PersonaServicio.obtenerPorUsuario(us.get());
 
-        model.addAttribute("grupo", g.get());
+        model.addAttribute("persona", g.get());
         model.addAttribute("update", true);
         model.addAllAttributes(accserv.consultarAccesosPantallaUsuario(u.getId(), "usr_mgr_registro"));
 
