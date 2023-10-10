@@ -9,6 +9,9 @@ import com.dom.stp.omsa.control.domain.usuario.Usuario;
 import com.dom.stp.omsa.control.domain.usuario.AccesoServ;
 import com.dom.stp.omsa.control.general.ModelServ;
 import com.dom.stp.omsa.control.domain.dato.GrupoDatoServ;
+import com.dom.stp.omsa.control.domain.usuario.Persona;
+import com.dom.stp.omsa.control.domain.usuario.PersonaServ;
+import com.dom.stp.omsa.control.domain.usuario.UsuarioServ;
 import com.dom.stp.omsa.control.general.DateUtils;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,19 +40,25 @@ public class UsuariosCntr {
 
     
     @Autowired
-    private DateUtils dtUtils;
+    DateUtils FechaUtils;
 
     @Autowired
-    private GrupoDatoServ gdserv;
+    GrupoDatoServ gdserv;
     
     @Autowired
-    private AccesoServ accserv;
+    AccesoServ accserv;
     
     @Autowired
-    private ModelServ dmService;
+    ModelServ dmService;
     
     @Autowired
-    private SSECntr seeCnt;
+    PersonaServ PersonaServicio;
+    
+    @Autowired
+    UsuarioServ UsuarioServicio;
+    
+    @Autowired
+    SSECntr seeCnt;
 
     @PostMapping("/save")
     public String GuardarGrupoDato(
@@ -72,7 +81,7 @@ public class UsuariosCntr {
         
         if (dateInput != null && !dateInput.equals("")) {
             
-            grpdt.setFecha_actualizacion(dtUtils.Formato2ToDate(dateInput));
+            grpdt.setFecha_actualizacion(FechaUtils.Formato2ToDate(dateInput));
             
         }
         
@@ -84,7 +93,7 @@ public class UsuariosCntr {
             
             ext = true;
             
-            if (!dtUtils.FechaFormato2.format(grupo.get().getFecha_actualizacion()).equals(dateInput)) {
+            if (!FechaUtils.FechaFormato2.format(grupo.get().getFecha_actualizacion()).equals(dateInput)) {
                 
                 ss = false;
                 
@@ -103,7 +112,7 @@ public class UsuariosCntr {
             model.addAttribute("status", true);
             model.addAttribute("msg", "Registro guardado exitosamente!");
             map.put(ext ? "U" : "I", d);
-            map.put("date", dtUtils.FechaFormato1.format(new Date()));
+            map.put("date", FechaUtils.FechaFormato1.format(new Date()));
             
         } else {
             
@@ -122,26 +131,28 @@ public class UsuariosCntr {
     }
 
     @PostMapping("/update")
-    public String ActualizarGrupo(
+    public String ActualizarUsuario(
             HttpServletRequest request, 
             Model model, 
-            String idGrupo
+            String idUsuario
     ) {  
         
         Usuario u =(Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-         
-        Optional<GrupoDato> g = gdserv.obtener(idGrupo);
+        Optional<Usuario> us=UsuarioServicio.obtener(idUsuario); 
 
-        if(g.isEmpty()){
+        if(us.isEmpty()){
 
-            log.error("Error COD: 00537 al editar grupos de datos.");
+            log.error("Error COD: 00537 al editar Usuario. Usuario no encontrado ("+idUsuario+")");
             request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, HttpStatus.NOT_FOUND.value());
             
             return "redirect:/error";
 
         }
+        
+        
+        Optional<Persona> g = PersonaServicio.obtenerPorUsuario(us.get());
 
-        model.addAttribute("grupo", g.get());
+        model.addAttribute("persona", g.get());
         model.addAttribute("update", true);
         model.addAllAttributes(accserv.consultarAccesosPantallaUsuario(u.getId(), "usr_mgr_registro"));
 

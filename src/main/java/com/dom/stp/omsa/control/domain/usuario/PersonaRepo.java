@@ -1,6 +1,5 @@
-package com.dom.stp.omsa.control.domain.persona;
+package com.dom.stp.omsa.control.domain.usuario;
 
-import com.dom.stp.omsa.control.domain.usuario.Usuario;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -30,7 +30,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 public class SSECntr {
     
     @Autowired
-    private SSEServ seeServ;
+    SSEServ SSEServicio;
     
     private final CopyOnWriteArrayList<SseEmitter> dtGnrEmitters = new CopyOnWriteArrayList<>();
 
@@ -44,17 +44,17 @@ public class SSECntr {
     
     public SSECntr(){
         this.actions.put("dtgnr", ()->{
-                seeServ.emitir(dtGnrEmitters, Datos);
+                SSEServicio.emitir(dtGnrEmitters, Datos);
             }
         );
         
         this.actions.put("dtgrp", ()->{
-                seeServ.emitir(dtGrpEmitters, Datos);
+                SSEServicio.emitir(dtGrpEmitters, Datos);
             }
         );
         
         this.actions.put("usrmgr", ()->{
-                seeServ.emitir(usrMgrEmitters, Datos);
+                SSEServicio.emitir(usrMgrEmitters, Datos);
             }
         );
     }
@@ -63,21 +63,21 @@ public class SSECntr {
     public SseEmitter consultarDatosGenerales(
             HttpServletRequest request
     ) {
-        return seeServ.agregar(dtGnrEmitters);
+        return SSEServicio.agregar(dtGnrEmitters);
     }
 
     @GetMapping(value = "/dtgrp", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter consultarGrupoDato(
             HttpServletRequest request
     ) {
-        return seeServ.agregar(dtGrpEmitters);
+        return SSEServicio.agregar(dtGrpEmitters);
     }
     
     @GetMapping(value="/usrmgr", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter consultarUsuarios(
             HttpServletRequest request
     ) {
-        return seeServ.agregar(usrMgrEmitters);
+        return SSEServicio.agregar(usrMgrEmitters);
     }
     
     public void publicar(String nombre,HashMap<String, Object> datos){

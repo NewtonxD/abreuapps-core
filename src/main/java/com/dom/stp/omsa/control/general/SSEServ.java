@@ -13,7 +13,9 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 /**
  *
- * @author cabreu
+ * Servicio para manejar los Server Site Event que refrescan los datos en pantalla.
+ * 
+ * @author Carlos Abreu Pérez
  */
 @Service
 public class SSEServ {

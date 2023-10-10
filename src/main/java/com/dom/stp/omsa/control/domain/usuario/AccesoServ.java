@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 public class AccesoServ {
     
     @Autowired
-    private AccesoUsuarioRepo accUsrRepo;
+    AccesoUsuarioRepo repo;
     
     private Object convertirValor(Object valor) {
         if (valor instanceof String) {
@@ -46,11 +46,11 @@ public class AccesoServ {
     
     public List<AccesoUsuario> consultarAccesosUsuario(Integer id_usuario){
         
-        return accUsrRepo.findAllByidUsuario(id_usuario);
+        return repo.findAllByidUsuario(id_usuario);
     }
     
     public Map<String, Object> consultarAccesosMenuUsuario(Integer id_usuario){
-        List<Object[]> results=accUsrRepo.ListadoMenuUsuario(id_usuario);
+        List<Object[]> results=repo.ListadoMenuUsuario(id_usuario);
         Map<String, Object> convert=new HashMap<>();
         
         for (Object[] result : results) {
@@ -63,7 +63,7 @@ public class AccesoServ {
     }
     
     public Map<String, Object> consultarAccesosPantallaUsuario(Integer id_usuario,String pantalla){
-        List<Object[]> results=accUsrRepo.ListadoAccesosPantallaUsuario(id_usuario,pantalla);
+        List<Object[]> results=repo.ListadoAccesosPantallaUsuario(id_usuario,pantalla);
         Map<String, Object> convert=new HashMap<>();
         
         for (Object[] result : results) {

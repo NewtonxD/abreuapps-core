@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 public class UsuarioServ {
     
     @Autowired
-    private UsuarioRepo repo;
+    UsuarioRepo repo;
     
     public Usuario guardar(Usuario gd, Integer idUsuario,boolean existe){
         

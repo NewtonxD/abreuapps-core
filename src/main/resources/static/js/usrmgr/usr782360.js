@@ -8,9 +8,9 @@ $(function (){
     
     $("tbody tr").click(function(){
         
-        let idDato=$(this).find('th').html();
+        let idUsuario=$(this).find('th').html();
         
-        if(idDato===undefined || idDato===null)
+        if(idUsuario===undefined || idUsuario===null)
             return;
         
         $("#content-page").css("overflow-y","hidden");
@@ -22,7 +22,7 @@ $(function (){
             url:'/usrmgr/update',
             type:"POST",
             async:true,
-            data:{idDato:idDato},
+            data:{idUsuario:idUsuario},
             success: function(res){
                         
                 if(res.indexOf('Login') !== -1)

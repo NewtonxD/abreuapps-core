@@ -11,15 +11,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
+ *  
+ * Servicio para manipular y consultar los grupos de datos.
  *
- * @author cabreu
+ * @author Carlos Abreu Pérez
+ *  
  */
 
 @Service
 public class GrupoDatoServ {
     
     @Autowired
-    private GrupoDatoRepo gdrepo;
+    GrupoDatoRepo repo;
     
     public GrupoDato guardar(GrupoDato gd, Integer idUsuario,boolean existe){
         if(existe){ 
@@ -29,14 +32,14 @@ public class GrupoDatoServ {
             gd.setFecha_registro(new Date(System.currentTimeMillis()));
         }
         gd.setFecha_actualizacion(new Date(System.currentTimeMillis()));
-        return gdrepo.save(gd);
+        return repo.save(gd);
     }
     
     public List<GrupoDato> consultar(){
-        return gdrepo.findAll();
+        return repo.findAll();
     }
     
     public Optional<GrupoDato> obtener(String grupo){
-        return gdrepo.findById(grupo);
+        return repo.findById(grupo);
     }
 }
