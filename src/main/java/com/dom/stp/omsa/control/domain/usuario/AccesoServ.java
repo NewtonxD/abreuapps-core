@@ -46,7 +46,7 @@ public class AccesoServ {
     
     public List<AccesoUsuario> consultarAccesosUsuario(Integer id_usuario){
         
-        return repo.findAllByidUsuario(id_usuario);
+        return repo.findAllByUsuarioId(id_usuario);
     }
     
     public Map<String, Object> consultarAccesosMenuUsuario(Integer id_usuario){
