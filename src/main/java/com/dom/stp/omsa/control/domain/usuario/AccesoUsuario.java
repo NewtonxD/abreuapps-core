@@ -9,6 +9,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,16 +37,18 @@ public class AccesoUsuario {
     @Column(name = "id")
     public Integer id;
     
-    @Column(name = "acc_id")
-    public Integer idAcceso;
-    
-    @Column(name = "usr_id", nullable = false)
-    public Integer idUsuario;
-    
     @Column(name = "val", nullable = false)
     public String valor;
     
     @Column(name = "act",nullable=false)
     public boolean activo;
+    
+    @ManyToOne
+    @JoinColumn(name = "usr_id") // Nombre de la columna de clave foránea
+    private Usuario usuario;    
+    
+    @ManyToOne
+    @JoinColumn(name = "acc_id") // Nombre de la columna de clave foránea
+    private Acceso acceso;
     
 }

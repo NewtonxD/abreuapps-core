@@ -58,8 +58,7 @@ public class Persona{
     private String nombre_emergencia;
     
     @Column(name = "dir")
-    private String direccion;
-    
+    private String direccion;    
     
     @Column(name = "brt_at")
     @Temporal(value = TemporalType.DATE)
@@ -85,6 +84,6 @@ public class Persona{
     @OneToOne
     @JoinColumn(name = "usr_id") // Nombre de la columna de clave foránea
     private Usuario usuario;
+ 
     
-    
-}
+}    

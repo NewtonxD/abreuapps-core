@@ -18,7 +18,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AccesoUsuarioRepo extends JpaRepository<AccesoUsuario, Integer>{
 
-    public List<AccesoUsuario> findAllByidUsuario(Integer idUsuario);
+    public List<AccesoUsuario> findAllByUsuarioId(Integer idUsuario);
     
     @Query( value ="""
                    SELECT 
