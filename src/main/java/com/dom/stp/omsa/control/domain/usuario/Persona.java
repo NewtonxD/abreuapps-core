@@ -58,7 +58,13 @@ public class Persona{
     private String nombre_emergencia;
     
     @Column(name = "dir")
-    private String direccion;    
+    private String direccion; 
+    
+    @Column(name = "nic")
+    private String apodo;
+    
+    @Column(name = "bld_tpe")
+    private String tipo_sangre;
     
     @Column(name = "brt_at")
     @Temporal(value = TemporalType.DATE)
