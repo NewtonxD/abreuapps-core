@@ -31,7 +31,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                         <th:block th:if="${update}">
                                             :&nbsp;&nbsp;
                                             <i class="fa-solid fa-pencil"></i>
-                                           &nbsp;&nbsp;Nombre de usuario
+                                           &nbsp;&nbsp;
                                         </th:block>
                                     </h4>
                                 </div>
@@ -68,11 +68,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                         <option th:value="${s.dato}" th:selected="${persona.sexo.equals(s.dato)}" th:each="s :${sexo}" th:text="${s.dato}"></option>
                                                     </select>        
                                                 </div>
-                                                <!--
-                                                <div class="mb-3 col-12">
-                                                    <label for="descripcion" class="form-label text-muted">Descripción:</label>
-                                                    <textarea class="form-control" id="descripcion" name="descripcion" rows="3" th:text="${update?dato.descripcion:''}" required maxlength="255"></textarea>
-                                                </div>-->
+                                                
                                                 <div class="col-6 d-flex justify-content-start">
                                                     <div class="form-check">
 
