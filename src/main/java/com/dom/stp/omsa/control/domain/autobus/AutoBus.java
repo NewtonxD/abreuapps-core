@@ -32,25 +32,25 @@ import lombok.NoArgsConstructor;
 public class AutoBus {
 
     @Id
-    @Column(name = "pl", columnDefinition = "varchar(15)")
+    @Column(name = "pl")
     private String placa;
 
-    @Column(name = "mar", columnDefinition = "varchar(50)",nullable=false)
+    @Column(name = "mar")
     private String marca;
 
-    @Column(name = "mdl", columnDefinition = "varchar(50)",nullable=false)
+    @Column(name = "mdl")
     private String modelo;
 
-    @Column(name = "cap_pax", nullable = false)
+    @Column(name = "cap_pax")
     private Integer capacidad_pasajeros;
 
-    @Column(name = "est", columnDefinition = "varchar(50)",nullable=false)
+    @Column(name = "est")
     private String estado;
 
-    @Column(name = "mde_by", nullable = false)
+    @Column(name = "mde_by")
     private Integer hecho_por;
 
-    @Column(name = "reg_dt",nullable=false)
+    @Column(name = "reg_dt")
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date fecha_registro;
 }

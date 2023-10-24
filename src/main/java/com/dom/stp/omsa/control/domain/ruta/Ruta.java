@@ -33,22 +33,22 @@ import lombok.NoArgsConstructor;
 public class Ruta {
     
     @Id
-    @Column(name = "rta",columnDefinition = "varchar(50)")
+    @Column(name = "rta")
     private String ruta;
 
-    @Column(name = "loc_ini", nullable = false)
+    @Column(name = "loc_ini")
     private String localizacion_inicial;
     
-    @Column(name = "loc_fin", nullable = false)
+    @Column(name = "loc_fin")
     private String localizacion_final;
     
-    @Column(name = "act",nullable=false)
+    @Column(name = "act")
     private boolean activo;
     
-    @Column(name = "mde_by", nullable = false)
+    @Column(name = "mde_by")
     private Integer hecho_por;
     
-    @Column(name = "reg_dt",nullable=false)
+    @Column(name = "reg_dt")
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date fecha_registro;
     

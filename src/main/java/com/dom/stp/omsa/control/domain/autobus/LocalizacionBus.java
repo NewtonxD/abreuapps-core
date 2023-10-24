@@ -33,16 +33,16 @@ import lombok.NoArgsConstructor;
 public class LocalizacionBus {
     
     @Id
-    @Column(name = "pl",columnDefinition = "varchar(15)")
+    @Column(name = "pl")
     private String placa;
 
-    @Column(name = "lat",columnDefinition = "decimal(12,7)",nullable=false)
+    @Column(name = "lat")
     private float latitud;
 
-    @Column(name = "lon", columnDefinition = "decimal(12,7)",nullable=false)
+    @Column(name = "lon")
     private float longitud;
 
-    @Column(name = "reg_dt",nullable=false)
+    @Column(name = "reg_dt")
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date fecha_registro;
 }

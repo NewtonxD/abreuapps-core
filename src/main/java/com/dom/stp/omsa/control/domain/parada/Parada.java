@@ -40,25 +40,25 @@ public class Parada {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "pwd", nullable = false)
+    @Column(name = "pwd")
     private String contraseña;
 
-    @Column(name = "dsc", nullable = false)
+    @Column(name = "dsc")
     private String descripción;
     
-    @Column(name = "lon",columnDefinition = "decimal(12,7)",nullable=false)
+    @Column(name = "lon")
     private float longitud;
     
-    @Column(name = "lat", columnDefinition = "decimal(12,7)",nullable=false)
+    @Column(name = "lat")
     private float latitud;
     
-    @Column(name = "act",nullable=false)
+    @Column(name = "act")
     private boolean activo;
     
-    @Column(name = "mde_by", nullable = false)
+    @Column(name = "mde_by")
     private Integer hecho_por;
     
-    @Column(name = "reg_dt",nullable=false)
+    @Column(name = "reg_dt")
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date fecha_registro;
 }

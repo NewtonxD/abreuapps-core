@@ -39,33 +39,33 @@ public class AsignacionRuta {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "pl", columnDefinition = "varchar(15)",nullable=false)
+    @Column(name = "pl")
     private String placa;
 
-    @Column(name = "rta", columnDefinition = "varchar(50)",nullable=false)
+    @Column(name = "rta")
     private String ruta;
     
-    @Column(name = "est", columnDefinition = "varchar(50)",nullable=false)
+    @Column(name = "est")
     private String estado;
 
-    @Column(name = "dt_ini", nullable = false)
+    @Column(name = "dt_ini")
     @Temporal(value = TemporalType.DATE)
     private Date fecha_inicio;
     
-    @Column(name = "dt_fin", nullable = false)
+    @Column(name = "dt_fin")
     @Temporal(value = TemporalType.DATE)
     private Date fecha_final;
     
-    @Column(name = "id_drv", nullable = false)
+    @Column(name = "id_drv")
     private Integer conductor_id;
     
-    @Column(name = "id_cob", nullable = false)
+    @Column(name = "id_cob")
     private Integer cobrador_id;
     
-    @Column(name = "mde_by", nullable = false)
+    @Column(name = "mde_by")
     private Integer hecho_por;
     
-    @Column(name = "reg_dt",nullable=false)
+    @Column(name = "reg_dt")
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date fecha_registro;
 

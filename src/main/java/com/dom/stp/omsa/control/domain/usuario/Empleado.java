@@ -38,30 +38,30 @@ public class Empleado {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "ced", columnDefinition = "varchar(13)",nullable=false)
+    @Column(name = "ced")
     private String cedula;
 
-    @Column(name = "nam", nullable = false)
+    @Column(name = "nam")
     private String nombre;
     
-    @Column(name = "ap", nullable = false)
+    @Column(name = "ap")
     private String apellido;
 
-    @Column(name = "sex", columnDefinition = "varchar(50)",nullable=false)
+    @Column(name = "sex")
     private String sexo;
 
-    @Column(name = "pst", columnDefinition = "varchar(50)",nullable=false)
+    @Column(name = "pst")
     private String puesto;
     
-    @Column(name = "dt_ini",nullable=false)
+    @Column(name = "dt_ini")
     @Temporal(value = TemporalType.DATE)
     private Date fecha_entrada;
     
-    @Column(name = "dt_fin", nullable = true)
+    @Column(name = "dt_fin")
     @Temporal(value = TemporalType.DATE)
     private Date fecha_salida;
     
-    @Column(name = "act",nullable=false)
+    @Column(name = "act")
     private boolean activo;
     
 }

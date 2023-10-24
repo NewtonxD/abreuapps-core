@@ -29,15 +29,15 @@ import lombok.NoArgsConstructor;
 public class ConfiguraciónSistema {
     
     @Id
-    @Column(name = "cod",columnDefinition = "varchar(50)")
+    @Column(name = "cod")
     private String dato;
 
-    @Column(name = "dsc", nullable = true)
+    @Column(name = "dsc")
     private String descripción;
     
-    @Column(name = "val", nullable = false)
+    @Column(name = "val")
     private String valor;
     
-    @Column(name = "cat",columnDefinition = "varchar(50)",nullable=false)
+    @Column(name = "cat")
     private String categoria;
 }

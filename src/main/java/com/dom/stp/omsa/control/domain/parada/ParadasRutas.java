@@ -30,10 +30,10 @@ import lombok.NoArgsConstructor;
 public class ParadasRutas {
     
     @Id
-    @Column(name = "rta",columnDefinition = "varchar(50)")
+    @Column(name = "rta")
     private String ruta;
     
-    @Column(name = "pda_id", nullable = false)
+    @Column(name = "pda_id")
     private Integer id_parada;
     
 }

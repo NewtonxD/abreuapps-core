@@ -35,18 +35,18 @@ public class Acceso {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "dsc", nullable = true)
+    @Column(name = "dsc")
     private String descripción;
     
-    @Column(name = "dat_tpe", columnDefinition = "varchar(50)",nullable=false)
+    @Column(name = "dat_tpe")
     private String tipo_dato;
     
-    @Column(name = "acc_tpe", columnDefinition = "varchar(50)",nullable=false)
+    @Column(name = "acc_tpe")
     private String tipo_acceso;
     
-    @Column(name = "scr", columnDefinition = "varchar(50)",nullable=false)
+    @Column(name = "scr")
     private String pantalla;
     
-    @Column(name = "act",nullable=false)
+    @Column(name = "act")
     private boolean activo;
 }
