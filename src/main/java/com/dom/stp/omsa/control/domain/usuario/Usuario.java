@@ -39,16 +39,16 @@ public class Usuario implements UserDetails {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "usr", nullable = false, unique = true)
+    @Column(name = "usr")
     private String usuario;
 
-    @Column(name = "mail", nullable = false, unique = true)
+    @Column(name = "mail")
     private String correo;
 
-    @Column(name = "pwd", nullable = false)
+    @Column(name = "pwd")
     private String contraseña;
 
-    @Column(name = "act", nullable = false)
+    @Column(name = "act")
     private boolean activo;
 
     @Column(name = "mde_by")

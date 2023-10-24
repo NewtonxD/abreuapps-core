@@ -70,7 +70,7 @@ public class Persona{
     @Temporal(value = TemporalType.DATE)
     private Date fecha_nacimiento;
 
-    @Column(name = "act", nullable = false)
+    @Column(name = "act")
     private boolean activo;
 
     @Column(name = "mde_by")

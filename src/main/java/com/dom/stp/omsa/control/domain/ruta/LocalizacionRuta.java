@@ -36,13 +36,13 @@ public class LocalizacionRuta {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "rta",columnDefinition = "varchar(50)",nullable=false)
+    @Column(name = "rta")
     private String ruta;
 
-    @Column(name = "lon",columnDefinition = "decimal(12,7)",nullable=false)
+    @Column(name = "lon")
     private String longitud;
     
-    @Column(name = "lat",columnDefinition = "decimal(12,7)",nullable=false)
+    @Column(name = "lat")
     private String latitud;
     
 }

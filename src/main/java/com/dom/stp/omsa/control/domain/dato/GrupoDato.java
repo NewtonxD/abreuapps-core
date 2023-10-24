@@ -32,13 +32,13 @@ import lombok.Setter;
 public class GrupoDato {
     
     @Id
-    @Column(name = "dat_grp", columnDefinition = "varchar(50)")
+    @Column(name = "dat_grp")
     private String grupo_dato;
 
-    @Column(name = "dsc", nullable = true)
+    @Column(name = "dsc")
     private String descripcion;
 
-    @Column(name = "act",nullable=false)
+    @Column(name = "act")
     private boolean activo;
     
     @Column(name= "mde_by")

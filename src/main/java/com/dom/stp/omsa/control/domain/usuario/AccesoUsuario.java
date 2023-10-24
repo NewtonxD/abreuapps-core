@@ -37,10 +37,10 @@ public class AccesoUsuario {
     @Column(name = "id")
     public Integer id;
     
-    @Column(name = "val", nullable = false)
+    @Column(name = "val")
     public String valor;
     
-    @Column(name = "act",nullable=false)
+    @Column(name = "act")
     public boolean activo;
     
     @ManyToOne
