@@ -13,7 +13,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 
 <body>
     <main th:fragment="content-default" id="content-page">
-        <th:block th:if="${dat_gen_registro_datos}">
+        <th:block th:if="${dat_gen_registro_grupos}">
         <div class="container-fluid px-4">
             <div class="row d-flex align-items-center justify-content-center mt-5 mb-5">
                 <div class="card col-12 col-md-10 col-lg-8">
@@ -97,7 +97,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
         </div>
         <script th:src="@{/content/js/dtgnr/svd_dt743620grp.js}"></script>
         </th:block>
-        <th:block th:unless="${dat_gen_registro_datos}">
+        <th:block th:unless="${dat_gen_registro_grupos}">
             <div class="container-fluid px-4">
                 <div class="row d-flex align-items-center justify-content-center mt-5 mb-5">
                     <div class="col-lg-6">
