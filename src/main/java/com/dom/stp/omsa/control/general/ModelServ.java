@@ -7,7 +7,9 @@ package com.dom.stp.omsa.control.general;
 import com.dom.stp.omsa.control.domain.usuario.AccesoServ;
 import com.dom.stp.omsa.control.domain.dato.DatoServ;
 import com.dom.stp.omsa.control.domain.dato.GrupoDatoServ;
+import com.dom.stp.omsa.control.domain.usuario.Persona;
 import com.dom.stp.omsa.control.domain.usuario.PersonaServ;
+import com.dom.stp.omsa.control.domain.usuario.Usuario;
 import jakarta.transaction.Transactional;
 import java.util.HashMap;
 import java.util.Map;
@@ -91,6 +93,11 @@ public class ModelServ {
         this.actions.put("usr_mgr_registro", ()->{
                 Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "usr_mgr_registro");
                 dataModel.addAttribute("update",false);
+                Persona p=new Persona();
+                Usuario u=new Usuario();
+                p.setUsuario(u);
+                dataModel.addAttribute("persona",p);
+                dataModel.addAttribute("sexo",DatoServicio.consultarPorGrupo("sexo"));
                 dataModel.addAllAttributes(acc);                
             }
         );

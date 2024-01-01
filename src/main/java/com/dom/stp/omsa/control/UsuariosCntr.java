@@ -4,6 +4,7 @@
  */
 package com.dom.stp.omsa.control;
 
+import com.dom.stp.omsa.control.domain.dato.DatoServ;
 import com.dom.stp.omsa.control.domain.dato.GrupoDato;
 import com.dom.stp.omsa.control.domain.usuario.Usuario;
 import com.dom.stp.omsa.control.domain.usuario.AccesoServ;
@@ -46,6 +47,9 @@ public class UsuariosCntr {
     GrupoDatoServ gdserv;
     
     @Autowired
+    DatoServ dtserv;
+    
+    @Autowired
     AccesoServ accserv;
     
     @Autowired
@@ -61,7 +65,7 @@ public class UsuariosCntr {
     SSECntr seeCnt;
 
     @PostMapping("/save")
-    public String GuardarGrupoDato(
+    public String GuardarUsuario(
             HttpServletRequest request, 
             Model model, 
             GrupoDato grpdt,
@@ -85,7 +89,7 @@ public class UsuariosCntr {
             
         }
         
-        Optional<GrupoDato> grupo = gdserv.obtener(grpdt.getGrupo_dato());
+        Optional<GrupoDato> grupo = gdserv.obtener(grpdt.getGrupoDato());
         
         boolean ext = false, ss = true;
         
@@ -151,9 +155,10 @@ public class UsuariosCntr {
         
         
         Optional<Persona> g = PersonaServicio.obtenerPorUsuario(us.get());
-
+        
         model.addAttribute("persona", g.get());
         model.addAttribute("update", true);
+        model.addAttribute("sexo",dtserv.consultarPorGrupo("sexo"));
         model.addAllAttributes(accserv.consultarAccesosPantallaUsuario(u.getId(), "usr_mgr_registro"));
 
         return "fragments/usr_mgr_registro :: content-default";  

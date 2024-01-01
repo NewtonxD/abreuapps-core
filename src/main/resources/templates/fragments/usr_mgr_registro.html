@@ -45,27 +45,28 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                 
                                                 <div class="mb-3 col-12 col-md-6">
                                                     <label for="nom-dato" class="form-label text-muted">Nombre:</label>
-                                                    <input type="text" id="nombre" name="nombre" placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">        
+                                                    <input type="text" th:field="*{persona.nombre}" placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">        
                                                 </div>
                                                 <div class="mb-3 col-12 col-md-6">
                                                     <label for="nom-dato" class="form-label text-muted">Apellido:</label>
-                                                    <input type="text" id="apellido" name="apellido" placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">        
+                                                    <input type="text" th:field="*{persona.apellido}"  placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">        
                                                 </div>
 
                                                 <th:block th:if="${update}">
                                                     <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" th:value="${#dates.format(persona.fecha_actualizacion, 'yyyy-MM-dd HH:mm:ss')}">
-                                                    <input  type="number" name="id" style="display: none; width: 1px;height: 1px;" th:value="${persona.id}" required>
+                                                    <input  type="number" th:field="*{persona.id}" style="display: none; width: 1px;height: 1px;" th:value="${persona.id}" required>
                                                 </th:block>
                                                 
                                                 <div class="mb-3 col-12 col-md-6">
                                                     <label for="cedula" class="form-label text-muted">Cédula:</label>
-                                                    <input type="text" id="cedula" disabled th:value="${persona.cedula}" placeholder="XXX-XXXXXXX-X" class="form-control" aria-describedby="cedula">
+                                                    <input type="text" th:field="*{persona.cedula}" th:disabled="${update}" placeholder="XXX-XXXXXXX-X" class="form-control" aria-describedby="cedula">
                                                 </div>
 
                                                 <div class="mb-3 col-12 col-md-6">
                                                     <label for="sexo" class="form-label text-muted">Sexo:</label>
-                                                    <select class="form-select custom-select" id="sexo" name="sexo">
-                                                        <option th:value="${s.dato}" th:selected="${persona.sexo.equals(s.dato)}" th:each="s :${sexo}" th:text="${s.dato}"></option>
+                                                    <select class="form-select custom-select" th:field="*{persona.sexo}">
+                                                        <option value="0" selected disabled>--Seleccione--</option>
+                                                        <option th:value="${s.dato}" th:each="s :${sexo}" th:text="${s.dato}"></option>
                                                     </select>        
                                                 </div>
                                                 
@@ -79,8 +80,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                 </div>
                                                 <div class="col-6 d-flex justify-content-end">
                                                     <th:block th:if="${!update}">
-                                                        <button type="submit" class="btn btn-primary"><b> <i class="fas fa-save"></i>
-                                                                Guardar</b></button>
+                                                        <button type="submit" class="btn btn-primary">
+                                                            <b> <i class="fas fa-save"></i>
+                                                                Guardar
+                                                            </b>
+                                                        </button>
                                                     </th:block>
                                                     <th:block th:if="${update}">
                                                         <button type="submit" class="btn btn-primary"><b> <i
@@ -95,7 +99,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                         </div>
                     </div>
                 </div>
-                <script th:src="@{/content/js/usrmgr/svd_dt742520.js}"></script>
+                <script th:src="@{/content/js/usrmgr/svd_usr782360.js}"></script>
             </th:block>
             <th:block th:unless="${usr_mgr_registro}">
                 <div class="container-fluid px-4">

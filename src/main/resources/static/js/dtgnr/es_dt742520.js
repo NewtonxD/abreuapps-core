@@ -47,7 +47,7 @@ function createTableRow(d) {
     var row = '<tr data-id="' + d.dato + '">';
     row += '<th>'+ d.dato + '</th>';
     row += '<td>' + d.descripcion + '</td>';
-    row += '<td>' + d.grupo_dato + '</td>'; 
+    row += '<td>' + d.GrupoDato + '</td>'; 
     row += '<td>' + (d.activo?'Activo':'Inactivo') + '</td>'; 
     row += '</tr>';
     return row;

@@ -83,7 +83,7 @@ public class DatosCntr {
 
         }
 
-        Optional<GrupoDato> grupo = GrupoServicio.obtener(grpdt.getGrupo_dato());
+        Optional<GrupoDato> grupo = GrupoServicio.obtener(grpdt.getGrupoDato());
 
         boolean ext = false, ss = true;
 
