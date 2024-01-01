@@ -39,6 +39,10 @@ public class DatoServ {
         return repo.findAll();
     }
     
+    public List<Dato> consultarPorGrupo(String grupo){
+        return repo.findByGrupoDato(grupo);
+    }
+    
     public Optional<Dato> obtener(String dato){
         return repo.findById(dato);
     }

@@ -33,7 +33,7 @@ public class GrupoDato {
     
     @Id
     @Column(name = "dat_grp")
-    private String grupo_dato;
+    private String GrupoDato;
 
     @Column(name = "dsc")
     private String descripcion;

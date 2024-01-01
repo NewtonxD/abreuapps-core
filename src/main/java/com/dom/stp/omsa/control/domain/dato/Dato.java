@@ -36,7 +36,7 @@ public class Dato {
     private String dato;
     
     @Column(name = "dat_grp")
-    private String grupo_dato;
+    private String grupoDato;
 
     @Column(name = "dsc")
     private String descripcion;
