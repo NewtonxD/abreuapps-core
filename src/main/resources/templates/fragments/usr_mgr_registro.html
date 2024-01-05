@@ -44,11 +44,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                             <div class="row">
                                                 
                                                 <div class="mb-3 col-12 col-md-6">
-                                                    <label for="nom-dato" class="form-label text-muted">Nombre:</label>
+                                                    <label for="nombre" class="form-label text-muted">Nombre:</label>
                                                     <input type="text" th:field="*{persona.nombre}" placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">        
                                                 </div>
                                                 <div class="mb-3 col-12 col-md-6">
-                                                    <label for="nom-dato" class="form-label text-muted">Apellido:</label>
+                                                    <label for="apellido" class="form-label text-muted">Apellido:</label>
                                                     <input type="text" th:field="*{persona.apellido}"  placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">        
                                                 </div>
 
@@ -59,7 +59,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                 
                                                 <div class="mb-3 col-12 col-md-6">
                                                     <label for="cedula" class="form-label text-muted">Cédula:</label>
-                                                    <input type="text" th:field="*{persona.cedula}" th:disabled="${update}" placeholder="XXX-XXXXXXX-X" class="form-control" aria-describedby="cedula">
+                                                    <input type="text" th:field="*{persona.cedula}" th:disabled="${update}" placeholder="XXX-XXXXXXX-X" class="form-control cedula" aria-describedby="cedula">
                                                 </div>
 
                                                 <div class="mb-3 col-12 col-md-6">
@@ -70,14 +70,34 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                     </select>        
                                                 </div>
                                                 
+                                                
+                                                <div class="mb-3 col-12 col-md-6">
+                                                    <label for="numero_celular" class="form-label text-muted">Núm. Celular:</label>
+                                                    <input type="tel" th:field="*{persona.numero_celular}" placeholder="809-999-123" class="form-control telefono" aria-describedby="numero_celular">
+                                                </div>
+                                                
+                                                <div class="mb-3 col-12">
+                                                    <label for="direccion" class="form-label text-muted">Dirección:</label>
+                                                    <textarea class="form-control" th:field="*{persona.direccion}" rows="3" required maxlength="255" aria-describedby="direccion"></textarea>
+                                                </div>
+                                                
+                                                <div class="mb-3 col-12 col-md-6">
+                                                    <label for="nombre_emergencia" class="form-label text-muted">Nombre Contacto Emergencia:</label>
+                                                    <input type="text" th:field="*{persona.nombre_emergencia}" class="form-control" aria-describedby="nombre_emg">
+                                                </div>
+                                                
+                                                <div class="mb-3 col-12 col-md-6">
+                                                    <label for="numero_emergencia" class="form-label text-muted">Núm. Celular Emergencia:</label>
+                                                    <input type="tel" th:field="*{persona.numero_emergencia}" placeholder="809-999-123" class="form-control telefono" aria-describedby="numero_celular_emg">
+                                                </div>
+
                                                 <div class="col-6 d-flex justify-content-start">
                                                     <div class="form-check">
-
-                                                        <input class="form-check-input" type="checkbox"  th:attr="checked=${update?persona.activo:true}" name="activo" id="activo">
-
-                                                            <label class="form-check-label text-muted" for="activo">Activo</label>
+                                                        <input class="form-check-input" type="checkbox" th:field="*{persona.activo}" aria-describedby="activo">
+                                                        <label class="form-check-label text-muted" for="activo1">Activo</label>
                                                     </div>
                                                 </div>
+                                                
                                                 <div class="col-6 d-flex justify-content-end">
                                                     <th:block th:if="${!update}">
                                                         <button type="submit" class="btn btn-primary">
@@ -100,6 +120,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                     </div>
                 </div>
                 <script th:src="@{/content/js/usrmgr/svd_usr782360.js}"></script>
+                <script th:src="@{/content/js/lib/input-formats.js}"></script>
             </th:block>
             <th:block th:unless="${usr_mgr_registro}">
                 <div class="container-fluid px-4">

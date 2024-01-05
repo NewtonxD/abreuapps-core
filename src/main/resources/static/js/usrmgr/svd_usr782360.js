@@ -18,7 +18,7 @@ $(function(){
     $("#form-guardar").on("submit", function(event){
         event.preventDefault();
         guardar_datos();
-    });
+    }); 
 });
 
 function guardar_datos(){
@@ -54,3 +54,5 @@ function guardar_datos(){
     
     
 }
+
+
