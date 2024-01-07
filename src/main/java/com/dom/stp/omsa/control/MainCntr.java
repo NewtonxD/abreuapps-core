@@ -42,7 +42,7 @@ public class MainCntr {
             Model model
     ) {
         Usuario u = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        model.addAttribute("datos_personales",PersonaServicio.obtenerPorUsuario(u).get());
+        model.addAttribute("datos_personales",u.getPersona());
         model.addAllAttributes(AccesosServicio.consultarAccesosMenuUsuario(u.getId()));
 
         return "index";

@@ -2,9 +2,12 @@ package com.dom.stp.omsa.control.domain.usuario;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -64,6 +67,10 @@ public class Usuario implements UserDetails {
     @Column(name = "upd_at")
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date fecha_actualizacion;
+    
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "inf_ppl_id") // Nombre de la columna de clave foránea
+    private Persona persona;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -10,7 +10,6 @@ import com.dom.stp.omsa.control.domain.usuario.Usuario;
 import com.dom.stp.omsa.control.domain.usuario.AccesoServ;
 import com.dom.stp.omsa.control.general.ModelServ;
 import com.dom.stp.omsa.control.domain.dato.GrupoDatoServ;
-import com.dom.stp.omsa.control.domain.usuario.Persona;
 import com.dom.stp.omsa.control.domain.usuario.PersonaServ;
 import com.dom.stp.omsa.control.domain.usuario.UsuarioServ;
 import com.dom.stp.omsa.control.general.DateUtils;
@@ -154,11 +153,11 @@ public class UsuariosCntr {
         }
         
         
-        Optional<Persona> g = PersonaServicio.obtenerPorUsuario(us.get());
-        
-        model.addAttribute("persona", g.get());
+        model.addAttribute("usuario",us.get());
+        model.addAttribute("persona",us.get().getPersona());
         model.addAttribute("update", true);
         model.addAttribute("sexo",dtserv.consultarPorGrupo("sexo"));
+        model.addAttribute("sangre",dtserv.consultarPorGrupo("Tipos Sanguineos"));
         model.addAllAttributes(accserv.consultarAccesosPantallaUsuario(u.getId(), "usr_mgr_registro"));
 
         return "fragments/usr_mgr_registro :: content-default";  

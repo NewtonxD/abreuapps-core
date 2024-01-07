@@ -1,6 +1,5 @@
 package com.dom.stp.omsa.control.domain.usuario;
 
-import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -9,9 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface PersonaRepo extends JpaRepository<Persona, Integer> {
 
   Optional<Persona> findByCedula(String cedula);
-  
-  Optional<Persona> findByUsuario(Usuario usuario);
-  
-  List<Persona> findByUsuarioIsNotNull();
 
 }
