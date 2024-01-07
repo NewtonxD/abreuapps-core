@@ -25,13 +25,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                 class="fa-solid fa-chevron-left"></i></b></button>
                                     &nbsp;&nbsp;&nbsp;&nbsp;<h4>Usuario
                                         <th:block th:if="${!update}">
-                                            &nbsp;&nbsp;
+                                            &nbsp;
                                             <i class="fa-solid fa-plus"></i>
                                         </th:block>
                                         <th:block th:if="${update}">
-                                            :&nbsp;&nbsp;
+                                            :&nbsp;
                                             <i class="fa-solid fa-pencil"></i>
-                                           &nbsp;&nbsp;
                                         </th:block>
                                     </h4>
                                 </div>
@@ -40,6 +39,16 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 <form class="form-group" id="form-guardar">
                                 <section>
                                     <article>
+                                        <div class="row">
+                                            <div class="mb-3 col-6 col-md-4">
+                                                <button type="button" class="btn btn-danger" id="BtnResetPwd"><i class="fa-solid fa-rotate"></i>&nbsp;&nbsp;Reestablecer Clave</button>
+                                            </div>
+                                            <div class="mb-3 col-6 col-md-4">
+                                                <button type="button" class="btn btn-primary" id="BtnCloseSess"><i class="fa-solid fa-right-from-bracket"></i>&nbsp;&nbsp;Cerrar Sesión</button>
+                                            </div>
+                                        </div>
+                                    </article>    
+                                    <article>
                                         <h5>Información del Usuario</h5>
                                         <div class="row">
                                             
@@ -47,19 +56,25 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                 <label for="usuario" class="form-label text-muted">Usuario:</label>
                                                 <input type="text" th:field="*{usuario.usuario}" placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">        
                                             </div>
-
                                             
                                             <div class="mb-3 col-12 col-md-6">
-                                                <label for="contraseña" class="form-label text-muted">Contraseña:</label>
-                                                <input type="password" th:field="*{usuario.contraseña}"  placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">        
+                                                <label for="correo" class="form-label text-muted">Correo:</label>
+                                                <input type="email" th:field="*{usuario.correo}" placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">        
                                             </div>
+                                            
+                                            <div class="col-12 d-flex justify-content-start">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" th:field="*{usuario.activo}" aria-describedby="activo">
+                                                    <label class="form-check-label text-muted" for="activo">Activo</label>
+                                                </div>
+                                            </div>  
                                             
                                         </div>
                                     </article>
                                     <br>
                                     <article>
-                                        <h5>Información Personal</h5>
-                                            <div class="row">
+                                        <h5>Información Personal &nbsp;<button type="button" class="btn collapsed" data-bs-toggle="collapse" data-bs-target="#inf_personal"><i class="fas fa-angle-down"></i></button></h5>
+                                            <div class="row collapse" id="inf_personal">
                                                 
                                                 <div class="mb-3 col-12 col-md-6">
                                                     <label for="nombre" class="form-label text-muted">Nombre:</label>
@@ -126,14 +141,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                         <option value="0" selected disabled>--Seleccione--</option>
                                                         <option th:value="${ts.dato}" th:each="ts :${sangre}" th:text="${ts.dato}"></option>
                                                     </select> 
-                                                </div>
-
-                                                <div class="col-6 d-flex justify-content-start">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" th:field="*{persona.activo}" aria-describedby="activo">
-                                                        <label class="form-check-label text-muted" for="activo1">Activo</label>
-                                                    </div>
-                                                </div>                                    
+                                                </div>                        
                                                 
                                             </div>
                                     </article>
