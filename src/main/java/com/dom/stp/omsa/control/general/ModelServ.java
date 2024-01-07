@@ -10,6 +10,7 @@ import com.dom.stp.omsa.control.domain.dato.GrupoDatoServ;
 import com.dom.stp.omsa.control.domain.usuario.Persona;
 import com.dom.stp.omsa.control.domain.usuario.PersonaServ;
 import com.dom.stp.omsa.control.domain.usuario.Usuario;
+import com.dom.stp.omsa.control.domain.usuario.UsuarioServ;
 import jakarta.transaction.Transactional;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,7 +40,7 @@ public class ModelServ {
     AccesoServ AccesoServicio;
     
     @Autowired
-    PersonaServ PersonaServicio;
+    UsuarioServ UsuarioServicio;
     
     private final Map<String,Runnable> actions=new HashMap<>();
     
@@ -85,7 +86,7 @@ public class ModelServ {
         
         this.actions.put("usr_mgr_principal", ()->{
                 Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "usr_mgr_principal");
-                dataModel.addAttribute("personas", PersonaServicio.consultarUsuarios());
+                dataModel.addAttribute("usuarios", UsuarioServicio.consultar());
                 dataModel.addAllAttributes(acc);                
             }
         );
@@ -95,8 +96,10 @@ public class ModelServ {
                 dataModel.addAttribute("update",false);
                 Persona p=new Persona();
                 Usuario u=new Usuario();
-                p.setUsuario(u);
+                u.setPersona(p);
+                dataModel.addAttribute("usuario",u);
                 dataModel.addAttribute("persona",p);
+                dataModel.addAttribute("sangre",DatoServicio.consultarPorGrupo("Tipos Sanguineos"));
                 dataModel.addAttribute("sexo",DatoServicio.consultarPorGrupo("sexo"));
                 dataModel.addAllAttributes(acc);                
             }

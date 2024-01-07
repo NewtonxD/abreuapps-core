@@ -69,11 +69,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr th:each="u: ${personas}" th:attr="data-id=${u.usuario.usuario}">
-                                                    <th th:text="${u.usuario.usuario}"></th>
-                                                    <td th:text="${u.nombre+' '+u.apellido}"></td>
-                                                    <td th:text="${u.usuario.correo}"></td>
-                                                    <td th:text="${u.usuario.activo?'Activo':'Inactivo'}"></td>
+                                                <tr th:each="u: ${usuarios}" th:attr="data-id=${u.usuario}">
+                                                    <th th:text="${u.usuario}"></th>
+                                                    <td th:text="${u.persona.nombre+' '+u.persona.apellido}"></td>
+                                                    <td th:text="${u.correo}"></td>
+                                                    <td th:text="${u.activo?'Activo':'Inactivo'}"></td>
                                                 </tr>
                                             </tbody>
                                         </table>
