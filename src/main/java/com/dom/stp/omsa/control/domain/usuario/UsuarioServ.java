@@ -42,6 +42,10 @@ public class UsuarioServ {
     }
     
     public Optional<Usuario> obtener(String usuario){
-        return repo.findByUsuario(usuario);
+        return repo.findByUsername(usuario);
+    }
+    
+    public Optional<Usuario> obtenerPorId(Integer id){
+        return repo.findById(id);
     }
 }

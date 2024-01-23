@@ -69,8 +69,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr th:each="u: ${usuarios}" th:attr="data-id=${u.usuario}">
-                                                    <th th:text="${u.usuario}"></th>
+                                                <tr th:each="u: ${usuarios}" th:attr="data-id=${u.username}">
+                                                    <th th:text="${u.username}"></th>
                                                     <td th:text="${u.persona.nombre+' '+u.persona.apellido}"></td>
                                                     <td th:text="${u.correo}"></td>
                                                     <td th:text="${u.activo?'Activo':'Inactivo'}"></td>

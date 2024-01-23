@@ -10,6 +10,7 @@ import com.dom.stp.omsa.control.domain.usuario.Usuario;
 import com.dom.stp.omsa.control.domain.usuario.AccesoServ;
 import com.dom.stp.omsa.control.general.ModelServ;
 import com.dom.stp.omsa.control.domain.dato.GrupoDatoServ;
+import com.dom.stp.omsa.control.domain.usuario.Persona;
 import com.dom.stp.omsa.control.domain.usuario.PersonaServ;
 import com.dom.stp.omsa.control.domain.usuario.UsuarioServ;
 import com.dom.stp.omsa.control.general.DateUtils;
@@ -67,43 +68,43 @@ public class UsuariosCntr {
     public String GuardarUsuario(
             HttpServletRequest request, 
             Model model, 
-            GrupoDato grpdt,
+            Usuario user,
             @RequestParam(name = "fecha_actualizacionn", required = false) String dateInput
     ) throws ParseException {
         
         Usuario u=(Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         
-        if(model.getAttribute("dat_gen_registro_grupos")==null || (! (Boolean)model.getAttribute("dat_gen_registro_grupos"))
+        if(model.getAttribute("usr_mgr_registro")==null || (! (Boolean)model.getAttribute("usr_mgr_registro"))
         ){
             model.addAttribute("status", false);
             model.addAttribute("msg", "No tiene permisos para realizar esta acción!");
-            return "fragments/dat_gen_consulta_grupos :: content-default";
+            return "fragments/usr_mgr_principal :: content-default";
         }
         
         HashMap<String, Object> map = new HashMap<>();
         
         if (dateInput != null && !dateInput.equals("")) {
             
-            grpdt.setFecha_actualizacion(FechaUtils.Formato2ToDate(dateInput));
+            user.setFecha_actualizacion(FechaUtils.Formato2ToDate(dateInput));
             
         }
         
-        Optional<GrupoDato> grupo = gdserv.obtener(grpdt.getGrupoDato());
+        Optional<Usuario> usuario1 = UsuarioServicio.obtenerPorId(user.getId());
         
         boolean ext = false, ss = true;
         
-        if (grupo.isPresent()) {
+        if (usuario1.isPresent()) {
             
             ext = true;
             
-            if (!FechaUtils.FechaFormato2.format(grupo.get().getFecha_actualizacion()).equals(dateInput)) {
+            if (!FechaUtils.FechaFormato2.format(usuario1.get().getFecha_actualizacion()).equals(dateInput)) {
                 
                 ss = false;
                 
             } else {
                 
-                grpdt.setFecha_registro(grupo.get().getFecha_registro());
-                grpdt.setHecho_por(grupo.get().getHecho_por());
+                user.setFecha_registro(usuario1.get().getFecha_registro());
+                user.setHecho_por(usuario1.get().getHecho_por());
                 
             }
             
@@ -111,10 +112,10 @@ public class UsuariosCntr {
 
         if (ss) {
             
-            GrupoDato d = gdserv.guardar(grpdt, u.getId(), ext);
+            //Usuario d = UsuarioServicio.guardar(usuario, u.getId(), ext);
             model.addAttribute("status", true);
             model.addAttribute("msg", "Registro guardado exitosamente!");
-            map.put(ext ? "U" : "I", d);
+            map.put(ext ? "U" : "I", user);
             map.put("date", FechaUtils.FechaFormato1.format(new Date()));
             
         } else {
@@ -125,7 +126,7 @@ public class UsuariosCntr {
         }
         
         if(!map.isEmpty())
-            seeCnt.publicar("dtgrp", map);
+            seeCnt.publicar("usrmgr", map);
 
         dmService.load("usr_mgr_principal", model, u.getId());
         
@@ -153,7 +154,7 @@ public class UsuariosCntr {
         }
         
         
-        model.addAttribute("usuario",us.get());
+        model.addAttribute("user",us.get());
         model.addAttribute("persona",us.get().getPersona());
         model.addAttribute("update", true);
         model.addAttribute("sexo",dtserv.consultarPorGrupo("sexo"));

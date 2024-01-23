@@ -15,16 +15,23 @@ function dataPrepare(idForm){
 }
 
 $(function(){
+    
+    /*$("#btn_guardar").on("click",function(event){
+        if(!$("#inf_personal").hasClass("show"))$("#inf_personal").addClass("show");
+    });*/
+    
     $("#form-guardar").on("submit", function(event){
         event.preventDefault();
         guardar_datos();
     }); 
+    
 });
 
 function guardar_datos(){
     $("#content-page").css("overflow-y","hidden");
     var fadeout=$("#content-page").hide().delay(150).promise();
     let data=dataPrepare("form-guardar");
+    console.log(data);
     $.ajax({
         url:'/usrmgr/save',
         type:"POST",

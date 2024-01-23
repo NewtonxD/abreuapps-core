@@ -46,8 +46,8 @@ function closeEventSource(){
 }
 
 function createTableRow(d) {
-    var row = '<tr data-id="' + d.usuario.usuario + '">';
-    row += '<th>' + d.usuario.usuario + '</th>';
+    var row = '<tr data-id="' + d.usuario.username + '">';
+    row += '<th>' + d.usuario.username + '</th>';
     row += '<td>'+ d.nombre+' '+d.apellido + '</td>';
     row += '<td>' + d.usuario.correo + '</td>';
     row += '<td>' + (d.usuario.activo?'Activo':'Inactivo') + '</td>'; 

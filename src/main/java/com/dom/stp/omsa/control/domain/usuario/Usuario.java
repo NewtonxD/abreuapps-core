@@ -43,7 +43,7 @@ public class Usuario implements UserDetails {
     private Integer id;
 
     @Column(name = "usr")
-    private String usuario;
+    private String username;
 
     @Column(name = "mail")
     private String correo;
@@ -84,7 +84,7 @@ public class Usuario implements UserDetails {
 
     @Override
     public String getUsername() {
-        return usuario;
+        return username;
     }
 
     @Override

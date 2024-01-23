@@ -97,7 +97,7 @@ public class ModelServ {
                 Persona p=new Persona();
                 Usuario u=new Usuario();
                 u.setPersona(p);
-                dataModel.addAttribute("usuario",u);
+                dataModel.addAttribute("user",u);
                 dataModel.addAttribute("persona",p);
                 dataModel.addAttribute("sangre",DatoServicio.consultarPorGrupo("Tipos Sanguineos"));
                 dataModel.addAttribute("sexo",DatoServicio.consultarPorGrupo("sexo"));
