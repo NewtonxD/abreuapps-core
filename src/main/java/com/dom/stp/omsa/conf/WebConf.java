@@ -4,8 +4,10 @@
  */
 package com.dom.stp.omsa.conf;
 
+import com.dom.stp.omsa.control.general.StringToDateConverter;
 import java.util.concurrent.TimeUnit;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.http.CacheControl;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -25,6 +27,11 @@ public class WebConf implements WebMvcConfigurer {
         registry.addResourceHandler("/content/**")
             .addResourceLocations("classpath:/static/")
             .setCacheControl(CacheControl.maxAge(365, TimeUnit.DAYS));
+    }
+    
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addConverter(new StringToDateConverter());
     }
     
 }

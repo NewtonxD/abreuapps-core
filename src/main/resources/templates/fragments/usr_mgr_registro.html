@@ -37,6 +37,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                             </div>
                             <div class="card-body mt-3 mb-3">
                                 <section>
+                                    <form class="form-group" id="form-guardar">
+                                    
                                     <article>
                                         <div class="row">
                                             <div class="mb-3 col-6 col-md-4">
@@ -49,14 +51,15 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                     </article>    
                                     <article>
                                         
-                                    <form class="form-group" th:object="${user}" id="form-guardar">
                                         <h5>Información del Usuario</h5>
-                                        <div class="row">
-                                            <input  type="number" th:field="*{id}" style="display: none; width: 1px;height: 1px;" required>
-                                                
+                                        <div class="row" id="inf_usuario" th:object="${user}" >
+                                            <th:block th:if="${update}">
+                                                <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" th:value="${#dates.format(user.fecha_actualizacion, 'yyyy-MM-dd HH:mm:ss')}">
+                                                <input  type="number" th:field="*{id}" th:value="*{id}" style="display: none; width: 1px;height: 1px;" required>
+                                            <th:block>
                                             <div class="mb-3 col-12 col-md-6">
                                                 <label for="usuario" class="form-label text-muted">Usuario:</label>
-                                                <input type="text" th:field="*{username}" placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">        
+                                                <input type="text" th:field="*{username}" th:value="*{username}" placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">        
                                             </div>
                                             
                                             <div class="mb-3 col-12 col-md-6">
@@ -71,57 +74,53 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                 </div>
                                             </div>  
                                             
-                                            <div class="col-12 d-flex justify-content-end">
-                                                <th:block th:if="${!update}">
-                                                    <button type="submit" class="btn btn-primary" id="btn_guardar">
-                                                        <b> <i class="fas fa-save"></i>
-                                                            Guardar Usuario
-                                                        </b>
-                                                    </button>
-                                                </th:block>
-                                                <th:block th:if="${update}">
-                                                    <button type="submit" class="btn btn-primary" id="btn_guardar"><b> <i
-                                                                class="fa-solid fa-pencil"></i> Editar Usuario</b></button>
-                                                </th:block>
-                                            </div>
                                             
                                         </div>
                                         
-                                    </form>
                                     </article>
                                     <br>
                                     <article>
                                         <h5>Información Personal &nbsp;<button type="button" class="btn collapsed" data-bs-toggle="collapse" data-bs-target="#inf_personal"><i class="fas fa-angle-down"></i></button></h5>
-                                            <div class="row collapse" id="inf_personal">
+                                            <div class="row collapse" id="inf_personal" th:object="${persona}" >
+                                                
+                                                <th:block th:if="${update}">
+                                                    <input  type="number" th:field="*{id}" style="display: none; width: 1px;height: 1px;" required>
+                          
+                                                    <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" th:value="${#dates.format(persona.fecha_actualizacion, 'yyyy-MM-dd HH:mm:ss')}">
+                                                </th:block>
                                                 
                                                 <div class="mb-3 col-12 col-md-6">
                                                     <label for="nombre" class="form-label text-muted">Nombre:</label>
-                                                    <input type="text" th:field="*{persona.nombre}" placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">        
+                                                    <input type="text" th:field="*{nombre}" placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">        
                                                 </div>
                                                 
                                                 <div class="mb-3 col-12 col-md-6">
                                                     <label for="apellido" class="form-label text-muted">Apellido:</label>
-                                                    <input type="text" th:field="*{persona.apellido}"  placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">        
+                                                    <input type="text" th:field="*{apellido}"  placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">        
                                                 </div>
                                                 
                                                 <div class="mb-3 col-12 col-md-6">
                                                     <label for="apodo" class="form-label text-muted">Apodo:</label>
-                                                    <input type="text" th:field="*{persona.apodo}"  placeholder=" ... " class="form-control" aria-describedby="basic-addon4">        
+                                                    <input type="text" th:field="*{apodo}"  placeholder=" ... " class="form-control" aria-describedby="basic-addon4">        
                                                 </div>
-
-                                                <th:block th:if="${update}">
-                                                    <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" th:value="${#dates.format(persona.fecha_actualizacion, 'yyyy-MM-dd HH:mm:ss')}">
-                                                    <input  type="number" th:field="*{persona.id}" style="display: none; width: 1px;height: 1px;" th:value="${persona.id}" required>
-                                                </th:block>
                                                 
                                                 <div class="mb-3 col-12 col-md-6">
                                                     <label for="cedula" class="form-label text-muted">Cédula:</label>
-                                                    <input type="text" th:field="*{persona.cedula}" th:disabled="${update}" placeholder="XXX-XXXXXXX-X" class="form-control cedula" aria-describedby="cedula" required>
+                                                    <th:block th:if="${update}" >
+                                                        <input type="text" th:field="*{cedula}" style="display: none; width: 1px;height: 1px;" />
+
+                                                        <input type="text" th:value="${persona.cedula}" name="ced" disabled placeholder="XXX-XXXXXXX-X" class="form-control cedula" aria-describedby="cedula" required>
+                                                    </th:block>
+                                                    
+                                                    <th:block th:if="${!update}">
+                                                        <input type="text" th:field="*{cedula}" placeholder="XXX-XXXXXXX-X" class="form-control cedula" aria-describedby="cedula" required>
+                                                    
+                                                    </th:block>
                                                 </div>
 
                                                 <div class="mb-3 col-12 col-md-6">
                                                     <label for="sexo" class="form-label text-muted" required>Sexo:</label>
-                                                    <select class="form-select custom-select" th:field="*{persona.sexo}">
+                                                    <select class="form-select custom-select" th:field="*{sexo}">
                                                         <option value="0" selected disabled>--Seleccione--</option>
                                                         <option th:value="${s.dato}" th:each="s :${sexo}" th:text="${s.dato}"></option>
                                                     </select>        
@@ -130,32 +129,32 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                 
                                                 <div class="mb-3 col-12 col-md-6">
                                                     <label for="numero_celular" class="form-label text-muted">Núm. Celular:</label>
-                                                    <input type="tel" th:field="*{persona.numero_celular}" placeholder="809-999-123" class="form-control telefono" aria-describedby="numero_celular" required>
+                                                    <input type="tel" th:field="*{numero_celular}" placeholder="809-999-123" class="form-control telefono" aria-describedby="numero_celular" required>
                                                 </div>
                                                 
                                                 <div class="mb-3 col-12">
                                                     <label for="direccion" class="form-label text-muted">Dirección:</label>
-                                                    <textarea class="form-control" th:field="*{persona.direccion}" rows="3" required maxlength="255" aria-describedby="direccion"></textarea>
+                                                    <textarea class="form-control" th:field="*{direccion}" rows="3" required maxlength="255" aria-describedby="direccion"></textarea>
                                                 </div>
                                                 
                                                 <div class="mb-3 col-12 col-md-6">
                                                     <label for="nombre_emergencia" class="form-label text-muted">Nombre Contacto Emergencia:</label>
-                                                    <input type="text" th:field="*{persona.nombre_emergencia}" class="form-control" aria-describedby="nombre_emg">
+                                                    <input type="text" th:field="*{nombre_emergencia}" class="form-control" aria-describedby="nombre_emg">
                                                 </div>
                                                 
                                                 <div class="mb-3 col-12 col-md-6">
                                                     <label for="numero_emergencia" class="form-label text-muted">Núm. Celular Emergencia:</label>
-                                                    <input type="tel" th:field="*{persona.numero_emergencia}" placeholder="809-999-123" class="form-control telefono" aria-describedby="numero_celular_emg">
+                                                    <input type="tel" th:field="*{numero_emergencia}" placeholder="809-999-123" class="form-control telefono" aria-describedby="numero_celular_emg">
                                                 </div>
                                                 
                                                 <div class="mb-3 col-12 col-md-6">
                                                     <label for="fecha_nacimiento" class="form-label text-muted">Fecha de Nacimiento:</label>
-                                                    <input type="date" th:field="*{persona.fecha_nacimiento}" class="form-control" aria-describedby="fecha_nacimiento" required>
+                                                    <input type="date" th:field="*{fecha_nacimiento}" class="form-control" aria-describedby="fecha_nacimiento" required>
                                                 </div>
                                                 
                                                 <div class="mb-3 col-12 col-md-6">
                                                     <label for="tipo_sangre" class="form-label text-muted">Tipo de Sangre:</label>
-                                                    <select class="form-select custom-select" th:field="*{persona.tipo_sangre}" required>
+                                                    <select class="form-select custom-select" th:field="*{tipo_sangre}" required>
                                                         <option value="0" selected disabled>--Seleccione--</option>
                                                         <option th:value="${ts.dato}" th:each="ts :${sangre}" th:text="${ts.dato}"></option>
                                                     </select> 
@@ -163,6 +162,21 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                 
                                             </div>
                                     </article>
+                                    <div class="col-12 d-flex justify-content-end">
+                                        <th:block th:if="${!update}">
+                                            <button type="submit" class="btn btn-primary" id="btn_guardar">
+                                                <b> <i class="fas fa-save"></i>
+                                                    Guardar
+                                                </b>
+                                            </button>
+                                        </th:block>
+                                        <th:block th:if="${update}">
+                                            <button type="submit" class="btn btn-primary" id="btn_guardar"><b> <i
+                                                        class="fa-solid fa-pencil"></i> Editar</b></button>
+                                        </th:block>
+                                    </div>
+                                    
+                                    </form>
                                 </section>
                             </div>
                         </div>

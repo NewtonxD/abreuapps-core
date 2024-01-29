@@ -39,6 +39,10 @@ public class PersonaServ {
         return repo.save(gd);
     }
     
+    public Optional<Persona> obtenerPorId(Integer id){
+        return repo.findById(id);
+    }
+    
     public List<Persona> consultar(){
         return repo.findAll();
     }

@@ -6,9 +6,9 @@
 
 function dataPrepare(idForm){
     let d=$("#"+idForm).serializeArray();
-    $('input[type=checkbox]').each(function() {     
-        if (!$(this).checked) {
-            d.push({name:$(this).attr("name"),value:false});
+    $("#"+idForm+" input[type=checkbox]").each(function() {
+        if (!$(this)[0].checked) {
+            d.push({name:$(this).attr("name"),value:"false"});
         }
     });
     return d;
