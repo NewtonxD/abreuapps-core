@@ -56,7 +56,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                             <th:block th:if="${update}">
                                                 <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" th:value="${#dates.format(user.fecha_actualizacion, 'yyyy-MM-dd HH:mm:ss')}">
                                                 <input  type="number" th:field="*{id}" th:value="*{id}" style="display: none; width: 1px;height: 1px;" required>
-                                            <th:block>
+                                            </th:block>
                                             <div class="mb-3 col-12 col-md-6">
                                                 <label for="usuario" class="form-label text-muted">Usuario:</label>
                                                 <input type="text" th:field="*{username}" th:value="*{username}" placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">        

@@ -28,6 +28,57 @@ function dataCustomPrepare(idForm){
     return formData;
 }
 
+function verificarCedula(){
+    var respuesta = false;
+    $.ajax({
+        url:'/infppl/vfyCed',
+        type:"POST",
+        async:false,
+        data:{"cedula":$("#cedula").val()},
+        success: function(res){
+            respuesta=res;
+        },
+        error: function(xhr, status, error){
+            respuesta=false;
+        }
+    });
+    return respuesta;
+}
+
+function verificarCorreo(){
+    var respuesta = false;
+    $.ajax({
+        url:'/usrmgr/vfyMail',
+        type:"POST",
+        async:false,
+        data:{"correo":$("#correo").val()},
+        success: function(res){
+            respuesta=res;
+        },
+        error: function(xhr, status, error){
+            respuesta=false;
+        }
+    });
+    return respuesta;
+}
+
+function verificarUsuario(){
+    var respuesta = false;
+    $.ajax({
+        url:'/usrmgr/vfyUsr',
+        type:"POST",
+        async:false,
+        data:{"username":$("#username").val()},
+        success: function(res){
+            respuesta=res;
+        },
+        error: function(xhr, status, error){
+            respuesta=false;
+        }
+    });
+    return respuesta;
+}
+
 $(function(){
     
     //desplegar antes de submitiar para los campos required
@@ -37,6 +88,29 @@ $(function(){
     
     $("#form-guardar").on("submit", function(event){
         event.preventDefault();
+        
+        if($("#id")===undefined){
+            
+            if(!verificarCedula()){
+                alert("La cedula ya se encuentra registrada. Para poder continuar, comuniquese con el equipo de sistemas.");
+                $("#cedula").focus();
+                return;
+            }
+
+            if(!verificarCorreo()){
+                alert("El correo ya se encuentra en el sistema. Cambie los datos y vuelva a intentarlo.");
+                $("#correo").focus();
+                return;
+            }
+
+            if(!verificarUsuario()){
+                alert("El usuario ya se encuentra en uso. Cambie los datos y vuelva a intentarlo.");
+                $("#username").focus();
+                return;
+            }
+            
+        }
+        
         guardar_datos();
     }); 
     
@@ -50,7 +124,7 @@ function guardar_datos(){
     let datosPersona=dataPrepare("inf_personal");
     var idPersona=0;
     $.ajax({
-        url:'/usrmgr/infppl/save',
+        url:'/infppl/save',
         type:"POST",
         async:false,
         data:datosPersona,
@@ -58,7 +132,7 @@ function guardar_datos(){
             idPersona=res;
         },
         error: function(xhr, status, error){
-            
+            idPersona=0;
         }
     });
     
