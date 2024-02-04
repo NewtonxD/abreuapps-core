@@ -5,16 +5,12 @@
 package com.dom.stp.omsa.control;
 
 import com.dom.stp.omsa.control.domain.dato.DatoServ;
-import com.dom.stp.omsa.control.domain.dato.GrupoDato;
 import com.dom.stp.omsa.control.domain.usuario.Usuario;
 import com.dom.stp.omsa.control.domain.usuario.AccesoServ;
 import com.dom.stp.omsa.control.general.ModelServ;
-import com.dom.stp.omsa.control.domain.dato.GrupoDatoServ;
-import com.dom.stp.omsa.control.domain.usuario.Persona;
 import com.dom.stp.omsa.control.domain.usuario.PersonaServ;
 import com.dom.stp.omsa.control.domain.usuario.UsuarioServ;
 import com.dom.stp.omsa.control.general.DateUtils;
-import com.dom.stp.omsa.control.general.UsuarioRequest;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
 import java.text.ParseException;
@@ -29,7 +25,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -46,9 +41,6 @@ public class UsuariosCntr {
     
     @Autowired
     DateUtils FechaUtils;
-
-    @Autowired
-    GrupoDatoServ gdserv;
     
     @Autowired
     DatoServ dtserv;
@@ -97,7 +89,7 @@ public class UsuariosCntr {
             
         }
         
-        Optional<Usuario> usuario_existe = UsuarioServicio.obtenerPorId(usuario.getId());
+        Optional<Usuario> usuario_existe = UsuarioServicio.obtenerPorId(usuario.getId()==null?0:usuario.getId());
         
         boolean ext = false, ss = true;
         
@@ -121,8 +113,9 @@ public class UsuariosCntr {
             
             if(idPersona==0)
                 ss=false;
-             else
-                usuario.setPersona(PersonaServicio.obtenerPorId(idPersona).get());            
+            else
+                usuario.setPersona(PersonaServicio.obtenerPorId(idPersona).get());
+            
             
         }
 
@@ -141,8 +134,7 @@ public class UsuariosCntr {
             
         }
         
-        if(!map.isEmpty())
-            seeCnt.publicar("usrmgr", map);
+        if(!map.isEmpty()) seeCnt.publicar("usrmgr", map);
 
         dmService.load("usr_mgr_principal", model, u.getId());
         
@@ -150,66 +142,7 @@ public class UsuariosCntr {
 
     }
     
-    @PostMapping(value="/infppl/save")
-    @ResponseBody
-    public int GuardarPersona(
-            HttpServletRequest request, 
-            Model model, 
-            Persona persona,
-            @RequestParam(name = "fecha_actualizacionn", required = false) String dateInput
-    ) throws ParseException {
-        
-        Usuario u=(Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        
-        Map<String,Object> m=AccesoServicio.consultarAccesosPantallaUsuario(u.getId(),"usr_mgr_registro");
- 
-        if(m.get("usr_mgr_registro")==null || (! (Boolean)m.get("usr_mgr_registro"))
-        ){
-            log.error("Actualizando datos personales, falta de permisos");
-            return 0;
-        }
-        
-        
-        HashMap<String, Object> map = new HashMap<>();
-        
-        if (dateInput != null && !dateInput.equals("")) {
-            
-            persona.setFecha_actualizacion(FechaUtils.Formato2ToDate(dateInput));
-            
-        }
-        
-        Optional<Persona> persona_existe = PersonaServicio.obtenerPorId(persona.getId());
-        
-        boolean ext = false, ss = true;
-        
-        if (persona_existe.isPresent()) {
-            
-            ext = true;
-            
-            if (!FechaUtils.FechaFormato2.format(persona_existe.get().getFecha_actualizacion()).equals(dateInput)) {
-                
-                ss = false;
-                
-            } else {
-                
-                persona.setFecha_registro(persona_existe.get().getFecha_registro());
-                persona.setHecho_por(persona_existe.get().getHecho_por());
-            
-            }
-            
-        }
-        
-        Persona d = null;
-        if (ss) {
-            d = PersonaServicio.guardar(persona, u.getId(), ext);
-        } else{
-            log.error("Actualizando datos personales, datos actualizados antes de "+persona_existe.get().getFecha_actualizacion()+" | "+dateInput);
-        }
-        
-        return d!=null?d.getId():0;
-
-    }
-
+    
     @PostMapping("/update")
     public String ActualizarUsuario(
             HttpServletRequest request, 
@@ -229,7 +162,6 @@ public class UsuariosCntr {
 
         }
         
-        
         model.addAttribute("user",us.get());
         model.addAttribute("persona",us.get().getPersona());
         model.addAttribute("update", true);
@@ -241,5 +173,26 @@ public class UsuariosCntr {
     }
 
     
-
+    @PostMapping("/vfyUsr")
+    @ResponseBody
+    public boolean VerificarUsuario(
+            HttpServletRequest request, 
+            Model model, 
+            @RequestParam("username") String usuario
+    ){
+       return ! UsuarioServicio.obtener(usuario).isPresent();
+    }
+    
+    
+    @PostMapping("/vfyMail")
+    @ResponseBody
+    public boolean VerificarCorreo(
+            HttpServletRequest request, 
+            Model model, 
+            @RequestParam("correo") String correo
+    ){
+       return ! UsuarioServicio.obtenerPorCorreo(correo).isPresent();
+    }
+            
+    
 }

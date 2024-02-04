@@ -43,6 +43,10 @@ public class PersonaServ {
         return repo.findById(id);
     }
     
+    public Optional<Persona> obtenerPorCedula(String cedula){
+        return repo.findByCedula(cedula);
+    }
+    
     public List<Persona> consultar(){
         return repo.findAll();
     }

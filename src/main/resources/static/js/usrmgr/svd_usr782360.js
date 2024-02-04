@@ -28,6 +28,84 @@ function dataCustomPrepare(idForm){
     return formData;
 }
 
+function verificarCedula(){
+    var respuesta = false;
+    
+    if($("#cedula").val()===$("#original_cedula").val()) respuesta=true;
+    else{
+        $.ajax({
+            url:'/infppl/vfyCedInUsr',
+            type:"POST",
+            async:false,
+            data:{"cedula":$("#cedula").val()},
+            success: function(res){
+                respuesta=res;
+            },
+            error: function(xhr, status, error){
+                respuesta=false;
+            }
+        });
+    }
+    return respuesta;
+}
+
+function verificarCorreo(){
+    var respuesta = false;
+    
+    if($("#correo").val()===$("#original_correo").val()) respuesta=true;
+    else{
+        $.ajax({
+            url:'/usrmgr/vfyMail',
+            type:"POST",
+            async:false,
+            data:{"correo":$("#correo").val()},
+            success: function(res){
+                respuesta=res;
+            },
+            error: function(xhr, status, error){
+                respuesta=false;
+            }
+        });
+    }
+    return respuesta;
+}
+
+function obtenerInfoPorCedula(){
+    if($("#original_cedula").val!==$("#cedula").val())
+    $.ajax({
+            url:'/infppl/getAllInfCed',
+            type:"POST",
+            async:true,
+            data:{"cedula":$("#cedula").val(),update:$("#update").val()},
+            success: function(res){
+                
+                $("#info-dinamica-personal").html(res);
+                $("#original_cedula").val($("#cedula").val());
+            }
+    });
+}
+
+function verificarUsuario(){
+    var respuesta = false;
+    
+    if($("#username").val()===$("#original_username").val()) respuesta=true;
+    else{
+        $.ajax({
+            url:'/usrmgr/vfyUsr',
+            type:"POST",
+            async:false,
+            data:{"username":$("#username").val()},
+            success: function(res){
+                respuesta=res;
+            },
+            error: function(xhr, status, error){
+                respuesta=false;
+            }
+        });
+    }
+    return respuesta;
+}
+
 $(function(){
     
     //desplegar antes de submitiar para los campos required
@@ -35,8 +113,38 @@ $(function(){
         if(!$("#inf_personal").hasClass("show"))$("#inf_personal").addClass("show");
     });
     
+    $("#cedula").on("blur",function(event){
+        if($(this).val()!=="")
+            if(!verificarCedula()){
+                alert("La cedula ya se encuentra registrada en un usuario. Verifique los datos y vuelva a intentarlo.");
+                $(this).val("");
+                $(this).focus();
+                return;
+            }else{
+                obtenerInfoPorCedula();
+            }
+        
+    });
+    
     $("#form-guardar").on("submit", function(event){
         event.preventDefault();
+        
+        if($("#id")===undefined){
+
+            if(!verificarCorreo()){
+                alert("El correo ya se encuentra en el sistema. Verifique los datos y vuelva a intentarlo.");
+                $("#correo").focus();
+                return;
+            }
+
+            if(!verificarUsuario()){
+                alert("El usuario ya se encuentra en uso. Verifique los datos y vuelva a intentarlo.");
+                $("#username").focus();
+                return;
+            }
+            
+        }
+        
         guardar_datos();
     }); 
     
@@ -50,7 +158,7 @@ function guardar_datos(){
     let datosPersona=dataPrepare("inf_personal");
     var idPersona=0;
     $.ajax({
-        url:'/usrmgr/infppl/save',
+        url:'/infppl/save',
         type:"POST",
         async:false,
         data:datosPersona,
@@ -58,7 +166,7 @@ function guardar_datos(){
             idPersona=res;
         },
         error: function(xhr, status, error){
-            
+            idPersona=0;
         }
     });
     
