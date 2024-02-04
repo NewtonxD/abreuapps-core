@@ -4,10 +4,12 @@
  */
 package com.dom.stp.omsa.control;
 
+import com.dom.stp.omsa.control.domain.dato.DatoServ;
 import com.dom.stp.omsa.control.domain.usuario.AccesoServ;
 import com.dom.stp.omsa.control.domain.usuario.Persona;
 import com.dom.stp.omsa.control.domain.usuario.PersonaServ;
 import com.dom.stp.omsa.control.domain.usuario.Usuario;
+import com.dom.stp.omsa.control.domain.usuario.UsuarioServ;
 import com.dom.stp.omsa.control.general.DateUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import java.text.ParseException;
@@ -43,6 +45,12 @@ public class InfPersonalCntr {
     
     @Autowired
     AccesoServ AccesoServicio;
+    
+    @Autowired
+    UsuarioServ UsuarioServicio;
+    
+    @Autowired
+    DatoServ dtserv;
     
     @PostMapping("/save")
     @ResponseBody
@@ -103,14 +111,35 @@ public class InfPersonalCntr {
 
     }
     
-    @PostMapping("/vfyCed")
+    @PostMapping("/vfyCedInUsr")
     @ResponseBody
     public boolean VerificarCedula(
             HttpServletRequest request, 
             Model model, 
             @RequestParam("cedula") String cedula
     ){
-       return ! PersonaServicio.obtenerPorCedula(cedula).isPresent();
+       Optional<Persona> p=PersonaServicio.obtenerPorCedula(cedula);
+       if (p.isPresent()) {
+           return ! UsuarioServicio.obtenerPorPersona(p.get()).isPresent();
+       }
+       else return true;
+    }
+    
+    
+    @PostMapping("/getAllInfCed")
+    public String ObtenerInfoPorCedula(
+            HttpServletRequest request, 
+            Model model, 
+            @RequestParam("cedula") String cedula,
+            @RequestParam("update") boolean update
+    ){
+        Persona p=PersonaServicio.obtenerPorCedula(cedula).orElse(new Persona());
+        p.setCedula(cedula);
+        model.addAttribute("sexo",dtserv.consultarPorGrupo("sexo"));
+        model.addAttribute("sangre",dtserv.consultarPorGrupo("Tipos Sanguineos"));
+        model.addAttribute("persona", p);
+        model.addAttribute("update",update);
+        return "fragments/usr_mgr_registro :: info-dinamica-personal";
     }
     
     

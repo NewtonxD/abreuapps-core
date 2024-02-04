@@ -8,8 +8,6 @@ import com.dom.stp.omsa.control.domain.dato.DatoServ;
 import com.dom.stp.omsa.control.domain.usuario.Usuario;
 import com.dom.stp.omsa.control.domain.usuario.AccesoServ;
 import com.dom.stp.omsa.control.general.ModelServ;
-import com.dom.stp.omsa.control.domain.dato.GrupoDatoServ;
-import com.dom.stp.omsa.control.domain.usuario.Persona;
 import com.dom.stp.omsa.control.domain.usuario.PersonaServ;
 import com.dom.stp.omsa.control.domain.usuario.UsuarioServ;
 import com.dom.stp.omsa.control.general.DateUtils;
@@ -43,9 +41,6 @@ public class UsuariosCntr {
     
     @Autowired
     DateUtils FechaUtils;
-
-    @Autowired
-    GrupoDatoServ gdserv;
     
     @Autowired
     DatoServ dtserv;
@@ -191,7 +186,7 @@ public class UsuariosCntr {
     
     @PostMapping("/vfyMail")
     @ResponseBody
-    public boolean GuardarPersona(
+    public boolean VerificarCorreo(
             HttpServletRequest request, 
             Model model, 
             @RequestParam("correo") String correo

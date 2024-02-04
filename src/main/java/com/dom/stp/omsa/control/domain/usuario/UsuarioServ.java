@@ -68,6 +68,10 @@ public class UsuarioServ {
         return repo.findByCorreo(correo);
     }
     
+    public Optional<Usuario> obtenerPorPersona(Persona persona){
+        return repo.findByPersona(persona);
+    }
+    
     public Optional<Usuario> obtenerPorId(Integer id){
         return repo.findById(id);
     }
