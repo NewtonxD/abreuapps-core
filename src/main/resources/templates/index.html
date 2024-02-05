@@ -30,7 +30,9 @@
             <div id="layoutSidenav_content">
                 <main th:replace="~{fragments/general.html :: content-default}"></main>
             </div>
+            <div class="overlay" onclick="hideSidebar()"></div>
         </div>
+        
         <script th:src="@{/content/js/lib/bootstrap.bundle.min.js}"></script>
         <script	th:src="@{/content/js/lib/chart.min.js}" type="module"></script>
         <script th:src="@{/content/assets/demo/chart-area-demo.js}"></script>

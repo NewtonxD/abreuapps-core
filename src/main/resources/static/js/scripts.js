@@ -1,11 +1,12 @@
-$(function(){
-    
-    $(".sidebarToggle").click(event => {
-        event.preventDefault();
-        document.body.classList.toggle('sb-sidenav-toggled');
-        
-    });
-    
-});
+
+function toggleSidebar() {
+  //$(".toggle-btn").css("display","none");
+  $("body").toggleClass("show-sidebar");
+}
+
+function hideSidebar() {
+  $("body").removeClass("show-sidebar");
+  //$(".toggle-btn").css("display","block");
+}
 
 

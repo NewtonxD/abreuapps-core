@@ -1,3 +1,5 @@
+* { scroll-behavior: auto !important; }
+
 html,
 body {
   height: 100%;
@@ -39,4 +41,63 @@ body {
 
 .bloqueado{
     cursor:not-allowed;
+}
+
+
+.main-content {
+  flex: 1;
+  padding: 20px;
+}
+  
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background-color: #333;
+  color: white;
+  padding: 20px;
+  box-sizing: border-box;
+  z-index: 1000;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-in-out;
+}
+
+@media all and (max-width: 480px)  {
+  .sidebar {
+    width: 80vw;
+  }
+}
+
+@media all and (max-width: 720px)   {
+  .sidebar {
+    width: 60vw;
+  }
+}
+
+@media all and (min-width: 721px)   {
+  
+  .sidebar {
+    width: 40vw;
+  }
+  
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 999;
+  display: none;
+}
+
+.show-sidebar .sidebar {
+  transform: translateX(0);
+}
+
+.show-sidebar .overlay {
+  display: block;
 }
