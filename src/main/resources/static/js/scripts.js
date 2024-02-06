@@ -1,11 +1,10 @@
-$(function(){
-    
-    $(".sidebarToggle").click(event => {
-        event.preventDefault();
-        document.body.classList.toggle('sb-sidenav-toggled');
-        
-    });
-    
-});
+
+function toggleSidebar() {
+  $("body").toggleClass("show-sidebar");
+}
+
+function hideSidebar() {
+  $("body").removeClass("show-sidebar");
+}
 
 

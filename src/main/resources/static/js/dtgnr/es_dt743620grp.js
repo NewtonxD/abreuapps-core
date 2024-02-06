@@ -27,7 +27,7 @@ function createEventSource() {
         //$("#act_dt").html(data["date"]);
         
         var notificacion=new Audio('/content/audio/n44.mp3');
-        notificacion.volume=0.3;
+        notificacion.volume=1;
         notificacion.play();
         
     };
