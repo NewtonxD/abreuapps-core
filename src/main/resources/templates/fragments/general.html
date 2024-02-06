@@ -59,10 +59,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                 </li>
             </ul>
         </nav>
-        <div id="layoutSidenav_nav" th:fragment="menu">
+        <div id="layoutSidenav_nav" class="bg-dark" th:fragment="menu">
             <nav class="sidebar" id="sidenavAccordion">
-                <button class="btn toggle-btn" onclick="toggleSidebar()">X</button><!-- icono de barritas  -->
-    
                 <div class="sb-sidenav-menu">
                     <div class="nav">
                         <div class="sb-sidenav-menu-heading">MODULOS</div>
@@ -166,18 +164,38 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                     Autorizaciones y Aprobaciones
                                 </a>
                             </nav>
+                        </div>                        
+                        <a
+                            class="nav-link collapsed"
+                            href="#"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapseLayouts3"
+                            aria-expanded="false"
+                            aria-controls="collapseLayouts3"
+                            >
+                            <i class="fa-solid fa-gear"></i>&MediumSpace; Sistemas
+                            <div class="sb-sidenav-collapse-arrow">
+                                <i class="fas fa-angle-down"></i>
+                            </div>
+                        </a>
+                        <div
+                            class="collapse"
+                            id="collapseLayouts3"
+                            aria-labelledby="headingThree"
+                            data-bs-parent="#sidenavAccordion"
+                            >
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link acceso" href="#" id="dat_gen_principal" th:if="${dat_gen_principal}">
+                                    <i class="fas fa-table"></i>&MediumSpace; Datos Generales
+                                </a>
+                                <a class="nav-link acceso" href="#" id="sistema_configuracion">
+                                    <i class="fa-solid fa-gear"></i>&MediumSpace; Configuración
+                                </a>
+                                <a class="nav-link acceso" href="#" id="usr_mgr_principal" th:if="${usr_mgr_principal}">
+                                    <i class="fa-solid fa-users"></i>&MediumSpace; Usuarios
+                                </a>
+                            </nav>
                         </div>
-
-                        <div class="sb-sidenav-menu-heading">Sistema</div>
-                        <a class="nav-link acceso" href="#" id="dat_gen_principal" th:if="${dat_gen_principal}">
-                            <i class="fas fa-table"></i>&MediumSpace; Datos Generales
-                        </a>
-                        <a class="nav-link acceso" href="#" id="sistema_configuracion">
-                            <i class="fa-solid fa-gear"></i>&MediumSpace; Configuración
-                        </a>
-                        <a class="nav-link acceso" href="#" id="usr_mgr_principal" th:if="${usr_mgr_principal}">
-                            <i class="fa-solid fa-users"></i>&MediumSpace; Usuarios
-                        </a>
                     </div>
                 </div>
                 <div class="sb-sidenav-footer">
@@ -198,7 +216,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                 </ol>
             </div>
         </main>
-        
+
 
         <footer class="py-4 bg-light mt-auto" th:fragment="footer">
             <div class="container-fluid px-4">
