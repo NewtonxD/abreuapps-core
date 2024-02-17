@@ -88,7 +88,7 @@ function obtenerInfoPorCedula(){
 function verificarUsuario(){
     var respuesta = false;
     
-    if($("#username").val()===$("#original_username").val()) respuesta=true;
+    if($("#username").val()===$("#original_usuario").val()) respuesta=true;
     else{
         $.ajax({
             url:'/usrmgr/vfyUsr',
@@ -104,6 +104,39 @@ function verificarUsuario(){
         });
     }
     return respuesta;
+}
+
+function cerrarSesion(){
+    let data={ "usuario":$("#original_usuario").val() };
+    $("#content-page").css("overflow-y","hidden");
+    var fadeout=$("#content-page").hide().delay(150).promise();
+    
+    $.ajax({
+        url:'/usrmgr/closeUsrSess',
+        type:"POST",
+        async:false,
+        data:data,
+        success: function(res){
+
+            if(res.indexOf('Login') !== -1)
+                    window.location.href="/auth/login?logout=true";
+
+            fadeout.then(function(){
+                $("#content-page").html(res).fadeIn(200).promise().then(function(){
+                    $("#content-page").css("overflow-y","hidden");
+                }); 
+            });
+        },
+        error: function(xhr, status, error){
+            fadeout.then(function(){
+                var fadein=$("#content-page").html(xhr.responseText).fadeIn(200).promise();
+
+                fadein.then(function(){
+                    $("#content-page").css("overflow-y","hidden");
+                }); 
+            });
+        }
+    });
 }
 
 $(function(){
@@ -147,6 +180,9 @@ $(function(){
         
         guardar_datos();
     }); 
+    
+    
+    $("#BtnCloseSess").on("click", cerrarSesion);
     
 });
 

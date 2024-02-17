@@ -13,6 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import com.dom.stp.omsa.control.domain.usuario.UsuarioRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 
 @Configuration
 @RequiredArgsConstructor
@@ -46,6 +48,11 @@ public class AppConf {
     @Bean
     public HttpSessionEventPublisher httpSessionEventPublisher() {
         return new HttpSessionEventPublisher();
+    }
+    
+    @Bean
+    public SessionRegistry sessionRegistry() { 
+        return new SessionRegistryImpl(); 
     }
 
 }

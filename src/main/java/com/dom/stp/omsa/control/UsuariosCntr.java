@@ -121,6 +121,7 @@ public class UsuariosCntr {
 
         if (ss) {
             
+            UsuarioServicio.CerrarSesion(usuario.getUsername());
             Usuario d = UsuarioServicio.guardar(usuario, u.getId(), ext);
             model.addAttribute("status", true);
             model.addAttribute("msg", "Registro guardado exitosamente!");
@@ -193,6 +194,35 @@ public class UsuariosCntr {
     ){
        return ! UsuarioServicio.obtenerPorCorreo(correo).isPresent();
     }
-            
+    
+    
+    @PostMapping(value="/closeUsrSess")
+    public String CerrarSesionUsuario(
+            HttpServletRequest request, 
+            Model model, 
+            String usuario
+    ) throws ParseException {
+        
+        Usuario u=(Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        
+        Map<String,Object> m=AccesoServicio.consultarAccesosPantallaUsuario(u.getId(),"usr_mgr_registro");
+ 
+        if(m.get("usr_mgr_registro")==null || (! (Boolean)m.get("usr_mgr_registro"))
+        ){
+            model.addAttribute("status", false);
+            model.addAttribute("msg", "No tiene permisos para realizar esta acción!");
+            return "fragments/usr_mgr_principal :: content-default";
+        }
+        
+        UsuarioServicio.CerrarSesion(usuario);
+        
+        model.addAttribute("status", true);
+        model.addAttribute("msg", "Sesión Cerrada Exitosamente!");
+
+        dmService.load("usr_mgr_principal", model, u.getId());
+        
+        return "fragments/usr_mgr_principal :: content-default";
+
+    }        
     
 }
