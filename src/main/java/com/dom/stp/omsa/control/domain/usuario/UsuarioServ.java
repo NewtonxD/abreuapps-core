@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +32,9 @@ public class UsuarioServ {
     
     @Autowired
     PasswordEncoder passwordEncoder;
+    
+    @Autowired
+    private SessionRegistry sessionRegistry;
     
     public String generarPassword(){
 
@@ -57,7 +63,8 @@ public class UsuarioServ {
     }
     
     public List<Usuario> consultar(){
-        return repo.findAll();
+        List<Usuario> ul=repo.findAll();        
+        return ul;
     }
     
     public Optional<Usuario> obtener(String usuario){
@@ -74,5 +81,20 @@ public class UsuarioServ {
     
     public Optional<Usuario> obtenerPorId(Integer id){
         return repo.findById(id);
+    }
+    
+    public void CerrarSesion(String usuario){
+        List<Object> principals = sessionRegistry.getAllPrincipals();
+        for (Object principal : principals) {
+            if (principal instanceof UserDetails) {
+                UserDetails userDetails = (UserDetails) principal;
+                if (userDetails.getUsername().equals(usuario)) {
+                    List<SessionInformation> sessions = sessionRegistry.getAllSessions(principal, false);
+                    for (SessionInformation session : sessions) {
+                        session.expireNow();
+                    }
+                }
+            }
+        }
     }
 }

@@ -26,7 +26,6 @@ import org.springframework.ui.Model;
  *  
  */
 
-@Transactional
 @Service
 public class ModelServ {
     
