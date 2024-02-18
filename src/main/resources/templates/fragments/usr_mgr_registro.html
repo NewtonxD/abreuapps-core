@@ -88,7 +88,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                         <article>
                                             <h5>Información Personal &nbsp;<button type="button" class="btn collapsed" data-bs-toggle="collapse" data-bs-target="#inf_personal"><i class="fas fa-angle-down"></i></button></h5>
                                             <div class="row collapse" id="inf_personal" th:object="${persona}" >
-                                                <div  th:fragment="info-dinamica-personal" id="info-dinamica-personal">  
+                                                <div  th:fragment="info-dinamica-personal" id="info-dinamica-personal" class="row">  
                                                     <th:block th:if="${update}">
                                                         <input  type="number" th:field="*{id}" style="display: none; width: 1px;height: 1px;" required>
 
