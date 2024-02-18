@@ -20,7 +20,7 @@ $(function(){
             data: {id:id},
             success: function(xhr, status, error) {
                 
-                if(xhr.indexOf('Login') !== -1)
+                if(xhr.indexOf('Login') !== -1 || xhr.indexOf('This session has been expired') !== -1)
                     window.location.href="/auth/login?logout=true";
                 
               fadeout.then(function(){
@@ -34,7 +34,11 @@ $(function(){
                 });
             },
             error: function(xhr, status, error) {
-              // Maneja cualquier error que ocurra durante la llamada                
+              // Maneja cualquier error que ocurra durante la llamada    
+                
+                if(xhr.responseText.indexOf('This session has been expired') !== -1)
+                    window.location.href="/auth/login?logout=true";  
+                
               fadeout.then(function(){
                     var fadein=$("#content-page").html(xhr.responseText).fadeIn(200).promise();
                     

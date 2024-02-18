@@ -68,6 +68,9 @@ public class Usuario implements UserDetails {
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date fecha_actualizacion;
     
+    @Column(name = "pwd_chg")
+    private boolean cambiarPassword;
+    
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "inf_ppl_id") // Nombre de la columna de clave foránea
     private Persona persona;
@@ -99,7 +102,7 @@ public class Usuario implements UserDetails {
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return activo;
+        return true;
     }
 
     @Override

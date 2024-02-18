@@ -8,6 +8,7 @@ import jakarta.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.session.SessionInformation;
@@ -36,13 +37,31 @@ public class UsuarioServ {
     @Autowired
     private SessionRegistry sessionRegistry;
     
-    public String generarPassword(){
+    private static final String LETTERS = "@#$%!AbCdEfGhIjKlMnOpQrRtUvWxYz-*[]";
+    private static final String NUMBERS = "0123456789";
+    private static final Random RANDOM = new Random();
 
-        //password por defecto
-        Double instant=new Date().getTime()+(Math.random());
-        String p=String.valueOf(instant).split("\\.")[1];
-        int len=p.length();
-        return p.substring(len-7, len-1);
+    public static String generarPassword() {
+        StringBuilder password = new StringBuilder();
+
+        // Generate two random letters
+        for (int i = 0; i < 2; i++) {
+            char letter = LETTERS.charAt(RANDOM.nextInt(LETTERS.length()));
+            password.append(letter);
+        }
+
+        // Generate six random numbers
+        for (int i = 0; i < 6; i++) {
+            char number = NUMBERS.charAt(RANDOM.nextInt(NUMBERS.length()));
+            password.append(number);
+        }
+
+        return password.toString();
+    }
+    
+    public Usuario cambiarPassword(Usuario u, String password){
+        u.setContraseña(passwordEncoder.encode(password));
+        return guardar(u,u.getId(),true);
     }
     
     public Usuario guardar(Usuario gd, Integer idUsuario,boolean existe){
@@ -52,7 +71,9 @@ public class UsuarioServ {
         }else{
             String nuevaContraseña=generarPassword();
             //enviar al correo aqui
-            log.info("\tContraseña nueva > "+nuevaContraseña);
+            log.info("\n\tContraseña nueva > "+nuevaContraseña+"\n");
+            
+            
             gd.setContraseña(passwordEncoder.encode(nuevaContraseña));
             gd.setHecho_por(idUsuario);
             gd.setFecha_registro(new Date());

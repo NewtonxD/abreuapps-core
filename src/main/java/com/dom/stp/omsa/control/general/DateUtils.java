@@ -4,33 +4,53 @@
  */
 package com.dom.stp.omsa.control.general;
 
+/**
+ *
+ * @author cabreu
+ */
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import org.springframework.stereotype.Service;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.convert.converter.Converter;
 
-/**
- *  
- * Utilidades para manejar y convertir fechas de un formato a otro.
- *
- * @author Carlos Abreu Pérez
- *  
- */
-
-@Service
-public class DateUtils {
+@Slf4j
+public class DateUtils implements Converter<String, Date> {
     
-
+    public SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    
     public SimpleDateFormat FechaFormato1 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss a");
     
     public SimpleDateFormat FechaFormato2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     
+    @Override
+    public Date convert(String source) {
+        try {
+            return dateFormat.parse(source);
+        } catch (ParseException e) {
+            // Handle the parse exception appropriately
+            log.error(" Error al parsear fecha : "+e.getLocalizedMessage());
+            return null;
+        }
+    }
+    
+    
     public Date Formato2ToDate(String str) throws ParseException {
+        try{
         return FechaFormato2.parse(str);
+        } catch (ParseException e){
+            log.error(" Error al parsear fecha : "+e.getLocalizedMessage());
+            return null;
+        }
     }
     
     public Date Formato1ToDate(String str) throws ParseException {
-        return FechaFormato1.parse(str);
+        try{
+            return FechaFormato1.parse(str);
+        } catch (ParseException e){
+            log.error(" Error al parsear fecha : "+e.getLocalizedMessage());
+            return null;
+        }
     }
-
 }

@@ -4,7 +4,7 @@
  */
 package com.dom.stp.omsa.conf;
 
-import com.dom.stp.omsa.control.general.StringToDateConverter;
+import com.dom.stp.omsa.control.general.DateUtils;
 import java.util.concurrent.TimeUnit;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
@@ -31,7 +31,7 @@ public class WebConf implements WebMvcConfigurer {
     
     @Override
     public void addFormatters(FormatterRegistry registry) {
-        registry.addConverter(new StringToDateConverter());
+        registry.addConverter(new DateUtils());
     }
     
 }
