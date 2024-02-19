@@ -121,7 +121,7 @@ public class UsuariosCntr {
 
         if (ss) {
             
-            UsuarioServicio.CerrarSesion(usuario.getUsername());
+            UsuarioServicio.cerrarSesion(usuario.getUsername());
             Usuario d = UsuarioServicio.guardar(usuario, u.getId(), ext);
             model.addAttribute("status", true);
             model.addAttribute("msg", "Registro guardado exitosamente!");
@@ -214,7 +214,7 @@ public class UsuariosCntr {
             return "fragments/usr_mgr_principal :: content-default";
         }
         
-        UsuarioServicio.CerrarSesion(usuario);
+        UsuarioServicio.cerrarSesion(usuario);
         
         model.addAttribute("status", true);
         model.addAttribute("msg", "Sesión Cerrada Exitosamente!");
@@ -225,4 +225,34 @@ public class UsuariosCntr {
 
     }        
     
+    @PostMapping(value="/resetPwd")
+    public String ResetearContraseña(
+            HttpServletRequest request, 
+            Model model, 
+            String usuario
+    ) throws ParseException {
+        
+        Usuario u=(Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        
+        Map<String,Object> m=AccesoServicio.consultarAccesosPantallaUsuario(u.getId(),"usr_mgr_registro");
+ 
+        if(m.get("usr_mgr_registro")==null || (! (Boolean)m.get("usr_mgr_registro"))
+        ){
+            model.addAttribute("status", false);
+            model.addAttribute("msg", "No tiene permisos para realizar esta acción!");
+            return "fragments/usr_mgr_principal :: content-default";
+        }
+        
+        Usuario us=UsuarioServicio.obtener(usuario).get();
+        UsuarioServicio.cerrarSesion(usuario);
+        UsuarioServicio.cambiarPassword(us,UsuarioServicio.generarPassword(),true);
+ 
+        model.addAttribute("status", true);
+        model.addAttribute("msg", "Contraseña Reseteada Exitosamente! Comuniquese con el usuario para que revise su correo.");
+
+        dmService.load("usr_mgr_principal", model, u.getId());
+        
+        return "fragments/usr_mgr_principal :: content-default";
+
+    }   
 }

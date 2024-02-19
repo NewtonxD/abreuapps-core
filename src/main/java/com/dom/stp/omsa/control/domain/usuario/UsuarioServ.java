@@ -4,6 +4,7 @@
  */
 package com.dom.stp.omsa.control.domain.usuario;
 
+import com.dom.stp.omsa.control.general.CorreoServ;
 import jakarta.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
@@ -35,13 +36,16 @@ public class UsuarioServ {
     PasswordEncoder passwordEncoder;
     
     @Autowired
+    CorreoServ correoServicio;
+    
+    @Autowired
     private SessionRegistry sessionRegistry;
     
     private static final String LETTERS = "@#$%!AbCdEfGhIjKlMnOpQrRtUvWxYz-*[]";
     private static final String NUMBERS = "0123456789";
     private static final Random RANDOM = new Random();
 
-    public static String generarPassword() {
+    public String generarPassword() {
         StringBuilder password = new StringBuilder();
 
         // Generate two random letters
@@ -59,8 +63,14 @@ public class UsuarioServ {
         return password.toString();
     }
     
-    public Usuario cambiarPassword(Usuario u, String password){
-        u.setContraseña(passwordEncoder.encode(password));
+    public Usuario cambiarPassword(Usuario u, String Contraseña, boolean enviaCorreo){
+        
+        correoServicio.enviarMensajeSimple(
+                u.getCorreo(),
+                "Sistema: Su contraseña fue actualizada", 
+                "Su nueva contraseña es "+Contraseña+" . Al ingresar podra colocar una nueva contraseña.");
+        u.setContraseña(passwordEncoder.encode(Contraseña));
+        u.setCambiarPassword(true);
         return guardar(u,u.getId(),true);
     }
     
@@ -70,10 +80,12 @@ public class UsuarioServ {
             gd.setActualizado_por(idUsuario);
         }else{
             String nuevaContraseña=generarPassword();
-            //enviar al correo aqui
-            log.info("\n\tContraseña nueva > "+nuevaContraseña+"\n");
+            correoServicio.enviarMensajeSimple(
+                gd.getCorreo(),
+                "Sistema: Su contraseña fue actualizada", 
+                "Su nueva contraseña es "+nuevaContraseña+" . Al ingresar podra colocar una nueva contraseña.");
             
-            
+            gd.setCambiarPassword(true);
             gd.setContraseña(passwordEncoder.encode(nuevaContraseña));
             gd.setHecho_por(idUsuario);
             gd.setFecha_registro(new Date());
@@ -104,7 +116,7 @@ public class UsuarioServ {
         return repo.findById(id);
     }
     
-    public void CerrarSesion(String usuario){
+    public void cerrarSesion(String usuario){
         List<Object> principals = sessionRegistry.getAllPrincipals();
         for (Object principal : principals) {
             if (principal instanceof UserDetails) {
