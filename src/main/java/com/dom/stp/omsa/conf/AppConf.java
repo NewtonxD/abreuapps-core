@@ -54,5 +54,5 @@ public class AppConf {
     public SessionRegistry sessionRegistry() { 
         return new SessionRegistryImpl(); 
     }
-
+    
 }

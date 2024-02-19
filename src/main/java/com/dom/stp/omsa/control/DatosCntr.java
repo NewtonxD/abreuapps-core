@@ -53,7 +53,7 @@ public class DatosCntr {
 
     @Autowired
     SSECntr SSEControlador;
-    
+
     
     /*----Grupos de Datos-----*/
 

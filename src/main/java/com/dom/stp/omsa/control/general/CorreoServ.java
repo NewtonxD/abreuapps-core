@@ -22,7 +22,7 @@ public class CorreoServ {
     private JavaMailSender emailSender;
     
     @Async
-    public void sendSimpleMessage(String Para, String Titulo, String Texto) {
+    public void enviarMensajeSimple(String Para, String Titulo, String Texto) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(Para);
         message.setSubject(Titulo);
