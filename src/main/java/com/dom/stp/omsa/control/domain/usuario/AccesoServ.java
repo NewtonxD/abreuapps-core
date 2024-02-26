@@ -8,7 +8,7 @@ import jakarta.transaction.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,10 +18,10 @@ import org.springframework.stereotype.Service;
 
 @Transactional
 @Service
+@RequiredArgsConstructor
 public class AccesoServ {
     
-    @Autowired
-    AccesoUsuarioRepo repo;
+    private final AccesoUsuarioRepo repo;
     
     private Object convertirValor(Object valor) {
         if (valor instanceof String) {

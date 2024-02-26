@@ -15,8 +15,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.util.Map;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,23 +33,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/infppl")
 @Slf4j
+@RequiredArgsConstructor
 public class InfPersonalCntr {
     
+    private final PersonaServ PersonaServicio;
     
-    @Autowired
-    PersonaServ PersonaServicio;
+    private final DateUtils FechaUtils;
     
-    @Autowired
-    DateUtils FechaUtils;
+    private final AccesoServ AccesoServicio;
     
-    @Autowired
-    AccesoServ AccesoServicio;
+    private final UsuarioServ UsuarioServicio;
     
-    @Autowired
-    UsuarioServ UsuarioServicio;
-    
-    @Autowired
-    DatoServ dtserv;
+    private final DatoServ dtserv;
     
     @PostMapping("/save")
     @ResponseBody

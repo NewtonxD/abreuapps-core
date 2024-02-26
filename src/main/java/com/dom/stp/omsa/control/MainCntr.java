@@ -9,8 +9,8 @@ import com.dom.stp.omsa.control.domain.usuario.Usuario;
 import com.dom.stp.omsa.control.domain.usuario.AccesoServ;
 import com.dom.stp.omsa.control.general.ModelServ;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,16 +25,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequestMapping("/main")
 @Slf4j
+@RequiredArgsConstructor
 public class MainCntr {
 
-    @Autowired
-    ModelServ DataModelServicio;
+    private final ModelServ DataModelServicio;
 
-    @Autowired
-    AccesoServ AccesosServicio;
+    private final AccesoServ AccesosServicio;
     
-    @Autowired
-    PersonaServ PersonaServicio;
+    private final PersonaServ PersonaServicio;
 
     @RequestMapping({"/", "index"})
     public String MainPage(

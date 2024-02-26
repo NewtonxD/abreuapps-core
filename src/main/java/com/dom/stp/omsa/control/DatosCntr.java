@@ -19,8 +19,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -34,25 +34,20 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 @Controller
 @Slf4j
+@RequiredArgsConstructor
 public class DatosCntr {
 
-    @Autowired
-    DateUtils FechaUtils;
+    private final DateUtils FechaUtils;
 
-    @Autowired
-    GrupoDatoServ GrupoServicio;
+    private final GrupoDatoServ GrupoServicio;
 
-    @Autowired
-    AccesoServ AccesoServicio;
+    private final AccesoServ AccesoServicio;
 
-    @Autowired
-    ModelServ ModeloServicio;
+    private final ModelServ ModeloServicio;
 
-    @Autowired
-    DatoServ DatoServicio;
+    private final DatoServ DatoServicio;
 
-    @Autowired
-    SSECntr SSEControlador;
+    private final SSECntr SSEControlador;
 
     
     /*----Grupos de Datos-----*/

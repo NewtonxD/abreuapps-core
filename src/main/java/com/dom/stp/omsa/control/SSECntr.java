@@ -29,6 +29,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @CrossOrigin
 public class SSECntr {
     
+    //only here we need autowired
     @Autowired
     SSEServ SSEServicio;
     

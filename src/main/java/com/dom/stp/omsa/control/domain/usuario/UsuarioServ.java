@@ -10,8 +10,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,19 +27,16 @@ import org.springframework.stereotype.Service;
 @Transactional
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class UsuarioServ {
     
-    @Autowired
-    UsuarioRepo repo;
+    private final UsuarioRepo repo;
     
-    @Autowired
-    PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
     
-    @Autowired
-    CorreoServ correoServicio;
+    private final CorreoServ correoServicio;
     
-    @Autowired
-    private SessionRegistry sessionRegistry;
+    private final  SessionRegistry sessionRegistry;
     
     private static final String LETTERS = "@#$%!AbCdEfGhIjKlMnOpQrRtUvWxYz-*[]";
     private static final String NUMBERS = "0123456789";

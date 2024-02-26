@@ -7,7 +7,7 @@ package com.dom.stp.omsa.control.domain.dato;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**
@@ -19,10 +19,10 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
+@RequiredArgsConstructor
 public class GrupoDatoServ {
     
-    @Autowired
-    GrupoDatoRepo repo;
+    private final GrupoDatoRepo repo;
     
     public GrupoDato guardar(GrupoDato gd, Integer idUsuario,boolean existe){
         if(existe){ 
