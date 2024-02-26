@@ -15,7 +15,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
     </head>
     <body>
         <nav
-            class="sb-topnav navbar navbar-expand navbar-dark bg-dark"
+            class="sb-topnav navbar navbar-expand navbar-dark bg-dark align-center"
             th:fragment="header"
             >
             <!-- Navbar Brand-->
@@ -25,7 +25,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             <!-- Sidebar Toggle-->
             <button
                 type="button"
-                class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0 toggle-btn"
+                class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0 toggle-btn text-white"
                 onclick="toggleSidebar()"
                 >
                 <i class="fas fa-bars"></i>
@@ -59,148 +59,176 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                 </li>
             </ul>
         </nav>
-        <div id="layoutSidenav_nav" class="bg-dark" th:fragment="menu">
-            <nav class="sidebar" id="sidenavAccordion">
+        <div id="layoutSidenav_nav" th:fragment="menu">
+            <nav id="sidenavAccordion" class="bg-dark sidebar flex-shrink-0 p-3" data-bs-theme="dark">
                 <div class="sb-sidenav-menu">
-                    <div class="nav">
-                        <div class="sb-sidenav-menu-heading">MODULOS</div>
-                        <a
-                            class="nav-link collapsed"
-                            href="#"
-                            data-bs-toggle="collapse"
-                            data-bs-target="#collapseLayouts1"
-                            aria-expanded="false"
-                            aria-controls="collapseLayouts1"
-                            >
-                            <i class="fa-solid fa-calculator"></i>&MediumSpace; Contabilidad
-                            <div class="sb-sidenav-collapse-arrow">
-                                <i class="fas fa-angle-down"></i>
+                    <a class="d-flex align-items-center pb-3 mb-3 text-decoration-none text-white">
+                        <span class="fs-4 fw-semibold">Proyecto</span>
+                    </a>
+                    <ul class="nav list-unstyled ps-0">
+                        <li>
+                            <button
+                                class="nav-link btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#collapseLayouts1"
+                                aria-expanded="false"
+                                aria-controls="collapseLayouts1"
+                                >
+                                <i class="fa-solid fa-calculator"></i>&MediumSpace; Contabilidad
+                            </button>
+                            <div
+                                class="collapse"
+                                id="collapseLayouts1"
+                                aria-labelledby="headingOne"
+                                data-bs-parent="#sidenavAccordion"
+                                >
+                                <ul class="sb-sidenav-menu-nested nav btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                    <li>
+                                        <a
+                                            class="nav-link acceso  link-body-emphasis d-inline-flex text-decoration-none rounded"
+                                            href="#"
+                                            id="contabilidad_registro_transacciones"
+                                            >
+                                            &MediumSpace; Registro de Transacciones
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a
+                                            class="nav-link acceso  link-body-emphasis d-inline-flex text-decoration-none rounded"
+                                            href="#"
+                                            id="contabilidad_conciliacion_bancaria"
+                                            >
+                                            &MediumSpace; Conciliación Bancaría
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a
+                                            class="nav-link acceso  link-body-emphasis d-inline-flex text-decoration-none rounded"
+                                            href="#"
+                                            id="contabilidad_cuentas_bancarias"
+                                            >
+                                            &MediumSpace; Cuentas Bancanrías
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a
+                                            class="nav-link acceso  link-body-emphasis d-inline-flex text-decoration-none rounded"
+                                            href="#"
+                                            id="contabilidad_presupuesto"
+                                            >
+                                            &MediumSpace; Gestión de Presupuesto
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link acceso  link-body-emphasis d-inline-flex text-decoration-none rounded" href="#" id="contabilidad_impuestos">
+                                            &MediumSpace; Gestión de Impuestos
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link acceso  link-body-emphasis d-inline-flex text-decoration-none rounded" href="#" id="contabilidad_informes">
+                                            &MediumSpace; Informes Financieros
+                                        </a>
+                                    </li>
+                                </ul>
                             </div>
-                        </a>
-                        <div
-                            class="collapse"
-                            id="collapseLayouts1"
-                            aria-labelledby="headingOne"
-                            data-bs-parent="#sidenavAccordion"
-                            >
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a
-                                    class="nav-link acceso"
-                                    href="#"
-                                    id="contabilidad_registro_transacciones"
-                                    >
-                                    Registro de Transacciones
-                                </a>
-                                <a
-                                    class="nav-link acceso"
-                                    href="#"
-                                    id="contabilidad_conciliacion_bancaria"
-                                    >
-                                    Conciliación Bancaría
-                                </a>
-                                <a
-                                    class="nav-link acceso"
-                                    href="#"
-                                    id="contabilidad_cuentas_bancarias"
-                                    >
-                                    Cuentas Bancanrías
-                                </a>
-                                <a
-                                    class="nav-link acceso"
-                                    href="#"
-                                    id="contabilidad_presupuesto"
-                                    >
-                                    Gestión de Presupuesto
-                                </a>
-                                <a class="nav-link acceso" href="#" id="contabilidad_impuestos">
-                                    Gestión de Impuestos
-                                </a>
-                                <a class="nav-link acceso" href="#" id="contabilidad_informes">
-                                    Informes Financieros
-                                </a>
-                            </nav>
-                        </div>
-                        <a
-                            class="nav-link collapsed"
-                            href="#"
-                            data-bs-toggle="collapse"
-                            data-bs-target="#collapseLayouts2"
-                            aria-expanded="false"
-                            aria-controls="collapseLayouts2"
-                            >
-                            <i class="fas fa-receipt"></i>&MediumSpace; Cuentas x Pagar
-                            <div class="sb-sidenav-collapse-arrow">
-                                <i class="fas fa-angle-down"></i>
+                        </li>
+                        <li>
+                            <button
+                                class="nav-link btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#collapseLayouts2"
+                                aria-expanded="false"
+                                aria-controls="collapseLayouts2"
+                                >
+                                <i class="fas fa-receipt"></i>&MediumSpace; Cuentas x Pagar
+                            </button>
+                            <div
+                                class="collapse"
+                                id="collapseLayouts2"
+                                aria-labelledby="headingTwo"
+                                data-bs-parent="#sidenavAccordion"
+                                >
+                                <ul class="sb-sidenav-menu-nested nav btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                    <li>
+                                        <a class="nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded " href="#" id="cxp_registro_facturas">
+                                            &MediumSpace; Registro de Facturas
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded " href="#" id="cxp_control_pagos">
+                                            &MediumSpace; Control de Pagos
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded " href="#" id="cxp_informes">
+                                            &MediumSpace; Informes y Análisis
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a
+                                            class="nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded "
+                                            href="#"
+                                            id="cxp_comunicacion_proveedores"
+                                            >
+                                            &MediumSpace; Comunicación con Proveedores
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a
+                                            class="nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded "
+                                            href="#"
+                                            id="cxp_autorizaciones_aprobaciones"
+                                            >
+                                            &MediumSpace; Autorizaciones y Aprobaciones
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div> 
+                        </li>
+                        <li class="border-top my-3"></li>
+                        <li class="mb-1">                       
+                            <button
+                                class="nav-link btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed "
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#collapseLayouts3"
+                                aria-expanded="false"
+                                aria-controls="collapseLayouts3"
+                                >
+                                <i class="fa-solid fa-gear"></i>&MediumSpace; Sistemas
+                            </button>
+                            <div
+                                class="collapse"
+                                id="collapseLayouts3"
+                                aria-labelledby="headingThree"
+                                data-bs-parent="#sidenavAccordion"
+                                >
+                                <ul class="sb-sidenav-menu-nested nav btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                    <li>
+                                        <a class="nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded " href="#" id="dat_gen_principal" th:if="${dat_gen_principal}">
+                                            &MediumSpace; Datos Generales
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded " href="#" id="sistema_configuracion">
+                                            &MediumSpace; Configuración
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded " href="#" id="usr_mgr_principal" th:if="${usr_mgr_principal}">
+                                            &MediumSpace; Usuarios
+                                        </a>
+                                    </li>
+                                </ul>
                             </div>
-                        </a>
-                        <div
-                            class="collapse"
-                            id="collapseLayouts2"
-                            aria-labelledby="headingTwo"
-                            data-bs-parent="#sidenavAccordion"
-                            >
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link acceso" href="#" id="cxp_registro_facturas">
-                                    Registro de Facturas
-                                </a>
-                                <a class="nav-link acceso" href="#" id="cxp_control_pagos">
-                                    Control de Pagos
-                                </a>
-                                <a class="nav-link acceso" href="#" id="cxp_informes">
-                                    Informes y Análisis
-                                </a>
-                                <a
-                                    class="nav-link acceso"
-                                    href="#"
-                                    id="cxp_comunicacion_proveedores"
-                                    >
-                                    Comunicación con Proveedores
-                                </a>
-                                <a
-                                    class="nav-link acceso"
-                                    href="#"
-                                    id="cxp_autorizaciones_aprobaciones"
-                                    >
-                                    Autorizaciones y Aprobaciones
-                                </a>
-                            </nav>
-                        </div>                        
-                        <a
-                            class="nav-link collapsed"
-                            href="#"
-                            data-bs-toggle="collapse"
-                            data-bs-target="#collapseLayouts3"
-                            aria-expanded="false"
-                            aria-controls="collapseLayouts3"
-                            >
-                            <i class="fa-solid fa-gear"></i>&MediumSpace; Sistemas
-                            <div class="sb-sidenav-collapse-arrow">
-                                <i class="fas fa-angle-down"></i>
-                            </div>
-                        </a>
-                        <div
-                            class="collapse"
-                            id="collapseLayouts3"
-                            aria-labelledby="headingThree"
-                            data-bs-parent="#sidenavAccordion"
-                            >
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link acceso" href="#" id="dat_gen_principal" th:if="${dat_gen_principal}">
-                                    <i class="fas fa-table"></i>&MediumSpace; Datos Generales
-                                </a>
-                                <a class="nav-link acceso" href="#" id="sistema_configuracion">
-                                    <i class="fa-solid fa-gear"></i>&MediumSpace; Configuración
-                                </a>
-                                <a class="nav-link acceso" href="#" id="usr_mgr_principal" th:if="${usr_mgr_principal}">
-                                    <i class="fa-solid fa-users"></i>&MediumSpace; Usuarios
-                                </a>
-                            </nav>
-                        </div>
-                    </div>
+                        </li>
+                    </ul>
                 </div>
-                <div class="sb-sidenav-footer">
-                    <div class="small">Bienvenido:</div>
-                    <span
+                <div class="sb-sidenav-footer position-fixed bottom-0 start-0 p-3">
+                    <div class="fs-6">Bienvenido:</div>
+                    <span class="fs-6 fw-semibold"
                         th:if="${datos_personales}"
                         th:text="${datos_personales.getNombre()+' '+datos_personales.getApellido()}"
                         ></span>

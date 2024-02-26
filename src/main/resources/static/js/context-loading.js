@@ -8,9 +8,8 @@ $(function(){
     $(".acceso").on("click",function(e){
         e.preventDefault;
         var id=$(this).attr("id");
-        $('.nav').children('a.acceso').removeClass('active');
-        $(this).addClass("active");
-        $("#sidebarToggle").click();
+        //$('.nav').children('a.acceso').removeClass('active');
+        //$(this).addClass("active");
         $("#content-page").css("overflow-y","hidden");
         var fadeout=$("#content-page").hide().delay(150).promise();
         
@@ -20,10 +19,12 @@ $(function(){
             data: {id:id},
             success: function(xhr, status, error) {
                 
+                toggleSidebar();
+                
                 if(xhr.indexOf('Login') !== -1 || xhr.indexOf('This session has been expired') !== -1)
                     window.location.href="/auth/login?logout=true";
                 
-              fadeout.then(function(){
+                fadeout.then(function(){
                     
                     var fadein=$("#content-page").html(xhr).fadeIn(200).promise();
                     
@@ -35,11 +36,13 @@ $(function(){
             },
             error: function(xhr, status, error) {
               // Maneja cualquier error que ocurra durante la llamada    
+              
+                toggleSidebar();
                 
                 if(xhr.responseText.indexOf('This session has been expired') !== -1)
                     window.location.href="/auth/login?logout=true";  
                 
-              fadeout.then(function(){
+                fadeout.then(function(){
                     var fadein=$("#content-page").html(xhr.responseText).fadeIn(200).promise();
                     
                     fadein.then(function(){
