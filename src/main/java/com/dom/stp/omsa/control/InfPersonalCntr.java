@@ -13,7 +13,6 @@ import com.dom.stp.omsa.control.domain.usuario.UsuarioServ;
 import com.dom.stp.omsa.control.general.DateUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import java.text.ParseException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -70,8 +69,6 @@ public class InfPersonalCntr {
             return 0;
         }
         
-        
-        HashMap<String, Object> map = new HashMap<>();
         
         if (dateInput != null && !dateInput.equals("")) {
             
