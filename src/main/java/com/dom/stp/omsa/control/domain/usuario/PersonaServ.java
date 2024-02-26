@@ -8,7 +8,7 @@ import jakarta.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**
@@ -21,10 +21,10 @@ import org.springframework.stereotype.Service;
 
 @Transactional
 @Service
+@RequiredArgsConstructor
 public class PersonaServ {
     
-    @Autowired
-    PersonaRepo repo;
+    private final PersonaRepo repo;
     
     public Persona guardar(Persona gd, Integer idUsuario,boolean existe){
         

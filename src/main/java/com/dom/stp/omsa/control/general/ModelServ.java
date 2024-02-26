@@ -27,6 +27,8 @@ import org.springframework.ui.Model;
 @Service
 public class ModelServ {
     
+    //  only here we need autowired
+    //  for a special use case
     @Autowired
     GrupoDatoServ GrupoServicio;
     

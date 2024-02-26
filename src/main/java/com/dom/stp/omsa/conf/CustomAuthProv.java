@@ -4,6 +4,7 @@
  */
 package com.dom.stp.omsa.conf;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,17 +19,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * @author cabreu
  */
 
+@RequiredArgsConstructor
 public class CustomAuthProv implements AuthenticationProvider {
     
     
     private final UserDetailsService userDetailsService;
     
     private final PasswordEncoder passwordEncoder;
-    
-    public CustomAuthProv(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
-        this.userDetailsService = userDetailsService;
-        this.passwordEncoder = passwordEncoder;
-    }
 
 
     @Override

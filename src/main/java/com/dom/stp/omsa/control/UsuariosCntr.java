@@ -18,8 +18,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -36,29 +36,22 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/usrmgr")
 @Slf4j
+@RequiredArgsConstructor
 public class UsuariosCntr {
 
+    private final DateUtils FechaUtils;
     
-    @Autowired
-    DateUtils FechaUtils;
+    private final DatoServ dtserv;
     
-    @Autowired
-    DatoServ dtserv;
+    private final AccesoServ AccesoServicio;
     
-    @Autowired
-    AccesoServ AccesoServicio;
+    private final ModelServ dmService;
     
-    @Autowired
-    ModelServ dmService;
+    private final PersonaServ PersonaServicio;
     
-    @Autowired
-    PersonaServ PersonaServicio;
+    private final UsuarioServ UsuarioServicio;
     
-    @Autowired
-    UsuarioServ UsuarioServicio;
-    
-    @Autowired
-    SSECntr seeCnt;
+    private final SSECntr seeCnt;
 
     @PostMapping(value="/save")
     public String GuardarUsuario(

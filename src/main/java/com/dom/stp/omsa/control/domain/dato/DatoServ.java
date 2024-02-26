@@ -7,7 +7,7 @@ package com.dom.stp.omsa.control.domain.dato;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,10 +18,10 @@ import org.springframework.stereotype.Service;
  *  
  */
 @Service
+@RequiredArgsConstructor
 public class DatoServ {
     
-    @Autowired
-    DatoRepo repo;
+    private final DatoRepo repo;
     
     public Dato guardar(Dato gd, Integer idUsuario,boolean existe){
         

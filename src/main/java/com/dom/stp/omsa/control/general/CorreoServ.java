@@ -4,7 +4,7 @@
  */
 package com.dom.stp.omsa.control.general;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
@@ -16,10 +16,10 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
+@RequiredArgsConstructor
 public class CorreoServ {
-
-    @Autowired
-    private JavaMailSender emailSender;
+    
+    private final  JavaMailSender emailSender;
     
     @Async
     public void enviarMensajeSimple(String Para, String Titulo, String Texto) {

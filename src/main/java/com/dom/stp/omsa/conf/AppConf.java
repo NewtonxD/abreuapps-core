@@ -12,17 +12,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import com.dom.stp.omsa.control.domain.usuario.UsuarioRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 
 @Configuration
 @RequiredArgsConstructor
 public class AppConf {
-    
-    @Autowired
-    UsuarioRepo UsuarioRepositorio;
 
+    private final UsuarioRepo UsuarioRepositorio;
+    
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> UsuarioRepositorio.findByUsername(username)
