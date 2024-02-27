@@ -15,26 +15,26 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                 <div class="container-fluid px-4">
                     <div class="row d-flex align-items-center justify-content-center mt-5 mb-5">
                         <div class="card col-12 col-md-10 col-lg-8">
-                            <div class="card-header blanco-obligao row">
-                                <div class="col-12 mb-2 mt-3 d-flex align-items-start justify-content-start">
-                                    <button type="submit" class="btn btn-sm btn-secondary"
-                                            onclick="$(function () {
-                                                    event.preventDefault();
-                                                    cargar_contenido('dat_gen_consulta_datos');
-                                                });">
-                                        <b><i class="fa-solid fa-chevron-left"></i></b>
-                                    </button>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;<h4>Datos Generales&nbsp;&nbsp;
-                                        <th:block th:if="${!update}">
-                                            <i class="fa-solid fa-plus"></i>
-                                        </th:block>
-                                        <th:block th:if="${update}">
-                                            <i class="fa-solid fa-pencil"></i>
-                                        </th:block>
-                                    </h4>
-                                </div>
-                            </div>
                             <div class="card-body mt-3 mb-3">
+                                <div class="row">
+                                    <div class="col-12 mb-2 mt-3 d-flex align-items-start justify-content-start ms-4 me-4">
+                                        <button type="submit" class="btn btn-sm btn-secondary"
+                                                onclick="$(function () {
+                                                        event.preventDefault();
+                                                        cargar_contenido('dat_gen_consulta_datos');
+                                                    });">
+                                            <b><i class="fa-solid fa-chevron-left"></i></b>
+                                        </button>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<h4>Datos Generales&nbsp;&nbsp;
+                                            <th:block th:if="${!update}">
+                                                <i class="fa-solid fa-plus"></i>
+                                            </th:block>
+                                            <th:block th:if="${update}">
+                                                <i class="fa-solid fa-pencil"></i>
+                                            </th:block>
+                                        </h4>
+                                    </div>
+                                </div>
                                 <form class="form-group" id="form-guardar">
                                     <div class="row">
                                         <th:block th:if="${!update}">
