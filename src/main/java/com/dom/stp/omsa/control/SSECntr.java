@@ -30,8 +30,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 public class SSECntr {
     
     //only here we need autowired
-    @Autowired
-    SSEServ SSEServicio;
+    private final SSEServ SSEServicio;
     
     private final CopyOnWriteArrayList<SseEmitter> dtGnrEmitters = new CopyOnWriteArrayList<>();
 
@@ -43,7 +42,9 @@ public class SSECntr {
     
     private HashMap<String, Object> Datos;
     
-    public SSECntr(){
+    public SSECntr(SSEServ SSEServicio){
+        this.SSEServicio =SSEServicio; 
+        
         this.actions.put("dtgnr", ()->{
                 SSEServicio.emitir(dtGnrEmitters, Datos);
             }

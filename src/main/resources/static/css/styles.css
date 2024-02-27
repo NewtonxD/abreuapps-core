@@ -86,3 +86,7 @@ body {
     padding: 0.75rem;
     flex-shrink: 0;
 }
+
+.card{
+    border-radius: 12px !important;
+}

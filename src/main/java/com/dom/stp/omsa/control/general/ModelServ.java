@@ -12,7 +12,8 @@ import com.dom.stp.omsa.control.domain.usuario.Usuario;
 import com.dom.stp.omsa.control.domain.usuario.UsuarioServ;
 import java.util.HashMap;
 import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -27,19 +28,13 @@ import org.springframework.ui.Model;
 @Service
 public class ModelServ {
     
-    //  only here we need autowired
-    //  for a special use case
-    @Autowired
-    GrupoDatoServ GrupoServicio;
+    private final GrupoDatoServ GrupoServicio;
     
-    @Autowired
-    DatoServ DatoServicio;
+    private final DatoServ DatoServicio;
     
-    @Autowired
-    AccesoServ AccesoServicio;
+    private final AccesoServ AccesoServicio;
     
-    @Autowired
-    UsuarioServ UsuarioServicio;
+    private final UsuarioServ UsuarioServicio;
     
     private final Map<String,Runnable> actions=new HashMap<>();
     
@@ -47,7 +42,13 @@ public class ModelServ {
     
     private Integer userId=null;
     
-    public ModelServ(){
+    //  custom constructor injection
+    public ModelServ(GrupoDatoServ GrupoServicio,DatoServ DatoServicio,AccesoServ AccesoServicio,UsuarioServ UsuarioServicio){
+        this.AccesoServicio=AccesoServicio;
+        this.GrupoServicio=GrupoServicio;
+        this.DatoServicio=DatoServicio;
+        this.UsuarioServicio=UsuarioServicio;
+        
         this.actions.put("dat_gen_consulta_grupos", ()->{
                 Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "dat_gen_consulta_grupos");
                 dataModel.addAllAttributes(acc);

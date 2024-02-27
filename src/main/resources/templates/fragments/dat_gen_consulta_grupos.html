@@ -21,7 +21,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                         class="row d-flex align-items-center justify-content-center mt-5 mb-5"
                 >
                     <div class="card col-12 col-md-10 col-lg-8">
-                        <div class="card-header blanco-obligao row">
+                    <div class="card-body mt-3 mb-3">
+                        <div class="row">
                             <div
                                 class="col-8 mb-2 mt-3 d-flex align-items-start justify-content-start"
                             >
@@ -39,19 +40,18 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                     ></i>
                                 </h4>
                             </div>
-                        <div
-                            class="col-4 mb-2 mt-3 d-flex align-items-end justify-content-end"
-                        >
-                            <button
-                                type="button" th:if="${dat_gen_registro_grupos}" 
-                                class="btn btn-success"
-                                onclick="event.preventDefault();closeEventSource();cargar_contenido('dat_gen_registro_grupos'); "
+                            <div
+                                class="col-4 mb-2 mt-3 d-flex align-items-end justify-content-end"
                             >
-                                <b><i class="fa-solid fa-plus"></i></b>
-                            </button>
+                                <button
+                                    type="button" th:if="${dat_gen_registro_grupos}" 
+                                    class="btn btn-success"
+                                    onclick="event.preventDefault();closeEventSource();cargar_contenido('dat_gen_registro_grupos'); "
+                                >
+                                    <b><i class="fa-solid fa-plus"></i></b>
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="card-body mt-3 mb-3">
                         <div class="row">
                             <div class="col">
                                     <th:block th:if="${msg!=null}">
