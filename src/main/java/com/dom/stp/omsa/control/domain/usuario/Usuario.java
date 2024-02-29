@@ -102,7 +102,7 @@ public class Usuario implements UserDetails {
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return ! cambiarPassword;
     }
 
     @Override

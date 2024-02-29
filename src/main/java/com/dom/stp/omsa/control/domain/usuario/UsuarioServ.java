@@ -116,8 +116,7 @@ public class UsuarioServ {
     public void cerrarSesion(String usuario){
         List<Object> principals = sessionRegistry.getAllPrincipals();
         for (Object principal : principals) {
-            if (principal instanceof UserDetails) {
-                UserDetails userDetails = (UserDetails) principal;
+            if (principal instanceof UserDetails userDetails) {
                 if (userDetails.getUsername().equals(usuario)) {
                     List<SessionInformation> sessions = sessionRegistry.getAllSessions(principal, false);
                     for (SessionInformation session : sessions) {
