@@ -1,5 +1,6 @@
 package com.dom.stp.omsa.conf;
 
+import com.dom.stp.omsa.control.domain.usuario.UsuarioRepo;
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -8,6 +9,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -15,7 +17,14 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConf {
+public class SecurityConf{
+    
+    private final UsuarioRepo UsuarioRepositorio;
+    
+    @Bean
+    public AuthenticationSuccessHandler myAuthSuccessHandler(){
+        return new CustomAuthSuccessHandler();
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -28,7 +37,7 @@ public class SecurityConf {
             )
             .formLogin(form -> form
                 .loginPage("/auth/login")
-                .defaultSuccessUrl("/main/index")
+                .successHandler(myAuthSuccessHandler())
                 .failureUrl("/auth/login?error=true")
             )
             .sessionManagement(session -> session
@@ -57,4 +66,6 @@ public class SecurityConf {
             source.registerCorsConfiguration("/**", configuration);
             return source;
     }
+    
+    
 }
