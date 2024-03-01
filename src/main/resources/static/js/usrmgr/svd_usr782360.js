@@ -13,21 +13,6 @@ function dataPrepare(idForm){
     return d;
 }
 
-function dataCustomPrepare(idForm){
-    var formData = {};
-    $('#'+idForm).find('input').each(function() {
-        formData[$(this).attr('name')] = $(this).val();
-    });
-    /*    
-    let d=$("#"+idForm+" :input").serializeArray();
-    $("#"+idForm+" input[type=checkbox]").each(function() {
-        if (!$(this)[0].checked) {
-            d.push({name:$(this).attr("name"),value:"false"});
-        }
-    });*/
-    return formData;
-}
-
 function verificarCedula(){
     var respuesta = false;
     
