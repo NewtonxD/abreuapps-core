@@ -80,6 +80,10 @@ public class MainCntr {
             HttpServletRequest request,
             Model model
     ) {
+        Usuario userSession = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Usuario userBd = UsuarioServicio.obtener(userSession.getUsername()).get();
+        userBd.setContraseña("");
+        model.addAttribute("usuario", userBd);
         return "password";
     }
     
@@ -88,21 +92,21 @@ public class MainCntr {
     public Map<String,String> changePasswordExpired(
             HttpServletRequest request,
             Model model,
-            @RequestParam("old-password") String oldPass,
-            @RequestParam("password") String newPass
+            @RequestParam(name = "actualPassword",required = false) String oldPass,
+            @RequestParam("newPassword") String newPass
     ) {
-        
+        oldPass = oldPass==null ? "" : oldPass ;
         Usuario userSession = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Usuario userBd = UsuarioServicio.obtener(userSession.getUsername()).get();
         Map<String, String> respuesta= new HashMap<>();
         //si credenciales no estan expiradas verificar old pass
-        if(!userBd.isCredentialsNonExpired() && 
+        if(userBd.isCredentialsNonExpired() && 
                 !passwordEncoder.matches(
                         oldPass, 
                         userBd.getPassword()
                 )
           ) {
-            respuesta.put("status", "error");
+            respuesta.put("status", "warning");
             respuesta.put("msg", "La contraseña anterior que suministro se encuentra incorrecta!");
             return respuesta; //contraseña vieja no matchea
         }
