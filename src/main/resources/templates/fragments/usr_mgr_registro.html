@@ -56,6 +56,19 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 
                                             <h5>Información del Usuario</h5>
                                             <div class="row" id="inf_usuario" th:object="${user}" >
+                                                <div class="col-12 mt-2 mb-2">
+                                                    <div
+                                                        class="alert alert-warning alert-correo"
+                                                        role="alert" style="display:none;"
+                                                        ><span>Correo en uso. Verifique y vuelva a intentarlo.</span>
+                                                    </div>
+                                                    <div
+                                                        class="alert alert-warning alert-usuario"
+                                                        role="alert" style="display:none;"
+                                                        ><span>Usuario en uso. Verifique y vuelva a intentarlo.</span>
+                                                    </div>
+                                                    
+                                                </div>
                                                 <th:block th:if="${update}">
                                                     <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" th:value="${#dates.format(user.fecha_actualizacion, 'yyyy-MM-dd HH:mm:ss')}">
                                                     <input  type="number" class="idusuario" th:field="*{id}" th:value="*{id}" style="display: none; width: 1px;height: 1px;" required>
@@ -86,11 +99,17 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                             <div class="row collapse" id="inf_personal" th:object="${persona}" >
                                                 <div  th:fragment="info-dinamica-personal" id="info-dinamica-personal" class="row">  
                                                     <th:block th:if="${update}">
-                                                        <input  type="number" th:field="*{id}" style="display: none; width: 1px;height: 1px;" required>
+                                                        <input  type="number" th:field="*{id}" id="idPersona" style="display: none; width: 1px;height: 1px;" required>
 
                                                         <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" th:value="${#dates.format(persona.fecha_actualizacion, 'yyyy-MM-dd HH:mm:ss')}">
                                                     </th:block>
-
+                                                    <div class="col-12 mt-2 mb-2">
+                                                        <div
+                                                            class="alert alert-warning alert-cedula"
+                                                            role="alert" style="display:none;"
+                                                            ><span>Cedula en uso. Verifique y vuelva a intentarlo.</span>
+                                                        </div>
+                                                    </div>
                                                     <div class="mb-3 col-12">
                                                         <label for="cedula" class="form-label text-muted">Cédula:</label>
                                                         <th:block th:if="${update}" >
@@ -169,7 +188,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 </section>
                                 
                                 <div class="row pt-2 pb-2 me-4 ms-4  d-flex justify-content-end align-items-center">
-                                    
+                                    <div class="col-12 mt-2 mb-2">
+                                        <div
+                                            class="alert alert-warning alert-pwd"
+                                            role="alert" style="display:none;"
+                                            ><span>Contraseña incorrecta. Verifique e intentelo de nuevo.</span>
+                                        </div>
+                                    </div>
                                     <div class="col-12 col-md-6 d-flex justify-content-end">
                                     <th:block th:if="${configuracion}">
                                         <input

@@ -215,7 +215,18 @@ public class UsuariosCntr {
             Model model, 
             @RequestParam("correo") String correo
     ){
-       return ! UsuarioServicio.obtenerPorCorreo(correo).isPresent();
+        return ! UsuarioServicio.obtenerPorCorreo(correo).isPresent();
+    }
+    
+    @PostMapping("/vfyPwd")
+    @ResponseBody
+    public boolean VerificarPassword(
+            HttpServletRequest request, 
+            Model model, 
+            @RequestParam("pwd") String password
+    ){
+       Usuario u=(Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+       return UsuarioServicio.coincidenContraseña(password,u.getId());
     }
     
     

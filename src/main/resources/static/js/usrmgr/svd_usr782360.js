@@ -177,11 +177,12 @@ $(function(){
     $("#cedula").on("blur",function(event){
         if($(this).val()!=="")
             if(!verificarCedula()){
-                alert("La cedula ya se encuentra registrada en un usuario. Verifique los datos y vuelva a intentarlo.");
+                $(".alert-cedula").css("display","block");
                 $(this).val("");
                 $(this).focus();
                 return;
             }else{
+                $(".alert-cedula").css("display","none");
                 obtenerInfoPorCedula();
             }
         
@@ -190,21 +191,17 @@ $(function(){
     $("#form-guardar").on("submit", function(event){
         event.preventDefault();
         
-        if($(".idusuario")===undefined){
+        if(!verificarCorreo()){
+            $(".alert-correo").css("display","block");
+            $("#correo").focus();
+            return;
+        }else $(".alert-correo").css("display","none");
 
-            if(!verificarCorreo()){
-                alert("El correo ya se encuentra en el sistema. Verifique los datos y vuelva a intentarlo.");
-                $("#correo").focus();
-                return;
-            }
-
-            if(!verificarUsuario()){
-                alert("El usuario ya se encuentra en uso. Verifique los datos y vuelva a intentarlo.");
-                $("#username").focus();
-                return;
-            }
-            
-        }
+        if(!verificarUsuario()){
+            $(".alert-usuario").css("display","block");
+            $("#username").focus();
+            return;
+        }else $(".alert-usuario").css("display","none");
         
         guardar_datos();
     }); 
