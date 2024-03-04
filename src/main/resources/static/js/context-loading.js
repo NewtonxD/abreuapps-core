@@ -5,6 +5,47 @@
 //document ready
 $(function(){
     
+    $(".config-user").on("click",function(e){
+        e.preventDefault;
+        $("#content-page").css("overflow-y","hidden");
+        var fadeout=$("#content-page").hide().delay(150).promise();
+        
+        $.get({
+            url: '/usrmgr/myupdate',
+            async:true,
+            success: function(xhr, status, error) {
+                
+                if(xhr.indexOf('Login') !== -1 || xhr.indexOf('This session has been expired') !== -1)
+                    window.location.href="/auth/login?logout=true";
+                
+                fadeout.then(function(){
+                    
+                    var fadein=$("#content-page").html(xhr).fadeIn(200).promise();
+                    
+                    fadein.then(function(){
+                        $("#content-page").css("overflow-y","hidden");
+                        
+                    }); 
+                });
+            },
+            error: function(xhr, status, error) {
+                
+                if(xhr.responseText.indexOf('This session has been expired') !== -1)
+                    window.location.href="/auth/login?logout=true";  
+                
+                fadeout.then(function(){
+                    var fadein=$("#content-page").html(xhr.responseText).fadeIn(200).promise();
+                    
+                    fadein.then(function(){
+                        $("#content-page").css("overflow-y","hidden");
+                        
+                    }); 
+                });
+            }
+        });
+        
+    });
+    
     $(".acceso").on("click",function(e){
         e.preventDefault;
         var id=$(this).attr("id");
