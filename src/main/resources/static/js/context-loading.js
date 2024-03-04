@@ -7,6 +7,7 @@ $(function(){
     
     $(".config-user").on("click",function(e){
         e.preventDefault;
+        hideSidebar();
         $("#content-page").css("overflow-y","hidden");
         var fadeout=$("#content-page").hide().delay(150).promise();
         

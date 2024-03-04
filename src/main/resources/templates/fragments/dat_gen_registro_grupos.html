@@ -22,13 +22,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                             <div class="col-12 d-flex align-items-start justify-content-start">
                                 <button type="submit" class="btn btn-sm btn-secondary"
                                     onclick="$(function(){ event.preventDefault();cargar_contenido('dat_gen_consulta_grupos'); });"><b><i
-                                            class="fa-solid fa-chevron-left"></i></b></button>
+                                            class="fa fa-chevron-left"></i></b></button>
                                 &nbsp;&nbsp;<h4>Grupos de Datos&nbsp;
                                     <th:block th:if="${!update}">
-                                        <i class="fa-solid fa-plus"></i>
+                                        <i class="fa fa-plus"></i>
                                     </th:block>
                                     <th:block th:if="${update}">
-                                        <i class="fa-solid fa-pencil"></i>
+                                        <i class="fa fa-pencil"></i>
                                     </th:block>
                                 </h4>
                             </div>
@@ -81,12 +81,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 </div>
                                 <div class="col-6 d-flex justify-content-end">
                                     <th:block th:if="${!update}">
-                                        <button type="submit" class="btn btn-primary"><b> <i class="fas fa-save"></i>
+                                        <button type="submit" class="btn btn-primary"><b> <i class="fa fa-save"></i>
                                                 Guardar</b></button>
                                     </th:block>
                                     <th:block th:if="${update}">
                                         <button type="submit" class="btn btn-primary"><b> <i
-                                                    class="fa-solid fa-pencil"></i> Editar</b></button>
+                                                    class="fa fa-pencil"></i> Editar</b></button>
                                     </th:block>
                                 </div>
                             </div>
@@ -106,7 +106,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                             <p class="lead">Acceso No Autorizado!</p>
                             <p>El acceso a este recurso ha sido denegado.</p>
                             <a th:href="@{/auth/login}">
-                                <i class="fas fa-arrow-left me-1"></i>
+                                <i class="fa fa-arrow-left me-1"></i>
                                 Volver a Inicio
                             </a>
                         </div>
