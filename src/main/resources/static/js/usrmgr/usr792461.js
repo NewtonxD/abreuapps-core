@@ -106,10 +106,20 @@ $(function () {
                 if(res.status==="success"){
                     setTimeout(function() {
                         window.location.href = "/main/index";
-                    }, 3000);
+                    }, 5000);
                 }
             }
         });
+    });
+    
+    $("#btnSalir").on("click",function(){
+        if($("#credentialNonExpired").val()==="false"){
+            
+            window.location.href = "/auth/logout";
+        } else {
+            $(".config-user").click();
+        }
+            
     });
 
 });

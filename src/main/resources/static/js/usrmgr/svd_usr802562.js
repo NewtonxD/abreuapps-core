@@ -129,16 +129,19 @@ function cerrarSesion(){
     });
 }
 
+function verificarPassword(){
+    //verificar password 
+}
+
 function cambiarPassword(){
-    let data={ "usuario":$("#original_usuario").val() };
+
     $("#content-page").css("overflow-y","hidden");
     var fadeout=$("#content-page").hide().delay(150).promise();
     
     $.ajax({
-        url:'/usrmgr/resetPwd',
+        url:'/main/changePwd',
         type:"POST",
         async:false,
-        data:data,
         success: function(res){
 
             if(res.indexOf('Login') !== -1)
@@ -165,6 +168,7 @@ function cambiarPassword(){
             });
         }
     });
+    
 }
 
 $(function(){
@@ -204,6 +208,11 @@ $(function(){
                 return;
             }
             
+            if(!verificarPassword()){
+                alert("Contraseña incorrecta. Verifique e intentelo de nuevo.");
+                $("#password").focus();
+                return;
+            }
         }
         
         guardar_datos();
@@ -250,9 +259,7 @@ function guardar_datos(){
                     window.location.href="/auth/login?logout=true";
 
             fadeout.then(function(){
-                $("#content-page").html(res).fadeIn(200).promise().then(function(){
-                    $("#content-page").css("overflow-y","hidden");
-                }); 
+                window.location.href="/";
             });
         },
         error: function(xhr, status, error){

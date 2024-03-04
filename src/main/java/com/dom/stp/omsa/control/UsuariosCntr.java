@@ -24,6 +24,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -113,8 +114,9 @@ public class UsuariosCntr {
         }
 
         if (ss) {
+            if(! usuario.getUsername().equals(u.getUsername()) )
+                UsuarioServicio.cerrarSesion(usuario.getUsername());
             
-            UsuarioServicio.cerrarSesion(usuario.getUsername());
             Usuario d = UsuarioServicio.guardar(usuario, u.getId(), ext);
             model.addAttribute("status", true);
             model.addAttribute("msg", "Registro guardado exitosamente!");
@@ -163,6 +165,34 @@ public class UsuariosCntr {
         model.addAttribute("sangre",dtserv.consultarPorGrupo("Tipos Sanguineos"));
         model.addAllAttributes(AccesoServicio.consultarAccesosPantallaUsuario(u.getId(), "usr_mgr_registro"));
 
+        return "fragments/usr_mgr_registro :: content-default";  
+    }
+    
+    @GetMapping("/myupdate")
+    public String ActualizarMiUsuario(
+            HttpServletRequest request, 
+            Model model
+    ) {  
+        
+        Usuario u =(Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Optional<Usuario> us=UsuarioServicio.obtener(u.getUsername()); 
+
+        if(us.isEmpty()){
+
+            log.error("Error COD: 00539 al editar mi Usuario. Mi Usuario no encontrado ("+u.getUsername()+")");
+            request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, HttpStatus.NOT_FOUND.value());
+            
+            return "redirect:/error";
+
+        }
+        
+        model.addAttribute("user",us.get());
+        model.addAttribute("persona",us.get().getPersona());
+        model.addAttribute("update", true);
+        model.addAttribute("sexo",dtserv.consultarPorGrupo("sexo"));
+        model.addAttribute("sangre",dtserv.consultarPorGrupo("Tipos Sanguineos"));
+        model.addAttribute("usr_mgr_registro",true);
+        model.addAttribute("configuracion",true);
         return "fragments/usr_mgr_registro :: content-default";  
     }
 

@@ -18,7 +18,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -84,7 +83,12 @@ public class MainCntr {
         Usuario userBd = UsuarioServicio.obtener(userSession.getUsername()).get();
         userBd.setContraseña("");
         model.addAttribute("usuario", userBd);
-        return "password";
+        
+        if(userBd.isCredentialsNonExpired())
+            return "password  :: content-default";
+        else 
+            return "password";
+           
     }
     
     @PostMapping("/changeMyPwdNow")
@@ -107,7 +111,7 @@ public class MainCntr {
                 )
           ) {
             respuesta.put("status", "warning");
-            respuesta.put("msg", "La contraseña anterior que suministro se encuentra incorrecta!");
+            respuesta.put("msg", "Contraseña anterior incorrecta!");
             return respuesta; //contraseña vieja no matchea
         }
         
@@ -116,7 +120,7 @@ public class MainCntr {
         userBd.setContraseña(passwordEncoder.encode(newPass));
         UsuarioServicio.guardar(userBd, 1, true);
         respuesta.put("status", "success");
-        respuesta.put("msg", "Su contraseña fue reestablecida exitosamente! En breves lo redirigiremos.");
+        respuesta.put("msg", "Contraseña fue guardada exitosamente! En breve lo redirigiremos.");
         return respuesta;
         
     }

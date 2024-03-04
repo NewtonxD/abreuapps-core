@@ -18,13 +18,16 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                         <div class="card">
                             <div class="card-body row">
                                 <div class="mb-2 mt-3 d-flex align-items-start justify-content-start ms-4 me-4">
-                                    <button type="submit" class="btn btn-sm btn-secondary"
+                                    <button type="submit" class="btn btn-sm btn-secondary" th:unless="${configuracion}"
                                             onclick="$(function () {
                                                         event.preventDefault();
                                                         cargar_contenido('usr_mgr_principal');
                                                     });"><b><i
                                                 class="fa-solid fa-chevron-left"></i></b></button>
-                                    &nbsp;&nbsp;<h4>Usuario
+                                    <h4>
+                                        <th:block th:if="${configuracion}">Editar&nbsp;Mi</th:block>
+                                        <th:block th:unless="${configuracion}">&nbsp;&nbsp;</th:block>
+                                        Usuario
                                         <th:block th:if="${!update}">
                                             <i class="fa-solid fa-plus"></i>
                                         </th:block>
@@ -41,10 +44,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                     <input type="text" id="update" th:value="*{update}" style="display: none; width: 1px;height: 1px;"  placeholder=" ... " class="form-control">                                            
                                         <article class="pt-2" th:if="${update}">
                                             <div class="row d-flex justify-content-center">
-                                                <div class="mb-3 col-6 col-md-4 col-lg-3">
+                                                <div class="mb-3 col-12 col-md-6 col-lg-3">
                                                     <button type="button" class="btn btn-danger" id="BtnResetPwd"><b><i class="fa-solid fa-rotate"></i>&nbsp;Reestablecer Clave</b></button>
                                                 </div>
-                                                <div class="mb-3 col-6 col-md-4 col-lg-3">
+                                                <div class="mb-3 col-12 col-md-6 col-lg-3">
                                                     <button type="button" class="btn btn-primary" id="BtnCloseSess"><b><i class="fa-solid fa-right-from-bracket"></i>&nbsp;Cerrar Sesión</b></button>
                                                 </div>
                                             </div>
@@ -55,7 +58,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                             <div class="row" id="inf_usuario" th:object="${user}" >
                                                 <th:block th:if="${update}">
                                                     <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" th:value="${#dates.format(user.fecha_actualizacion, 'yyyy-MM-dd HH:mm:ss')}">
-                                                    <input  type="number" th:field="*{id}" th:value="*{id}" style="display: none; width: 1px;height: 1px;" required>
+                                                    <input  type="number" class="idusuario" th:field="*{id}" th:value="*{id}" style="display: none; width: 1px;height: 1px;" required>
                                                 </th:block>
                                                 <div class="mb-3 col-12 col-md-6">
                                                     <label for="usuario" class="form-label text-muted">Usuario:</label>
@@ -165,18 +168,27 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                         </article>
                                 </section>
                                 
-                                <div class="d-flex justify-content-end pt-2 pb-2 me-4 ms-4">
+                                <div class="row pt-2 pb-2 me-4 ms-4  d-flex justify-content-end align-items-center">
+                                    
+                                    <div class="col-12 col-md-6 d-flex justify-content-end">
+                                    <th:block th:if="${configuracion}">
+                                        <input
+                                            class="form-control"
+                                            id="password"
+                                            type="password"
+                                            placeholder="Contraseña"
+                                            required="required"
+                                            /> 
+                                    </th:block>
                                     <th:block th:if="${!update}">
                                         <button type="submit" class="btn btn-primary" id="btn_guardar">
-                                            <b> <i class="fas fa-save"></i>
-                                                Guardar
-                                            </b>
+                                            <b>Guardar</b>
                                         </button>
                                     </th:block>
                                     <th:block th:if="${update}">
-                                        <button type="submit" class="btn btn-primary" id="btn_guardar"><b> <i
-                                                    class="fa-solid fa-pencil"></i> Editar</b></button>
+                                        <button type="submit" class="btn btn-primary" id="btn_guardar"><b>Editar</b></button>
                                     </th:block>
+                                    </div>
                                 </div>
 
                                 </form>
@@ -184,7 +196,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                         </div>
                     </div>
                 </div>
-                <script th:src="@{/content/js/usrmgr/svd_usr782360.js}"></script>
+                <script th:src="@{/content/js/usrmgr/svd_usr782360.js}" th:unless="${configuracion}"></script>
+                <script th:src="@{/content/js/usrmgr/svd_usr802562.js}" th:if="${configuracion}"></script>
                 <script th:src="@{/content/js/lib/input-formats.js}"></script>
             </th:block>
             <th:block th:unless="${usr_mgr_registro}">
