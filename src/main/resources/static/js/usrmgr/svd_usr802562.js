@@ -130,7 +130,23 @@ function cerrarSesion(){
 }
 
 function verificarPassword(){
-    //verificar password 
+    var respuesta = false;
+    
+    
+        $.ajax({
+            url:'/usrmgr/vfyPwd',
+            type:"POST",
+            async:false,
+            data:{"pwd":$("#password").val()},
+            success: function(res){
+                respuesta=res;
+            },
+            error: function(xhr, status, error){
+                respuesta=false;
+            }
+        });
+        
+    return respuesta;
 }
 
 function cambiarPassword(){
@@ -181,11 +197,12 @@ $(function(){
     $("#cedula").on("blur",function(event){
         if($(this).val()!=="")
             if(!verificarCedula()){
-                alert("La cedula ya se encuentra registrada en un usuario. Verifique los datos y vuelva a intentarlo.");
+                $(".alert-cedula").css("display","block");
                 $(this).val("");
                 $(this).focus();
                 return;
             }else{
+                $(".alert-cedula").css("display","none");
                 obtenerInfoPorCedula();
             }
         
@@ -194,26 +211,23 @@ $(function(){
     $("#form-guardar").on("submit", function(event){
         event.preventDefault();
         
-        if($(".idusuario")===undefined){
+        if(!verificarCorreo()){
+            $(".alert-correo").css("display","block");
+            $("#correo").focus();
+            return;
+        }else $(".alert-correo").css("display","none");
 
-            if(!verificarCorreo()){
-                alert("El correo ya se encuentra en el sistema. Verifique los datos y vuelva a intentarlo.");
-                $("#correo").focus();
-                return;
-            }
+        if(!verificarUsuario()){
+            $(".alert-usuario").css("display","block");
+            $("#username").focus();
+            return;
+        }else $(".alert-usuario").css("display","none");
 
-            if(!verificarUsuario()){
-                alert("El usuario ya se encuentra en uso. Verifique los datos y vuelva a intentarlo.");
-                $("#username").focus();
-                return;
-            }
-            
-            if(!verificarPassword()){
-                alert("Contraseña incorrecta. Verifique e intentelo de nuevo.");
-                $("#password").focus();
-                return;
-            }
-        }
+        if(!verificarPassword()){
+            $(".alert-pwd").css("display","block");
+            $("#password").focus();
+            return;
+        }else $(".alert-pwd").css("display","none");
         
         guardar_datos();
     }); 

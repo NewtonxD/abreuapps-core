@@ -111,10 +111,7 @@ public class InfPersonalCntr {
             @RequestParam("cedula") String cedula
     ){
        Optional<Persona> p=PersonaServicio.obtenerPorCedula(cedula);
-       if (p.isPresent()) {
-           return ! UsuarioServicio.obtenerPorPersona(p.get()).isPresent();
-       }
-       else return true;
+       return ! p.isPresent();
     }
     
     

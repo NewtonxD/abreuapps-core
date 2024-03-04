@@ -71,6 +71,14 @@ public class UsuarioServ {
         return guardar(u,u.getId(),true);
     }
     
+    public boolean coincidenContraseña(String Contraseña,int IdUsuario){
+        
+        return passwordEncoder.matches(
+            Contraseña, 
+            repo.findById(IdUsuario).get().getContraseña()
+        );
+    }
+    
     public Usuario guardar(Usuario gd, Integer idUsuario,boolean existe){
         
         if(existe){ 
