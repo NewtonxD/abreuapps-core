@@ -28,7 +28,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                 class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0 toggle-btn text-white"
                 onclick="toggleSidebar()"
                 >
-                <i class="fas fa-bars"></i>
+                <i class="fa fa-bars"></i>
             </button>
             <div
                 class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0"
@@ -42,7 +42,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                         role="button"
                         data-bs-toggle="dropdown"
                         aria-expanded="false"
-                        ><i class="fas fa-user fa-fw"></i
+                        ><i class="fa fa-user fa-fw"></i
                         ></a>
                     <ul
                         class="dropdown-menu dropdown-menu-end"
@@ -75,7 +75,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 aria-expanded="false"
                                 aria-controls="collapseLayouts1"
                                 >
-                                <i class="fa-solid fa-calculator"></i>&MediumSpace; Contabilidad
+                                <i class="fa fa-calculator"></i>&MediumSpace; Contabilidad
                             </button>
                             <div
                                 class="collapse"
@@ -142,7 +142,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 aria-expanded="false"
                                 aria-controls="collapseLayouts2"
                                 >
-                                <i class="fas fa-receipt"></i>&MediumSpace; Cuentas x Pagar
+                                <i class="fa fa-list-alt"></i>&MediumSpace; Cuentas x Pagar
                             </button>
                             <div
                                 class="collapse"
@@ -188,7 +188,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                             </div> 
                         </li>
                         <li class="border-top my-3"></li>
-                        <li class="mb-1">                       
+                        <li class="mb-1" th:if="${sys_principal}">                       
                             <button
                                 class="nav-link btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed "
                                 type="button"
@@ -197,7 +197,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 aria-expanded="false"
                                 aria-controls="collapseLayouts3"
                                 >
-                                <i class="fa-solid fa-gear"></i>&MediumSpace; Sistemas
+                                <i class="fa fa-solid fa-gear"></i>&MediumSpace; Sistemas
                             </button>
                             <div
                                 class="collapse"
@@ -212,7 +212,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded " href="#" id="sistema_configuracion">
+                                        <a class="nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded " href="#" id="sys_configuracion" th:if="${sys_configuracion}">
                                             &MediumSpace; Configuración
                                         </a>
                                     </li>
@@ -227,8 +227,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                     </ul>
                 </div>
                 <div class="sb-sidenav-footer position-fixed bottom-0 start-0 p-3">
-                    <div class="fs-6">Bienvenido:</div>
-                    <span class="fs-6 fw-semibold"
+                    <div class="fs-6">Bienvenido:&MediumSpace;
+                        <a class="btn btn-secondary btn-sm config-user" href="#"><i class="fa fa-cog"></i></a>
+                        &nbsp;
+                        <a class="btn btn-danger btn-sm" th:href="@{/auth/logout}"><i class="fa fa-sign-out"></i></a>
+                    </div>
+                    <span class="fs-6 fw-semibold mt-2"
                         th:if="${datos_personales}"
                         th:text="${datos_personales.getNombre()+' '+datos_personales.getApellido()}"
                         ></span>

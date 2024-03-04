@@ -26,7 +26,7 @@ public interface AccesoUsuarioRepo extends JpaRepository<AccesoUsuario, Integer>
                     FROM
                         usr_acc u
                             INNER JOIN
-                        acc a ON u.usr_id=:idusuario and (a.scr is null or a.fat_scr is null) AND u.acc_id = a.id and a.act and u.act;
+                        acc a ON u.usr_id=:idusuario AND a.acc_tpe="Menu" AND u.acc_id = a.id and a.act and u.act;
                    """,nativeQuery = true)
     public List<Object[]> ListadoMenuUsuario(@Param("idusuario") Integer idUsuario);
     

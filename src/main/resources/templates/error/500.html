@@ -9,7 +9,7 @@
         <title>500 Error - Proyecto</title>
         <link th:href="@{/content/css/styles.css}" rel="stylesheet" />
         <link th:href="@{/content/css/bootstrap.min.css}" rel="stylesheet" />
-        <script th:src="@{/content/js/lib/font-awesome6.4.0all.min.js}"></script>
+        <link rel="stylesheet" th:href="@{/content/css/font-awesome.min.css}"/>
     </head>
     <body>
         <div id="layoutError">
@@ -22,7 +22,7 @@
                                     <h1 class="display-1">500</h1>
                                     <p class="lead">Error Interno del Servidor</p>
                                     <a th:href="@{/auth/login}">
-                                        <i class="fas fa-arrow-left me-1"></i>
+                                        <i class="fa fa-arrow-left me-1"></i>
                                         Volver a Inicio
                                     </a>
                                 </div>
