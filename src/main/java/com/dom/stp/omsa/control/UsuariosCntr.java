@@ -168,6 +168,31 @@ public class UsuariosCntr {
         return "fragments/usr_mgr_registro :: content-default";  
     }
     
+     @PostMapping("/access")
+    public String PermisosUsuario(
+            HttpServletRequest request, 
+            Model model, 
+            String idUsuario
+    ) {  
+        
+        Usuario u =(Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Optional<Usuario> us=UsuarioServicio.obtener(idUsuario); 
+
+        if(us.isEmpty()){
+
+            log.error("Error COD: 00537 al editar Usuario. Usuario no encontrado ("+idUsuario+")");
+            request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, HttpStatus.NOT_FOUND.value());
+            
+            return "redirect:/error";
+
+        }
+        
+        model.addAttribute("usuario",us.get());
+        model.addAllAttributes(AccesoServicio.consultarAccesosPantallaUsuario(u.getId(), "usr_mgr_registro"));
+
+        return "fragments/usr_mgr_permisos :: content-default";  
+    }
+    
     @GetMapping("/myupdate")
     public String ActualizarMiUsuario(
             HttpServletRequest request, 
