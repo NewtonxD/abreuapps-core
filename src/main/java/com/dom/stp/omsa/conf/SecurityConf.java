@@ -1,8 +1,6 @@
 package com.dom.stp.omsa.conf;
 
-import com.dom.stp.omsa.control.domain.usuario.UsuarioRepo;
 import java.util.Arrays;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,11 +14,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 public class SecurityConf{
-    
-    private final UsuarioRepo UsuarioRepositorio;
-    
+        
     @Bean
     public AuthenticationSuccessHandler myAuthSuccessHandler(){
         return new CustomAuthSuccessHandler();

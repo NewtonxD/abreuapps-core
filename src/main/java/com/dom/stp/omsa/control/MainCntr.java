@@ -103,6 +103,7 @@ public class MainCntr {
         Usuario userSession = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Usuario userBd = UsuarioServicio.obtener(userSession.getUsername()).get();
         Map<String, String> respuesta= new HashMap<>();
+        
         //si credenciales no estan expiradas verificar old pass
         if(userBd.isCredentialsNonExpired() && 
                 !passwordEncoder.matches(
