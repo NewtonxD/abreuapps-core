@@ -34,18 +34,15 @@ public class Acceso {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-
-    @Column(name = "dsc")
-    private String descripción;
     
     @Column(name = "dat_tpe")
     private String tipo_dato;
     
-    @Column(name = "acc_tpe")
-    private String tipo_acceso;
-    
     @Column(name = "scr")
     private String pantalla;
+    
+    @Column(name = "fat_scr")
+    private String pantalla_padre;
     
     @Column(name = "act")
     private boolean activo;
