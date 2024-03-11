@@ -136,7 +136,7 @@ public class DatosCntr {
 
         Optional<GrupoDato> g = GrupoServicio.obtener(idGrupo);
 
-        if (g.isEmpty()) {
+        if (!g.isPresent()) {
 
             log.error("Error COD: 00537 al editar grupos de datos.");
             request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, HttpStatus.NOT_FOUND.value());
@@ -238,7 +238,7 @@ public class DatosCntr {
 
         Optional<Dato> d = DatoServicio.obtener(idDato);
 
-        if (d.isEmpty()) {
+        if (!d.isPresent()) {
 
             log.error("Error COD: 00535 al editar datos generales.");
             request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, HttpStatus.NOT_FOUND.value());

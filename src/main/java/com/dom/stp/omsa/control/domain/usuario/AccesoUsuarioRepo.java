@@ -14,16 +14,6 @@ import org.springframework.stereotype.Repository;
  *
  * @author cabreu
  */
-/* query  for access tree 
-    :
-
-    select a.*,d.dsc,d.dat_grp,coalesce(u.val,"false") as val 
-    from acc a 
-        inner join gnr_dat d on d.dat=a.scr and a.act 
-        left join usr_acc u on a.id=u.acc_id and u.usr_id=2  
-    order by d.dat_grp,a.fat_scr;
-
-*/
 @Repository
 public interface AccesoUsuarioRepo extends JpaRepository<AccesoUsuario, Integer>{
 
@@ -51,5 +41,17 @@ public interface AccesoUsuarioRepo extends JpaRepository<AccesoUsuario, Integer>
                    """,nativeQuery = true)
     public List<Object[]> ListadoAccesosPantallaUsuario(@Param("idusuario") Integer idUsuario,@Param("pantalla") String pantalla);
     
+    @Query( value ="""
+                   SELECT 
+                        a.*,
+                        d.dsc,
+                        d.dat_grp,
+                        coalesce(u.val, "false") as val 
+                   FROM acc a 
+                        INNER JOIN gnr_dat d ON d.dat=a.scr AND a.act 
+                        LEFT JOIN usr_acc u ON a.id=u.acc_id AND u.usr_id=:idusuario  
+                   ORDER BY d.dat_grp, a.fat_scr;
+                   """,nativeQuery = true)
+    public List<Object[]> ListadoAccesosUsuarioEditar(@Param("idusuario") int idUsuario);
     
 }

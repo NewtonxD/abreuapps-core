@@ -20,12 +20,16 @@ import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -149,7 +153,7 @@ public class UsuariosCntr {
         Usuario u =(Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Optional<Usuario> us=UsuarioServicio.obtener(idUsuario); 
 
-        if(us.isEmpty()){
+        if(!us.isPresent()){
 
             log.error("Error COD: 00537 al editar Usuario. Usuario no encontrado ("+idUsuario+")");
             request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, HttpStatus.NOT_FOUND.value());
@@ -168,31 +172,6 @@ public class UsuariosCntr {
         return "fragments/usr_mgr_registro :: content-default";  
     }
     
-     @PostMapping("/access")
-    public String PermisosUsuario(
-            HttpServletRequest request, 
-            Model model, 
-            String idUsuario
-    ) {  
-        
-        Usuario u =(Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Optional<Usuario> us=UsuarioServicio.obtener(idUsuario); 
-
-        if(us.isEmpty()){
-
-            log.error("Error COD: 00537 al editar Usuario. Usuario no encontrado ("+idUsuario+")");
-            request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, HttpStatus.NOT_FOUND.value());
-            
-            return "redirect:/error";
-
-        }
-        
-        model.addAttribute("usuario",us.get());
-        model.addAllAttributes(AccesoServicio.consultarAccesosPantallaUsuario(u.getId(), "usr_mgr_registro"));
-
-        return "fragments/usr_mgr_permisos :: content-default";  
-    }
-    
     @GetMapping("/myupdate")
     public String ActualizarMiUsuario(
             HttpServletRequest request, 
@@ -202,7 +181,7 @@ public class UsuariosCntr {
         Usuario u =(Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Optional<Usuario> us=UsuarioServicio.obtener(u.getUsername()); 
 
-        if(us.isEmpty()){
+        if(!us.isPresent()){
 
             log.error("Error COD: 00539 al editar mi Usuario. Mi Usuario no encontrado ("+u.getUsername()+")");
             request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, HttpStatus.NOT_FOUND.value());
@@ -314,4 +293,72 @@ public class UsuariosCntr {
         return "fragments/usr_mgr_principal :: content-default";
 
     }   
+    
+    @PostMapping("/access")
+    public String PermisosUsuario(
+            HttpServletRequest request, 
+            Model model, 
+            String idUsuario
+    ) {  
+        
+        Usuario u =(Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        
+        Map<String,Object> m=AccesoServicio.consultarAccesosPantallaUsuario(u.getId(),"usr_mgr_registro");
+ 
+        if(m.get("usr_mgr_registro")==null || (! (Boolean)m.get("usr_mgr_registro"))
+        ){
+            model.addAttribute("status", false);
+            model.addAttribute("msg", "No tiene permisos para realizar esta acción!");
+            return "fragments/usr_mgr_principal :: content-default";
+        }
+        
+        Optional<Usuario> us=UsuarioServicio.obtener(idUsuario); 
+
+        if(!us.isPresent()){
+
+            log.error("Error COD: 00537 al editar Usuario. Usuario no encontrado ("+idUsuario+")");
+            request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, HttpStatus.NOT_FOUND.value());
+            
+            return "redirect:/error";
+
+        }
+        
+        model.addAttribute("usuario",us.get());
+        model.addAllAttributes(AccesoServicio.consultarAccesosPantallaUsuario(u.getId(), "usr_mgr_registro"));
+        return "fragments/usr_mgr_permisos :: content-default";  
+    }
+    
+    @PostMapping(value="/get-access", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity ObtenerListadoPermisosUsuario(
+            HttpServletRequest request, 
+            @RequestBody String idUsuario
+    ) {  
+        
+        Usuario u =(Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        
+        Map<String,Object> m=AccesoServicio.consultarAccesosPantallaUsuario(u.getId(),"usr_mgr_registro");
+ 
+        if(m.get("usr_mgr_registro")==null || (! (Boolean)m.get("usr_mgr_registro"))
+        ){
+            return null;
+        }
+        
+        Optional<Usuario> us=UsuarioServicio.obtener(idUsuario.replace("idUsuario=", "")); 
+
+        if(!us.isPresent()){
+
+            log.error("Error COD: 00539 al editar Usuario. Usuario no encontrado ("+idUsuario+")");
+            request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, HttpStatus.NOT_FOUND.value());
+            
+            return null;
+
+        }
+        
+        return new ResponseEntity<>(
+                AccesoServicio.ListadoAccesosUsuarioEditar(us.get().getId()),
+                new HttpHeaders(),
+                HttpStatus.OK);  
+    }
+    
 }
