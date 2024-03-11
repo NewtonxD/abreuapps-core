@@ -9,9 +9,12 @@ function cargarPermisos(){
     
     //CREAMOS EL ARBOL Y LOS CAMPOS EXTRA DE LOS PERMISOS ESPECIALES
     console.log(data);
+    
 }
 
 $(function(){
+    
+    cargarPermisos();
     
     $(".atras").on("click",function(){
         //idUsuario
