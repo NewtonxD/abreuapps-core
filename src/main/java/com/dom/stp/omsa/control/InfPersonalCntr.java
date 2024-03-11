@@ -42,8 +42,6 @@ public class InfPersonalCntr {
     
     private final AccesoServ AccesoServicio;
     
-    private final UsuarioServ UsuarioServicio;
-    
     private final DatoServ dtserv;
     
     @PostMapping("/save")

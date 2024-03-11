@@ -24,8 +24,7 @@ public class AccesoServ {
     private final AccesoUsuarioRepo repo;
     
     private Object convertirValor(Object valor) {
-        if (valor instanceof String) {
-            String stringValue = (String) valor;
+        if (valor instanceof String stringValue) {
             
             if(!stringValue.contains(",")){
                 
@@ -73,6 +72,10 @@ public class AccesoServ {
         }
         
         return convert;
+    }
+    
+    public List<Object[]> ListadoAccesosUsuarioEditar(int idUsuario){
+        return repo.ListadoAccesosUsuarioEditar(idUsuario);
     }
     
 }

@@ -3,6 +3,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Other/javascript.js to edit this template
  */
 
+function cargarPermisos(){
+    var data=window.data_acc;
+    delete window.data_acc;
+    
+    //CREAMOS EL ARBOL Y LOS CAMPOS EXTRA DE LOS PERMISOS ESPECIALES
+    console.log(data);
+}
+
 $(function(){
     
     $(".atras").on("click",function(){
