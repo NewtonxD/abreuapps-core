@@ -77,7 +77,6 @@ $(function(){
     delete window.data_acc;
     
     var forest = constructForest(data);
-    
     $(".container").prepend(forest);
 
     var specialAccess = constructSpecialAccess(data);
