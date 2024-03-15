@@ -1,6 +1,4 @@
 
-    
-    
 function constructForest(data) {
     var forest = $('<div class="forest"></div>');
     var rootNodes = findChildren(null,data);
@@ -12,6 +10,11 @@ function constructForest(data) {
         constructBranch(ul, [root], data);
         forest.append($('<div class="row mt-4"></div>').append($('<div class="col-12"></div>').append(tree)));
     });
+    
+    var scriptEvent = $('<script>');
+    scriptEvent.attr('src', '/content/js/lib/treeclickevent.js');
+    forest.append(scriptEvent);
+
 
     return forest;
 }
@@ -82,13 +85,4 @@ $(function(){
     var specialAccess = constructSpecialAccess(data);
     $('.special-access').append(specialAccess);
 
-
-    // Attach click event listener to checkboxes
-    $('.tree input[type="checkbox"]').on('click', function() {
-        if(this.checked){
-            $(this).parents('li').children('input[type=checkbox]').prop('checked',true);
-        }    
-        $(this).parent().find('input[type=checkbox]').prop('checked',this.checked);	
-    
-    });
 });
