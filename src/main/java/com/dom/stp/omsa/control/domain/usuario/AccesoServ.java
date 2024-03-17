@@ -4,10 +4,13 @@
  */
 package com.dom.stp.omsa.control.domain.usuario;
 
+import com.dom.stp.omsa.control.domain.dato.DatoRepo;
 import jakarta.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,12 +26,16 @@ public class AccesoServ {
     
     private final AccesoUsuarioRepo repo;
     
+    private final AccesoRepo accRepo;
+    
+    private final DatoRepo dataRepo;
+    
     private Object convertirValor(Object valor) {
         if (valor instanceof String stringValue) {
             
             if(!stringValue.contains(",")){
                 
-                if (stringValue.equalsIgnoreCase("true") || stringValue.equalsIgnoreCase("false")) {
+                if (stringValue.equalsIgnoreCase("on") ||stringValue.equalsIgnoreCase("off") ||stringValue.equalsIgnoreCase("true") || stringValue.equalsIgnoreCase("false")) {
                     return Boolean.valueOf(stringValue);
                 } else if (stringValue.matches("-?\\d+")) {
 
@@ -76,6 +83,50 @@ public class AccesoServ {
     
     public List<Object[]> ListadoAccesosUsuarioEditar(int idUsuario){
         return repo.ListadoAccesosUsuarioEditar(idUsuario);
+    }
+    
+        
+    public void GuardarTodosMap(Map<String,String> accesos,Usuario usuario){
+        List<AccesoUsuario> listaAcceso = new ArrayList<>();
+        for (String key : accesos.keySet()) {
+            //si el acceso existe crear acceso y agregar
+            if(dataRepo.existsById(key)){
+                Optional<Acceso> acc=accRepo.findByPantalla(key);
+                
+                if(acc.isPresent()){
+                    
+                    Optional<AccesoUsuario> accUsr= repo.findAllByUsuarioIdAndAccesoId(
+                        usuario.getId(),
+                        acc.get().getId()
+                    );
+                    
+                    if(accUsr.isPresent()){
+                        //editando
+                        AccesoUsuario AccUsr=accUsr.get();
+                        AccUsr.setActivo(true);
+                        AccUsr.setValor(
+                                accesos.get(key).equals("on")?"true":(accesos.get(key).equals("off")?"false":accesos.get(key))
+                        );
+                        listaAcceso.add(AccUsr);
+                    }else{
+                        //nuevo
+                        listaAcceso.add(
+                            new AccesoUsuario(
+                                null,
+                                accesos.get(key).equals("on")?"true":(accesos.get(key).equals("off")?"false":accesos.get(key)),
+                                true,
+                                usuario,
+                                acc.get()
+                            )
+                        );
+                        
+                    }
+                    
+                }
+            }
+        }
+        
+        repo.saveAllAndFlush(listaAcceso);
     }
     
 }

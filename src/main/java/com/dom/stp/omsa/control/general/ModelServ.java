@@ -26,14 +26,6 @@ import org.springframework.ui.Model;
 @Service
 public class ModelServ {
     
-    private final GrupoDatoServ GrupoServicio;
-    
-    private final DatoServ DatoServicio;
-    
-    private final AccesoServ AccesoServicio;
-    
-    private final UsuarioServ UsuarioServicio;
-    
     private final Map<String,Runnable> actions=new HashMap<>();
     
     private Model dataModel=null;
@@ -42,10 +34,7 @@ public class ModelServ {
     
     //  custom constructor injection
     public ModelServ(GrupoDatoServ GrupoServicio,DatoServ DatoServicio,AccesoServ AccesoServicio,UsuarioServ UsuarioServicio){
-        this.AccesoServicio=AccesoServicio;
-        this.GrupoServicio=GrupoServicio;
-        this.DatoServicio=DatoServicio;
-        this.UsuarioServicio=UsuarioServicio;
+        
         
         this.actions.put("dat_gen_consulta_grupos", ()->{
                 Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "dat_gen_consulta_grupos");

@@ -28,11 +28,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                     </div>
                                     <div class="row me-4 pe-4  d-flex justify-content-end">
                                         <div class="mb-3 col-auto">
-                                            <button type="button" class="btn btn-primary" id="BtnSave"><b><i class="fa fa-save"></i>&nbsp;Guardar</b></button>
+                                            <button type="button" class="btn btn-primary" onclick="saveUsuarioAccess()" id="BtnSave"><b><i class="fa fa-save"></i>&nbsp;Guardar</b></button>
                                         </div>
                                     </div>
                                     <div class="row m-4  d-flex justify-content-center">
-                                        <input type="hidden" th:value="${usuario.username}" id="idUsuario"/>
+                                        <input type="hidden" name="idUsuario" th:value="${usuario.username}" id="idUsuario"/>
                                         <div class="mb-3 col-auto">
                                             <button type="button" class="btn btn-primary" id="BtnMrkAll" onclick="checkAll()"><b><i class="fa fa-check-square"></i>&nbsp;Marcar Todos</b></button>
                                         </div>
@@ -40,7 +40,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                             <button type="button" class="btn btn-danger" id="BtnMrkNone" onclick="checkNone()"><b><i class="fa fa-square-o"></i>&nbsp;Desmarcar Todos</b></button>
                                         </div>
                                         <div class="mb-3 col-auto">
-                                            <input type="text" id="idUsuarioCopy" name="idUsuarioCopy" class="form-control"/>
+                                            <input type="text" id="idUsuarioCopy" class="form-control"/>
                                         </div>
                                          <div class="mb-3 col-auto">
                                             <button type="button" class="btn btn-secondary" id="BtnCopy" onclick="usuarioCopyAccess()"><b><i class="fa fa-users"></i>&nbsp;Copiar</b></button>
