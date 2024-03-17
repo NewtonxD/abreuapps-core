@@ -5,6 +5,7 @@
 package com.dom.stp.omsa.control.domain.usuario;
 
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Repository;
 public interface AccesoUsuarioRepo extends JpaRepository<AccesoUsuario, Integer>{
 
     public List<AccesoUsuario> findAllByUsuarioId(Integer idUsuario);
+    public Optional<AccesoUsuario> findAllByUsuarioIdAndAccesoId(Integer idUsuario,Integer idAcceso);
     
     @Query( value ="""
                    SELECT 

@@ -27,6 +27,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -359,6 +360,44 @@ public class UsuariosCntr {
                 AccesoServicio.ListadoAccesosUsuarioEditar(us.get().getId()),
                 new HttpHeaders(),
                 HttpStatus.OK);  
+    }
+    
+    @PostMapping(value="/save-acc")
+    public String GuardarPermisosUsuario(
+            HttpServletRequest request, 
+            Model model,
+            @RequestParam Map<String,String> data
+    ) {
+        
+        Usuario u=(Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        
+        Map<String,Object> m=AccesoServicio.consultarAccesosPantallaUsuario(u.getId(),"usr_mgr_registro");
+ 
+        if(m.get("usr_mgr_registro")==null || (! (Boolean)m.get("usr_mgr_registro"))
+        ){
+            model.addAttribute("status", false);
+            model.addAttribute("msg", "No tiene permisos para realizar esta acción!");
+            return "fragments/usr_mgr_principal :: content-default";
+        }
+        
+        Optional<Usuario> usuario=UsuarioServicio.obtener(data.get("idUsuario"));
+        if(usuario.isPresent()){
+            UsuarioServicio.cerrarSesion(usuario.get().getUsername());
+            AccesoServicio.GuardarTodosMap(data, usuario.get());
+            model.addAttribute("status", true);
+            model.addAttribute("msg", "Permisos guardados exitosamente!");
+           
+        } else {
+            
+            model.addAttribute("status", false);
+            model.addAttribute("msg", "Al parecer alguien hubo un inconveniente con la transacción. Por favor, inténtalo otra vez. COD: 00545");
+            
+        }
+        
+        dmService.load("usr_mgr_principal", model, u.getId());
+        
+        return "fragments/usr_mgr_principal :: content-default";
+
     }
     
 }
