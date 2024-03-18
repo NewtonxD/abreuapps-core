@@ -7,11 +7,10 @@ $(function(){
     
     $('.tree input[type="checkbox"]').on('click', function() {
         if(this.checked){
-            $(this).parents('li').children('input[type=checkbox]').prop('checked',true);
+            $(this).parent().parents('li').children('input[type=checkbox]').prop('checked',true);
         }    
-        $(this).parent().find('input[type=checkbox]').prop('checked',this.checked);	
+        $(this).parent().parent().find('input[type=checkbox]').prop('checked',this.checked);	
     
     });
-    
     
 });

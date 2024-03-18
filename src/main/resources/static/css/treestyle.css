@@ -70,11 +70,11 @@ right connector from last child*/
 
 .tree li a{
 	border: 1px solid #ccc;
-	padding: 5px 10px;
+	padding: 2px 5px;
 	text-decoration: none;
 	color: #3a3a3a;
 	display: inline-block;
-	
+        font-size: 0.75rem !important;
 	border-radius: 5px;
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;

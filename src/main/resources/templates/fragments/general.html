@@ -201,18 +201,18 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 data-bs-parent="#sidenavAccordion"
                                 >
                                 <ul class="sb-sidenav-menu-nested nav btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                                    <li>
-                                        <a class="nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded " href="#" id="dat_gen_principal" th:if="${dat_gen_principal}">
+                                    <li th:if="${dat_gen_principal}">
+                                        <a class="nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded " href="#" id="dat_gen_principal">
                                             &MediumSpace; Datos Generales
                                         </a>
                                     </li>
-                                    <li>
-                                        <a class="nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded " href="#" id="sys_configuracion" th:if="${sys_configuracion}">
+                                    <li th:if="${sys_configuracion}">
+                                        <a class="nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded " href="#" id="sys_configuracion">
                                             &MediumSpace; Configuración
                                         </a>
                                     </li>
-                                    <li>
-                                        <a class="nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded " href="#" id="usr_mgr_principal" th:if="${usr_mgr_principal}">
+                                    <li th:if="${usr_mgr_principal}">
+                                        <a class="nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded " href="#" id="usr_mgr_principal">
                                             &MediumSpace; Usuarios
                                         </a>
                                     </li>

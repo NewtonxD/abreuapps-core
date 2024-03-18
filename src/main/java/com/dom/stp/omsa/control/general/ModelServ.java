@@ -35,7 +35,6 @@ public class ModelServ {
     //  custom constructor injection
     public ModelServ(GrupoDatoServ GrupoServicio,DatoServ DatoServicio,AccesoServ AccesoServicio,UsuarioServ UsuarioServicio){
         
-        
         this.actions.put("dat_gen_consulta_grupos", ()->{
                 Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "dat_gen_consulta_grupos");
                 dataModel.addAllAttributes(acc);
@@ -88,6 +87,13 @@ public class ModelServ {
                 dataModel.addAttribute("persona",p);
                 dataModel.addAttribute("sangre",DatoServicio.consultarPorGrupo("Tipos Sanguineos"));
                 dataModel.addAttribute("sexo",DatoServicio.consultarPorGrupo("sexo"));
+                dataModel.addAllAttributes(acc);                
+            }
+        );
+        
+        this.actions.put("sys_configuracion", ()->{
+                Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "sys_configuracion");
+                //dataModel.addAttribute("usuarios", UsuarioServicio.consultar());
                 dataModel.addAllAttributes(acc);                
             }
         );

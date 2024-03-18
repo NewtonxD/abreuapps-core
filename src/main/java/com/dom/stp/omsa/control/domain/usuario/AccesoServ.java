@@ -105,7 +105,7 @@ public class AccesoServ {
                         AccesoUsuario AccUsr=accUsr.get();
                         AccUsr.setActivo(true);
                         AccUsr.setValor(
-                                accesos.get(key).equals("on")?"true":(accesos.get(key).equals("off")?"false":accesos.get(key))
+                            accesos.get(key).equals("on")?"true":(accesos.get(key).equals("off")?"false":accesos.get(key))
                         );
                         listaAcceso.add(AccUsr);
                     }else{
