@@ -8,6 +8,7 @@ package com.dom.stp.omsa.control.general;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
  * @author Carlos Abreu Pérez
  */
 @Service
+@Slf4j
 public class SSEServ {
     
     @Async
@@ -27,7 +29,8 @@ public class SSEServ {
             try {
                 emitter.send(Datos);
             } catch (IOException e) {
-                emitter.completeWithError(e);
+                log.error("SSEServ: Error al emitir "+e.getMessage());
+                emitter.complete();
                 emitters.remove(emitter);
             }
         });
