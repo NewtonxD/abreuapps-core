@@ -23,7 +23,7 @@ function constructBranch(parent, nodes, data) {
     nodes.forEach(function(node) {
         if (node[6]!=="Permisos"){
             var li = $('<li></li>');
-            var input = $('<a href="#"> '+'<input type="checkbox" name="'+node[3]+'" '+(node[7]==="true"?'checked="checked"> ':'> ')+'</input>'+ node[5] + '</a>');
+            var input = $('<a><input type="checkbox" name="'+node[3]+'" '+(node[7]==="true"?'checked="checked"> ':'> ')+'</input>'+ node[5] + '</a>');
             li.append(input);
 
             var children = findChildren(node[3], data);
