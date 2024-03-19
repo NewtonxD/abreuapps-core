@@ -7,7 +7,7 @@ $(function(){
     
     $('.tree input[type="checkbox"]').on('click', function() {
         if(this.checked){
-            $(this).parent().parents('li').children('input[type=checkbox]').prop('checked',true);
+            $(this).parent().parents('li').children('a').children('input[type=checkbox]').prop('checked',true);
         }    
         $(this).parent().parent().find('input[type=checkbox]').prop('checked',this.checked);	
     
