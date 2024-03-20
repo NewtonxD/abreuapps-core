@@ -26,7 +26,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "rta_pda")
+@Table(name = "rta_pda",schema = "transport")
 public class ParadasRutas {
     
     @Id

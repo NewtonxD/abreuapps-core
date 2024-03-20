@@ -119,7 +119,7 @@ public class MainCntr {
         
         userBd.setCambiarPassword(false);
         userBd.setContraseña(passwordEncoder.encode(newPass));
-        UsuarioServicio.guardar(userBd, 1, true);
+        UsuarioServicio.guardar(userBd, UsuarioServicio.obtenerPorId(1).get() , true);
         respuesta.put("status", "success");
         respuesta.put("msg", "Contraseña fue guardada exitosamente! En breve lo redirigiremos.");
         return respuesta;

@@ -34,7 +34,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "usr")
+@Table(name = "usr",schema = "public")
 public class Usuario implements UserDetails {
 
     @Id
@@ -54,17 +54,21 @@ public class Usuario implements UserDetails {
     @Column(name = "act")
     private boolean activo;
 
-    @Column(name = "mde_by")
-    private Integer hecho_por;
-
-    @Column(name = "mde_at")
+    @Column(name= "mde_by")
+    @OneToOne()
+    @JoinColumn(name = "id")
+    private Usuario hecho_por;
+    
+    @Column(name= "mde_at")
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date fecha_registro;
-
-    @Column(name = "upd_by")
-    private Integer actualizado_por;
-
-    @Column(name = "upd_at")
+    
+    @Column(name= "upd_by")
+    @OneToOne()
+    @JoinColumn(name = "id")
+    private Usuario actualizado_por;
+    
+    @Column(name= "upd_at")
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date fecha_actualizacion;
     

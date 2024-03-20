@@ -68,7 +68,7 @@ public class UsuarioServ {
                 "Su nueva contraseña es "+Contraseña+" . Al ingresar podra colocar una nueva contraseña.");
         u.setContraseña(passwordEncoder.encode(Contraseña));
         u.setCambiarPassword(true);
-        return guardar(u,u.getId(),true);
+        return guardar(u,u,true);
     }
     
     public boolean coincidenContraseña(String Contraseña,int IdUsuario){
@@ -79,10 +79,10 @@ public class UsuarioServ {
         );
     }
     
-    public Usuario guardar(Usuario gd, Integer idUsuario,boolean existe){
+    public Usuario guardar(Usuario gd, Usuario usuario,boolean existe){
         
         if(existe){ 
-            gd.setActualizado_por(idUsuario);
+            gd.setActualizado_por(usuario);
         }else{
             String nuevaContraseña=generarPassword();
             correoServicio.enviarMensajeSimple(
@@ -92,7 +92,7 @@ public class UsuarioServ {
             
             gd.setCambiarPassword(true);
             gd.setContraseña(passwordEncoder.encode(nuevaContraseña));
-            gd.setHecho_por(idUsuario);
+            gd.setHecho_por(usuario);
             gd.setFecha_registro(new Date());
         }
         gd.setFecha_actualizacion(new Date());

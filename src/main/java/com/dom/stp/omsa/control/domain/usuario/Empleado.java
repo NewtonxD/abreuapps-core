@@ -30,7 +30,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "emp")
+@Table(name = "emp",schema = "payroll")
 public class Empleado {
     
     @Id

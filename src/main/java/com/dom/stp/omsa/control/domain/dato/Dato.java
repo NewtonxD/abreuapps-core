@@ -4,9 +4,12 @@
  */
 package com.dom.stp.omsa.control.domain.dato;
 
+import com.dom.stp.omsa.control.domain.usuario.Usuario;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -29,7 +32,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "gnr_dat")
+@Table(name = "gnr_dat",schema = "public")
 public class Dato {
     
     @Id
@@ -37,7 +40,9 @@ public class Dato {
     private String dato;
     
     @Column(name = "dat_grp")
-    private String grupoDato;
+    @OneToOne()
+    @JoinColumn(name = "grp")
+    private GrupoDato grupo_dato;
 
     @Column(name = "dsc")
     private String descripcion;
@@ -46,14 +51,18 @@ public class Dato {
     private boolean activo;
     
     @Column(name= "mde_by")
-    private Integer hecho_por;
+    @OneToOne()
+    @JoinColumn(name = "id")
+    private Usuario hecho_por;
     
     @Column(name= "mde_at")
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date fecha_registro;
     
     @Column(name= "upd_by")
-    private Integer actualizado_por;
+    @OneToOne()
+    @JoinColumn(name = "id")
+    private Usuario actualizado_por;
     
     @Column(name= "upd_at")
     @Temporal(value = TemporalType.TIMESTAMP)

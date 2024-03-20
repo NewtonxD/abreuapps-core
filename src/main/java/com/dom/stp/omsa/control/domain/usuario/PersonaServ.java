@@ -26,12 +26,12 @@ public class PersonaServ {
     
     private final PersonaRepo repo;
     
-    public Persona guardar(Persona gd, Integer idUsuario,boolean existe){
+    public Persona guardar(Persona gd, Usuario usuario,boolean existe){
         
         if(existe){ 
-            gd.setActualizado_por(idUsuario);
+            gd.setActualizado_por(usuario);
         }else{
-            gd.setHecho_por(idUsuario);
+            gd.setHecho_por(usuario);
             gd.setFecha_registro(new Date());
         }
         gd.setFecha_actualizacion(new Date());

@@ -25,12 +25,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "sys_cnf")
+@Table(name = "sys_cnf",schema = "public")
 public class ConfiguraciónSistema {
     
     @Id
     @Column(name = "cod")
-    private String dato;
+    private String codigo;
 
     @Column(name = "dsc")
     private String descripción;
@@ -38,6 +38,4 @@ public class ConfiguraciónSistema {
     @Column(name = "val")
     private String valor;
     
-    @Column(name = "cat")
-    private String categoria;
 }

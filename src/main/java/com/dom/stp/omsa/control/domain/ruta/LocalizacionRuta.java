@@ -28,7 +28,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "rta_loc")
+@Table(name = "rta_loc",schema = "transport")
 public class LocalizacionRuta {
     
     @Id

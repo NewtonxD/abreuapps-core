@@ -78,7 +78,7 @@ public class DatosCntr {
 
         }
 
-        Optional<GrupoDato> grupo = GrupoServicio.obtener(grpdt.getGrupoDato());
+        Optional<GrupoDato> grupo = GrupoServicio.obtener(grpdt.getGrupo());
 
         boolean ext = false, ss = true;
 
@@ -101,7 +101,7 @@ public class DatosCntr {
 
         if (ss) {
 
-            GrupoDato d = GrupoServicio.guardar(grpdt, u.getId(), ext);
+            GrupoDato d = GrupoServicio.guardar(grpdt, u, ext);
             model.addAttribute("status", true);
             model.addAttribute("msg", "Registro guardado exitosamente!");
             map.put(ext ? "U" : "I", d);
@@ -204,7 +204,7 @@ public class DatosCntr {
 
         if (ss) {
 
-            Dato d = DatoServicio.guardar(dtgnr, u.getId(), ext);
+            Dato d = DatoServicio.guardar(dtgnr, u, ext);
             model.addAttribute("status", true);
             model.addAttribute("msg", "Registro guardado exitosamente!");
             map.put(ext ? "U" : "I", d);
