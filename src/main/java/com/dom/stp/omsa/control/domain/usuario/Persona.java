@@ -1,10 +1,13 @@
 package com.dom.stp.omsa.control.domain.usuario;
 
+import com.dom.stp.omsa.control.domain.dato.Dato;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -26,7 +29,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "ppl_inf")
+@Table(name = "ppl_inf",schema = "public")
 public class Persona{
 
     @Id
@@ -44,7 +47,9 @@ public class Persona{
     private String cedula;
     
     @Column(name = "sex")
-    private String sexo;
+    @OneToOne()
+    @JoinColumn(name = "dat")
+    private Dato sexo;
     
     @Column(name = "num_cel")
     private String numero_celular;
@@ -62,23 +67,29 @@ public class Persona{
     private String apodo;
     
     @Column(name = "bld_tpe")
-    private String tipo_sangre;
+    @OneToOne()
+    @JoinColumn(name = "dat")
+    private Dato tipo_sangre;
     
     @Column(name = "brt_at")
     @Temporal(value = TemporalType.DATE)
     private Date fecha_nacimiento;
 
-    @Column(name = "mde_by")
-    private Integer hecho_por;
-
-    @Column(name = "mde_at")
+    @Column(name= "mde_by")
+    @OneToOne()
+    @JoinColumn(name = "id")
+    private Usuario hecho_por;
+    
+    @Column(name= "mde_at")
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date fecha_registro;
-
-    @Column(name = "upd_by")
-    private Integer actualizado_por;
-
-    @Column(name = "upd_at")
+    
+    @Column(name= "upd_by")
+    @OneToOne()
+    @JoinColumn(name = "id")
+    private Usuario actualizado_por;
+    
+    @Column(name= "upd_at")
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date fecha_actualizacion;
  

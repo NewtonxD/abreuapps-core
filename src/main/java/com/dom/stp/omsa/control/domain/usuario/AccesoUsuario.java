@@ -29,7 +29,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "usr_acc")
+@Table(name = "usr_acc",schema = "public")
 public class AccesoUsuario {
     
     @Id

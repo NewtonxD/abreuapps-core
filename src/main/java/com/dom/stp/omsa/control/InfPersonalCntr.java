@@ -92,7 +92,7 @@ public class InfPersonalCntr {
         Persona d = null;
         if (ss) {
             
-            d = PersonaServicio.guardar(persona, u.getId(), ext);
+            d = PersonaServicio.guardar(persona, u, ext);
             
         }
         

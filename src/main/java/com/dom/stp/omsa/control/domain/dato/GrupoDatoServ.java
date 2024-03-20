@@ -4,6 +4,7 @@
  */
 package com.dom.stp.omsa.control.domain.dato;
 
+import com.dom.stp.omsa.control.domain.usuario.Usuario;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -24,11 +25,11 @@ public class GrupoDatoServ {
     
     private final GrupoDatoRepo repo;
     
-    public GrupoDato guardar(GrupoDato gd, Integer idUsuario,boolean existe){
+    public GrupoDato guardar(GrupoDato gd, Usuario usuario,boolean existe){
         if(existe){ 
-            gd.setActualizado_por(idUsuario);
+            gd.setActualizado_por(usuario);
         }else{
-            gd.setHecho_por(idUsuario);
+            gd.setHecho_por(usuario);
             gd.setFecha_registro(new Date(System.currentTimeMillis()));
         }
         gd.setFecha_actualizacion(new Date(System.currentTimeMillis()));

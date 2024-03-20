@@ -27,7 +27,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -122,7 +121,7 @@ public class UsuariosCntr {
             if(! usuario.getUsername().equals(u.getUsername()) )
                 UsuarioServicio.cerrarSesion(usuario.getUsername());
             
-            Usuario d = UsuarioServicio.guardar(usuario, u.getId(), ext);
+            Usuario d = UsuarioServicio.guardar(usuario, u, ext);
             model.addAttribute("status", true);
             model.addAttribute("msg", "Registro guardado exitosamente!");
             map.put(ext ? "U" : "I", d);

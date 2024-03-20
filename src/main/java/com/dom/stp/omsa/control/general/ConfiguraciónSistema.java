@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "sys_cnf")
+@Table(name = "sys_cnf",schema = "public")
 public class ConfiguraciónSistema {
     
     @Id
