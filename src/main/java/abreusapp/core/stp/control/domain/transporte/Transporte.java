@@ -9,6 +9,7 @@ import abreusapp.core.stp.control.domain.usuario.Usuario;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
@@ -39,26 +40,26 @@ public class Transporte {
     @Column(name = "pl")
     private String placa;
 
-    @OneToOne
+    @ManyToOne
     @PrimaryKeyJoinColumn
     private Dato marca;
 
-    @OneToOne
+    @ManyToOne
     @PrimaryKeyJoinColumn
     private Dato modelo;
     
     @Column(name = "cap_pax")
     private Integer capacidad_pasajeros;
     
-    @OneToOne
+    @ManyToOne
     @PrimaryKeyJoinColumn
     private Dato tipo_vehiculo;
 
-    @OneToOne
+    @ManyToOne
     @PrimaryKeyJoinColumn
     private Dato estado;
 
-    @OneToOne
+    @ManyToOne
     @PrimaryKeyJoinColumn
     private Usuario hecho_por;
     
@@ -66,7 +67,7 @@ public class Transporte {
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date fecha_registro;
     
-    @OneToOne
+    @ManyToOne
     @PrimaryKeyJoinColumn
     private Usuario actualizado_por;
     

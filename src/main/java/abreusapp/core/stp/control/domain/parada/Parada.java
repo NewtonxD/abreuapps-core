@@ -9,7 +9,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
@@ -57,7 +57,7 @@ public class Parada {
     @Column(name = "act")
     private boolean activo;
     
-    @OneToOne
+    @ManyToOne
     @PrimaryKeyJoinColumn
     private Usuario hecho_por;
     
@@ -65,7 +65,7 @@ public class Parada {
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date fecha_registro;
     
-    @OneToOne
+    @ManyToOne
     @PrimaryKeyJoinColumn
     private Usuario actualizado_por;
     

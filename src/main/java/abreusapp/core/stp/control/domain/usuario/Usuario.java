@@ -6,6 +6,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
@@ -54,7 +56,7 @@ public class Usuario implements UserDetails {
     @Column(name = "act")
     private boolean activo;
 
-    @OneToOne
+    @ManyToOne
     @PrimaryKeyJoinColumn
     private Usuario hecho_por;
     
@@ -62,7 +64,7 @@ public class Usuario implements UserDetails {
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date fecha_registro;
     
-    @OneToOne
+    @ManyToOne
     @PrimaryKeyJoinColumn
     private Usuario actualizado_por;
     
@@ -74,7 +76,7 @@ public class Usuario implements UserDetails {
     private boolean cambiarPassword;
     
     @OneToOne(fetch = FetchType.EAGER)
-    @PrimaryKeyJoinColumn // Nombre de la columna de clave foránea
+    @JoinColumn(name = "persona_id",nullable = false) // Nombre de la columna de clave foránea
     private Persona persona;
 
     @Override
