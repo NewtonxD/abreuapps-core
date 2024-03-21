@@ -4,8 +4,8 @@ import abreusapp.core.stp.control.domain.dato.Dato;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
@@ -46,7 +46,7 @@ public class Persona{
     @Column(name = "ced")
     private String cedula;
     
-    @OneToOne
+    @ManyToOne
     @PrimaryKeyJoinColumn
     private Dato sexo;
     
@@ -65,7 +65,7 @@ public class Persona{
     @Column(name = "nic")
     private String apodo;
     
-    @OneToOne
+    @ManyToOne
     @PrimaryKeyJoinColumn
     private Dato tipo_sangre;
     
@@ -73,7 +73,7 @@ public class Persona{
     @Temporal(value = TemporalType.DATE)
     private Date fecha_nacimiento;
 
-    @OneToOne
+    @ManyToOne
     @PrimaryKeyJoinColumn
     private Usuario hecho_por;
     
@@ -81,7 +81,7 @@ public class Persona{
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date fecha_registro;
     
-    @OneToOne
+    @ManyToOne
     @PrimaryKeyJoinColumn
     private Usuario actualizado_por;
     

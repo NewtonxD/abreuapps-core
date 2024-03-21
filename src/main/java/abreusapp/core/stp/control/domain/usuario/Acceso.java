@@ -8,9 +8,8 @@ import abreusapp.core.stp.control.domain.dato.Dato;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -38,11 +37,11 @@ public class Acceso {
     @Column(name = "id")
     private Integer id;
     
-    @OneToOne
+    @ManyToOne
     @PrimaryKeyJoinColumn
     private Dato tipo_dato;
     
-    @OneToOne
+    @ManyToOne
     @PrimaryKeyJoinColumn
     private Dato pantalla;
     

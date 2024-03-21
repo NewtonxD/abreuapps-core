@@ -11,7 +11,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
@@ -43,15 +44,15 @@ public class AsignacionRuta {
     @Column(name = "id")
     private Integer id;
     
-    @OneToOne
+    @ManyToOne
     @PrimaryKeyJoinColumn
     private Transporte placa;
 
-    @OneToOne
+    @ManyToOne
     @PrimaryKeyJoinColumn
     private Ruta ruta;
     
-    @OneToOne
+    @ManyToOne
     @PrimaryKeyJoinColumn
     private Dato estado;
 
@@ -69,7 +70,7 @@ public class AsignacionRuta {
     @Column(name = "id_cob")
     private Integer cobrador_id;
     
-    @OneToOne
+    @ManyToOne
     @PrimaryKeyJoinColumn
     private Usuario hecho_por;
     
@@ -77,7 +78,7 @@ public class AsignacionRuta {
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date fecha_registro;
     
-    @OneToOne
+    @ManyToOne
     @PrimaryKeyJoinColumn
     private Usuario actualizado_por;
     
