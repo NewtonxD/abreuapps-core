@@ -5,6 +5,9 @@
 
     
 function cargar_contenido(id){
+    
+    if(typeof closeEventSource==='function') closeEventSource();
+    
     $("#content-page").css("overflow-y","hidden");
 
     var fadeout=$("#content-page").hide().delay(150).promise();

@@ -67,7 +67,7 @@ public class UsuarioServ {
                 u.getCorreo(),
                 "Sistema: Su contraseña fue actualizada", 
                 "Su nueva contraseña es "+Contraseña+" . Al ingresar podra colocar una nueva contraseña.");
-        u.setContraseña(passwordEncoder.encode(Contraseña));
+        u.setPassword(passwordEncoder.encode(Contraseña));
         u.setCambiarPassword(true);
         return guardar(u,u,true);
     }
@@ -76,14 +76,14 @@ public class UsuarioServ {
         
         return passwordEncoder.matches(
             Contraseña, 
-            repo.findById(IdUsuario).get().getContraseña()
+            repo.findById(IdUsuario).get().getPassword()
         );
     }
     
     public Usuario guardar(Usuario gd, Usuario usuario,boolean existe){
         
         if(existe){ 
-            gd.setActualizado_por(usuario);
+            gd.setActualizado_por(usuario.getId());
         }else{
             String nuevaContraseña=generarPassword();
             correoServicio.enviarMensajeSimple(
@@ -92,8 +92,8 @@ public class UsuarioServ {
                 "Su nueva contraseña es "+nuevaContraseña+" . Al ingresar podra colocar una nueva contraseña.");
             
             gd.setCambiarPassword(true);
-            gd.setContraseña(passwordEncoder.encode(nuevaContraseña));
-            gd.setHecho_por(usuario);
+            gd.setPassword(passwordEncoder.encode(nuevaContraseña));
+            gd.setHecho_por(usuario.getId());
             gd.setFecha_registro(new Date());
         }
         gd.setFecha_actualizacion(new Date());

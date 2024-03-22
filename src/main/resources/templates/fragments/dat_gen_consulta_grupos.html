@@ -89,9 +89,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                         <tbody>
                                                 <tr
                                                         th:each="g: ${grupos}"
-                                                        th:attr="data-id=${g.GrupoDato}"
+                                                        th:attr="data-id=${g.grupo}"
                                                 >
-                                                        <th scope="row" th:text="${g.GrupoDato}"></th>
+                                                        <th scope="row" th:text="${g.grupo}"></th>
                                                         <td th:text="${g.descripcion}"></td>
                                                         <td th:text="${g.activo?'Activo':'Inactivo'}"></td>
                                                 </tr>

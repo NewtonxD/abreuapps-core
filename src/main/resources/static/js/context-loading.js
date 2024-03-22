@@ -8,6 +8,9 @@ $(function(){
     $(".config-user").on("click",function(e){
         e.preventDefault;
         hideSidebar();
+        
+        if(typeof closeEventSource==='function') closeEventSource();
+        
         $("#content-page").css("overflow-y","hidden");
         var fadeout=$("#content-page").hide().delay(150).promise();
         
@@ -49,6 +52,10 @@ $(function(){
     
     $(".acceso").on("click",function(e){
         e.preventDefault;
+        
+        
+        if(typeof closeEventSource==='function') closeEventSource();
+        
         var id=$(this).attr("id");
         //$('.nav').children('a.acceso').removeClass('active');
         //$(this).addClass("active");

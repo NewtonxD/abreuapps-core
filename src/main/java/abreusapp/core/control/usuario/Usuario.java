@@ -1,16 +1,16 @@
 package abreusapp.core.control.usuario;
 
 import abreusapp.core.control.general.Persona;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -38,6 +38,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @AllArgsConstructor
 @Entity
 @Table(name = "usr",schema = "public")
+@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@UsuarioId")
 public class Usuario implements UserDetails {
 
     @Id
@@ -52,22 +53,21 @@ public class Usuario implements UserDetails {
     private String correo;
 
     @Column(name = "pwd")
-    private String contraseña;
+    @JsonIgnore
+    private String password;
 
     @Column(name = "act")
     private boolean activo;
 
-    @ManyToOne
-    @PrimaryKeyJoinColumn
-    private Usuario hecho_por;
+    @Column(name="hecho_por_id")
+    private Integer hecho_por;
     
     @Column(name= "mde_at")
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date fecha_registro;
     
-    @ManyToOne
-    @PrimaryKeyJoinColumn
-    private Usuario actualizado_por;
+    @Column(name="actualizado_por_id")
+    private Integer actualizado_por;
     
     @Column(name= "upd_at")
     @Temporal(value = TemporalType.TIMESTAMP)
@@ -87,7 +87,7 @@ public class Usuario implements UserDetails {
 
     @Override
     public String getPassword() {
-        return contraseña;
+        return password;
     }
 
     @Override

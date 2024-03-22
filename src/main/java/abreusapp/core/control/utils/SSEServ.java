@@ -7,8 +7,7 @@ package abreusapp.core.control.utils;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Map;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -20,28 +19,27 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
  * @author Carlos Abreu Pérez
  */
 @Service
-@Slf4j
 public class SSEServ {
     
     @Async
-    public void emitir(CopyOnWriteArrayList<SseEmitter> emitters,HashMap<String, Object> Datos){
-        emitters.forEach(emitter -> {
+    public void emitir(Map<String,SseEmitter> emitters,HashMap<String, Object> Datos){
+        
+        for (Map.Entry<String,SseEmitter> val : emitters.entrySet()) {
             try {
-                emitter.send(Datos);
+                val.getValue().send(Datos);
             } catch (IOException e) {
-                log.error("SSEServ: Error al emitir "+e.getMessage());
-                emitter.complete();
-                emitters.remove(emitter);
+                val.getValue().completeWithError(e);
+                emitters.remove(val.getKey());
             }
-        });
+        }
     }
     
-    public SseEmitter agregar(CopyOnWriteArrayList<SseEmitter> emitters){
+    public SseEmitter agregar(String nombre,Map<String,SseEmitter> emitters){
         long timeout = 900000;
         SseEmitter emitter = new SseEmitter(timeout);
-        emitter.onCompletion(() -> emitters.remove(emitter));
+        emitter.onCompletion(() -> emitters.remove(nombre));
         emitter.onTimeout(() -> emitter.complete());
-        emitters.add(emitter);
+        emitters.put(nombre,emitter);
         return emitter ;
     }
 }

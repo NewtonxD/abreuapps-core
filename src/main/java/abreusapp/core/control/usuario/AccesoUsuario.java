@@ -4,6 +4,8 @@
  */
 package abreusapp.core.control.usuario;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,6 +31,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Table(name = "usr_acc",schema = "public")
+@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@AccesoUsuarioId")
 public class AccesoUsuario {
     
     @Id

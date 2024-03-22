@@ -5,7 +5,6 @@
 package abreusapp.core.control.general;
 
 import abreusapp.core.control.usuario.Usuario;
-import abreusapp.core.control.usuario.Usuario;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;

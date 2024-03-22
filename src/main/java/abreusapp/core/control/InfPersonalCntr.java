@@ -124,7 +124,7 @@ public class InfPersonalCntr {
     ){
         Persona p=PersonaServicio.obtenerPorCedula(cedula).orElse(new Persona());
         p.setCedula(cedula);
-        model.addAttribute("sexo",dtserv.consultarPorGrupo(GrupoServicio.obtener("sexo").get() ));
+        model.addAttribute("sexo",dtserv.consultarPorGrupo(GrupoServicio.obtener("Sexo").get() ));
         model.addAttribute("sangre",dtserv.consultarPorGrupo(GrupoServicio.obtener("Tipos Sanguineos").get() ));
         model.addAttribute("persona", p);
         model.addAttribute("update",update);

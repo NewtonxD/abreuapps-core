@@ -5,14 +5,14 @@
 package abreusapp.core.control.transporte;
 
 import abreusapp.core.control.general.Dato;
-import abreusapp.core.control.transporte.Transporte;
 import abreusapp.core.control.usuario.Usuario;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
@@ -37,6 +37,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table(name = "rta_asg",schema = "transport")
+@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@AsignacionRutaId")
 public class AsignacionRuta {
     
     @Id
