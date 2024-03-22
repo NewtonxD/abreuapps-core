@@ -83,7 +83,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                                 <tr th:each="d: ${datos}" th:attr="data-id=${d.dato}">
                                                                     <th scope="row" th:text="${d.dato}"></th>
                                                                     <td th:text="${d.descripcion}"></td>
-                                                                    <td th:text="${d.GrupoDato}"></td>
+                                                                    <td th:text="${d.grupo.grupo}"></td>
                                                                     <td th:text="${d.activo?'Activo':'Inactivo'}"></td>
                                                                 </tr>
                                                             </tbody>

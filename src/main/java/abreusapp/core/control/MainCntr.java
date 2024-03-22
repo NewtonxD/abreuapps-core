@@ -81,7 +81,7 @@ public class MainCntr {
     ) {
         Usuario userSession = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Usuario userBd = UsuarioServicio.obtener(userSession.getUsername()).get();
-        userBd.setContraseña("");
+        userBd.setPassword("");
         model.addAttribute("usuario", userBd);
         
         if(userBd.isCredentialsNonExpired())
@@ -118,7 +118,7 @@ public class MainCntr {
         
         
         userBd.setCambiarPassword(false);
-        userBd.setContraseña(passwordEncoder.encode(newPass));
+        userBd.setPassword(passwordEncoder.encode(newPass));
         UsuarioServicio.guardar(userBd, UsuarioServicio.obtenerPorId(1).get() , true);
         respuesta.put("status", "success");
         respuesta.put("msg", "Contraseña fue guardada exitosamente! En breve lo redirigiremos.");

@@ -4,7 +4,6 @@
  */
 package abreusapp.core.control.general;
 
-import abreusapp.core.control.general.GrupoDato;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

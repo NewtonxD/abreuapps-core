@@ -5,7 +5,9 @@
 package abreusapp.core.control.general;
 
 import abreusapp.core.control.usuario.Usuario;
-import abreusapp.core.control.usuario.Usuario;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -33,11 +35,12 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Table(name = "dat_grp",schema = "public")
+@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@GrupoDatoId")
 public class GrupoDato {
     
     @Id
     @Column(name = "grp")
-    private String Grupo;
+    private String grupo;
 
     @Column(name = "dsc")
     private String descripcion;

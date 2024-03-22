@@ -38,7 +38,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 <th:block th:if="${!update}">
                                     <div class="mb-3 col-12 col-md-6">
                                         <label for="nom_dato" class="form-label text-muted">Nombre de Grupo:</label>
-                                        <input type="text" id="grupo" name="GrupoDato" placeholder=" ... "
+                                        <input type="text" id="grupo" name="grupo" placeholder=" ... "
                                             class="form-control" required aria-describedby="basic-addon4">
                                     </div>
                                     <div class="mb-3 col-12">
@@ -48,15 +48,15 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                     </div>
                                 </th:block>
                                 <th:block th:if="${update}">
-                                    <input type="text" name="GrupoDato" style="display: none; width: 1px;height: 1px;"
-                                        th:value="${grupo.GrupoDato}" required>
+                                    <input type="text" name="grupo" style="display: none; width: 1px;height: 1px;"
+                                        th:value="${grupo.grupo}" required>
                                     <input type="text" name="fecha_actualizacionn"
                                         style="display: none; width: 1px;height: 1px;"
                                         th:value=" ${#dates.format(grupo.fecha_actualizacion, 'yyyy-MM-dd HH:mm:ss')}">
                                     <div class="mb-3 col-12 col-md-6">
                                         <label for="nom_dato" class="form-label text-muted">Nombre de Grupo:</label>
                                         <input type="text" disabled placeholder=" ... " class="form-control"
-                                            th:value="${grupo.GrupoDato}" aria-describedby="basic-addon4">
+                                            th:value="${grupo.grupo}" aria-describedby="basic-addon4">
                                     </div>
                                     <div class="mb-3 col-12">
                                         <label for="descripcion" class="form-label text-muted">Descripción:</label>

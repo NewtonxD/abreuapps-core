@@ -106,7 +106,7 @@ public class UsuariosCntr {
                 
                 usuario.setFecha_registro(usuario_existe.get().getFecha_registro());
                 usuario.setHecho_por(usuario_existe.get().getHecho_por());
-                usuario.setContraseña(usuario_existe.get().getContraseña());
+                usuario.setPassword(usuario_existe.get().getPassword());
                 usuario.setPersona(usuario_existe.get().getPersona());
             }
             
@@ -168,7 +168,7 @@ public class UsuariosCntr {
         model.addAttribute("user",us.get());
         model.addAttribute("persona",us.get().getPersona());
         model.addAttribute("update", true);
-        model.addAttribute("sexo",dtserv.consultarPorGrupo(GrupoServicio.obtener("sexo").get() ));
+        model.addAttribute("sexo",dtserv.consultarPorGrupo(GrupoServicio.obtener("Sexo").get() ));
         model.addAttribute("sangre",dtserv.consultarPorGrupo(GrupoServicio.obtener("Tipos Sanguineos").get() ));
         model.addAllAttributes(AccesoServicio.consultarAccesosPantallaUsuario(u.getId(), "usr_mgr_registro"));
 
@@ -196,7 +196,7 @@ public class UsuariosCntr {
         model.addAttribute("user",us.get());
         model.addAttribute("persona",us.get().getPersona());
         model.addAttribute("update", true);
-        model.addAttribute("sexo",dtserv.consultarPorGrupo(GrupoServicio.obtener("sexo").get() ));
+        model.addAttribute("sexo",dtserv.consultarPorGrupo(GrupoServicio.obtener("Sexo").get() ));
         model.addAttribute("sangre",dtserv.consultarPorGrupo(GrupoServicio.obtener("Tipos Sanguineos").get() ));
         model.addAttribute("usr_mgr_registro",true);
         model.addAttribute("configuracion",true);
