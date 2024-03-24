@@ -5,6 +5,7 @@
 package abreusapp.core.control;
 
 //import abreusapp.core.stp.control.domain.usuario.PersonaServ;
+import abreusapp.core.control.general.ConfServ;
 import abreusapp.core.control.usuario.Usuario;
 import abreusapp.core.control.usuario.AccesoServ;
 import abreusapp.core.control.usuario.UsuarioServ;
@@ -12,6 +13,7 @@ import abreusapp.core.control.utils.ModelServ;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -41,8 +43,9 @@ public class MainCntr {
     private final UsuarioServ UsuarioServicio;
     
     private final PasswordEncoder passwordEncoder;
-
     
+    private final ConfServ confServ;
+
     @RequestMapping({"/", "index"})
     public String MainPage(
         HttpServletRequest request,
@@ -56,6 +59,7 @@ public class MainCntr {
         ) return "redirect:/main/changePwd";
         
         model.addAttribute("datos_personales",u.getPersona());
+        model.addAllAttributes(confServ.consultarConfMap());
         model.addAllAttributes(AccesosServicio.consultarAccesosMenuUsuario(u.getId()));
         
         return "index";
@@ -124,6 +128,36 @@ public class MainCntr {
         respuesta.put("msg", "Contraseña fue guardada exitosamente! En breve lo redirigiremos.");
         return respuesta;
         
+    }
+    
+    @PostMapping(value="/saveConf")
+    public String GuardarConfiguracion(
+            HttpServletRequest request, 
+            Model model,
+            @RequestParam Map<String,String> data
+    ) {
+        
+        Usuario u=(Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        
+        Map<String,Object> m=AccesosServicio.consultarAccesosPantallaUsuario(u.getId(),"sys_configuracion");
+ 
+        if(m.get("sys_configuracion")==null || (! (Boolean)m.get("sys_configuracion"))
+        ){
+            model.addAttribute("status", false);
+            model.addAttribute("msg", "No tiene permisos para realizar esta acción!");
+            return "fragments/sys_configuracion :: content-default";
+        }
+        
+        
+        confServ.GuardarTodosMap(data, u);
+        model.addAttribute("status", true);
+        model.addAttribute("msg", "Configuración guardada exitosamente!");
+           
+        
+        DataModelServicio.load("sys_configuracion", model, u.getId());
+        
+        return "fragments/sys_configuracion :: content-default";
+
     }
 
 }
