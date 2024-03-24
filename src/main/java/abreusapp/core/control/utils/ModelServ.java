@@ -4,6 +4,7 @@
  */
 package abreusapp.core.control.utils;
 
+import abreusapp.core.control.general.ConfServ;
 import abreusapp.core.control.general.DatoServ;
 import abreusapp.core.control.general.GrupoDatoServ;
 import abreusapp.core.control.general.Persona;
@@ -33,7 +34,7 @@ public class ModelServ {
     private Integer userId=null;
     
     //  custom constructor injection
-    public ModelServ(GrupoDatoServ GrupoServicio,DatoServ DatoServicio,AccesoServ AccesoServicio,UsuarioServ UsuarioServicio){
+    public ModelServ(GrupoDatoServ GrupoServicio,DatoServ DatoServicio,AccesoServ AccesoServicio,UsuarioServ UsuarioServicio,ConfServ ConfServ){
         
         this.actions.put("dat_gen_consulta_grupos", ()->{
                 Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "dat_gen_consulta_grupos");
@@ -93,7 +94,7 @@ public class ModelServ {
         
         this.actions.put("sys_configuracion", ()->{
                 Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "sys_configuracion");
-                //dataModel.addAttribute("usuarios", UsuarioServicio.consultar());
+                dataModel.addAttribute("conf", ConfServ.consultar());
                 dataModel.addAllAttributes(acc);                
             }
         );

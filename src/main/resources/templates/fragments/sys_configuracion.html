@@ -17,14 +17,15 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                 <div class="row d-flex align-items-center justify-content-center mt-5 mb-5">
                     <div class="card col-12 col-md-10 col-lg-8">
                         <div class="card-body mt-3 mb-3">
+                            <form id="form-guardar">
                             <div class="row">
                                 
-                                <div class="col-10 d-flex align-items-start justify-content-start">
-                                    <h4>
+                                <div class="col-10 d-flex align-items-center justify-content-start">
+                                    <h4 class="me-4">
                                         Configuraciones del Sistema&nbsp;<i class="fa fa-cog"></i>
                                     </h4>
+                                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i></button>
                                 </div>
-
                             </div>
 
                             <div class="row">
@@ -46,13 +47,18 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 </div>
                             </div>
                             <br>
-                            <div class="row">
-                                <h6>Lista de configuraciones aqui</h6>
+                            <div class="row m-4 pb-4">
+                                <div th:each="c: ${conf}" class="col-auto mb-2 justify-content-start">
+                                    <label class="form-label" th:text="${'- '+c.descripcion+': '}"></label>
+                                    <input type="text" class="form-control" th:name="${c.codigo}" th:id="${c.codigo}" th:value="${c.valor}" />
+                                </div>
                             </div>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
+            <script th:src="@{/content/js/conf/svd_conf345612.js}"></script>
         </th:block>
 
         <th:block th:unless="${sys_configuracion}">
