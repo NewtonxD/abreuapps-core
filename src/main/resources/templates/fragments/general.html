@@ -16,7 +16,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
     <body>
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark align-center" th:fragment="header">
             <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" th:href="@{/main/index}"><span class="fs-4 fw-semibold" th:text="${appnombre}"></span></a>
+            <a class="navbar-brand ps-3" th:href="@{/main/index}">
+                <img class="pb-2" width="32px" height="32px" th:src="@{/content/assets/img/favicon_io/favicon32x32.png}"/>
+                <span class="fs-4 fw-semibold" th:text="${appnombre}"></span>
+            </a>
             <!-- Sidebar Toggle-->
             <button
                 type="button"
@@ -58,6 +61,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             <nav id="sidenavAccordion" class="bg-dark sidebar flex-shrink-0 p-3" data-bs-theme="dark">
                 <div class="sb-sidenav-menu">
                     <a class="d-flex align-items-center pb-3 mb-3 text-decoration-none text-white">
+                        <img class="me-3" width="32px" height="32px" th:src="@{/content/assets/img/favicon_io/favicon32x32.png}"/>
                         <span class="fs-4 fw-semibold" th:text="${appnombre}"></span>
                     </a>
                     <ul class="nav list-unstyled ps-0">
