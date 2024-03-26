@@ -35,7 +35,7 @@ public class SSEServ {
     }
     
     public SseEmitter agregar(String nombre,Map<String,SseEmitter> emitters){
-        long timeout = 900000;
+        long timeout = 7200000;
         SseEmitter emitter = new SseEmitter(timeout);
         emitter.onCompletion(() -> emitters.remove(nombre));
         emitter.onTimeout(() -> emitter.complete());

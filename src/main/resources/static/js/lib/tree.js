@@ -1,8 +1,8 @@
-
 function constructForest(data) {
     var forest = $('<div class="forest"></div>');
     var rootNodes = findChildren(null,data);
-
+    console.log(data);
+    console.log(rootNodes);
     rootNodes.forEach(function(root) {
         var tree =  $('<div class="tree"></div>');
         var ul = $('<ul></ul>');
@@ -39,6 +39,7 @@ function constructBranch(parent, nodes, data) {
 
 function findChildren(parent, data) {
     return data.filter(function(node) {
+        console.log("node",node);
         return node[4] === parent && node[6]!=="Permiso";
     });
 }
