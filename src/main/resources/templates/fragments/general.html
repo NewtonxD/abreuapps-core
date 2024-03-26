@@ -65,7 +65,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                         <span class="fs-4 fw-semibold" th:text="${appnombre}"></span>
                     </a>
                     <ul class="nav list-unstyled ps-0">
-                        <li>
+                        <li  th:if="${con_principal}">
                             <button
                                 class="nav-link btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
                                 type="button"
@@ -83,56 +83,56 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 data-bs-parent="#sidenavAccordion"
                                 >
                                 <ul class="sb-sidenav-menu-nested nav btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                                    <li>
+                                    <li  th:if="${con_registro_transacciones}">
                                         <a
                                             class="nav-link acceso  link-body-emphasis d-inline-flex text-decoration-none rounded"
                                             href="#"
-                                            id="contabilidad_registro_transacciones"
+                                            id="con_registro_transacciones"
                                             >
                                             &MediumSpace; Registro de Transacciones
                                         </a>
                                     </li>
-                                    <li>
+                                    <li th:if="${con_conciliacion_bancaria}">
                                         <a
                                             class="nav-link acceso  link-body-emphasis d-inline-flex text-decoration-none rounded"
                                             href="#"
-                                            id="contabilidad_conciliacion_bancaria"
+                                            id="con_conciliacion_bancaria"
                                             >
                                             &MediumSpace; Conciliación Bancaría
                                         </a>
                                     </li>
-                                    <li>
+                                    <li th:if="${con_cuentas_bancarias}">
                                         <a
                                             class="nav-link acceso  link-body-emphasis d-inline-flex text-decoration-none rounded"
                                             href="#"
-                                            id="contabilidad_cuentas_bancarias"
+                                            id="con_cuentas_bancarias"
                                             >
                                             &MediumSpace; Cuentas Bancanrías
                                         </a>
                                     </li>
-                                    <li>
+                                    <li th:if="${con_presupuesto}">
                                         <a
                                             class="nav-link acceso  link-body-emphasis d-inline-flex text-decoration-none rounded"
                                             href="#"
-                                            id="contabilidad_presupuesto"
+                                            id="con_presupuesto"
                                             >
                                             &MediumSpace; Gestión de Presupuesto
                                         </a>
                                     </li>
-                                    <li>
-                                        <a class="nav-link acceso  link-body-emphasis d-inline-flex text-decoration-none rounded" href="#" id="contabilidad_impuestos">
+                                    <li  th:if="${con_impuestos}">
+                                        <a class="nav-link acceso  link-body-emphasis d-inline-flex text-decoration-none rounded" href="#" id="con_impuestos">
                                             &MediumSpace; Gestión de Impuestos
                                         </a>
                                     </li>
-                                    <li>
-                                        <a class="nav-link acceso  link-body-emphasis d-inline-flex text-decoration-none rounded" href="#" id="contabilidad_informes">
+                                    <li th:if="${con_informes}">
+                                        <a class="nav-link acceso  link-body-emphasis d-inline-flex text-decoration-none rounded" href="#" id="con_informes">
                                             &MediumSpace; Informes Financieros
                                         </a>
                                     </li>
                                 </ul>
                             </div>
                         </li>
-                        <li>
+                        <li th:if="${cxp_principal}">
                             <button
                                 class="nav-link btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
                                 type="button"
@@ -150,22 +150,22 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 data-bs-parent="#sidenavAccordion"
                                 >
                                 <ul class="sb-sidenav-menu-nested nav btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                                    <li>
+                                    <li th:if="${cxp_registro_facturas}">
                                         <a class="nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded " href="#" id="cxp_registro_facturas">
                                             &MediumSpace; Registro de Facturas
                                         </a>
                                     </li>
-                                    <li>
+                                    <li th:if="${cxp_control_pagos}">
                                         <a class="nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded " href="#" id="cxp_control_pagos">
                                             &MediumSpace; Control de Pagos
                                         </a>
                                     </li>
-                                    <li>
+                                    <li th:if="${cxp_informes}">
                                         <a class="nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded " href="#" id="cxp_informes">
                                             &MediumSpace; Informes y Análisis
                                         </a>
                                     </li>
-                                    <li>
+                                    <li th:if="${cxp_comunicacion_proveedores}">
                                         <a
                                             class="nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded "
                                             href="#"
@@ -174,7 +174,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                             &MediumSpace; Comunicación con Proveedores
                                         </a>
                                     </li>
-                                    <li>
+                                    <li th:if="${cxp_autorizaciones_aprobaciones}">
                                         <a
                                             class="nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded "
                                             href="#"
@@ -186,7 +186,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 </ul>
                             </div> 
                         </li>
-                        <li class="border-top my-3"></li>
                         <li class="mb-1" th:if="${sys_principal}">                       
                             <button
                                 class="nav-link btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed "

@@ -75,8 +75,10 @@ public class SSECntr {
             HttpServletRequest request,
             @RequestParam String clientId
     ) {
-        dtGnrEmitters.get(clientId).complete();
-        dtGnrEmitters.remove(clientId);
+        if (dtGnrEmitters.get(clientId)!=null){
+            dtGnrEmitters.get(clientId).complete();
+            dtGnrEmitters.remove(clientId);
+        }
     }
 
     @GetMapping(value = "/dtgrp", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
@@ -93,8 +95,10 @@ public class SSECntr {
             HttpServletRequest request,
             @RequestParam String clientId
     ) {
-        dtGrpEmitters.get(clientId).complete();
-        dtGrpEmitters.remove(clientId);
+        if (dtGrpEmitters.get(clientId)!=null){
+            dtGrpEmitters.get(clientId).complete();
+            dtGrpEmitters.remove(clientId);
+        }
     }
     
     @GetMapping(value="/usrmgr", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
@@ -111,8 +115,10 @@ public class SSECntr {
             HttpServletRequest request,
             @RequestParam String clientId
     ) {
-        usrMgrEmitters.get(clientId).complete();
-        usrMgrEmitters.remove(clientId);
+        if (usrMgrEmitters.get(clientId)!=null){
+            usrMgrEmitters.get(clientId).complete();
+            usrMgrEmitters.remove(clientId);
+        }
     }
     
     public void publicar(String nombre,HashMap<String, Object> datos){

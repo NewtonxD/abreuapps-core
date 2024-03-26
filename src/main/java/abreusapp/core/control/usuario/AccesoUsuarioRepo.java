@@ -50,7 +50,11 @@ public interface AccesoUsuarioRepo extends JpaRepository<AccesoUsuario, Integer>
     @Query( value =
         """
         SELECT 
-             a.*,
+             a.id,
+             a.act,
+             a.tipo_dato_dat,
+             a.pantalla_dat,
+             a.fat_scr,
              d.dsc,
              d.grupo_grp ,
              coalesce(u.val, 'false') as val 
