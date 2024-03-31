@@ -87,7 +87,7 @@ public class ModelServ {
                 dataModel.addAttribute("user",u);
                 dataModel.addAttribute("persona",p);
                 dataModel.addAttribute("sangre",DatoServicio.consultarPorGrupo(GrupoServicio.obtener("Tipos Sanguineos").get() ));
-                dataModel.addAttribute("sexo",DatoServicio.consultarPorGrupo(GrupoServicio.obtener("sexo").get() ));
+                dataModel.addAttribute("sexo",DatoServicio.consultarPorGrupo(GrupoServicio.obtener("Sexo").get() ));
                 dataModel.addAllAttributes(acc);                
             }
         );
