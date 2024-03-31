@@ -53,11 +53,7 @@ function closeEventSource(callServer=true){
     if(eventSource_dtgnr!==null && eventSource_dtgnr!==undefined){
         eventSource_dtgnr.close();
         eventSource_dtgnr=undefined;
-        if(callServer)
-        $.get('/see/dtgnr/close?clientId='+clientId).fail(function(){
-            alert("Se perdió la conexión con el servidor, intentelo más tarde.");
-        });
-        else alert("Se perdió la conexión con el servidor, intentelo más tarde.");
+        if(callServer) $.get('/see/dtgnr/close?clientId='+clientId);
     }
 }
 
