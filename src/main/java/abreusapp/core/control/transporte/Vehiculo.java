@@ -10,7 +10,6 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrimaryKeyJoinColumn;
@@ -24,53 +23,47 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 
- * Esta entidad sirve para asignar una ruta a un autobus, tomando en cuenta el chofer
- * y su compañera cobradora, las asignaciones tienen fecha, hora y manejan estado.
- * 
+ *  
+ * Esta entidad representa al autobus y sus atributos.
+ *
  * @author Carlos Abreu Pérez
- * 
+ *  
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "rta_asg",schema = "transport")
-@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@AsignacionRutaId")
-public class AsignacionRuta {
-    
+@Table(name = "vhl",schema = "transport")
+@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@VehiculoId")
+public class Vehiculo {
+
     @Id
-    @GeneratedValue
-    @Column(name = "id")
-    private Integer id;
-    
-    @ManyToOne
-    @PrimaryKeyJoinColumn
-    private Transporte placa;
+    @Column(name = "pl")
+    private String placa;
 
     @ManyToOne
     @PrimaryKeyJoinColumn
-    private Ruta ruta;
+    private Dato marca;
+
+    @ManyToOne
+    @PrimaryKeyJoinColumn
+    private Dato modelo;
     
+    @Column(name = "cap_pax")
+    private Integer capacidad_pasajeros;
+    
+    @Column(name = "mke_at")
+    private short anio_fabricacion;
+    
+    @ManyToOne
+    @PrimaryKeyJoinColumn
+    private Dato tipo_vehiculo;
+
     @ManyToOne
     @PrimaryKeyJoinColumn
     private Dato estado;
 
-    @Column(name = "dt_ini")
-    @Temporal(value = TemporalType.DATE)
-    private Date fecha_inicio;
-    
-    @Column(name = "dt_fin")
-    @Temporal(value = TemporalType.DATE)
-    private Date fecha_final;
-    
-    @Column(name = "id_drv")
-    private Integer conductor_id;
-    
-    @Column(name = "id_cob")
-    private Integer cobrador_id;
-    
     @ManyToOne
     @PrimaryKeyJoinColumn
     private Usuario hecho_por;
@@ -86,5 +79,4 @@ public class AsignacionRuta {
     @Column(name= "upd_at")
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date fecha_actualizacion;
-
 }

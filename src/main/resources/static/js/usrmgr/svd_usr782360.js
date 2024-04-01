@@ -94,7 +94,7 @@ function verificarUsuario(){
 function cerrarSesion(){
     let data={ "usuario":$("#original_usuario").val() };
     $("#content-page").css("overflow-y","hidden");
-    var fadeout=$("#content-page").hide().delay(150).promise();
+    var fadeout=$("#content-page").hide().delay(100).promise();
     
     $.ajax({
         url:'/usrmgr/closeUsrSess',
@@ -107,7 +107,7 @@ function cerrarSesion(){
                     window.location.href="/auth/login?logout=true";
 
             fadeout.then(function(){
-                $("#content-page").html(res).fadeIn(200).promise().then(function(){
+                $("#content-page").html(res).fadeIn(100).promise().then(function(){
                     $("#content-page").css("overflow-y","hidden");
                 }); 
             });
@@ -119,7 +119,7 @@ function cerrarSesion(){
                 window.location.href="/auth/login?logout=true";  
                 
             fadeout.then(function(){
-                var fadein=$("#content-page").html(xhr.responseText).fadeIn(200).promise();
+                var fadein=$("#content-page").html(xhr.responseText).fadeIn(100).promise();
 
                 fadein.then(function(){
                     $("#content-page").css("overflow-y","hidden");
@@ -132,7 +132,7 @@ function cerrarSesion(){
 function editarPermisos(){
     let data={ "idUsuario":$("#original_usuario").val() };
     $("#content-page").css("overflow-y","hidden");
-    var fadeout=$("#content-page").hide().delay(150).promise();
+    var fadeout=$("#content-page").hide().delay(100).promise();
     
     $.ajax({
         url:'/usrmgr/get-access',
@@ -167,7 +167,7 @@ function editarPermisos(){
                     window.location.href="/auth/login?logout=true";
 
             fadeout.then(function(){
-                $("#content-page").html(res).fadeIn(200).promise().then(function(){
+                $("#content-page").html(res).fadeIn(100).promise().then(function(){
                     $("#content-page").css("overflow-y","hidden");
                 }); 
             });
@@ -179,7 +179,7 @@ function editarPermisos(){
                 window.location.href="/auth/login?logout=true";  
                 
             fadeout.then(function(){
-                var fadein=$("#content-page").html(xhr.responseText).fadeIn(200).promise();
+                var fadein=$("#content-page").html(xhr.responseText).fadeIn(100).promise();
 
                 fadein.then(function(){
                     $("#content-page").css("overflow-y","hidden");
@@ -192,7 +192,7 @@ function editarPermisos(){
 function cambiarPassword(){
     let data={ "usuario":$("#original_usuario").val() };
     $("#content-page").css("overflow-y","hidden");
-    var fadeout=$("#content-page").hide().delay(150).promise();
+    var fadeout=$("#content-page").hide().delay(100).promise();
     
     $.ajax({
         url:'/usrmgr/resetPwd',
@@ -205,7 +205,7 @@ function cambiarPassword(){
                     window.location.href="/auth/login?logout=true";
 
             fadeout.then(function(){
-                $("#content-page").html(res).fadeIn(200).promise().then(function(){
+                $("#content-page").html(res).fadeIn(100).promise().then(function(){
                     $("#content-page").css("overflow-y","hidden");
                 }); 
             });
@@ -217,7 +217,7 @@ function cambiarPassword(){
                 window.location.href="/auth/login?logout=true";  
                 
             fadeout.then(function(){
-                var fadein=$("#content-page").html(xhr.responseText).fadeIn(200).promise();
+                var fadein=$("#content-page").html(xhr.responseText).fadeIn(100).promise();
 
                 fadein.then(function(){
                     $("#content-page").css("overflow-y","hidden");
@@ -275,7 +275,7 @@ $(function(){
 
 function guardar_datos(){
     $("#content-page").css("overflow-y","hidden");
-    var fadeout=$("#content-page").hide().delay(150).promise();
+    var fadeout=$("#content-page").hide().delay(100).promise();
    
     //datos.push({name:"persona",value:dataPrepare("inf_personal")});
     let datosPersona=dataPrepare("inf_personal");
@@ -308,7 +308,7 @@ function guardar_datos(){
                     window.location.href="/auth/login?logout=true";
 
             fadeout.then(function(){
-                $("#content-page").html(res).fadeIn(200).promise().then(function(){
+                $("#content-page").html(res).fadeIn(100).promise().then(function(){
                     $("#content-page").css("overflow-y","hidden");
                 }); 
             });
@@ -321,7 +321,7 @@ function guardar_datos(){
                 
                 
             fadeout.then(function(){
-                var fadein=$("#content-page").html(xhr.responseText).fadeIn(200).promise();
+                var fadein=$("#content-page").html(xhr.responseText).fadeIn(100).promise();
 
                 fadein.then(function(){
                     $("#content-page").css("overflow-y","hidden");

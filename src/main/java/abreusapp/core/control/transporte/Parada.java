@@ -45,9 +45,6 @@ public class Parada {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "pwd")
-    private String contraseña;
-
     @Column(name = "dsc")
     private String descripción;
     
@@ -56,6 +53,15 @@ public class Parada {
     
     @Column(name = "lat")
     private float latitud;
+    
+    @Column(name = "lon_ptr")
+    private float longitud_apunta;
+    
+    @Column(name = "lat_ptr")
+    private float latitud_apunta;
+    
+    @Column(name = "dsc_ptr")
+    private String descripción_apunta;
     
     @Column(name = "act")
     private boolean activo;

@@ -4,12 +4,11 @@
  */
 package abreusapp.core.control.transporte;
 
-import abreusapp.core.control.general.Dato;
-import abreusapp.core.control.usuario.Usuario;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrimaryKeyJoinColumn;
@@ -23,57 +22,38 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- *  
- * Esta entidad representa al autobus y sus atributos.
  *
+ * Esta entidad sirve para asignar la localización instantanea del autobus.
+ * 
  * @author Carlos Abreu Pérez
- *  
+ * 
  */
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "trp",schema = "transport")
-@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@TransporteId")
-public class Transporte {
-
+@Table(name = "trp_loc",schema = "transport")
+@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@LocVehiculoId")
+public class LocVehiculo {
+    
     @Id
-    @Column(name = "pl")
-    private String placa;
-
-    @ManyToOne
-    @PrimaryKeyJoinColumn
-    private Dato marca;
-
-    @ManyToOne
-    @PrimaryKeyJoinColumn
-    private Dato modelo;
-    
-    @Column(name = "cap_pax")
-    private Integer capacidad_pasajeros;
+    @GeneratedValue
+    @Column(name = "id")
+    private Integer id;
     
     @ManyToOne
     @PrimaryKeyJoinColumn
-    private Dato tipo_vehiculo;
+    private Vehiculo placa;
 
-    @ManyToOne
-    @PrimaryKeyJoinColumn
-    private Dato estado;
+    @Column(name = "lat")
+    private float latitud;
 
-    @ManyToOne
-    @PrimaryKeyJoinColumn
-    private Usuario hecho_por;
-    
-    @Column(name= "mde_at")
+    @Column(name = "lon")
+    private float longitud;
+
+    @Column(name = "reg_dt")
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date fecha_registro;
-    
-    @ManyToOne
-    @PrimaryKeyJoinColumn
-    private Usuario actualizado_por;
-    
-    @Column(name= "upd_at")
-    @Temporal(value = TemporalType.TIMESTAMP)
-    private Date fecha_actualizacion;
 }
