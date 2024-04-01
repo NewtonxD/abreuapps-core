@@ -23,7 +23,7 @@ $(function(){
 
 function guardar_datos(){
     $("#content-page").css("overflow-y","hidden");
-    var fadeout=$("#content-page").hide().delay(150).promise();
+    var fadeout=$("#content-page").hide().delay(100).promise();
     let data=dataPrepare("form-guardar");
     $.ajax({
         url:'/dtgrp/save',
@@ -36,7 +36,7 @@ function guardar_datos(){
                     window.location.href="/auth/login?logout=true";
                 
             fadeout.then(function(){
-                $("#content-page").html(res).fadeIn(200).promise().then(function(){
+                $("#content-page").html(res).fadeIn(100).promise().then(function(){
                     $("#content-page").css("overflow-y","hidden");
                 }); 
             });
@@ -48,7 +48,7 @@ function guardar_datos(){
                 window.location.href="/auth/login?logout=true";  
                 
             fadeout.then(function(){
-                var fadein=$("#content-page").html(xhr.responseText).fadeIn(200).promise();
+                var fadein=$("#content-page").html(xhr.responseText).fadeIn(100).promise();
 
                 fadein.then(function(){
                     $("#content-page").css("overflow-y","hidden");

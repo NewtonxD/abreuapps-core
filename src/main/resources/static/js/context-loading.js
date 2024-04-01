@@ -12,7 +12,7 @@ $(function(){
         if(typeof closeEventSource==='function') closeEventSource();
         
         $("#content-page").css("overflow-y","hidden");
-        var fadeout=$("#content-page").hide().delay(150).promise();
+        var fadeout=$("#content-page").hide().delay(100).promise();
         
         $.get({
             url: '/usrmgr/myupdate',
@@ -24,7 +24,7 @@ $(function(){
                 
                 fadeout.then(function(){
                     
-                    var fadein=$("#content-page").html(xhr).fadeIn(200).promise();
+                    var fadein=$("#content-page").html(xhr).fadeIn(100).promise();
                     
                     fadein.then(function(){
                         $("#content-page").css("overflow-y","hidden");
@@ -38,7 +38,7 @@ $(function(){
                     window.location.href="/auth/login?logout=true";  
                 
                 fadeout.then(function(){
-                    var fadein=$("#content-page").html(xhr.responseText).fadeIn(200).promise();
+                    var fadein=$("#content-page").html(xhr.responseText).fadeIn(100).promise();
                     
                     fadein.then(function(){
                         $("#content-page").css("overflow-y","hidden");
@@ -60,7 +60,7 @@ $(function(){
         //$('.nav').children('a.acceso').removeClass('active');
         //$(this).addClass("active");
         $("#content-page").css("overflow-y","hidden");
-        var fadeout=$("#content-page").hide().delay(150).promise();
+        var fadeout=$("#content-page").hide().delay(100).promise();
         
         $.post({
             url: '/main/content-page/',
@@ -75,7 +75,7 @@ $(function(){
                 
                 fadeout.then(function(){
                     
-                    var fadein=$("#content-page").html(xhr).fadeIn(200).promise();
+                    var fadein=$("#content-page").html(xhr).fadeIn(100).promise();
                     
                     fadein.then(function(){
                         $("#content-page").css("overflow-y","hidden");
@@ -92,7 +92,7 @@ $(function(){
                     window.location.href="/auth/login?logout=true";  
                 
                 fadeout.then(function(){
-                    var fadein=$("#content-page").html(xhr.responseText).fadeIn(200).promise();
+                    var fadein=$("#content-page").html(xhr.responseText).fadeIn(100).promise();
                     
                     fadein.then(function(){
                         $("#content-page").css("overflow-y","hidden");

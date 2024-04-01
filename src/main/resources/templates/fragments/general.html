@@ -65,6 +65,46 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                         <span class="fs-4 fw-semibold" th:text="${appnombre}"></span>
                     </a>
                     <ul class="nav list-unstyled ps-0">
+                        <li class="mb-1">                       
+                            <button
+                                class="nav-link btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed "
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#collapseLayouts4"
+                                aria-expanded="false"
+                                aria-controls="collapseLayouts4"
+                                >
+                                <i class="fa fa-car"></i>&MediumSpace; Transporte
+                            </button>
+                            <div
+                                class="collapse"
+                                id="collapseLayouts4"
+                                aria-labelledby="headingFour"
+                                data-bs-parent="#sidenavAccordion"
+                                >
+                                <ul class="sb-sidenav-menu-nested nav btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                    <li>
+                                        <a class="nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded " href="#" id="vhl_consulta">
+                                            &MediumSpace; Vehículos
+                                        </a>
+                                    </li>
+                                </ul>
+                                <ul class="sb-sidenav-menu-nested nav btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                    <li>
+                                        <a class="nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded " href="#" id="dat_gen_principal">
+                                            &MediumSpace; Rutas
+                                        </a>
+                                    </li>
+                                </ul>
+                                <ul class="sb-sidenav-menu-nested nav btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                    <li>
+                                        <a class="nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded " href="#" id="dat_gen_principal">
+                                            &MediumSpace; Paradas
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
                         <li  th:if="${con_principal}">
                             <button
                                 class="nav-link btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
