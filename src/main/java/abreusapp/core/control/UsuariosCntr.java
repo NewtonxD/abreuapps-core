@@ -133,8 +133,13 @@ public class UsuariosCntr {
         } else {
             
             model.addAttribute("status", false);
-            model.addAttribute("msg", "Al parecer alguien hubo un inconveniente con la transacción. Por favor, inténtalo otra vez. COD: 00535");
-            
+            model.addAttribute(
+                    "msg", 
+                     ( dateInput!=null ? 
+                        "Al parecer alguien ha realizado cambios en la información primero. Por favor, inténtalo otra vez. COD: 00535" :
+                        "No podemos realizar los cambios porque ya este Grupo se encuentra registrado."
+                     )
+            );
         }
         
         if(!map.isEmpty()) seeCnt.publicar("usrmgr", map);

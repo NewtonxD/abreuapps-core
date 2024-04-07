@@ -24,7 +24,7 @@ public interface AccesoUsuarioRepo extends JpaRepository<AccesoUsuario, Integer>
     @Query( value =
         """
         SELECT 
-             a.pantalla_dat  as acc_nam,u.val
+             a.pantalla_dat  as acc_nam, u.val
          FROM
              usr_acc u
                  INNER JOIN
