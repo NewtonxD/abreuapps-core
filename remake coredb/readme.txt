@@ -95,6 +95,126 @@ INSERT INTO public.gnr_dat (dat,act,dsc,upd_at,mde_at,actualizado_por_id,grupo_g
 	 ('Autobus',true,'Tipos de vehiculos del sistema.','2024-03-31 12:03:35.752','2024-03-31 12:03:35.752',NULL,'Tipo Vehiculo',1),
 	 ('Camión',true,'Tipo de vehiculo.','2024-03-31 12:04:07.448','2024-03-31 12:04:07.448',NULL,'Tipo Vehiculo',1);
 
+
+
+
+INSERT INTO public.gnr_dat (dat,act,dsc,upd_at,mde_at,actualizado_por_id,grupo_grp,hecho_por_id) VALUES
+	 ('trp_principal',true,'Transporte','2024-03-31 12:02:23.212','2024-03-31 12:02:23.212',NULL,'Modulo',1),
+	 ('con_principal',true,'Contabilidad','2024-03-31 12:02:45.183','2024-03-31 12:02:45.183',NULL,'Modulo',1),
+	 ('cxp_principal',true,'Cuentas por Pagar','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Modulo',1),
+	 ('sys_principal',true,'Sistemas','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Modulo',1),
+	 ('con_conciliacion_bancaria',true,'Conciliación Bancaría','2024-03-31 12:02:23.212','2024-03-31 12:02:23.212',NULL,'Menu',1),
+	 ('con_cuentas_bancarias',true,'Cuentas Bancarías','2024-03-31 12:02:45.183','2024-03-31 12:02:45.183',NULL,'Menu',1),
+	 ('con_impuestos',true,'Impuestos','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Menu',1),
+	 ('con_informes',true,'Informes y Reportes','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Menu',1),
+	 ('con_presupuesto',true,'Presupuesto','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Menu',1),
+	 ('con_registro_transacciones',true,'Transacciones','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Menu',1),
+	 ('dat_gen_consulta_datos',true,'Datos','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Pantallas',1),
+	 ('dat_gen_consulta_grupos',true,'Grupos de Datos','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Pantallas',1),
+	 ('dat_gen_principal',true,'Datos del Sistema','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Menu',1),
+	 ('sys_configuracion',true,'Configuraciones','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Menu',1),
+	 ('trp_vehiculo_consulta',true,'Vehículos','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Menu',1),
+	 ('usr_mgr_principal',true,'Usuarios','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Menu',1),
+	 ('usr_mgr_registro',true,'Registro','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Pantallas',1),
+	 ('usr_mgr_permisos',true,'Permisos','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Pantallas',1);
+	 
+	 
+
+INSERT INTO public.gnr_dat (dat,act,dsc,upd_at,mde_at,actualizado_por_id,grupo_grp,hecho_por_id) VALUES
+	 ('Masculino',true,'Sexo Masculino','2024-03-31 12:02:23.212','2024-03-31 12:02:23.212',NULL,'Sexo',1),
+	 ('Femenino',true,'Sexo Femenino','2024-03-31 12:02:45.183','2024-03-31 12:02:45.183',NULL,'Sexo',1),
+	 ('Indefinido',true,'Sexo Indefinido','2024-03-31 12:02:45.183','2024-03-31 12:02:45.183',NULL,'Sexo',1),
+	 ('Booleano',true,'Dato true o false','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Tipo de Datos',1),
+	 ('Cadena de Texto',true,'Dato texto','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Tipo de Datos',1),
+	 ('Enteros',true,'Dato entero','2024-03-31 12:02:23.212','2024-03-31 12:02:23.212',NULL,'Tipo de Datos',1),
+	 ('Decimales',true,'Dato decimal','2024-03-31 12:02:45.183','2024-03-31 12:02:45.183',NULL,'Tipo de Datos',1),
+	 ('O+',true,'Sangre O+','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Tipos Sanguineos',1),
+	 ('O-',true,'Sangre O-','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Tipos Sanguineos',1),
+	 ('A+',true,'Sangre A+','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Tipos Sanguineos',1),
+	 ('A-',true,'Sangre A-','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Tipos Sanguineos',1),
+	 ('B+',true,'Sangre B+','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Tipos Sanguineos',1),
+	 ('B-',true,'Sangre B-','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Tipos Sanguineos',1),
+	 ('AB+',true,'Sangre AB+','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Tipos Sanguineos',1),
+	 ('AB-',true,'Sangre AB-','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Tipos Sanguineos',1),
+	 ('Rojo',true,'Color Rojo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Colores',1),
+	 ('Azul',true,'Color Azul','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Colores',1),
+	 ('Amarillo',true,'Color Amarillo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Colores',1),
+	 ('Verde',true,'Color Verde','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Colores',1),
+	 ('Morado',true,'Color Morado','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Colores',1),
+	 ('Naranja',true,'Color Naranja','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Colores',1),
+	 ('Gris',true,'Color Gris','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Colores',1),
+	 ('Negro',true,'Color Negro','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Colores',1),
+	 ('Blanco',true,'Color Blanco','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Colores',1),
+	 ('Rosado',true,'Color Rosado','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Colores',1),
+	 ('Estacionado',true,'Estado estacionado','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Estados Vehiculo',1),
+	 ('En Parada',true,'Estado En Parada','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Estados Vehiculo',1),
+	 ('Averiado',true,'Estado Averiado','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Estados Vehiculo',1),
+	 ('En Camino',true,'Estado En Camino','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Estados Vehiculo',1),
+	 ('Mantenimiento',true,'Estado Mantenimiento','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Estados Vehiculo',1),
+	 ('Mercedes Benz',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Marca',1),
+ 	 ('Isuzu',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Marca',1),
+ 	 ('Volvo',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Marca',1),
+ 	 ('KYC',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Marca',1),
+ 	 ('Scania',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Marca',1),
+ 	 ('Setra',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Marca',1),
+ 	 ('MAN Truck & Bus',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Marca',1),
+ 	 ('Toyota',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Marca',1),
+ 	 ('Honda',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Marca',1),
+ 	 ('Iveco Bus',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Marca',1),
+ 	 ('Yutong Group',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Marca',1);
+ 	 	 	 	 	 	 
+INSERT INTO public.gnr_dat (dat,act,dsc,upd_at,mde_at,actualizado_por_id,grupo_grp,hecho_por_id)  values
+('Citaro',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Mercedes Benz',1),
+('Tourismo',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Mercedes Benz',1),
+('Intouro',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Mercedes Benz',1),
+('Conecto',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Mercedes Benz',1),
+('Sprinter City',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Mercedes Benz',1),
+('CapaCity',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Mercedes Benz',1),
+('eCitaro',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Mercedes Benz',1),
+('Travego',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Mercedes Benz',1),
+('OC 500 RF',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Mercedes Benz',1),
+('OC 500 LE',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Mercedes Benz',1),
+('MAN Lion"s City',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'MAN Truck & Bus',1),
+('MAN Lion"s Coach',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'MAN Truck & Bus',1),
+('MAN Lion"s Intercity',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'MAN Truck & Bus',1),
+('MAN Lion"s Regio',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'MAN Truck & Bus',1),
+('MAN Lion"s Star',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'MAN Truck & Bus',1),
+('MAN Lion"s Explorer',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'MAN Truck & Bus',1),
+('MAN Lion"s Intercity CNG',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'MAN Truck & Bus',1),
+('MAN Lion"s City Hybrid',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'MAN Truck & Bus',1),
+('MAN Lion"s City Electric',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'MAN Truck & Bus',1),
+('MAN Lion"s City CNG',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'MAN Truck & Bus',1),
+('Crossway',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Iveco Bus',1),
+('Urbanway',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Iveco Bus',1),
+('Daily Minibus',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Iveco Bus',1),
+('Magelys',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Iveco Bus',1),
+('Evadys',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Iveco Bus',1),
+('Crealis',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Iveco Bus',1),
+('Irisbus Citelis',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Iveco Bus',1),
+('Daily Tourys',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Iveco Bus',1),
+('Ares',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Iveco Bus',1),
+('EuroRider',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Iveco Bus',1),
+('EuroCargo Bus',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Iveco Bus',1),
+('Turbocity',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Iveco Bus',1),
+('CityClass',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Iveco Bus',1),
+('Midys',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Iveco Bus',1),
+('Eurorider Cursor',true,'Marca de Vehículo','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Iveco Bus',1);
+	 	 
+	 
+
+INSERT INTO public.gnr_dat (dat,act,dsc,upd_at,mde_at,actualizado_por_id,grupo_grp,hecho_por_id)  values
+('dat_gen_registro_datos',true,'Registro','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Pantallas',1),
+('dat_gen_registro_grupos',true,'Registro','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Pantallas',1),
+('cxp_registro_facturas',true,'Facturas','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Menu',1),
+('cxp_control_pagos',true,'Control de Pagos','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Menu',1),
+('cxp_informes',true,'Informes y Reportes','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Menu',1),
+('cxp_comunicacion_proveedores',true,'Comunicación Proveedores','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Menu',1),
+('cxp_autorizaciones_aprobaciones',true,'Autorizaciones','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Menu',1),
+('trp_rutas_consulta',true,'Rutas','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Menu',1),
+('trp_paradas_consulta',true,'Paradas','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Menu',1)
+;	 	 	 	 
+	 	 
+
 ALTER TABLE public.gnr_dat 
 ENABLE TRIGGER ALL;
 
@@ -125,7 +245,12 @@ INSERT INTO public.acc (id,act,fat_scr,pantalla_dat,tipo_dato_dat) VALUES
 	 (26,true,'con_principal','con_cuentas_bancarias','Booleano'),
 	 (27,true,'con_principal','con_presupuesto','Booleano'),
 	 (28,true,'con_principal','con_impuestos','Booleano'),
-	 (29,true,'con_principal','con_informes','Booleano');
+	 (29,true,'con_principal','con_informes','Booleano')
+	 (30,true,NULL,'trp_principal','Booleano'),
+	 (31,true,'trp_principal','trp_rutas_consulta','Booleano'),
+	 (32,true,'trp_principal','trp_paradas_consulta','Booleano'),
+	 (33,true,'trp_principal','trp_vehiculo_consulta','Booleano');
+	 
 
 ALTER TABLE public.acc 
 ENABLE TRIGGER ALL;

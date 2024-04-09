@@ -30,9 +30,9 @@ public class ErrorCntr implements ErrorController{
     ){
         Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
         
-        Exception exception = (Exception) request.getAttribute("javax.servlet.error.exception");
+        /*Exception exception = (Exception) request.getAttribute("javax.servlet.error.exception");
         if(exception!=null)
-            log.error("Error : "+exception.getMessage()+" | "+exception.getLocalizedMessage());
+            log.error("Error : "+exception.getMessage()+" | "+exception.getLocalizedMessage());*/
         
         if (status != null) {
             Integer statusCode = Integer.valueOf(status.toString());

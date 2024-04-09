@@ -110,7 +110,13 @@ public class DatosCntr {
         } else {
 
             model.addAttribute("status", false);
-            model.addAttribute("msg", "Al parecer alguien ha realizado cambios en la información primero. Por favor, inténtalo otra vez. COD: 00535");
+            model.addAttribute(
+                    "msg", 
+                     ( dateInput!=null ? 
+                        "Al parecer alguien ha realizado cambios en la información primero. Por favor, inténtalo otra vez. COD: 00535" :
+                        "No podemos realizar los cambios porque ya este Grupo se encuentra registrado."
+                     )
+            );
 
         }
         
@@ -213,8 +219,13 @@ public class DatosCntr {
         } else {
 
             model.addAttribute("status", false);
-            model.addAttribute("msg", "Hubo un inconveniente al actualizar el registro. Parece que alguien más ha realizado cambios en la información. Por favor, inténtalo otra vez. COD: 00535");
-
+            model.addAttribute(
+                    "msg", 
+                     ( dateInput!=null ? 
+                        "Al parecer alguien ha realizado cambios en la información primero. Por favor, inténtalo otra vez. COD: 00535" :
+                        "No podemos realizar los cambios porque ya este Dato se encuentra registrado."
+                     )
+            );
         }
         
         ModeloServicio.load("dat_gen_consulta_datos", model, u.getId());

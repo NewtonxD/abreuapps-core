@@ -82,26 +82,23 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 aria-labelledby="headingFour"
                                 data-bs-parent="#sidenavAccordion"
                                 >
-                                <ul class="sb-sidenav-menu-nested nav btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                                    <li>
+                                <ul class="nav btn-toggle-nav list-unstyled fw-normal pb-1 d-block">
+                                    <li th:if="${trp_vehiculo_consulta}">
                                         <a class="nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded " href="#" id="trp_vehiculo_consulta">
                                             &MediumSpace; Vehículos
                                         </a>
                                     </li>
-                                </ul>
-                                <ul class="sb-sidenav-menu-nested nav btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                                    <li>
+                                    <li th:if="${trp_rutas_consulta}">
                                         <a class="nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded " href="#" id="trp_rutas_consulta">
                                             &MediumSpace; Rutas
                                         </a>
                                     </li>
-                                </ul>
-                                <ul class="sb-sidenav-menu-nested nav btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                                    <li>
+                                    <li th:if="${trp_paradas_consulta}">
                                         <a class="nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded " href="#" id="trp_paradas_consulta">
                                             &MediumSpace; Paradas
                                         </a>
                                     </li>
+                                    
                                 </ul>
                             </div>
                         </li>
@@ -122,7 +119,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 aria-labelledby="headingOne"
                                 data-bs-parent="#sidenavAccordion"
                                 >
-                                <ul class="sb-sidenav-menu-nested nav btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                <ul class="nav btn-toggle-nav list-unstyled fw-normal pb-1 d-block">
                                     <li  th:if="${con_registro_transacciones}">
                                         <a
                                             class="nav-link acceso  link-body-emphasis d-inline-flex text-decoration-none rounded"
@@ -189,7 +186,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 aria-labelledby="headingTwo"
                                 data-bs-parent="#sidenavAccordion"
                                 >
-                                <ul class="sb-sidenav-menu-nested nav btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                <ul class="nav btn-toggle-nav list-unstyled fw-normal pb-1 d-block">
                                     <li th:if="${cxp_registro_facturas}">
                                         <a class="nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded " href="#" id="cxp_registro_facturas">
                                             &MediumSpace; Registro de Facturas
@@ -243,19 +240,19 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 aria-labelledby="headingThree"
                                 data-bs-parent="#sidenavAccordion"
                                 >
-                                <ul class="sb-sidenav-menu-nested nav btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                <ul class="nav btn-toggle-nav list-unstyled fw-normal pb-1 d-block">
                                     <li th:if="${dat_gen_principal}">
-                                        <a class="nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded " href="#" id="dat_gen_principal">
+                                        <a class="nav-link acceso link-body-emphasis text-decoration-none rounded " href="#" id="dat_gen_principal">
                                             &MediumSpace; Datos Generales
                                         </a>
                                     </li>
                                     <li th:if="${sys_configuracion}">
-                                        <a class="nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded " href="#" id="sys_configuracion">
+                                        <a class="nav-link acceso link-body-emphasis text-decoration-none rounded " href="#" id="sys_configuracion">
                                             &MediumSpace; Configuración
                                         </a>
                                     </li>
                                     <li th:if="${usr_mgr_principal}">
-                                        <a class="nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded " href="#" id="usr_mgr_principal">
+                                        <a class="nav-link acceso link-body-emphasis text-decoration-none rounded " href="#" id="usr_mgr_principal">
                                             &MediumSpace; Usuarios
                                         </a>
                                     </li>
