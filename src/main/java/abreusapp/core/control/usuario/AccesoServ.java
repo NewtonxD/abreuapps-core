@@ -88,7 +88,8 @@ public class AccesoServ {
     
         
     public void GuardarTodosMap(Map<String,String> accesos,Usuario usuario){
-        List<AccesoUsuario> listaAcceso = new ArrayList<>();
+        List<AccesoUsuario> listaAccesoNuevo = new ArrayList<>();
+        List<AccesoUsuario> listaAccesoEdicion = new ArrayList<>();
         for (String key : accesos.keySet()) {
             //si el acceso existe crear acceso y agregar
             Optional<Dato> dato=dataRepo.findById(key);
@@ -109,10 +110,10 @@ public class AccesoServ {
                         AccUsr.setValor(
                             accesos.get(key).equals("on")?"true":(accesos.get(key).equals("off")?"false":accesos.get(key))
                         );
-                        listaAcceso.add(AccUsr);
+                        listaAccesoEdicion.add(AccUsr);
                     }else{
                         //nuevo
-                        listaAcceso.add(
+                        listaAccesoNuevo.add(
                             new AccesoUsuario(
                                 null,
                                 accesos.get(key).equals("on")?"true":(accesos.get(key).equals("off")?"false":accesos.get(key)),
@@ -128,7 +129,8 @@ public class AccesoServ {
             }
         }
         
-        repo.saveAllAndFlush(listaAcceso);
+        repo.saveAll(listaAccesoEdicion);
+        repo.saveAll(listaAccesoNuevo);
     }
     
 }
