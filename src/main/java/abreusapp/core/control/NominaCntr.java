@@ -6,22 +6,19 @@ package abreusapp.core.control;
 
 import abreusapp.core.control.general.DatoServ;
 import abreusapp.core.control.general.GrupoDatoServ;
-import abreusapp.core.control.usuario.AccesoServ;
 import abreusapp.core.control.general.Persona;
 import abreusapp.core.control.general.PersonaServ;
 import abreusapp.core.control.usuario.Usuario;
 import abreusapp.core.control.utils.DateUtils;
+import abreusapp.core.control.utils.ModelServ;
 import jakarta.servlet.http.HttpServletRequest;
 import java.text.ParseException;
-import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -29,24 +26,26 @@ import org.springframework.web.bind.annotation.ResponseBody;
  *
  * @author cabreu
  */
-
 @Controller
-@RequestMapping("/infppl")
 @Slf4j
 @RequiredArgsConstructor
-public class InfPersonalCntr {
+public class NominaCntr {
     
     private final PersonaServ PersonaServicio;
     
     private final DateUtils FechaUtils;
     
-    private final AccesoServ AccesoServicio;
-    
     private final DatoServ dtserv;
     
     private final GrupoDatoServ GrupoServicio;
     
-    @PostMapping("/save")
+    private final ModelServ ModeloServicio;
+    
+
+//----------------------------------------------------------------------------//
+//----------------------------INFORMACION PERSONAL----------------------------//
+//----------------------------------------------------------------------------//    
+    @PostMapping("/infppl/save")
     @ResponseBody
     public int GuardarPersona(
             HttpServletRequest request, 
@@ -55,15 +54,10 @@ public class InfPersonalCntr {
             @RequestParam(name = "fecha_actualizacionn", required = false) String dateInput
     ) throws ParseException {
         
-        Usuario u=(Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Usuario u=ModeloServicio.getUsuarioLogueado();
         
-        Map<String,Object> m=AccesoServicio.consultarAccesosPantallaUsuario(u.getId(),"usr_mgr_registro");
- 
-        if(m.get("usr_mgr_registro")==null || (! (Boolean)m.get("usr_mgr_registro"))
-        ){
-            return 0;
-        }
-        
+        String verificarPermisos= ModeloServicio.verificarPermisos("usr_mgr_registro", model, u);
+        if (! verificarPermisos.equals("")) return 0;
         
         if (dateInput != null && !dateInput.equals("")) {
             
@@ -102,8 +96,9 @@ public class InfPersonalCntr {
         return d!=null?d.getId():0;
 
     }
+//----------------------------------------------------------------------------//  
     
-    @PostMapping("/vfyCedInUsr")
+    @PostMapping("/infppl/vfyCedInUsr")
     @ResponseBody
     public boolean VerificarCedula(
             HttpServletRequest request, 
@@ -113,9 +108,10 @@ public class InfPersonalCntr {
        Optional<Persona> p=PersonaServicio.obtenerPorCedula(cedula);
        return ! p.isPresent();
     }
+//----------------------------------------------------------------------------//  
     
     
-    @PostMapping("/getAllInfCed")
+    @PostMapping("/infppl/getAllInfCed")
     public String ObtenerInfoPorCedula(
             HttpServletRequest request, 
             Model model, 
@@ -130,7 +126,6 @@ public class InfPersonalCntr {
         model.addAttribute("update",update);
         return "fragments/usr_mgr_registro :: info-dinamica-personal";
     }
-    
+//----------------------------------------------------------------------------//  
     
 }
-

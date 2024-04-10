@@ -41,7 +41,7 @@ public class LocVehiculo {
     @Id
     @GeneratedValue
     @Column(name = "id")
-    private Integer id;
+    private Long id;
     
     @ManyToOne
     @PrimaryKeyJoinColumn

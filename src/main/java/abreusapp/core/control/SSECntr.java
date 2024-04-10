@@ -38,6 +38,8 @@ public class SSECntr {
     
     private final Map<String,SseEmitter> usrMgrEmitters = new ConcurrentHashMap<>();
     
+    private final Map<String,SseEmitter> vhlEmitters = new ConcurrentHashMap<>();
+    
     private final Map<String,Runnable> actions=new HashMap<>();
     
     private HashMap<String, Object> Datos;
@@ -57,6 +59,11 @@ public class SSECntr {
         
         this.actions.put("usrmgr", ()->{
                 this.SSEServicio.emitir(usrMgrEmitters, Datos);
+            }
+        );
+        
+        this.actions.put("vhl", ()->{
+                this.SSEServicio.emitir(vhlEmitters, Datos);
             }
         );
     }
@@ -118,6 +125,26 @@ public class SSECntr {
         if (usrMgrEmitters.get(clientId)!=null){
             usrMgrEmitters.get(clientId).complete();
             usrMgrEmitters.remove(clientId);
+        }
+    }
+    
+    @GetMapping(value="/vhl", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter consultarVehiculos(
+            HttpServletRequest request,
+            @RequestParam String clientId
+    ) {
+        return SSEServicio.agregar(clientId,vhlEmitters);
+    }
+    
+    @GetMapping(value = "/vhl/close")
+    @ResponseBody
+    public void cerrarSSEVehiculos(
+            HttpServletRequest request,
+            @RequestParam String clientId
+    ) {
+        if (vhlEmitters.get(clientId)!=null){
+            vhlEmitters.get(clientId).complete();
+            vhlEmitters.remove(clientId);
         }
     }
     

@@ -8,11 +8,13 @@ import abreusapp.core.control.general.ConfServ;
 import abreusapp.core.control.general.DatoServ;
 import abreusapp.core.control.general.GrupoDatoServ;
 import abreusapp.core.control.general.Persona;
+import abreusapp.core.control.transporte.VehiculoServ;
 import abreusapp.core.control.usuario.AccesoServ;
 import abreusapp.core.control.usuario.Usuario;
 import abreusapp.core.control.usuario.UsuarioServ;
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -33,8 +35,12 @@ public class ModelServ {
     
     private Integer userId=null;
     
+    private final AccesoServ AccesoServicio;
+    
     //  custom constructor injection
-    public ModelServ(GrupoDatoServ GrupoServicio,DatoServ DatoServicio,AccesoServ AccesoServicio,UsuarioServ UsuarioServicio,ConfServ ConfServ){
+    public ModelServ(GrupoDatoServ GrupoServicio,DatoServ DatoServicio,AccesoServ AccesoServicio,UsuarioServ UsuarioServicio,ConfServ ConfServ,VehiculoServ VehiculoServ){
+        
+        this.AccesoServicio=AccesoServicio;
         
         this.actions.put("dat_gen_consulta_grupos", ()->{
                 Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "dat_gen_consulta_grupos");
@@ -99,6 +105,13 @@ public class ModelServ {
             }
         );
         
+        this.actions.put("trp_vehiculo_consulta", ()->{
+                Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "trp_vehiculo_consulta");
+                dataModel.addAttribute("vehiculos", VehiculoServ.consultar());
+                dataModel.addAllAttributes(acc);                
+            }
+        );
+        
     }
     
     public void load(String idPage,Model model,Integer idUser){
@@ -107,5 +120,22 @@ public class ModelServ {
         
         actions.getOrDefault(idPage,()->{}).run();
         
+    }
+    
+    public Usuario getUsuarioLogueado(){
+        return (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+    
+    public String verificarPermisos(String permiso,Model modelo,Usuario usuario){
+        Map<String,Object> m=AccesoServicio.consultarAccesosPantallaUsuario(usuario.getId(),permiso);
+        String respuesta="";
+        if (m.get(permiso) == null || (!(Boolean) m.get(permiso))) {
+            if (modelo !=null){
+                modelo.addAttribute("status", false);
+                modelo.addAttribute("msg", "No tiene permisos para realizar esta acción!");
+            }
+            respuesta="fragments/"+permiso+" :: content-default";
+        }
+        return respuesta;
     }
 }

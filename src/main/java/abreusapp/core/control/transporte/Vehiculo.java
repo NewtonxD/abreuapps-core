@@ -63,6 +63,10 @@ public class Vehiculo {
     @ManyToOne
     @PrimaryKeyJoinColumn
     private Dato estado;
+    
+    @ManyToOne
+    @PrimaryKeyJoinColumn
+    private Dato color;
 
     @ManyToOne
     @PrimaryKeyJoinColumn
