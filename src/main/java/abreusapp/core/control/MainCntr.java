@@ -4,34 +4,36 @@
  */
 package abreusapp.core.control;
 
-//import abreusapp.core.stp.control.domain.usuario.PersonaServ;
 import abreusapp.core.control.general.ConfServ;
 import abreusapp.core.control.usuario.Usuario;
 import abreusapp.core.control.usuario.AccesoServ;
 import abreusapp.core.control.usuario.UsuarioServ;
 import abreusapp.core.control.utils.ModelServ;
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  *
  * @author Newton
  */
 @Controller
-@RequestMapping("/main")
 @Slf4j
 @RequiredArgsConstructor
 public class MainCntr {
@@ -45,13 +47,17 @@ public class MainCntr {
     private final PasswordEncoder passwordEncoder;
     
     private final ConfServ confServ;
-
-    @RequestMapping({"/", "index"})
+    
+    
+//----------------------------------------------------------------------------//
+//--------------------------MAIN----------------------------------------------//
+//----------------------------------------------------------------------------//
+    @RequestMapping({"/main/", "/main/index"})
     public String MainPage(
         HttpServletRequest request,
         Model model
     ) {
-        Usuario u = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Usuario u = DataModelServicio.getUsuarioLogueado();
         
         if (!UsuarioServicio.obtener(
                 u.getUsername()
@@ -64,26 +70,28 @@ public class MainCntr {
         
         return "index";
     }
+//----------------------------------------------------------------------------//
 
-    @RequestMapping(value = "/content-page/", method = RequestMethod.POST)
+    @RequestMapping(value = "/main/content-page/", method = RequestMethod.POST)
     public String loadContetPage(
             HttpServletRequest request,
             Model model,
             @RequestParam("id") String idPage
     ) {
 
-        Usuario u = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Usuario u = DataModelServicio.getUsuarioLogueado();
         DataModelServicio.load(idPage, model, u.getId());
 
         return "fragments/" + idPage + " :: content-default";
     }
+//----------------------------------------------------------------------------//
     
-    @RequestMapping("/changePwd")
+    @RequestMapping("/main/changePwd")
     public String changePasswordExpired(
             HttpServletRequest request,
             Model model
     ) {
-        Usuario userSession = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Usuario userSession = DataModelServicio.getUsuarioLogueado();
         Usuario userBd = UsuarioServicio.obtener(userSession.getUsername()).get();
         userBd.setPassword("");
         model.addAttribute("usuario", userBd);
@@ -94,8 +102,9 @@ public class MainCntr {
             return "password";
            
     }
+//----------------------------------------------------------------------------//
     
-    @PostMapping("/changeMyPwdNow")
+    @PostMapping("/main/changeMyPwdNow")
     @ResponseBody
     public Map<String,String> changePasswordExpired(
             HttpServletRequest request,
@@ -104,7 +113,7 @@ public class MainCntr {
             @RequestParam("newPassword") String newPass
     ) {
         oldPass = oldPass==null ? "" : oldPass ;
-        Usuario userSession = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Usuario userSession = DataModelServicio.getUsuarioLogueado();
         Usuario userBd = UsuarioServicio.obtener(userSession.getUsername()).get();
         Map<String, String> respuesta= new HashMap<>();
         
@@ -129,25 +138,19 @@ public class MainCntr {
         return respuesta;
         
     }
+//----------------------------------------------------------------------------//
     
-    @PostMapping(value="/saveConf")
+    @PostMapping(value="/main/saveConf")
     public String GuardarConfiguracion(
             HttpServletRequest request, 
             Model model,
             @RequestParam Map<String,String> data
     ) {
         
-        Usuario u=(Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Usuario u= DataModelServicio.getUsuarioLogueado();
         
-        Map<String,Object> m=AccesosServicio.consultarAccesosPantallaUsuario(u.getId(),"sys_configuracion");
- 
-        if(m.get("sys_configuracion")==null || (! (Boolean)m.get("sys_configuracion"))
-        ){
-            model.addAttribute("status", false);
-            model.addAttribute("msg", "No tiene permisos para realizar esta acción!");
-            return "fragments/sys_configuracion :: content-default";
-        }
-        
+        String verificarPermisos= DataModelServicio.verificarPermisos("sys_configuracion", model, u);
+        if (! verificarPermisos.equals("")) return verificarPermisos;
         
         confServ.GuardarTodosMap(data, u);
         model.addAttribute("status", true);
@@ -159,5 +162,34 @@ public class MainCntr {
         return "fragments/sys_configuracion :: content-default";
 
     }
-
+//----------------------------------------------------------------------------//
+//------------------------- AUTH----------------------------------------------//
+//----------------------------------------------------------------------------//
+    @GetMapping("/auth/login")
+    public String Login(
+            HttpServletRequest request,
+            @RequestParam(name = "invalidSession", required = false,defaultValue = "false") boolean invalidSession,
+            @RequestParam(name = "logout", required = false,defaultValue = "false") boolean logout,
+            Model model
+    ) {
+        
+        if((SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken))
+            return "redirect:/main/index";
+        
+        if(invalidSession)
+            model.addAttribute("error_msg","Su sesión expiró. Ingrese sus credenciales nuevamente.");
+        
+        if(logout)
+            model.addAttribute("success_msg","Sesión cerrada exitosamente!");
+        
+        return "login";
+    }
+//----------------------------------------------------------------------------//
+    
+    @GetMapping("/")
+    public String redirectLogin(HttpServletRequest request,Model model
+    ){
+        return "redirect:/auth/login";
+    }
+//----------------------------------------------------------------------------//
 }
