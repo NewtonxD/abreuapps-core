@@ -69,6 +69,7 @@ function createTableRow(d,update=false) {
     row += '<td>' + d.marca.dato + ' ' + d.modelo.dato + '</td>';
     row += '<td>' + d.color.dato + '</td>'; 
     row += '<td>' + d.estado + '</td>'; 
+    row += '<td>' + (d.activo?'Activo':'Inactivo') + '</td>';
     row +=  !update ? '</tr>' : '';
     return row;
 }

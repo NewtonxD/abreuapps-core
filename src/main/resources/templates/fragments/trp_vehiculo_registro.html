@@ -26,44 +26,36 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                             <b><i class="fa fa-chevron-left"></i></b>
                                         </button>
                                         &nbsp;&nbsp;<h4>Vehículos&nbsp;
-                                            <th:block th:if="${!update}">
+                                            <th:block th:if="${placa==null}">
                                                 <i class="fa fa-plus"></i>
                                             </th:block>
-                                            <th:block th:if="${update}">
+                                            <th:block th:if="${placa!=null}">
                                                 <i class="fa fa-pencil"></i>
                                             </th:block>
                                         </h4>
                                     </div>
                                 </div>
-                                <form class="form-group" id="form-guardar">
+                                <form class="form-group" id="form-guardar" th:object="${vehiculo}">
                                     <div class="row">
                                         <div class="mb-3 col-12 col-md-6">
                                             <label for="placa" class="form-label text-muted">Placa:</label>
-                                            <input type="text" th:field='*{placa}' th:attr="disabled=${update?'disabled':''}" placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">        
+                                            <input type="text" th:field='*{placa}' th:disabled="${placa!=null}" placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">        
                                         </div>
 
                                         <div class="mb-3 col-12 col-md-6">
-                                            <label for="grupo" class="form-label text-muted">Grupo:</label>
-                                            <select class="form-select custom-select" id="grupo" name="grupo.grupo" required>
+                                            <label for="grupo" class="form-label text-muted">Color:</label>
+                                            <select class="form-select custom-select" th:field="*{color}" required>
                                                 <option value="0" selected disabled>--Seleccione--</option>
-                                                <option th:value="${g.grupo}" th:each="g :${grupos}" th:if="${g.activo}" th:text="${g.grupo}"></option>
+                                                <option th:value="${c.dato}" th:each="c :${color}" th:if="${c.activo}" th:text="${c.dato}"></option>
                                             </select>
                                         </div>
-
-                                        <th:block th:if="${vehiculo.placa!=''}">
-                                            <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" th:value="${#dates.format(vehiculo.fecha_actualizacion, 'yyyy-MM-dd HH:mm:ss')}">
-                                        </th:block>
-
-                                        <div class="mb-3 col-12">
-                                            <label for="descripcion" class="form-label text-muted">Descripción:</label>
-                                            <textarea class="form-control" id="descripcion" name="descripcion" rows="3" th:text="${update?dato.descripcion:''}" required maxlength="255"></textarea>
-                                        </div>
+                                        
+                                        <input  type="datetime" name="fecha_actualizacion" style="display: none; width: 1px;height: 1px;" th:value="${#dates.format(vehiculo.fecha_actualizacion, 'yyyy-MM-dd HH:mm:ss')}">
+                                        
                                         
                                         <div class="col-6 d-flex justify-content-start">
                                             <div class="form-check">
-
-                                                <input class="form-check-input" type="checkbox"  th:attr="checked=${update?dato.activo:true}" name="activo" id="activo">
-
+                                                <input class="form-check-input" type="checkbox"  th:attr="checked=${placa!=null?activo:'true'}" name="vehiculo.activo" id="activo">
                                                     <label class="form-check-label text-muted" for="activo">Activo</label>
                                             </div>
                                         </div>
@@ -71,10 +63,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                         <div class="col-6 d-flex justify-content-end">
 
                                             <button type="submit" class="btn btn-primary"> 
-                                                <th:block th:if="${!update}"><b> <i class="fa fa-save"></i>
+                                                <th:block th:if="${placa==null}"><b> <i class="fa fa-save"></i>
                                                     Guardar</b>
                                                 </th:block>
-                                                <th:block th:if="${update}"><b> <i class="fa fa-pencil"></i>
+                                                <th:block th:if="${placa!=null}"><b> <i class="fa fa-pencil"></i>
                                                         Editar</b>
                                                 </th:block>
                                             </button>

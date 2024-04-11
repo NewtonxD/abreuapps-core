@@ -67,6 +67,9 @@ public class Vehiculo {
     @ManyToOne
     @PrimaryKeyJoinColumn
     private Dato color;
+    
+    @Column(name="act")
+    private boolean activo;
 
     @ManyToOne
     @PrimaryKeyJoinColumn

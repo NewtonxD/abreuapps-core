@@ -64,9 +64,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                         <thead class="bg-secondary text-white">
                                             <tr>
                                                 <th scope="col">Placa</th>
-                                                <th scope="col">Marca + Modelo</th>
+                                                <th scope="col">Marca y Módelo</th>
                                                 <th scope="col">Color</th>
                                                 <th scope="col">Estado</th>
+                                                <th scope="col">Activo</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -75,6 +76,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                 <td th:text="${d.marca.dato + ' ' + d.modelo.dato}"></td>
                                                 <td th:text="${d.color.dato}"></td>
                                                 <td th:text="${d.estado}"></td>
+                                                <td th:text="${d.activo?'Activo':'Inactivo'}"></td>
                                             </tr>
                                         </tbody>
                                     </table>
