@@ -8,6 +8,7 @@ import abreusapp.core.control.general.ConfServ;
 import abreusapp.core.control.general.DatoServ;
 import abreusapp.core.control.general.GrupoDatoServ;
 import abreusapp.core.control.general.Persona;
+import abreusapp.core.control.transporte.Vehiculo;
 import abreusapp.core.control.transporte.VehiculoServ;
 import abreusapp.core.control.usuario.AccesoServ;
 import abreusapp.core.control.usuario.Usuario;
@@ -108,6 +109,39 @@ public class ModelServ {
         this.actions.put("trp_vehiculo_consulta", ()->{
                 Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "trp_vehiculo_consulta");
                 dataModel.addAttribute("vehiculos", VehiculoServ.consultar());
+                dataModel.addAllAttributes(acc);                
+            }
+        );
+        
+        this.actions.put("trp_vehiculo_registro", ()->{
+                Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "trp_vehiculo_registro");
+                dataModel.addAttribute("update",false);
+                Vehiculo p=new Vehiculo();
+                dataModel.addAttribute("vehiculo",p);
+                dataModel.addAttribute(
+                        "marca",
+                        DatoServicio.consultarPorGrupo(
+                                GrupoServicio.obtener("Marca").get() 
+                        )
+                );
+                dataModel.addAttribute(
+                        "tipo_vehiculo",
+                        DatoServicio.consultarPorGrupo(
+                                GrupoServicio.obtener("Tipo Vehiculo").get() 
+                        )
+                );
+                dataModel.addAttribute(
+                        "estado",
+                        DatoServicio.consultarPorGrupo(
+                                GrupoServicio.obtener("Estados Vehiculo").get() 
+                        )
+                );
+                dataModel.addAttribute(
+                        "color",
+                        DatoServicio.consultarPorGrupo(
+                                GrupoServicio.obtener("Colores").get() 
+                        )
+                );
                 dataModel.addAllAttributes(acc);                
             }
         );

@@ -211,8 +211,11 @@ INSERT INTO public.gnr_dat (dat,act,dsc,upd_at,mde_at,actualizado_por_id,grupo_g
 ('cxp_comunicacion_proveedores',true,'Comunicación Proveedores','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Menu',1),
 ('cxp_autorizaciones_aprobaciones',true,'Autorizaciones','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Menu',1),
 ('trp_rutas_consulta',true,'Rutas','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Menu',1),
-('trp_paradas_consulta',true,'Paradas','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Menu',1)
-;	 	 	 	 
+('trp_paradas_consulta',true,'Paradas','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Menu',1),
+('trp_vehiculo_registro',true,'Registro','2024-03-31 12:02:56.006','2024-03-31 12:02:56.006',NULL,'Pantallas',1)
+;
+
+
 	 	 
 
 ALTER TABLE public.gnr_dat 
@@ -249,7 +252,8 @@ INSERT INTO public.acc (id,act,fat_scr,pantalla_dat,tipo_dato_dat) VALUES
 	 (30,true,NULL,'trp_principal','Booleano'),
 	 (31,true,'trp_principal','trp_rutas_consulta','Booleano'),
 	 (32,true,'trp_principal','trp_paradas_consulta','Booleano'),
-	 (33,true,'trp_principal','trp_vehiculo_consulta','Booleano');
+	 (33,true,'trp_principal','trp_vehiculo_consulta','Booleano'),
+	 (34,true,'trp_vehiculo_consulta','trp_vehiculo_registro','Booleano');
 	 
 
 ALTER TABLE public.acc 

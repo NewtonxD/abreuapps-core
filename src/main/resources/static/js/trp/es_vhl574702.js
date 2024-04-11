@@ -64,14 +64,13 @@ function closeEventSource(callServer=true){
 }
 
 function createTableRow(d,update=false) {
-    var row = !update ? '<tr data-id="' + d.dato + '">' : '';
-    row += '<th>'+ d.dato + '</th>';
-    row += '<td>' + d.descripcion + '</td>';
-    row += '<td>' + d.grupo.grupo + '</td>'; 
-    row += '<td>' + (d.activo?'Activo':'Inactivo') + '</td>'; 
+    var row = !update ? '<tr data-id="' + d.placa + '">' : '';
+    row += '<th>'+ d.placa + '</th>';
+    row += '<td>' + d.marca.dato + ' ' + d.modelo.dato + '</td>';
+    row += '<td>' + d.color.dato + '</td>'; 
+    row += '<td>' + d.estado + '</td>'; 
     row +=  !update ? '</tr>' : '';
     return row;
-
 }
 
 $(function(){

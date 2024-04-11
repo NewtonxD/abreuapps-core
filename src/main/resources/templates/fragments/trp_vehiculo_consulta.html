@@ -21,7 +21,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 class="col-8 d-flex align-items-start justify-content-start"
                                 >
                                 <h4>
-                                    Vehículos&nbsp;<i class="fa fa-magnifying-glass" ></i>
+                                    Vehículos&nbsp;
                                 </h4>
                             </div>
                             <div
@@ -63,18 +63,18 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                         >
                                         <thead class="bg-secondary text-white">
                                             <tr>
-                                                <th scope="col">Dato</th>
-                                                <th scope="col">Descripción</th>
-                                                <th scope="col">Grupo</th>
+                                                <th scope="col">Placa</th>
+                                                <th scope="col">Marca + Modelo</th>
+                                                <th scope="col">Color</th>
                                                 <th scope="col">Estado</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr th:each="d: ${datos}" th:attr="data-id=${d.dato}">
-                                                <th scope="row" th:text="${d.dato}"></th>
-                                                <td th:text="${d.descripcion}"></td>
-                                                <td th:text="${d.grupo.grupo}"></td>
-                                                <td th:text="${d.activo?'Activo':'Inactivo'}"></td>
+                                            <tr th:each="d: ${vehiculos}" th:attr="data-id=${d.placa}">
+                                                <th scope="row" th:text="${d.placa}"></th>
+                                                <td th:text="${d.marca.dato + ' ' + d.modelo.dato}"></td>
+                                                <td th:text="${d.color.dato}"></td>
+                                                <td th:text="${d.estado}"></td>
                                             </tr>
                                         </tbody>
                                     </table>
