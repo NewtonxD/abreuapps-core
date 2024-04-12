@@ -257,7 +257,7 @@ INSERT INTO public.acc (id,act,fat_scr,pantalla_dat,tipo_dato_dat) VALUES
 	 
 
 ALTER TABLE public.acc 
-ENABLE TRIGGER ALL;
+ENABLE TRIGGER ALL ;
 
 
 ALTER TABLE public.ppl_inf 
