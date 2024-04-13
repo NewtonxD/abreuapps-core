@@ -13,6 +13,4 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-public interface VehiculoRepo extends JpaRepository<Vehiculo, Integer> {
-    
-}
+public interface VehiculoRepo extends JpaRepository<Vehiculo, String> {}

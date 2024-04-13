@@ -5,6 +5,7 @@
 package abreusapp.core.control.utils;
 
 import abreusapp.core.control.general.ConfServ;
+import abreusapp.core.control.general.Dato;
 import abreusapp.core.control.general.DatoServ;
 import abreusapp.core.control.general.GrupoDatoServ;
 import abreusapp.core.control.general.Persona;
@@ -14,6 +15,7 @@ import abreusapp.core.control.usuario.AccesoServ;
 import abreusapp.core.control.usuario.Usuario;
 import abreusapp.core.control.usuario.UsuarioServ;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -115,14 +117,12 @@ public class ModelServ {
         
         this.actions.put("trp_vehiculo_registro", ()->{
                 Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "trp_vehiculo_registro");
-                dataModel.addAttribute("update",false);
                 Vehiculo p=new Vehiculo();
                 dataModel.addAttribute("vehiculo",p);
+                List<Dato> marcas=DatoServicio.consultarPorGrupo( GrupoServicio.obtener("Marca").get() );
                 dataModel.addAttribute(
                         "marca",
-                        DatoServicio.consultarPorGrupo(
-                                GrupoServicio.obtener("Marca").get() 
-                        )
+                        marcas
                 );
                 dataModel.addAttribute(
                         "tipo_vehiculo",
@@ -140,6 +140,12 @@ public class ModelServ {
                         "color",
                         DatoServicio.consultarPorGrupo(
                                 GrupoServicio.obtener("Colores").get() 
+                        )
+                );
+                dataModel.addAttribute(
+                        "modelo",
+                        DatoServicio.consultarPorGrupo(
+                                GrupoServicio.obtener( marcas.getFirst().getDato() ).get() 
                         )
                 );
                 dataModel.addAllAttributes(acc);                
