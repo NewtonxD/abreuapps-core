@@ -537,7 +537,7 @@ public class SistemaCntr {
     @ResponseBody
     public ResponseEntity ObtenerListadoPermisosUsuario(
             HttpServletRequest request, 
-            @RequestBody String idUsuario
+            @RequestParam("Marca") String idUsuario
     ) {  
         
         Usuario u = ModeloServicio.getUsuarioLogueado();
@@ -545,7 +545,7 @@ public class SistemaCntr {
         String verificarPermisos= ModeloServicio.verificarPermisos("usr_mgr_registro", null, u);
         if (! verificarPermisos.equals("")) return null;
         
-        Optional<Usuario> us=UsuarioServicio.obtener(idUsuario.replace("idUsuario=", "")); 
+        Optional<Usuario> us=UsuarioServicio.obtener(idUsuario); 
 
         if(!us.isPresent()){
 

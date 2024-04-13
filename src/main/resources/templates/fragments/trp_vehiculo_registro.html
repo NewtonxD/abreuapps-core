@@ -37,25 +37,102 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 </div>
                                 <form class="form-group" id="form-guardar" th:object="${vehiculo}">
                                     <div class="row">
-                                        <div class="mb-3 col-12 col-md-6">
+                                        <div class="mb-3 col-12 col-md-6 col-lg-4">
                                             <label for="placa" class="form-label text-muted">Placa:</label>
-                                            <input type="text" th:field='*{placa}' th:disabled="${placa!=null}" placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">        
+                                            <input type="text" th:field='*{placa}' th:disabled="${vehiculo.placa!=null}" placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">        
                                         </div>
 
-                                        <div class="mb-3 col-12 col-md-6">
+                                        <div class="mb-3 col-12 col-md-6 col-lg-4">
                                             <label for="grupo" class="form-label text-muted">Color:</label>
-                                            <select class="form-select custom-select" th:field="*{color}" required>
-                                                <option value="0" selected disabled>--Seleccione--</option>
-                                                <option th:value="${c.dato}" th:each="c :${color}" th:if="${c.activo}" th:text="${c.dato}"></option>
+                                            
+                                            <th:block th:if="${vehiculo.placa==null}">
+                                                <select class="form-select custom-select" th:field="*{color}" required>
+                                            </th:block>
+                                            <th:block th:if="${vehiculo.placa!=null}">
+                                                <select class="form-select custom-select" name="color" id="color" required>
+                                            </th:block>
+                                            
+                                                    <option value="0" disabled>--Seleccione--</option>
+                                                <th:block  th:each="c :${color}">
+                                                    <option th:value="${c.dato}" th:selected="${vehiculo.placa!=null && vehiculo.color.dato==c.dato}" th:if="${c.activo}" th:text="${c.dato}"></option>
+                                                </th:block>
                                             </select>
                                         </div>
                                         
-                                        <input  type="datetime" name="fecha_actualizacion" style="display: none; width: 1px;height: 1px;" th:value="${#dates.format(vehiculo.fecha_actualizacion, 'yyyy-MM-dd HH:mm:ss')}">
+                                        <div class="mb-3 col-12 col-md-6 col-lg-4">
+                                            <label for="grupo" class="form-label text-muted">Tipo:</label>
+                                            
+                                            <th:block th:if="${vehiculo.placa==null}">
+                                                <select class="form-select custom-select" th:field="*{tipo_vehiculo}" required>
+                                            </th:block>
+                                            <th:block th:if="${vehiculo.placa!=null}">
+                                                <select class="form-select custom-select" name="tipo_vehiculo" id="tipo_vehiculo" required>
+                                            </th:block>
+                                            
+                                                    <option value="0" disabled>--Seleccione--</option>
+                                                <th:block th:each="t :${tipo_vehiculo}">
+                                                    <option th:value="${t.dato}" th:selected="${vehiculo.placa!=null && vehiculo.tipo_vehiculo.dato==t.dato}"  th:if="${t.activo}" th:text="${t.dato}"></option>
+                                                </th:block>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="mb-3 col-12 col-md-6 col-lg-4">
+                                            <label for="grupo" class="form-label text-muted">Estado:</label>
+                                            
+                                            <th:block th:if="${vehiculo.placa==null}">
+                                                <select class="form-select custom-select" th:field="*{estado}" required>
+                                            </th:block>
+                                            <th:block th:if="${vehiculo.placa!=null}">
+                                                <select class="form-select custom-select" name="estado" id="estado" required>
+                                            </th:block>
+                                            
+                                                    <option value="0" disabled>--Seleccione--</option>
+                                                <th:block th:each="e :${estado}">
+                                                    <option th:value="${e.dato}" th:selected="${vehiculo.placa!=null && vehiculo.estado.dato==e.dato}" th:if="${e.activo}" th:text="${e.dato}"></option>
+                                                </th:block>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="mb-3 col-12 col-md-6 col-lg-4">
+                                            <label for="grupo" class="form-label text-muted">Marca:</label>
+                                            
+                                            <th:block th:if="${vehiculo.placa==null}">
+                                                <select class="form-select custom-select" th:field="*{marca}" required>
+                                            </th:block>
+                                            <th:block th:if="${vehiculo.placa!=null}">
+                                                <select class="form-select custom-select" name="marca" id="marca" required>
+                                            </th:block>
+                                            
+                                                    <option value="0" disabled>--Seleccione--</option>
+                                                <th:block th:each="m :${marca}">
+                                                    <option th:value="${m.dato}" th:selected="${vehiculo.placa!=null && vehiculo.marca.dato==m.dato}" th:if="${m.activo}" th:text="${m.dato}"></option>
+                                                </th:block> 
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="mb-3 col-12 col-md-6 col-lg-4">
+                                            <label for="grupo" class="form-label text-muted">Módelo:</label>
+                                            
+                                            <th:block th:if="${vehiculo.placa==null}">
+                                                <select class="form-select custom-select" th:field="*{modelo}" required>
+                                            </th:block>
+                                            <th:block th:if="${vehiculo.placa!=null}">
+                                                <select class="form-select custom-select" name="modelo" id="modelo" required>
+                                            </th:block>
+                                            
+                                                    <option value="0" disabled>--Seleccione--</option>
+                                                <th:block th:each="mo :${modelo}">
+                                                    <option th:value="${mo.dato}" th:selected="${vehiculo.placa!=null && vehiculo.modelo.dato==mo.dato}" th:if="${mo.activo}" th:text="${mo.dato}"></option>
+                                                </th:block> 
+                                            </select>
+                                        </div>
+                                        
+                                        <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" th:value="${#dates.format(vehiculo.fecha_actualizacion, 'yyyy-MM-dd HH:mm:ss')}">
                                         
                                         
                                         <div class="col-6 d-flex justify-content-start">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox"  th:attr="checked=${placa!=null?activo:'true'}" name="vehiculo.activo" id="activo">
+                                                <input class="form-check-input" type="checkbox"  th:attr="checked=${placa!=null?activo:'true'}" name="activo" id="activo">
                                                     <label class="form-check-label text-muted" for="activo">Activo</label>
                                             </div>
                                         </div>
@@ -64,7 +141,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 
                                             <button type="submit" class="btn btn-primary"> 
                                                 <th:block th:if="${placa==null}"><b> <i class="fa fa-save"></i>
-                                                    Guardar</b>
+                                                        Guardar</b>
                                                 </th:block>
                                                 <th:block th:if="${placa!=null}"><b> <i class="fa fa-pencil"></i>
                                                         Editar</b>

@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrimaryKeyJoinColumn;
@@ -42,36 +43,36 @@ public class Vehiculo {
     @Column(name = "pl")
     private String placa;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn
     private Dato marca;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn
     private Dato modelo;
     
     @Column(name = "cap_pax")
-    private Integer capacidad_pasajeros;
+    private short capacidad_pasajeros;
     
     @Column(name = "mke_at")
     private short anio_fabricacion;
     
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn
     private Dato tipo_vehiculo;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn
     private Dato estado;
     
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn
     private Dato color;
     
     @Column(name="act")
     private boolean activo;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn
     private Usuario hecho_por;
     
@@ -79,7 +80,7 @@ public class Vehiculo {
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date fecha_registro;
     
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn
     private Usuario actualizado_por;
     
