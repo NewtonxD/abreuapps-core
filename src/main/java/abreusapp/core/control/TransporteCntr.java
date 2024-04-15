@@ -24,7 +24,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import lombok.Data;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -32,7 +35,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -233,35 +238,38 @@ public class TransporteCntr {
 //----------------------------API TRANSPORTE----------------------------------//
 //----------------------------------------------------------------------------//
     
-    @PostMapping(value="/API/trp/verifyTrpData", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value="/API/trp/verifyTrpData", produces = MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Map<String, Object> VerificarInformacionTransporte(
             HttpServletRequest request, 
-            @RequestParam("placa") String placa
+            @RequestBody Map<String, String> req
     ) {  
         boolean valido=false;
         
         String mensaje="";
         
-        Optional<Vehiculo> v = VehiculoServicio.obtener(placa);
+        String placa=req.get("placa");
         
-        if(v.isPresent()){
-            
-            valido=true;
-            
-            if (! v.get().isActivo() )
-                mensaje = "Vehiculo Inactivo! Verifique Placa...";
-            
-            if (! v.get().getEstado().getDato().equals("Estacionado")) 
-                mensaje = "Vehiculo no Estacionado! Verifique Placa...";
-            
-        }else mensaje = "Vehiculo no existe!";
-        
-        if(valido) mensaje = "Datos correctos! Iniciando Servicio...";
-        
+        if(! placa.equals(null) ){
+            Optional<Vehiculo> v = VehiculoServicio.obtener(placa);
+
+            if(v.isPresent()){
+
+                valido=true;
+
+                if (! v.get().isActivo() )
+                    mensaje = "Vehiculo Inactivo! Verifique Placa...";
+
+                if (! v.get().getEstado().getDato().equals("Estacionado")) 
+                    mensaje = "Vehiculo no Estacionado! Verifique Placa...";
+
+            }else mensaje = "Vehiculo no existe!";
+
+            if(valido) mensaje = "Datos correctos! Iniciando Servicio...";
+        }else mensaje="Placa no pudo ser procesada...";
         Map<String, Object> respuesta= new HashMap<>();
         respuesta.put("isValid", valido);
-        respuesta.put("Message", mensaje);
+        respuesta.put("message", mensaje);
         
         return respuesta;  
     } 
