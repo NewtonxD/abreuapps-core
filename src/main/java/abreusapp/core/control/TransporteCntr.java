@@ -22,6 +22,7 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -227,6 +228,42 @@ public class TransporteCntr {
                 HttpStatus.OK);  
     }
 
+    
 //----------------------------------------------------------------------------//
+//----------------------------API TRANSPORTE----------------------------------//
+//----------------------------------------------------------------------------//
+    
+    @PostMapping(value="/API/trp/verifyTrpData", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String, Object> VerificarInformacionTransporte(
+            HttpServletRequest request, 
+            @RequestParam("placa") String placa
+    ) {  
+        boolean valido=false;
+        
+        String mensaje="";
+        
+        Optional<Vehiculo> v = VehiculoServicio.obtener(placa);
+        
+        if(v.isPresent()){
+            
+            valido=true;
+            
+            if (! v.get().isActivo() )
+                mensaje = "Vehiculo Inactivo! Verifique Placa...";
+            
+            if (! v.get().getEstado().getDato().equals("Estacionado")) 
+                mensaje = "Vehiculo no Estacionado! Verifique Placa...";
+            
+        }else mensaje = "Vehiculo no existe!";
+        
+        if(valido) mensaje = "Datos correctos! Iniciando Servicio...";
+        
+        Map<String, Object> respuesta= new HashMap<>();
+        respuesta.put("isValid", valido);
+        respuesta.put("Message", mensaje);
+        
+        return respuesta;  
+    } 
     
 }

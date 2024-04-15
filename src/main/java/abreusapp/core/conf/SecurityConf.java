@@ -27,7 +27,7 @@ public class SecurityConf{
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(t -> t
-                .requestMatchers("/", "/auth/**", "/content/**", "/error/**").permitAll()
+                .requestMatchers("/", "/auth/**", "/content/**", "/error/**","/API/**").permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
