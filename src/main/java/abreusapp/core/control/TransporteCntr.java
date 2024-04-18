@@ -274,4 +274,28 @@ public class TransporteCntr {
         return respuesta;  
     } 
     
+    @PostMapping(value="/API/trp/sendTrpData", produces = MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String, Object> RegistrarInformacionTransporte(
+            HttpServletRequest request, 
+            @RequestBody Map<String, String> req
+    ) {  
+        boolean valido=true;
+        
+        String mensaje="";
+        
+        String placa=req.get("placa");
+        String lat= req.get("lat");
+        String lon= req.get("lon");
+        log.info("\n > placa = "+placa+"  |  longitud = "+lon+"  |  latitud = "+lat+" \n");
+        Map<String, Object> respuesta= new HashMap<>();
+        
+        respuesta.put("isValid", valido);
+        respuesta.put("message", mensaje);
+        
+        return respuesta;  
+        
+    }
+    
+    
 }
