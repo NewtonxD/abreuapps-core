@@ -20,7 +20,11 @@ import java.util.Base64;
 
 @Service
 public class TransportTokenServ {
-    public String generateToken(String secretKey, int tokenLength) throws NoSuchAlgorithmException, InvalidKeyException {
+    
+    private static final int tokenLength=8;
+    private static final String secretKey="*@3ads@4%dEeez";
+    
+    public String generateToken() throws NoSuchAlgorithmException, InvalidKeyException {
         SecureRandom random = new SecureRandom();
         byte[] randomBytes = new byte[tokenLength];
         random.nextBytes(randomBytes);
@@ -30,23 +34,32 @@ public class TransportTokenServ {
         hmac.init(secretKeySpec);
         byte[] hmacBytes = hmac.doFinal(randomBytes);
 
-        // Encode the HMAC bytes to base64
         return Base64.getEncoder().encodeToString(hmacBytes);
     }
 
-    // Validate if a token is valid
-    public boolean validateToken(String token, String secretKey) throws NoSuchAlgorithmException, InvalidKeyException {
+    private boolean validateToken(String token) throws NoSuchAlgorithmException, InvalidKeyException {
         Mac hmac = Mac.getInstance("HmacSHA256");
         SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes(), "HmacSHA256");
         hmac.init(secretKeySpec);
 
-        // Decode the token from base64
         byte[] decodedToken = Base64.getDecoder().decode(token);
 
-        // Re-calculate HMAC and compare with provided token
         byte[] recalculatedHmacBytes = hmac.doFinal(decodedToken);
 
-        // Compare the recalculated HMAC with the provided token's HMAC
         return MessageDigest.isEqual(recalculatedHmacBytes, decodedToken);
     }
+    
+    public boolean isValidToken(String token){
+        boolean res=false;
+        if(token!=null){
+            try{
+                res=validateToken(token);
+            }catch(InvalidKeyException|NoSuchAlgorithmException e){
+                res=false;
+            }
+        }
+        return res;
+    }
+    
+    
 }
