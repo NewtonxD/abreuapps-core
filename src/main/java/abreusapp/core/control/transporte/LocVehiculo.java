@@ -48,10 +48,10 @@ public class LocVehiculo {
     private Vehiculo placa;
 
     @Column(name = "lat")
-    private float latitud;
+    private Double latitud;
 
     @Column(name = "lon")
-    private float longitud;
+    private Double longitud;
 
     @Column(name = "reg_dt")
     @Temporal(value = TemporalType.TIMESTAMP)

@@ -87,4 +87,7 @@ public class Vehiculo {
     @Column(name= "upd_at")
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date fecha_actualizacion;
+    
+    @Column(name = "tkn")
+    private String token;
 }
