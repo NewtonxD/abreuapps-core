@@ -31,9 +31,12 @@ public class VehiculoServ {
     public Vehiculo guardar(Vehiculo gd, Usuario usuario,boolean existe){
         
         if(existe){ 
-            gd.setActualizado_por(usuario);
+            if(usuario!=null)
+                gd.setActualizado_por(usuario);
         }else{
-            gd.setHecho_por(usuario);
+            if(usuario!=null)
+                gd.setHecho_por(usuario);
+            
             gd.setFecha_registro(new Date());
         }
         gd.setFecha_actualizacion(new Date());

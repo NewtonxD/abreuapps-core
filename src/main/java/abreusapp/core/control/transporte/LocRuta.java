@@ -45,9 +45,9 @@ public class LocRuta {
     private Ruta ruta;
 
     @Column(name = "lon")
-    private String longitud;
+    private Double longitud;
     
     @Column(name = "lat")
-    private String latitud;
+    private Double latitud;
     
 }

@@ -8,6 +8,8 @@ import abreusapp.core.control.general.Dato;
 import abreusapp.core.control.general.DatoServ;
 import abreusapp.core.control.general.GrupoDato;
 import abreusapp.core.control.general.GrupoDatoServ;
+import abreusapp.core.control.transporte.LocVehiculo;
+import abreusapp.core.control.transporte.LocVehiculoServ;
 import abreusapp.core.control.transporte.Vehiculo;
 import abreusapp.core.control.transporte.VehiculoServ;
 import abreusapp.core.control.usuario.AccesoServ;
@@ -16,18 +18,13 @@ import abreusapp.core.control.utils.DateUtils;
 import abreusapp.core.control.utils.ModelServ;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import lombok.Data;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -35,7 +32,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -65,6 +61,7 @@ public class TransporteCntr {
     
     private final DatoServ DatosServicio;
     
+    private final LocVehiculoServ LocVehiculoServicio;
     
 //----------------------------------------------------------------------------//
 //----------------------------VEHICULOS---------------------------------------//
@@ -238,7 +235,7 @@ public class TransporteCntr {
 //----------------------------API TRANSPORTE----------------------------------//
 //----------------------------------------------------------------------------//
     
-    @PostMapping(value="/API/trp/verifyTrpData", produces = MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value="/API/trp/verifyData", produces = MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Map<String, Object> VerificarInformacionTransporte(
             HttpServletRequest request, 
@@ -247,10 +244,93 @@ public class TransporteCntr {
         boolean valido=false;
         
         String mensaje="";
+        String placa=req.get("placa");
+        String token=req.get("token");
+        if(!token.equals("")){
+            
+            
+            
+            if(! placa.equals("") ){
+                Optional<Vehiculo> v = VehiculoServicio.obtener(placa);
+
+                if(v.isPresent()){
+
+                    valido=true;
+
+                    if (! v.get().isActivo() )
+                        mensaje = "Vehiculo Inactivo! Verifique Placa...";
+
+                    if (! v.get().getEstado().getDato().equals("Estacionado")) 
+                        mensaje = "Vehiculo no Estacionado! Verifique Placa...";
+
+                }else mensaje = "Vehiculo no existe!";
+
+                if(valido) {
+                    mensaje = "Datos correctos! Iniciando Servicio...";
+                    Vehiculo h=v.get();
+                    h.setEstado(DatosServicio.obtener("En Camino").get());
+                    VehiculoServicio.guardar(h, null, true);
+                }
+
+            }else mensaje="Placa no pudo ser procesada...";
+        
+        }
+        Map<String, Object> respuesta= new HashMap<>();
+        respuesta.put("isValid", valido);
+        respuesta.put("message", mensaje);
+        
+        return respuesta;  
+    } 
+    
+    @PostMapping(value="/API/trp/sendData", produces = MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String, Object> RegistrarInformacionTransporte(
+            HttpServletRequest request, 
+            @RequestBody Map<String, String> req
+    ) {  
+        boolean valido=true;
+        
+        String mensaje = "";
+        
+        String placa   = req.get("placa");
+        Double lat     = Double.valueOf(req.get("lat"));
+        Double lon     = Double.valueOf(req.get("lon"));
+        
+        if(!(placa.isBlank() || lat.isNaN() || lon.isNaN())){
+            
+            LocVehiculo lv = new LocVehiculo();
+
+            lv.setLatitud(lat);
+            lv.setLongitud(lon);
+            lv.setPlaca(VehiculoServicio.obtener(placa).get());
+
+            LocVehiculoServicio.guardar(lv);
+            
+        }
+        
+        
+        Map<String, Object> respuesta= new HashMap<>();
+        respuesta.put("isValid", valido);
+        respuesta.put("message", mensaje);
+        
+        return respuesta;  
+        
+    }
+    
+    @PostMapping(value="/API/trp/changeStatus", produces = MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String, Object> CambiarEstadoTransporte(
+            HttpServletRequest request, 
+            @RequestBody Map<String, String> req
+    ) {  
+        boolean valido=false;
+        
+        String mensaje="";
         
         String placa=req.get("placa");
+        String estado=req.get("estado");
         
-        if(! placa.equals(null) ){
+        if(! placa.equals("") ){
             Optional<Vehiculo> v = VehiculoServicio.obtener(placa);
 
             if(v.isPresent()){
@@ -259,43 +339,29 @@ public class TransporteCntr {
 
                 if (! v.get().isActivo() )
                     mensaje = "Vehiculo Inactivo! Verifique Placa...";
-
-                if (! v.get().getEstado().getDato().equals("Estacionado")) 
-                    mensaje = "Vehiculo no Estacionado! Verifique Placa...";
+                else {
+                    
+                    mensaje = "Transporte "+estado+"...";
+                    Vehiculo h=v.get();
+                    h.setEstado(DatosServicio.obtener(estado).get());
+                    VehiculoServicio.guardar(h, null, true);
+                    
+                    HashMap<String, Object> map = new HashMap<>();
+                    map.put("U", h);
+                    map.put("date", FechaUtils.FechaFormato1.format(new Date()));
+                    SSEControlador.publicar("vhl", map);
+                }
 
             }else mensaje = "Vehiculo no existe!";
 
-            if(valido) mensaje = "Datos correctos! Iniciando Servicio...";
         }else mensaje="Placa no pudo ser procesada...";
+        
         Map<String, Object> respuesta= new HashMap<>();
         respuesta.put("isValid", valido);
         respuesta.put("message", mensaje);
         
         return respuesta;  
     } 
-    
-    @PostMapping(value="/API/trp/sendTrpData", produces = MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public Map<String, Object> RegistrarInformacionTransporte(
-            HttpServletRequest request, 
-            @RequestBody Map<String, String> req
-    ) {  
-        boolean valido=true;
-        
-        String mensaje="";
-        
-        String placa=req.get("placa");
-        String lat= req.get("lat");
-        String lon= req.get("lon");
-        log.info("\n > placa = "+placa+"  |  longitud = "+lon+"  |  latitud = "+lat+" \n");
-        Map<String, Object> respuesta= new HashMap<>();
-        
-        respuesta.put("isValid", valido);
-        respuesta.put("message", mensaje);
-        
-        return respuesta;  
-        
-    }
     
     
 }
