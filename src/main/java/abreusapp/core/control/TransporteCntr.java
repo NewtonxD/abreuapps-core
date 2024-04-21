@@ -33,6 +33,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -68,7 +69,9 @@ public class TransporteCntr {
     
     private final TransportTokenServ TrpTokenServ;
     
-    private static final String pwd_hash="$2a$10$FD.HVab6z8H3Tba.hw.SvukdeJDfZ5aIIzCN87AL7T2SSAJqoi8Bq";
+    private final PasswordEncoder passwordEncoder;
+    
+    private static final String PWD_HASH="$2a$10$FD.HVab6z8H3Tba.hw.SvukdeJDfZ5aIIzCN87AL7T2SSAJqoi8Bq";
     
 //----------------------------------------------------------------------------//
 //----------------------------VEHICULOS---------------------------------------//
@@ -242,32 +245,6 @@ public class TransporteCntr {
 //----------------------------API TRANSPORTE----------------------------------//
 //----------------------------------------------------------------------------//
     
-    @PostMapping(value="/API/trp/getToken", produces = MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public Map<String, Object> ObtenerTokenTransporte(
-            HttpServletRequest request, 
-            @RequestBody Map<String, String> req
-    ) {  
-        boolean valido=false;
-        
-        String mensaje="";
-        String pwd=req.get("password");
-        
-        if(pwd_hash.equals(pwd)){
-            try{
-                mensaje=TrpTokenServ.generateToken();
-                valido=true;
-            }catch(InvalidKeyException|NoSuchAlgorithmException e){
-                mensaje="";
-            }
-        }
-        Map<String, Object> respuesta= new HashMap<>();
-        respuesta.put("isValid", valido);
-        respuesta.put("message", mensaje);
-        
-        return respuesta;  
-    } 
-    
     @PostMapping(value="/API/trp/verifyData", produces = MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Map<String, Object> VerificarInformacionTransporte(
@@ -277,40 +254,51 @@ public class TransporteCntr {
         boolean valido=false;
         
         String mensaje="";
+        String token="";
         String placa=req.get("placa");
-        String token=req.get("token");
-        if(TrpTokenServ.isValidToken(token)){
+        String pwd=req.get("password");
+        if(passwordEncoder.matches(pwd, PWD_HASH)){
             
             if(! placa.equals("") ){
                 Optional<Vehiculo> v = VehiculoServicio.obtener(placa);
 
                 if(v.isPresent()){
 
-                    valido=true;
-
                     if (! v.get().isActivo() )
                         mensaje = "Vehiculo Inactivo! Verifique Placa...";
 
-                    if (! v.get().getEstado().getDato().equals("Estacionado")) 
-                        mensaje = "Vehiculo no Estacionado! Verifique Placa...";
+                    if (! v.get().getEstado().getDato().equals("Estacionado") ) 
+                        mensaje = "Debe presionar detener para poder Iniciar!";
 
                 }else mensaje = "Vehiculo no existe!";
 
-                if(valido) {
-                    mensaje = "Datos correctos! Iniciando Servicio...";
-                    Vehiculo h=v.get();
-                    h.setEstado(DatosServicio.obtener("En Camino").get());
-                    h.setToken(token);
-                    VehiculoServicio.guardar(h, null, true);
+                if(mensaje.equals("")) {
+                    
+                    token=TrpTokenServ.generateToken();
+                    valido=true;
+                    mensaje = "Transporte en Camino! Iniciando Servicio...";
+                    
+                    if(!"".equals(token)){
+                        Vehiculo h=v.get();
+                        h.setEstado(DatosServicio.obtener("En Camino").get());
+                        h.setToken(token);
+                        VehiculoServicio.guardar(h, null, true);
+
+                        HashMap<String, Object> map = new HashMap<>();
+                        map.put("U", h);
+                        map.put("date", FechaUtils.FechaFormato1.format(new Date()));
+                        SSEControlador.publicar("vhl", map);
+                    }
                 }
 
             }else mensaje="Placa no pudo ser procesada...";
         
-        }
+        }else mensaje="Token invalido, intentelo nuevamente...";
         
         Map<String, Object> respuesta= new HashMap<>();
         respuesta.put("isValid", valido);
         respuesta.put("message", mensaje);
+        respuesta.put("token", token);
         
         return respuesta;  
     } 
@@ -329,10 +317,10 @@ public class TransporteCntr {
         Double lat     = Double.valueOf(req.get("lat"));
         Double lon     = Double.valueOf(req.get("lon"));
         String token   = req.get("token");
-        
+       
         
         if(!(placa.isBlank() || lat.isNaN() || lon.isNaN())){
-            
+        
             Vehiculo v=VehiculoServicio.obtener(placa).get();
             
             if(token.equals(v.getToken())){
@@ -366,26 +354,23 @@ public class TransporteCntr {
         
         String mensaje="";
         
-        String placa=req.get("placa");
+        String placa  =  req.get("placa");
+        String estado =  req.get("estado");
+        String pwd    =  req.get("password");
         
-        String estado=req.get("estado");
-        
-        
-        String token=req.get("token");
-        if(TrpTokenServ.isValidToken(token)){
+        if(passwordEncoder.matches(pwd, PWD_HASH)){
         
             if(! placa.equals("") ){
                 Optional<Vehiculo> v = VehiculoServicio.obtener(placa);
 
                 if(v.isPresent()){
 
-                    valido=true;
-
                     if (! v.get().isActivo() )
                         mensaje = "Vehiculo Inactivo! Verifique Placa...";
                     else {
 
-                        mensaje = "Transporte "+estado+"...";
+                        mensaje = "Transporte "+estado+"! ";
+                        valido=true;
                         Vehiculo h=v.get();
                         h.setToken("");
                         h.setEstado(DatosServicio.obtener(estado).get());
@@ -401,7 +386,7 @@ public class TransporteCntr {
 
             }else mensaje="Placa no pudo ser procesada...";
         
-        }
+        }else mensaje="Token invalido, intentelo nuevamente...";
         
         Map<String, Object> respuesta= new HashMap<>();
         respuesta.put("isValid", valido);
