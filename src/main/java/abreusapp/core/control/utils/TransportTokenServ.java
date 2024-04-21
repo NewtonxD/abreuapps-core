@@ -10,7 +10,6 @@ import javax.crypto.spec.SecretKeySpec;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.util.Base64;
 
 /**
@@ -22,41 +21,39 @@ import java.util.Base64;
 public class TransportTokenServ {
     
     private static final int tokenLength=8;
-    private static final String secretKey="*@3ads@4%dEeez";
+    private static final String secretKey="*@3ad_@4%dE*ez";
     
-    public String generateToken() throws NoSuchAlgorithmException, InvalidKeyException {
-        SecureRandom random = new SecureRandom();
-        byte[] randomBytes = new byte[tokenLength];
-        random.nextBytes(randomBytes);
-
-        Mac hmac = Mac.getInstance("HmacSHA256");
-        SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes(), "HmacSHA256");
-        hmac.init(secretKeySpec);
-        byte[] hmacBytes = hmac.doFinal(randomBytes);
-
-        return Base64.getEncoder().encodeToString(hmacBytes);
+    public String generateToken(){
+        try {
+            Mac hmac = Mac.getInstance("HmacSHA256");
+            SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes(), "HmacSHA256");
+            hmac.init(secretKeySpec);
+            byte[] tokenBytes = hmac.doFinal(Long.toString(System.currentTimeMillis()).getBytes());
+            return Base64.getEncoder().encodeToString(tokenBytes);
+        } catch (NoSuchAlgorithmException | InvalidKeyException e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 
-    private boolean validateToken(String token) throws NoSuchAlgorithmException, InvalidKeyException {
-        Mac hmac = Mac.getInstance("HmacSHA256");
-        SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes(), "HmacSHA256");
-        hmac.init(secretKeySpec);
-
-        byte[] decodedToken = Base64.getDecoder().decode(token);
-
-        byte[] recalculatedHmacBytes = hmac.doFinal(decodedToken);
-
-        return MessageDigest.isEqual(recalculatedHmacBytes, decodedToken);
+    private boolean validateToken(String token) {
+        try {
+            Mac hmac = Mac.getInstance("HmacSHA256");
+            SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes(), "HmacSHA256");
+            hmac.init(secretKeySpec);
+            byte[] tokenBytes = Base64.getDecoder().decode(token);
+            byte[] calculatedBytes = hmac.doFinal(Long.toString(System.currentTimeMillis()).getBytes());
+            return MessageDigest.isEqual(tokenBytes, calculatedBytes);
+        } catch (NoSuchAlgorithmException | InvalidKeyException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
     
     public boolean isValidToken(String token){
         boolean res=false;
         if(token!=null){
-            try{
-                res=validateToken(token);
-            }catch(InvalidKeyException|NoSuchAlgorithmException e){
-                res=false;
-            }
+            res=validateToken(token);
         }
         return res;
     }
