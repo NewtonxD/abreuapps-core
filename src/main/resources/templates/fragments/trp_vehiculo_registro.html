@@ -40,6 +40,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                         <div class="mb-3 col-12 col-md-6 col-lg-4">
                                             <label for="placa" class="form-label text-muted">Placa:</label>
                                             <input type="text" th:field='*{placa}' th:disabled="${vehiculo.placa!=null}" placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">        
+                                            <input type="text" style="display: none; width: 1px;height: 1px;" th:if="${vehiculo.placa!=null}" name="placa" th:value="${vehiculo.placa}" placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">
                                         </div>
 
                                         <div class="mb-3 col-12 col-md-6 col-lg-4">
@@ -129,6 +130,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                         
                                         <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" th:value="${#dates.format(vehiculo.fecha_actualizacion, 'yyyy-MM-dd HH:mm:ss')}">
                                         
+                                        <th:block th:if="${vehiculo.placa!=null}">
+                                            <div class="col-12 d-flex justify-content-center">
+                                                <h1>Ultima Ubicación: 22-04-2024</h1>
+                                                
+                                            </div>
+                                        </th:block>
                                         
                                         <div class="col-6 d-flex justify-content-start">
                                             <div class="form-check">
