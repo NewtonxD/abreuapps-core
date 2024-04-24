@@ -19,8 +19,6 @@ import abreusapp.core.control.utils.ModelServ;
 import abreusapp.core.control.utils.TransportTokenServ;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
@@ -170,6 +168,8 @@ public class TransporteCntr {
             return "redirect:/error";
 
         }
+        
+        
 
         model.addAttribute("vehiculo", g.get());
         model.addAttribute(
@@ -177,6 +177,10 @@ public class TransporteCntr {
                 DatosServicio.consultarPorGrupo(
                         GrupoServicio.obtener("Marca").get() 
                 )
+        );
+        model.addAttribute(
+                "last_loc", 
+                LocVehiculoServicio.tieneUltimaLoc(Placa)
         );
         model.addAttribute(
                 "tipo_vehiculo",
@@ -237,9 +241,37 @@ public class TransporteCntr {
         return new ResponseEntity<>(
                 modelos,
                 new HttpHeaders(),
+        HttpStatus.OK);  
+    }
+    
+//----------------------------------------------------------------------------//
+    
+    @PostMapping(value="/vhl/getLastLoc", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity ObtenerUltimaLocTransporte(
+            HttpServletRequest request, 
+            @RequestParam("placa") String placa
+    ) {  
+        
+        Usuario u = ModeloServicio.getUsuarioLogueado();
+        
+        String verificarPermisos = ModeloServicio.verificarPermisos("trp_vehiculo_registro", null, u);
+        if (! verificarPermisos.equals("")) return null;
+        
+        LocVehiculo lastLoc = LocVehiculoServicio.consultarUltimaLocVehiculo(placa); 
+        
+        Map<String, Object> respuesta= new HashMap<>();
+        if(lastLoc!=null){
+            respuesta.put("placa", placa);
+            respuesta.put("lon",lastLoc.getLongitud());
+            respuesta.put("lat", lastLoc.getLatitud());
+            respuesta.put("fecha",FechaUtils.DateToFormato1(lastLoc.getFecha_registro() ) );
+        }
+        return new ResponseEntity<>(
+                lastLoc!=null?respuesta:null,
+                new HttpHeaders(),
                 HttpStatus.OK);  
     }
-
     
 //----------------------------------------------------------------------------//
 //----------------------------API TRANSPORTE----------------------------------//

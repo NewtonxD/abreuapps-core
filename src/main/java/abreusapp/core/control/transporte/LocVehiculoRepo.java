@@ -5,6 +5,7 @@
 package abreusapp.core.control.transporte;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -13,6 +14,13 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-public interface LocVehiculoRepo extends JpaRepository<LocVehiculo, Integer>  {
-    
+public interface LocVehiculoRepo extends JpaRepository<LocVehiculo, Long>
+{
+    @Query(
+        value = "select tl.*,vhl.* "
+                + " from transport.trp_loc tl inner join transport.vhl vhl on tl.placa_pl=vhl.pl "
+                + " where tl.placa_pl = :placa order by tl.id desc limit 1 ",
+        nativeQuery = true
+    )
+    LocVehiculo findLastByPlaca(String placa);
 }

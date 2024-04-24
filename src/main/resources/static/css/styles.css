@@ -90,3 +90,8 @@ body {
 .card{
     border-radius: 12px !important;
 }
+
+.map-regular{
+    height: 540px;
+    width: 540px;
+}

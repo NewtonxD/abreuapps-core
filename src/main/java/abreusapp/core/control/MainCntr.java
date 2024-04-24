@@ -68,6 +68,14 @@ public class MainCntr {
         return "index";
     }
 //----------------------------------------------------------------------------//
+    @RequestMapping("/main/leaflet.js.map")
+    public String LeatLeaftJsMap(
+        HttpServletRequest request,
+        Model model
+    ) {        
+        return "redirect:/content/js/lib/leaflet.js.map";
+    }
+//----------------------------------------------------------------------------//
 
     @RequestMapping(value = "/main/content-page/", method = RequestMethod.POST)
     public String loadContetPage(

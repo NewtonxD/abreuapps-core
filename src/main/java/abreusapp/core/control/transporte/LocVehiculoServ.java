@@ -26,4 +26,12 @@ public class LocVehiculoServ {
         return repo.save(Loc);
     }
     
+    public LocVehiculo consultarUltimaLocVehiculo(String placa){
+        return repo.findLastByPlaca(placa);
+    }
+    
+    public boolean tieneUltimaLoc(String placa){
+        return consultarUltimaLocVehiculo(placa)!=null;
+    }
+    
 }
