@@ -19,16 +19,12 @@ import abreusapp.core.control.utils.ModelServ;
 import abreusapp.core.control.utils.TransportTokenServ;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -172,6 +168,8 @@ public class TransporteCntr {
             return "redirect:/error";
 
         }
+        
+        
 
         model.addAttribute("vehiculo", g.get());
         model.addAttribute(
@@ -179,6 +177,10 @@ public class TransporteCntr {
                 DatosServicio.consultarPorGrupo(
                         GrupoServicio.obtener("Marca").get() 
                 )
+        );
+        model.addAttribute(
+                "last_loc", 
+                LocVehiculoServicio.tieneUltimaLoc(Placa)
         );
         model.addAttribute(
                 "tipo_vehiculo",
@@ -239,8 +241,10 @@ public class TransporteCntr {
         return new ResponseEntity<>(
                 modelos,
                 new HttpHeaders(),
-                HttpStatus.OK);  
+        HttpStatus.OK);  
     }
+    
+//----------------------------------------------------------------------------//
     
     @PostMapping(value="/vhl/getLastLoc", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -261,7 +265,7 @@ public class TransporteCntr {
             respuesta.put("placa", placa);
             respuesta.put("lon",lastLoc.getLongitud());
             respuesta.put("lat", lastLoc.getLatitud());
-            respuesta.put("fecha",lastLoc.getFecha_registro());
+            respuesta.put("fecha",FechaUtils.DateToFormato1(lastLoc.getFecha_registro() ) );
         }
         return new ResponseEntity<>(
                 lastLoc!=null?respuesta:null,

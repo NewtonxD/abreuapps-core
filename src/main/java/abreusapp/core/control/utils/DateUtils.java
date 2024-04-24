@@ -38,7 +38,7 @@ public class DateUtils implements Converter<String, Date> {
     }
     
     
-    public Date Formato2ToDate(String str) throws ParseException {
+    public Date Formato2ToDate(String str){
         try{
         return FechaFormato2.parse(str);
         } catch (ParseException e){
@@ -47,12 +47,20 @@ public class DateUtils implements Converter<String, Date> {
         }
     }
     
-    public Date Formato1ToDate(String str) throws ParseException {
+    public Date Formato1ToDate(String str) {
         try{
             return FechaFormato1.parse(str);
         } catch (ParseException e){
             log.error(" Error al parsear fecha : "+e.getLocalizedMessage());
             return null;
         }
+    }
+    
+    public String DateToFormato1(Date dt){
+        return FechaFormato1.format(dt);
+    }
+    
+    public String DateToFormato2(Date dt){
+        return FechaFormato2.format(dt);
     }
 }

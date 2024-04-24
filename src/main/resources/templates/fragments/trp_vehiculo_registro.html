@@ -16,7 +16,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                     <div class="row d-flex align-items-center justify-content-center mt-5 mb-5">
                         <div class="card col-12 col-md-10 col-lg-8">
                             <div class="card-body mt-3 mb-3">
-                                <div class="row">
+                                <div class="row mb-3">
                                     <div class="col-12 d-flex align-items-start justify-content-start">
                                         <button type="submit" class="btn btn-sm btn-secondary"
                                                 onclick="$(function () {
@@ -130,10 +130,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                         
                                         <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" th:value="${#dates.format(vehiculo.fecha_actualizacion, 'yyyy-MM-dd HH:mm:ss')}">
                                         
-                                        <th:block th:if="${vehiculo.placa!=null}">
+                                        <th:block th:if="${vehiculo.placa!=null && last_loc}">
+                                            <div class="col-12  d-flex justify-content-center text-center ">
+                                                <h5>Fecha Ultima Ubicación: <span id="date_last_loc"></span></h5>
+                                            </div>
                                             <div class="col-12 d-flex justify-content-center">
-                                                <h1>Ultima Ubicación: 22-04-2024</h1>
-                                                
+                                                <div id="map" class="map-regular"></div>
                                             </div>
                                         </th:block>
                                         
@@ -162,7 +164,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                     </div>
                 </div>
                 <script th:src="@{/content/js/trp/svd_vhl574702.js}"></script>
-                <script  th:if="${vehiculo.placa!=null}"  th:src="@{/content/js/trp/vhl544702lastloc.js}"></script>
+                <script  th:if="${vehiculo.placa!=null  && last_loc }"  th:src="@{/content/js/lib/leaflet.js}"></script>
+                <script  th:if="${vehiculo.placa!=null && last_loc }"  th:src="@{/content/js/trp/vhl544702lastloc.js}"></script>
             </th:block>
             <th:block th:unless="${trp_vehiculo_registro}">
                 <div class="container-fluid px-4">

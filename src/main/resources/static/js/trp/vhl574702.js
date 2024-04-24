@@ -23,9 +23,7 @@ $(function (){
             async:false,
             data:{placa:Placa},
             success: function(res){
-                
                 window.data_lastloc=res;
-
             },
             error: function(xhr, status, error){
 

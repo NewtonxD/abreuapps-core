@@ -6,7 +6,7 @@
 $(function(){
     
     var data=window.data_lastloc;
-    if(data!==undefined && data!==null){
+    if(data.lat!==undefined && data.lat!==null){
         
         delete window.data_lastloc;
         
@@ -14,21 +14,20 @@ $(function(){
             minZoom: 7,
             maxZoom: 18
         };
-        // magnification with which the map will start
-        const zoom = 18;
-        // co-ordinates
+        const zoom = 16;
         const lat = data.lat;
         const lng = data.lon;
-
-        // calling map
+        
+        $("#date_last_loc").html(data.fecha);
+        
         const map = L.map("map", config).setView([lat, lng], zoom);
-
-        // Used to load and display tile layers on the map
-        // Most tile servers require attribution, which you can set under `Layer`
+        
         L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
           attribution:
             '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         }).addTo(map);
+        
+        var marker = L.marker([lat, lng]).addTo(map);
         
     }
 });
