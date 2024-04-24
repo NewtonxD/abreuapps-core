@@ -17,6 +17,21 @@ $(function (){
         
         closeEventSource();
         
+         $.ajax({
+            url:'/vhl/getLastLoc',
+            type:"POST",
+            async:false,
+            data:{placa:Placa},
+            success: function(res){
+                
+                window.data_lastloc=res;
+
+            },
+            error: function(xhr, status, error){
+
+            }
+        });
+        
         $.ajax({
             url:'/vhl/update',
             type:"POST",

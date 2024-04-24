@@ -162,6 +162,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                     </div>
                 </div>
                 <script th:src="@{/content/js/trp/svd_vhl574702.js}"></script>
+                <script  th:if="${vehiculo.placa!=null}"  th:src="@{/content/js/trp/vhl544702lastloc.js}"></script>
             </th:block>
             <th:block th:unless="${trp_vehiculo_registro}">
                 <div class="container-fluid px-4">

@@ -27,6 +27,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -239,7 +241,33 @@ public class TransporteCntr {
                 new HttpHeaders(),
                 HttpStatus.OK);  
     }
-
+    
+    @PostMapping(value="/vhl/getLastLoc", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity ObtenerUltimaLocTransporte(
+            HttpServletRequest request, 
+            @RequestParam("placa") String placa
+    ) {  
+        
+        Usuario u = ModeloServicio.getUsuarioLogueado();
+        
+        String verificarPermisos = ModeloServicio.verificarPermisos("trp_vehiculo_registro", null, u);
+        if (! verificarPermisos.equals("")) return null;
+        
+        LocVehiculo lastLoc = LocVehiculoServicio.consultarUltimaLocVehiculo(placa); 
+        
+        Map<String, Object> respuesta= new HashMap<>();
+        if(lastLoc!=null){
+            respuesta.put("placa", placa);
+            respuesta.put("lon",lastLoc.getLongitud());
+            respuesta.put("lat", lastLoc.getLatitud());
+            respuesta.put("fecha",lastLoc.getFecha_registro());
+        }
+        return new ResponseEntity<>(
+                lastLoc!=null?respuesta:null,
+                new HttpHeaders(),
+                HttpStatus.OK);  
+    }
     
 //----------------------------------------------------------------------------//
 //----------------------------API TRANSPORTE----------------------------------//

@@ -9,7 +9,7 @@ $(function(){
     if(data!==undefined && data!==null){
         
         delete window.data_lastloc;
-
+        
         let config = {
             minZoom: 7,
             maxZoom: 18
