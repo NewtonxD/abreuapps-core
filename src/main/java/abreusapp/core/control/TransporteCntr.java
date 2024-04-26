@@ -15,6 +15,7 @@ import abreusapp.core.control.transporte.VehiculoServ;
 import abreusapp.core.control.usuario.AccesoServ;
 import abreusapp.core.control.usuario.Usuario;
 import abreusapp.core.control.utils.DateUtils;
+import abreusapp.core.control.utils.MapperServ;
 import abreusapp.core.control.utils.ModelServ;
 import abreusapp.core.control.utils.TransportTokenServ;
 import jakarta.servlet.RequestDispatcher;
@@ -122,7 +123,7 @@ public class TransporteCntr {
             Vehiculo d = VehiculoServicio.guardar(vhl, u, ext);
             model.addAttribute("status", true);
             model.addAttribute("msg", "Registro guardado exitosamente!");
-            map.put(ext ? "U" : "I", d);
+            map.put(ext ? "U" : "I", MapperServ.vehiculoToDTO(d));
             map.put("date", FechaUtils.FechaFormato1.format(new Date()));
 
         } else {
@@ -317,7 +318,7 @@ public class TransporteCntr {
                         VehiculoServicio.guardar(h, null, true);
 
                         HashMap<String, Object> map = new HashMap<>();
-                        map.put("U", h);
+                        map.put("U", MapperServ.vehiculoToDTO(h));
                         map.put("date", FechaUtils.FechaFormato1.format(new Date()));
                         SSEControlador.publicar("vhl", map);
                     }
@@ -409,7 +410,7 @@ public class TransporteCntr {
                         VehiculoServicio.guardar(h, null, true);
 
                         HashMap<String, Object> map = new HashMap<>();
-                        map.put("U", h);
+                        map.put("U", MapperServ.vehiculoToDTO(h));
                         map.put("date", FechaUtils.FechaFormato1.format(new Date()));
                         SSEControlador.publicar("vhl", map);
                     }

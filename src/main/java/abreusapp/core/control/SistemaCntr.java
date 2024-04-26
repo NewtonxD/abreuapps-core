@@ -536,7 +536,7 @@ public class SistemaCntr {
     @ResponseBody
     public ResponseEntity ObtenerListadoPermisosUsuario(
             HttpServletRequest request, 
-            @RequestParam("Marca") String idUsuario
+            @RequestParam("idUsuario") String idUsuario
     ) {  
         
         Usuario u = ModeloServicio.getUsuarioLogueado();

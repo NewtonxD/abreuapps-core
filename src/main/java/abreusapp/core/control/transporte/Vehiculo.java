@@ -51,6 +51,10 @@ public class Vehiculo {
     @PrimaryKeyJoinColumn
     private Dato modelo;
     
+    @ManyToOne(fetch = FetchType.LAZY)
+    @PrimaryKeyJoinColumn
+    private Ruta ruta;
+    
     @Column(name = "cap_pax")
     private short capacidad_pasajeros;
     
