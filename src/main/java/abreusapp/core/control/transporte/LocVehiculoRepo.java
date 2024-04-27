@@ -4,6 +4,7 @@
  */
 package abreusapp.core.control.transporte;
 
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -22,5 +23,5 @@ public interface LocVehiculoRepo extends JpaRepository<LocVehiculo, Long>
                 + " where tl.placa_pl = :placa order by tl.id desc limit 1 ",
         nativeQuery = true
     )
-    LocVehiculo findLastByPlaca(String placa);
+    Optional<LocVehiculo> findLastByPlaca(String placa);
 }

@@ -9,7 +9,6 @@ import abreusapp.core.control.usuario.Usuario;
 import abreusapp.core.control.usuario.AccesoServ;
 import abreusapp.core.control.usuario.UsuarioServ;
 import abreusapp.core.control.utils.ModelServ;
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -47,11 +46,10 @@ public class MainCntr {
     
     
 //----------------------------------------------------------------------------//
-//--------------------------MAIN----------------------------------------------//
+//------------------ENDPOINTS BASICOS SISTEMA---------------------------------//
 //----------------------------------------------------------------------------//
     @RequestMapping({"/main/", "/main/index"})
     public String MainPage(
-        HttpServletRequest request,
         Model model
     ) {
         Usuario u = DataModelServicio.getUsuarioLogueado();
@@ -69,19 +67,15 @@ public class MainCntr {
     }
 //----------------------------------------------------------------------------//
     @RequestMapping("/main/leaflet.js.map")
-    public String LeatLeaftJsMap(
-        HttpServletRequest request,
-        Model model
-    ) {        
+    public String LeatLeaftJsMap() {        
         return "redirect:/content/js/lib/leaflet.js.map";
     }
 //----------------------------------------------------------------------------//
 
     @RequestMapping(value = "/main/content-page/", method = RequestMethod.POST)
     public String loadContetPage(
-            HttpServletRequest request,
-            Model model,
-            @RequestParam("id") String idPage
+        Model model,
+        @RequestParam("id") String idPage
     ) {
 
         Usuario u = DataModelServicio.getUsuarioLogueado();
@@ -93,8 +87,7 @@ public class MainCntr {
     
     @RequestMapping("/main/changePwd")
     public String changePasswordExpired(
-            HttpServletRequest request,
-            Model model
+        Model model
     ) {
         Usuario userSession = DataModelServicio.getUsuarioLogueado();
         Usuario userBd = UsuarioServicio.obtener(userSession.getUsername()).get();
@@ -112,12 +105,10 @@ public class MainCntr {
     @PostMapping("/main/changeMyPwdNow")
     @ResponseBody
     public Map<String,String> changePasswordExpired(
-            HttpServletRequest request,
-            Model model,
-            @RequestParam(name = "actualPassword",required = false) String oldPass,
-            @RequestParam("newPassword") String newPass
+        @RequestParam(name = "actualPassword",required = false) String oldPwd,
+        @RequestParam("newPassword") String newPwd
     ) {
-        oldPass = oldPass==null ? "" : oldPass ;
+        oldPwd = oldPwd==null ? "" : oldPwd ;
         Usuario userSession = DataModelServicio.getUsuarioLogueado();
         Usuario userBd = UsuarioServicio.obtener(userSession.getUsername()).get();
         Map<String, String> respuesta= new HashMap<>();
@@ -125,7 +116,7 @@ public class MainCntr {
         //si credenciales no estan expiradas verificar old pass
         if(userBd.isCredentialsNonExpired() && 
                 !passwordEncoder.matches(
-                        oldPass, 
+                        oldPwd, 
                         userBd.getPassword()
                 )
           ) {
@@ -136,7 +127,7 @@ public class MainCntr {
         
         
         userBd.setCambiarPassword(false);
-        userBd.setPassword(passwordEncoder.encode(newPass));
+        userBd.setPassword(passwordEncoder.encode(newPwd));
         UsuarioServicio.guardar(userBd, UsuarioServicio.obtenerPorId(1).get() , true);
         respuesta.put("status", "success");
         respuesta.put("msg", "Contraseña fue guardada exitosamente! En breve lo redirigiremos.");
@@ -147,9 +138,8 @@ public class MainCntr {
     
     @PostMapping(value="/main/saveConf")
     public String GuardarConfiguracion(
-            HttpServletRequest request, 
-            Model model,
-            @RequestParam Map<String,String> data
+        Model model,
+        @RequestParam Map<String,String> data
     ) {
         
         Usuario u= DataModelServicio.getUsuarioLogueado();
@@ -172,10 +162,9 @@ public class MainCntr {
 //----------------------------------------------------------------------------//
     @GetMapping("/auth/login")
     public String Login(
-            HttpServletRequest request,
-            @RequestParam(name = "invalidSession", required = false,defaultValue = "false") boolean invalidSession,
-            @RequestParam(name = "logout", required = false,defaultValue = "false") boolean logout,
-            Model model
+        @RequestParam(name = "invalidSession", required = false,defaultValue = "false") boolean invalidSession,
+        @RequestParam(name = "logout", required = false,defaultValue = "false") boolean logout,
+        Model model
     ) {
         
         if((SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken))
@@ -192,8 +181,8 @@ public class MainCntr {
 //----------------------------------------------------------------------------//
     
     @GetMapping("/")
-    public String redirectLogin(HttpServletRequest request,Model model
-    ){
+    public String redirectLogin(){
+        
         return "redirect:/auth/login";
     }
 //----------------------------------------------------------------------------//

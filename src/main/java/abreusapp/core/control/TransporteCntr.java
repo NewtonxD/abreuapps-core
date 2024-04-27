@@ -18,7 +18,6 @@ import abreusapp.core.control.utils.DateUtils;
 import abreusapp.core.control.utils.MapperServ;
 import abreusapp.core.control.utils.ModelServ;
 import abreusapp.core.control.utils.TransportTokenServ;
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.util.Date;
@@ -72,144 +71,165 @@ public class TransporteCntr {
     
     private static final String PWD_HASH="$2a$10$FD.HVab6z8H3Tba.hw.SvukdeJDfZ5aIIzCN87AL7T2SSAJqoi8Bq";
     
+    
 //----------------------------------------------------------------------------//
-//----------------------------VEHICULOS---------------------------------------//
+//------------------ENDPOINTS VEHICULOS---------------------------------------//
 //----------------------------------------------------------------------------//
     
     @PostMapping("/vhl/save")
     public String GuardarVehiculo(
-            HttpServletRequest request,
-            Model model,
-            Vehiculo vhl,
-            @RequestParam(name = "fecha_actualizacionn", required = false) String dateInput
+        Model model,
+        Vehiculo vehiculoCliente,
+        @RequestParam(name = "fecha_actualizacionn", 
+                        required = false) String fechaActualizacionCliente
     ) throws ParseException {
 
+        boolean valido;
+        
+        String plantillaRespuesta="fragments/trp_vehiculo_consulta :: content-default";
+        
         Usuario u = ModeloServicio.getUsuarioLogueado();
         
-        String verificarPermisos= ModeloServicio.verificarPermisos("trp_vehiculo_registro", model, u);
-        if (! verificarPermisos.equals("")) return verificarPermisos;
+        //INICIO DE VALIDACIONES
+        String sinPermisoPlantilla = ModeloServicio.verificarPermisos(
+            "trp_vehiculo_registro", model, u );
+        
+        //USUARIO NO TIENE PERMISOS PARA EJECUTAR ESTA ACCION
+        valido = ! sinPermisoPlantilla.equals("");
+        
+        
+        if(valido){
+            
+            Optional<Vehiculo> vehiculoBD = VehiculoServicio.obtener(vehiculoCliente.getPlaca());
 
-        HashMap<String, Object> map = new HashMap<>();
+            if (vehiculoBD.isPresent()) {
 
-        if (dateInput != null && !dateInput.equals("")) {
-
-            vhl.setFecha_actualizacion(FechaUtils.Formato2ToDate(dateInput));
-
-        }
-
-        Optional<Vehiculo> vhl1 = VehiculoServicio.obtener(vhl.getPlaca());
-
-        boolean ext = false, ss = true;
-
-        if (vhl1.isPresent()) {
-
-            ext = true;
-
-            if (!FechaUtils.FechaFormato2.format(vhl1.get().getFecha_actualizacion()).equals(dateInput)) {
-
-                ss = false;
-
-            } else {
-
-                vhl.setFecha_registro(vhl1.get().getFecha_registro());
-                vhl.setHecho_por(vhl1.get().getHecho_por());
-
-            }
-
-        }
-
-        if (ss) {
-
-            Vehiculo d = VehiculoServicio.guardar(vhl, u, ext);
-            model.addAttribute("status", true);
-            model.addAttribute("msg", "Registro guardado exitosamente!");
-            map.put(ext ? "U" : "I", MapperServ.vehiculoToDTO(d));
-            map.put("date", FechaUtils.FechaFormato1.format(new Date()));
-
-        } else {
-
-            model.addAttribute("status", false);
-            model.addAttribute(
-                    "msg", 
-                     ( dateInput!=null ? 
+                if (! FechaUtils.FechaFormato2.format(
+                        vehiculoBD.get().getFecha_actualizacion()
+                        ).equals(fechaActualizacionCliente)
+                ) {
+                    
+                    model.addAttribute("status", valido);
+                    model.addAttribute(
+                        "msg",
+                        ! ( fechaActualizacionCliente == null || 
+                             fechaActualizacionCliente.equals("") ) ? 
                         "Al parecer alguien ha realizado cambios en la información primero. Por favor, inténtalo otra vez. COD: 00635" :
                         "No podemos realizar los cambios porque ya este Vehículo se encuentra registrado."
-                     )
-            );
+                    );
+                    valido = false;
+                    
+                }
 
+            }
+            
+            //SI TODAS LAS ANTERIORES SON VALIDAS PROCEDEMOS
+            if(valido){
+                
+            
+                if ( ! ( fechaActualizacionCliente == null || 
+                        fechaActualizacionCliente.equals("") )
+                ) {
+                    vehiculoCliente.setFecha_actualizacion(
+                        FechaUtils.Formato2ToDate(fechaActualizacionCliente)
+                    );
+                }
+                
+                if (vehiculoBD.isPresent()) {
+                    vehiculoCliente.setFecha_registro(vehiculoBD.get().getFecha_registro());
+                    vehiculoCliente.setHecho_por(vehiculoBD.get().getHecho_por());
+                }
+
+                Vehiculo d = VehiculoServicio.guardar(vehiculoCliente, u, vehiculoBD.isPresent());
+                model.addAttribute("status", true);
+                model.addAttribute("msg", "Registro guardado exitosamente!");
+
+                HashMap<String, Object> map = new HashMap<>();
+                
+                // LOS OBJETOS CON LLAVES FK DENTRO Y LAZY LOADING TIENEN QUE PASAR
+                // A SER DTO PARA PODER SER DEVUELTOS SIN ERROR
+                map.put(vehiculoBD.isPresent() ? "U" : "I", MapperServ.vehiculoToDTO(d));
+                
+                map.put("date", FechaUtils.FechaFormato1.format(new Date()));
+                SSEControlador.publicar("vhl", map);
+
+                ModeloServicio.load("trp_vehiculo_consulta", model, u.getId());
+            }
+            
+            
         }
-        
-        ModeloServicio.load("trp_vehiculo_consulta", model, u.getId());
 
-        if (!map.isEmpty()) {
-            SSEControlador.publicar("vhl", map);
-        }
-
-        return "fragments/trp_vehiculo_consulta :: content-default";
+        return sinPermisoPlantilla.equals("") ? plantillaRespuesta : sinPermisoPlantilla;
 
     }
 //----------------------------------------------------------------------------//
     
     @PostMapping("/vhl/update")
     public String ActualizarVehiculo(
-            HttpServletRequest request,
-            Model model,
-            @RequestParam("placa") String Placa
+        HttpServletRequest request,
+        Model model,
+        @RequestParam("placa") String placa
     ) {
+        
+        boolean valido=true;
+        String plantillaRespuesta="fragments/trp_vehiculo_registro :: content-default";
+        
+        Usuario usuarioLogueado = ModeloServicio.getUsuarioLogueado();
 
-        Usuario u = ModeloServicio.getUsuarioLogueado();
+        Optional<Vehiculo> vehiculo = VehiculoServicio.obtener(placa);
 
-        Optional<Vehiculo> g = VehiculoServicio.obtener(Placa);
+        if (!vehiculo.isPresent()) {
 
-        if (!g.isPresent()) {
-
-            log.error("Error COD: 00637 al editar vehículo.");
-            request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, HttpStatus.NOT_FOUND.value());
-
-            return "redirect:/error";
+            log.error("Error COD: 00637 al editar vehículo. No encontrado ({})",placa);
+            plantillaRespuesta = "redirect:/error";
+            valido=false;
 
         }
         
-        
+        //SI TODAS LAS ANTERIORES SON VALIDAS PROCEDEMOS
+        if(valido){
+            model.addAttribute("vehiculo", vehiculo.get());
+            model.addAttribute(
+                    "marca",
+                    DatosServicio.consultarPorGrupo(
+                            GrupoServicio.obtener("Marca").get() 
+                    )
+            );
+            model.addAttribute(
+                    "last_loc", 
+                    LocVehiculoServicio.tieneUltimaLoc(placa)
+            );
+            model.addAttribute(
+                    "tipo_vehiculo",
+                    DatosServicio.consultarPorGrupo(
+                            GrupoServicio.obtener("Tipo Vehiculo").get() 
+                    )
+            );
+            model.addAttribute(
+                    "estado",
+                    DatosServicio.consultarPorGrupo(
+                            GrupoServicio.obtener("Estados Vehiculo").get() 
+                    )
+            );
+            model.addAttribute(
+                    "color",
+                    DatosServicio.consultarPorGrupo(
+                            GrupoServicio.obtener("Colores").get() 
+                    )
+            );
+            model.addAttribute(
+                    "modelo",
+                    DatosServicio.consultarPorGrupo(
+                            GrupoServicio.obtener(vehiculo.get().getMarca().getDato() ).get() 
+                    )
+            );
+            model.addAllAttributes(
+                    AccesoServicio.consultarAccesosPantallaUsuario(
+                            usuarioLogueado.getId(), "trp_vehiculo_registro" )
+            );
+        }
 
-        model.addAttribute("vehiculo", g.get());
-        model.addAttribute(
-                "marca",
-                DatosServicio.consultarPorGrupo(
-                        GrupoServicio.obtener("Marca").get() 
-                )
-        );
-        model.addAttribute(
-                "last_loc", 
-                LocVehiculoServicio.tieneUltimaLoc(Placa)
-        );
-        model.addAttribute(
-                "tipo_vehiculo",
-                DatosServicio.consultarPorGrupo(
-                        GrupoServicio.obtener("Tipo Vehiculo").get() 
-                )
-        );
-        model.addAttribute(
-                "estado",
-                DatosServicio.consultarPorGrupo(
-                        GrupoServicio.obtener("Estados Vehiculo").get() 
-                )
-        );
-        model.addAttribute(
-                "color",
-                DatosServicio.consultarPorGrupo(
-                        GrupoServicio.obtener("Colores").get() 
-                )
-        );
-        model.addAttribute(
-                "modelo",
-                DatosServicio.consultarPorGrupo(
-                        GrupoServicio.obtener(g.get().getMarca().getDato() ).get() 
-                )
-        );
-        model.addAllAttributes(AccesoServicio.consultarAccesosPantallaUsuario(u.getId(), "trp_vehiculo_registro"));
-
-        return "fragments/trp_vehiculo_registro :: content-default";
+        return plantillaRespuesta;
     }
     
 //----------------------------------------------------------------------------//
@@ -217,27 +237,34 @@ public class TransporteCntr {
     @PostMapping(value="/vhl/get-modelos", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity ObtenerListadoPermisosUsuario(
-            HttpServletRequest request, 
-            @RequestParam("Marca") String marca
+        HttpServletRequest request, 
+        @RequestParam("Marca") String marca
     ) {  
-        
+        boolean valido;
         Usuario u = ModeloServicio.getUsuarioLogueado();
         
-        String verificarPermisos = ModeloServicio.verificarPermisos("trp_vehiculo_registro", null, u);
-        if (! verificarPermisos.equals("")) return null;
+        //VERIFICAMOS PERMISOS PARA ESTA ACCION
+        String sinPermisoPlantilla = 
+            ModeloServicio.verificarPermisos(
+            "trp_vehiculo_registro", null, u 
+            );
         
-        Optional<GrupoDato> g = GrupoServicio.obtener(marca);
+        valido = ! sinPermisoPlantilla.equals("");
         
-        if(!g.isPresent()){
+        List<Dato> modelos = null; 
+        
+        if(valido){
+            Optional<GrupoDato> Marca = GrupoServicio.obtener(marca);
 
-            log.error("Error COD: 00639 al editar Vehiculo. Marca no encontrada ("+marca+")");
-            request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, HttpStatus.NOT_FOUND.value());
+            if(!Marca.isPresent()){
+                log.error("Error COD: 00639 al editar Vehiculo. Marca no encontrada ({})",marca);
+                valido=false;
+            }
             
-            return null;
-
+            //SI TODAS LAS ANTERIORES SON VALIDAS PROCEDEMOS
+            if(valido) modelos = DatosServicio.consultarPorGrupo(Marca.get()); 
+            
         }
-        
-        List<Dato> modelos = DatosServicio.consultarPorGrupo(g.get()); 
         
         return new ResponseEntity<>(
                 modelos,
@@ -250,83 +277,108 @@ public class TransporteCntr {
     @PostMapping(value="/vhl/getLastLoc", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity ObtenerUltimaLocTransporte(
-            HttpServletRequest request, 
-            @RequestParam("placa") String placa
+        @RequestParam("placa") String placa
     ) {  
-        
+        boolean valido;
         Usuario u = ModeloServicio.getUsuarioLogueado();
         
-        String verificarPermisos = ModeloServicio.verificarPermisos("trp_vehiculo_registro", null, u);
-        if (! verificarPermisos.equals("")) return null;
+        //VERIFICAMOS PERMISOS PARA ESTA ACCION
+        String sinPermisoPlantilla = 
+            ModeloServicio.verificarPermisos(
+            "trp_vehiculo_registro", null, u 
+            );
         
-        LocVehiculo lastLoc = LocVehiculoServicio.consultarUltimaLocVehiculo(placa); 
+        valido = ! sinPermisoPlantilla.equals("");
         
         Map<String, Object> respuesta= new HashMap<>();
-        if(lastLoc!=null){
-            respuesta.put("placa", placa);
-            respuesta.put("lon",lastLoc.getLongitud());
-            respuesta.put("lat", lastLoc.getLatitud());
-            respuesta.put("fecha",FechaUtils.DateToFormato1(lastLoc.getFecha_registro() ) );
+        
+        if(valido){
+            Optional<LocVehiculo> lastLoc = LocVehiculoServicio.consultarUltimaLocVehiculo(placa); 
+        
+            //SI TODAS LAS ANTERIORES SON VALIDAS PROCEDEMOS
+            if(lastLoc.isPresent()){
+                respuesta.put("placa", placa);
+                respuesta.put("lon",lastLoc.get().getLongitud());
+                respuesta.put("lat", lastLoc.get().getLatitud());
+                respuesta.put("fecha",FechaUtils.DateToFormato1(lastLoc.get().getFecha_registro() ) );
+            }
         }
+        
         return new ResponseEntity<>(
-                lastLoc!=null?respuesta:null,
+                respuesta.isEmpty() ? null: respuesta,
                 new HttpHeaders(),
                 HttpStatus.OK);  
     }
     
 //----------------------------------------------------------------------------//
-//----------------------------API TRANSPORTE----------------------------------//
+//------------------ENDPOINTS API TRANSPORTE----------------------------------//
 //----------------------------------------------------------------------------//
-    
-    @PostMapping(value="/API/trp/verifyData", produces = MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
+    @PostMapping(value="/API/trp/verifyData", 
+            produces = MediaType.APPLICATION_JSON_VALUE, 
+            consumes=MediaType.APPLICATION_JSON_VALUE )
     public Map<String, Object> VerificarInformacionTransporte(
-            HttpServletRequest request, 
-            @RequestBody Map<String, String> req
+        @RequestBody Map<String, String> req
     ) {  
-        boolean valido=false;
+        boolean valido=true;
         
         String mensaje="";
         String token="";
-        String placa=req.get("placa");
-        String pwd=req.get("password");
-        if(passwordEncoder.matches(pwd, PWD_HASH)){
+        String placa=req.getOrDefault("placa","");
+        String pwd=req.getOrDefault("password","");
+
+        //INICIO DE LAS VALIDACIONES
+        if(placa.equals("") ){
+            mensaje="Placa no pudo ser procesada...";
+            valido=false;
+        }
+
+        if(valido && !passwordEncoder.matches(
+                pwd, 
+                PWD_HASH )
+        ){
+            mensaje="Pwd invalida, intentelo nuevamente...";
+            valido=false;
+        }
             
-            if(! placa.equals("") ){
-                Optional<Vehiculo> v = VehiculoServicio.obtener(placa);
+        Optional<Vehiculo> v = VehiculoServicio.obtener(placa);
 
-                if(v.isPresent()){
-
-                    if (! v.get().isActivo() )
-                        mensaje = "Vehiculo Inactivo! Verifique Placa...";
-
-                    if (! v.get().getEstado().getDato().equals("Estacionado") ) 
-                        mensaje = "Debe presionar detener para poder Iniciar!";
-
-                }else mensaje = "Vehiculo no existe!";
-
-                if(mensaje.equals("")) {
-                    
-                    token=TrpTokenServ.generateToken();
-                    valido=true;
-                    mensaje = "Transporte en Camino! Iniciando Servicio...";
-                    
-                    if(!"".equals(token)){
-                        Vehiculo h=v.get();
-                        h.setEstado(DatosServicio.obtener("En Camino").get());
-                        h.setToken(token);
-                        VehiculoServicio.guardar(h, null, true);
-
-                        HashMap<String, Object> map = new HashMap<>();
-                        map.put("U", MapperServ.vehiculoToDTO(h));
-                        map.put("date", FechaUtils.FechaFormato1.format(new Date()));
-                        SSEControlador.publicar("vhl", map);
-                    }
-                }
-
-            }else mensaje="Placa no pudo ser procesada...";
+        if(! v.isPresent()){
+            mensaje = "Vehiculo no existe!";
+            valido=false;
+        } 
         
-        }else mensaje="Token invalido, intentelo nuevamente...";
+        if(valido){
+            if (! v.get().isActivo() ){
+                mensaje = "Vehiculo Inactivo! Verifique Placa...";
+                valido=false;
+            }
+
+            if (! v.get().getEstado().getDato().equals("Estacionado") ) {
+                mensaje = "Debe Detener el vehiculo para poder Iniciar!";
+                valido=false;
+            }
+        }
+        
+        //SI TODAS LAS ANTERIORES SON VALIDAS PROCEDEMOS
+        if(valido) {
+
+            token=TrpTokenServ.generateToken();
+            mensaje = "Transporte en Camino! Iniciando Servicio...";
+            Vehiculo h=v.get();
+            h.setEstado(DatosServicio.obtener("En Camino").get());
+            h.setToken(token);
+            VehiculoServicio.guardar(h, null, true);
+
+            HashMap<String, Object> map = new HashMap<>();
+
+            // LOS OBJETOS CON LLAVES FK DENTRO Y LAZY LOADING TIENEN QUE PASAR
+            // A SER DTO PARA PODER SER DEVUELTOS SIN ERROR
+            map.put("U", MapperServ.vehiculoToDTO(h));
+            map.put("date", FechaUtils.FechaFormato1.format(new Date()));
+            SSEControlador.publicar("vhl", map);
+            
+        }
         
         Map<String, Object> respuesta= new HashMap<>();
         respuesta.put("isValid", valido);
@@ -335,38 +387,51 @@ public class TransporteCntr {
         
         return respuesta;  
     } 
+//----------------------------------------------------------------------------//
     
-    @PostMapping(value="/API/trp/sendData", produces = MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
+    @PostMapping(value="/API/trp/sendData",
+                    produces = MediaType.APPLICATION_JSON_VALUE, 
+                    consumes=MediaType.APPLICATION_JSON_VALUE )
     public Map<String, Object> RegistrarInformacionTransporte(
-            HttpServletRequest request, 
-            @RequestBody Map<String, String> req
+        @RequestBody Map<String, String> req
     ) {  
         boolean valido=true;
         
         String mensaje = "";
-        
-        String placa   = req.get("placa");
+        String placa   = req.getOrDefault("placa","");
         Double lat     = Double.valueOf(req.get("lat"));
         Double lon     = Double.valueOf(req.get("lon"));
-        String token   = req.get("token");
+        String token   = req.getOrDefault("token","");
        
         
+        //INICIO DE VALIDACIONES
         if(!(placa.isBlank() || lat.isNaN() || lon.isNaN())){
+            mensaje = "Datos invalidos! intentelo de nuevo.";
+            valido=false;
+        }
         
-            Vehiculo v=VehiculoServicio.obtener(placa).get();
-            
-            if(token.equals(v.getToken())){
-                
-                LocVehiculo lv = new LocVehiculo();
+        Optional<Vehiculo> v=VehiculoServicio.obtener(placa);
+        if(valido && !v.isPresent() ){
+            mensaje = "Vehiculo no existe!";
+            valido=false;
+        }
+        
 
-                lv.setLatitud(lat);
-                lv.setLongitud(lon);
-                lv.setPlaca(v);
-
-                LocVehiculoServicio.guardar(lv);
-                
-            }
+        if(valido){
+            if(! token.equals(v.get().getToken())){
+                mensaje = "Token invalido!";
+                valido=false;
+            }   
+        }
+        
+        //SI TODAS LAS ANTERIORES SON VALIDAS PROCEDEMOS
+        if(valido){
+            LocVehiculo lv = new LocVehiculo();
+            lv.setLatitud(lat);
+            lv.setLongitud(lon);
+            lv.setPlaca(v.get());
+            LocVehiculoServicio.guardar(lv);
         }
         
         Map<String, Object> respuesta= new HashMap<>();
@@ -376,50 +441,73 @@ public class TransporteCntr {
         return respuesta;  
         
     }
-    
-    @PostMapping(value="/API/trp/changeStatus", produces = MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
+//----------------------------------------------------------------------------//
     @ResponseBody
+    @PostMapping(value="/API/trp/changeStatus",
+                    produces = MediaType.APPLICATION_JSON_VALUE, 
+                    consumes=MediaType.APPLICATION_JSON_VALUE )
     public Map<String, Object> CambiarEstadoTransporte(
-            HttpServletRequest request, 
-            @RequestBody Map<String, String> req
+        @RequestBody Map<String, String> req
     ) {  
-        boolean valido=false;
-        
+        boolean valido=true;
         String mensaje="";
         
-        String placa  =  req.get("placa");
-        String estado =  req.get("estado");
-        String pwd    =  req.get("password");
+        String placa  =  req.getOrDefault("placa","");
+        String estado =  req.getOrDefault("estado","");
+        String pwd    =  req.getOrDefault("password","");
         
-        if(passwordEncoder.matches(pwd, PWD_HASH)){
         
-            if(! placa.equals("") ){
-                Optional<Vehiculo> v = VehiculoServicio.obtener(placa);
-
-                if(v.isPresent()){
-
-                    if (! v.get().isActivo() )
-                        mensaje = "Vehiculo Inactivo! Verifique Placa...";
-                    else {
-
-                        mensaje = "Transporte "+estado+"! ";
-                        valido=true;
-                        Vehiculo h=v.get();
-                        h.setToken("");
-                        h.setEstado(DatosServicio.obtener(estado).get());
-                        VehiculoServicio.guardar(h, null, true);
-
-                        HashMap<String, Object> map = new HashMap<>();
-                        map.put("U", MapperServ.vehiculoToDTO(h));
-                        map.put("date", FechaUtils.FechaFormato1.format(new Date()));
-                        SSEControlador.publicar("vhl", map);
-                    }
-
-                }else mensaje = "Vehiculo no existe!";
-
-            }else mensaje="Placa no pudo ser procesada...";
+        //INICIO DE VALIDACIONES
+        if( placa.equals("")){
+            mensaje="Placa no pudo ser procesada...";
+            valido=false;
+        }
         
-        }else mensaje="Token invalido, intentelo nuevamente...";
+        if(valido && !passwordEncoder.matches(
+                pwd, 
+                PWD_HASH )
+        ){
+            mensaje="Token invalido, intentelo nuevamente...";
+            valido=false;
+        } 
+            
+        Optional<Vehiculo> v = VehiculoServicio.obtener(placa);
+            
+        if(valido && !v.isPresent() ){
+            mensaje = "Vehiculo no existe!";
+            valido=false;
+        }
+
+
+        if (valido){
+            if(!v.get().isActivo()){
+                mensaje = "Vehiculo Inactivo! Verifique Placa...";
+                valido=false;
+            }
+        } 
+        
+        
+        //SI TODAS LAS ANTERIORES SON VALIDAS PROCEDEMOS
+        if(valido){
+
+            mensaje = "Transporte "+estado+"! ";
+            Vehiculo h=v.get();
+            h.setToken("");
+            h.setEstado(DatosServicio.obtener(estado).get());
+            VehiculoServicio.guardar(h, null, true);
+
+            HashMap<String, Object> map = new HashMap<>();
+            // LOS OBJETOS CON LLAVES FK DENTRO Y LAZY LOADING TIENEN QUE PASAR
+            // A SER DTO PARA PODER SER DEVUELTOS SIN ERROR
+            map.put("U", MapperServ.vehiculoToDTO(h));
+            
+            map.put(
+                    "date", 
+                    FechaUtils.FechaFormato1.format(new Date())
+            );
+            
+            SSEControlador.publicar("vhl", map);
+        }
         
         Map<String, Object> respuesta= new HashMap<>();
         respuesta.put("isValid", valido);
@@ -427,6 +515,7 @@ public class TransporteCntr {
         
         return respuesta;  
     } 
+//----------------------------------------------------------------------------//
     
     
 }
