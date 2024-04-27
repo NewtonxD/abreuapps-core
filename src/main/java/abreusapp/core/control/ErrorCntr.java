@@ -22,6 +22,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Slf4j
 public class ErrorCntr implements ErrorController{
     
+    
+//----------------------------------------------------------------------------//
+//------------------ENDPOINTS MANEJO ERRORES----------------------------------//
+//----------------------------------------------------------------------------//
+    
     @RequestMapping("/error")
     public String error(
         HttpServletRequest request,
@@ -57,4 +62,5 @@ public class ErrorCntr implements ErrorController{
         
         return "error/404";
     }
+//----------------------------------------------------------------------------//
 }

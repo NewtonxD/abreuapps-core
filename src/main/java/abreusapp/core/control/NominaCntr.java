@@ -11,7 +11,6 @@ import abreusapp.core.control.general.PersonaServ;
 import abreusapp.core.control.usuario.Usuario;
 import abreusapp.core.control.utils.DateUtils;
 import abreusapp.core.control.utils.ModelServ;
-import jakarta.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -43,15 +42,14 @@ public class NominaCntr {
     
 
 //----------------------------------------------------------------------------//
-//----------------------------INFORMACION PERSONAL----------------------------//
+//------------------ENDPOINTS INFORMACION PERSONAL----------------------------//
 //----------------------------------------------------------------------------//    
     @PostMapping("/infppl/save")
     @ResponseBody
     public int GuardarPersona(
-            HttpServletRequest request, 
-            Model model, 
-            Persona persona,
-            @RequestParam(name = "fecha_actualizacionn", required = false) String dateInput
+        Model model, 
+        Persona persona,
+        @RequestParam(name = "fecha_actualizacionn", required = false) String dateInput
     ) throws ParseException {
         
         Usuario u=ModeloServicio.getUsuarioLogueado();
@@ -101,9 +99,7 @@ public class NominaCntr {
     @PostMapping("/infppl/vfyCedInUsr")
     @ResponseBody
     public boolean VerificarCedula(
-            HttpServletRequest request, 
-            Model model, 
-            @RequestParam("cedula") String cedula
+        @RequestParam("cedula") String cedula
     ){
        Optional<Persona> p=PersonaServicio.obtenerPorCedula(cedula);
        return ! p.isPresent();
@@ -113,15 +109,20 @@ public class NominaCntr {
     
     @PostMapping("/infppl/getAllInfCed")
     public String ObtenerInfoPorCedula(
-            HttpServletRequest request, 
-            Model model, 
-            @RequestParam("cedula") String cedula,
-            @RequestParam("update") boolean update
+        Model model, 
+        @RequestParam("cedula") String cedula,
+        @RequestParam("update") boolean update
     ){
         Persona p=PersonaServicio.obtenerPorCedula(cedula).orElse(new Persona());
         p.setCedula(cedula);
-        model.addAttribute("sexo",dtserv.consultarPorGrupo(GrupoServicio.obtener("Sexo").get() ));
-        model.addAttribute("sangre",dtserv.consultarPorGrupo(GrupoServicio.obtener("Tipos Sanguineos").get() ));
+        model.addAttribute("sexo",
+                dtserv.consultarPorGrupo(
+                GrupoServicio.obtener("Sexo").get() )
+        );
+        model.addAttribute("sangre",
+                dtserv.consultarPorGrupo(
+                GrupoServicio.obtener("Tipos Sanguineos").get() )
+        );
         model.addAttribute("persona", p);
         model.addAttribute("update",update);
         return "fragments/usr_mgr_registro :: info-dinamica-personal";

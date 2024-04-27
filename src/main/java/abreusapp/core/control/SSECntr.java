@@ -5,7 +5,6 @@
 package abreusapp.core.control;
 
 import abreusapp.core.control.utils.SSEServ;
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -45,7 +44,7 @@ public class SSECntr {
     private HashMap<String, Object> Datos;
     
     public SSECntr(SSEServ SSEServicio){
-        this.SSEServicio =SSEServicio; 
+        this.SSEServicio = SSEServicio; 
         
         this.actions.put("dtgnr", ()->{
                 this.SSEServicio.emitir(dtGnrEmitters, Datos);
@@ -68,90 +67,96 @@ public class SSECntr {
         );
     }
     
+    public void publicar(String nombre,HashMap<String, Object> datos){
+        this.Datos=datos;
+        actions.get(nombre).run();
+    }
+    
+    
+//----------------------------------------------------------------------------//
+//--------------ENDPOINTS SERVER SIDE EVENTS----------------------------------//
+//----------------------------------------------------------------------------//
+    
     @GetMapping(value = "/dtgnr", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter consultarDatosGenerales(
-            HttpServletRequest request,
-            @RequestParam String clientId
+        @RequestParam String clientId
     ) {
         return SSEServicio.agregar(clientId,dtGnrEmitters);
     }
+//----------------------------------------------------------------------------//
     
     @GetMapping(value = "/dtgnr/close")
     @ResponseBody
     public void cerrarSSEDatosGenerales(
-            HttpServletRequest request,
-            @RequestParam String clientId
+        @RequestParam String clientId
     ) {
         if (dtGnrEmitters.get(clientId)!=null){
             dtGnrEmitters.get(clientId).complete();
             dtGnrEmitters.remove(clientId);
         }
     }
+//----------------------------------------------------------------------------//
 
     @GetMapping(value = "/dtgrp", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter consultarGrupoDato(
-            HttpServletRequest request,
-            @RequestParam String clientId
+        @RequestParam String clientId
     ) {
         return SSEServicio.agregar(clientId,dtGrpEmitters);
     }
+//----------------------------------------------------------------------------//
     
     @GetMapping(value = "/dtgrp/close")
     @ResponseBody
     public void cerrarSSEGrupoDato(
-            HttpServletRequest request,
-            @RequestParam String clientId
+        @RequestParam String clientId
     ) {
         if (dtGrpEmitters.get(clientId)!=null){
             dtGrpEmitters.get(clientId).complete();
             dtGrpEmitters.remove(clientId);
         }
     }
+//----------------------------------------------------------------------------//
     
     @GetMapping(value="/usrmgr", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter consultarUsuarios(
-            HttpServletRequest request,
-            @RequestParam String clientId
+        @RequestParam String clientId
     ) {
         return SSEServicio.agregar(clientId,usrMgrEmitters);
     }
+//----------------------------------------------------------------------------//
     
     @GetMapping(value = "/usrmgr/close")
     @ResponseBody
     public void cerrarSSEUsuarios(
-            HttpServletRequest request,
-            @RequestParam String clientId
+        @RequestParam String clientId
     ) {
         if (usrMgrEmitters.get(clientId)!=null){
             usrMgrEmitters.get(clientId).complete();
             usrMgrEmitters.remove(clientId);
         }
     }
+//----------------------------------------------------------------------------//
     
     @GetMapping(value="/vhl", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter consultarVehiculos(
-            HttpServletRequest request,
-            @RequestParam String clientId
+        @RequestParam String clientId
     ) {
         return SSEServicio.agregar(clientId,vhlEmitters);
     }
+//----------------------------------------------------------------------------//
     
     @GetMapping(value = "/vhl/close")
     @ResponseBody
     public void cerrarSSEVehiculos(
-            HttpServletRequest request,
-            @RequestParam String clientId
+        @RequestParam String clientId
     ) {
         if (vhlEmitters.get(clientId)!=null){
             vhlEmitters.get(clientId).complete();
             vhlEmitters.remove(clientId);
         }
     }
+//----------------------------------------------------------------------------//
     
-    public void publicar(String nombre,HashMap<String, Object> datos){
-        this.Datos=datos;
-        actions.get(nombre).run();
-    }
     
     
 }

@@ -6,6 +6,7 @@ package abreusapp.core.control.transporte;
 
 import jakarta.transaction.Transactional;
 import java.util.Date;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,7 @@ public class LocVehiculoServ {
         return repo.save(Loc);
     }
     
-    public LocVehiculo consultarUltimaLocVehiculo(String placa){
+    public Optional<LocVehiculo> consultarUltimaLocVehiculo(String placa){
         return repo.findLastByPlaca(placa);
     }
     

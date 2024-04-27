@@ -19,6 +19,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -65,10 +66,9 @@ public class SistemaCntr {
 //----------------------------------------------------------------------------//
     @PostMapping("/dtgrp/save")
     public String GuardarGrupoDato(
-            HttpServletRequest request,
-            Model model,
-            GrupoDato grpdt,
-            @RequestParam(name = "fecha_actualizacionn", required = false) String dateInput
+        Model model,
+        GrupoDato grpdt,
+        @RequestParam(name = "fecha_actualizacionn", required = false) String dateInput
     ) throws ParseException {
 
         Usuario u = ModeloServicio.getUsuarioLogueado();
@@ -139,9 +139,9 @@ public class SistemaCntr {
     
     @PostMapping("/dtgrp/update")
     public String ActualizarGrupo(
-            HttpServletRequest request,
-            Model model,
-            String idGrupo
+        HttpServletRequest request,
+        Model model,
+        String idGrupo
     ) {
 
         Usuario u = ModeloServicio.getUsuarioLogueado();
@@ -169,9 +169,9 @@ public class SistemaCntr {
 //----------------------------------------------------------------------------//
     @PostMapping("/dtgnr/save")
     public String GuardarDatoGeneral(
-            HttpServletRequest request,
-            Model model, Dato dtgnr,
-            @RequestParam(value = "fecha_actualizacionn", required = false) String dateInput
+        Model model, 
+        Dato dtgnr,
+        @RequestParam(value = "fecha_actualizacionn", required = false) String dateInput
     ) throws ParseException {
 
         Usuario u = ModeloServicio.getUsuarioLogueado();
@@ -240,9 +240,9 @@ public class SistemaCntr {
 
     @PostMapping("/dtgnr/update")
     public String ActualizarDatosGenerales(
-            HttpServletRequest request,
-            Model model,
-            String idDato
+        HttpServletRequest request,
+        Model model,
+        String idDato
     ) {
 
         Usuario u = ModeloServicio.getUsuarioLogueado();
@@ -267,151 +267,187 @@ public class SistemaCntr {
     }
     
 //----------------------------------------------------------------------------//
-//-------------------------------------USUARIOS-------------------------------//
+//-------------------------ENDPOINTS USUARIOS---------------------------------//
 //----------------------------------------------------------------------------//
 
     @PostMapping(value="/usrmgr/save")
     public String GuardarUsuario(
-            HttpServletRequest request, 
-            Model model, 
-            Usuario usuario,
-            @RequestParam("idPersona") Integer idPersona,
-            @RequestParam(name = "fecha_actualizacionn", required = false) String dateInput
+        Model model, 
+        Usuario usuario,
+        @RequestParam("idPersona") Integer idPersona,
+        @RequestParam(name = "fecha_actualizacionn", required = false) String fechaActualizacionCliente
     ) throws ParseException {
         
-        Usuario u= ModeloServicio.getUsuarioLogueado();
+        String plantillaRespuesta="fragments/usr_mgr_principal :: content-default";
+        boolean valido;
         
+        Usuario usuarioLogueado= ModeloServicio.getUsuarioLogueado();
         
-        String verificarPermisos= ModeloServicio.verificarPermisos("usr_mgr_registro", model, u);
-        if (! verificarPermisos.equals("")) return verificarPermisos;
-        
-        
-        HashMap<String, Object> map = new HashMap<>();
-        
-        if (dateInput != null && !dateInput.equals("")) {
+        String sinPermisoPlantilla= ModeloServicio.verificarPermisos("usr_mgr_registro", model, usuarioLogueado);
+        valido =  sinPermisoPlantilla.equals("");
             
-            usuario.setFecha_actualizacion(FechaUtils.Formato2ToDate(dateInput));
+        if(valido){
             
-        }
-        
-        Optional<Usuario> usuario_existe = UsuarioServicio.obtenerPorId(usuario.getId()==null?0:usuario.getId());
-        
-        boolean ext = false, ss = true;
-        
-        if (usuario_existe.isPresent()) {
             
-            ext = true;
-            
-            if (!FechaUtils.FechaFormato2.format(usuario_existe.get().getFecha_actualizacion()).equals(dateInput)) {
-                
-                ss = false;
-                
-            } else {
-                
-                usuario.setFecha_registro(usuario_existe.get().getFecha_registro());
-                usuario.setHecho_por(usuario_existe.get().getHecho_por());
-                usuario.setPassword(usuario_existe.get().getPassword());
-                usuario.setPersona(usuario_existe.get().getPersona());
+            if(usuario==null) {
+                valido=false;
+                model.addAttribute(
+                        "msg",
+                        "La información del usuario no puede ser guardada. Por favor, inténtalo otra vez. COD: 00537"     
+                );
             }
             
-        }else{
+            if(valido){
+                
+                Optional<Usuario> usuarioBD = UsuarioServicio.obtenerPorId(usuario.getId());
+
+                if (usuarioBD.isPresent()) {
+
+                    if (!FechaUtils.FechaFormato2.format(
+                            usuarioBD.get().getFecha_actualizacion()
+                            ).equals(fechaActualizacionCliente)
+                    ) {
+
+                        valido = false;
+                        model.addAttribute(
+                           "msg", 
+                           ( ! ( fechaActualizacionCliente==null || 
+                                   fechaActualizacionCliente.equals("") 
+                               ) ? 
+                              "Al parecer alguien ha realizado cambios en la información primero. Por favor, inténtalo otra vez. COD: 00535" :
+                              "No podemos realizar los cambios porque ya este Usuario se encuentra registrado."
+                           )
+                       );
+                    }
+
+                }else if(idPersona==0) {
+                    valido=false;
+                    model.addAttribute(
+                           "msg",
+                           "La información personal no pudo ser guardada. Por favor, inténtalo otra vez. COD: 00536"     
+                    );
+                }
+                
+                if (valido) {
+
+                    if (! (fechaActualizacionCliente == null || 
+                        fechaActualizacionCliente.equals("") )
+                    ) usuario.setFecha_actualizacion(
+                        FechaUtils.Formato2ToDate(fechaActualizacionCliente )
+                    );
+
+                    if(idPersona!=0) usuario.setPersona(PersonaServicio.obtenerPorId(idPersona).get());
+
+
+                    if(usuarioBD.isPresent()){
+
+                        usuario.setFecha_registro(usuarioBD.get().getFecha_registro());
+                        usuario.setHecho_por(usuarioBD.get().getHecho_por());
+                        usuario.setPassword(usuarioBD.get().getPassword());
+                        usuario.setPersona(usuarioBD.get().getPersona());
+                    }
+
+                    if(! usuario.getUsername().equals(usuarioLogueado.getUsername()) )
+                        UsuarioServicio.cerrarSesion(usuario.getUsername());
+
+                    Usuario d = UsuarioServicio.guardar(usuario, usuarioLogueado, usuarioBD.isPresent());
+                    model.addAttribute("msg", "Registro guardado exitosamente!");
+
+                    HashMap<String, Object> map = new HashMap<>();
+                    map.put(usuarioBD.isPresent() ? "U" : "I", d);
+                    map.put("date", FechaUtils.FechaFormato1.format(new Date()));
+                    SSEControlador.publicar("usrmgr", map);
+
+                } 
+                
+            }
             
-            if(idPersona==0)
-                ss=false;
-            else
-                usuario.setPersona(PersonaServicio.obtenerPorId(idPersona).get());
-            
+            model.addAttribute("status", valido);
             
         }
-
-        if (ss) {
-            if(! usuario.getUsername().equals(u.getUsername()) )
-                UsuarioServicio.cerrarSesion(usuario.getUsername());
-            
-            Usuario d = UsuarioServicio.guardar(usuario, u, ext);
-            model.addAttribute("status", true);
-            model.addAttribute("msg", "Registro guardado exitosamente!");
-            map.put(ext ? "U" : "I", d);
-            map.put("date", FechaUtils.FechaFormato1.format(new Date()));
-            
-        } else {
-            
-            model.addAttribute("status", false);
-            model.addAttribute(
-                    "msg", 
-                     ( dateInput!=null ? 
-                        "Al parecer alguien ha realizado cambios en la información primero. Por favor, inténtalo otra vez. COD: 00535" :
-                        "No podemos realizar los cambios porque ya este Grupo se encuentra registrado."
-                     )
-            );
-        }
         
-        if(!map.isEmpty()) SSEControlador.publicar("usrmgr", map);
-
-        ModeloServicio.load("usr_mgr_principal", model, u.getId());
+        if( sinPermisoPlantilla.equals("") )
+            ModeloServicio.load("usr_mgr_principal", model, usuarioLogueado.getId());
         
-        return "fragments/usr_mgr_principal :: content-default";
-
+        return sinPermisoPlantilla.equals("") ? plantillaRespuesta : sinPermisoPlantilla;
     }
 //----------------------------------------------------------------------------//
     
     
     @PostMapping("/usrmgr/update")
-    public String ActualizarUsuario(
-            HttpServletRequest request, 
-            Model model, 
-            String idUsuario
+    public String ActualizarUsuario( 
+        Model model, 
+        String idUsuario
     ) {  
         
-        Usuario u =ModeloServicio.getUsuarioLogueado();
-        Optional<Usuario> us=UsuarioServicio.obtener(idUsuario); 
+        String plantillaRespuesta="fragments/usr_mgr_registro :: content-default";
+        boolean valido=true;
+        
+        Usuario usuarioLogueado =ModeloServicio.getUsuarioLogueado();
+        Optional<Usuario> usuarioBD=UsuarioServicio.obtener(idUsuario); 
 
-        if(!us.isPresent()){
-
-            log.error("Error COD: 00537 al editar Usuario. Usuario no encontrado ("+idUsuario+")");
-            request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, HttpStatus.NOT_FOUND.value());
-            
-            return "redirect:/error";
+        if(!usuarioBD.isPresent()){
+            log.error("Error COD: 00537 al editar Usuario. Usuario no encontrado ({})",idUsuario);
+            plantillaRespuesta= "redirect:/error";
+            valido=false;
 
         }
         
-        model.addAttribute("user",us.get());
-        model.addAttribute("persona",us.get().getPersona());
-        model.addAttribute("update", true);
-        model.addAttribute("sexo",DatoServicio.consultarPorGrupo(GrupoServicio.obtener("Sexo").get() ));
-        model.addAttribute("sangre",DatoServicio.consultarPorGrupo(GrupoServicio.obtener("Tipos Sanguineos").get() ));
-        model.addAllAttributes(AccesoServicio.consultarAccesosPantallaUsuario(u.getId(), "usr_mgr_registro"));
+        //PROCEDEMOS SI TODOS LOS DATOS SON VALIDOS
+        if(valido){
+            model.addAttribute("user",usuarioBD.get());
+            model.addAttribute("persona",usuarioBD.get().getPersona());
+            model.addAttribute("update", true);
+            model.addAttribute("sexo",DatoServicio.consultarPorGrupo(
+                    GrupoServicio.obtener("Sexo").get() )
+            );
+            model.addAttribute("sangre",DatoServicio.consultarPorGrupo(
+                    GrupoServicio.obtener("Tipos Sanguineos").get() )
+            );
+            model.addAllAttributes(
+                    AccesoServicio.consultarAccesosPantallaUsuario(
+                            usuarioLogueado.getId(), 
+                            "usr_mgr_registro"
+                    )
+            );
+        }
 
-        return "fragments/usr_mgr_registro :: content-default";  
+        return plantillaRespuesta;  
     }
 //----------------------------------------------------------------------------//
     
     @GetMapping("/usrmgr/myupdate")
     public String ActualizarMiUsuario(
-            HttpServletRequest request, 
-            Model model
+        Model model
     ) {  
+        boolean valido=true;
+        String plantillaRespuesta="fragments/usr_mgr_registro :: content-default";
         
-        Usuario u =ModeloServicio.getUsuarioLogueado();
-        Optional<Usuario> us=UsuarioServicio.obtener(u.getUsername()); 
-
-        if(!us.isPresent()){
-
-            log.error("Error COD: 00539 al editar mi Usuario. Mi Usuario no encontrado ("+u.getUsername()+")");
-            request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, HttpStatus.NOT_FOUND.value());
-            
-            return "redirect:/error";
-
+        Usuario usuarioLogueado =ModeloServicio.getUsuarioLogueado();
+        Optional<Usuario> usuarioBD=UsuarioServicio.obtener(usuarioLogueado.getUsername()); 
+ 
+        if(! usuarioBD.isPresent() ){
+            log.error("Error COD: 00539 al editar mi Usuario. Mi Usuario no encontrado ({})",usuarioLogueado.getUsername());
+            plantillaRespuesta= "redirect:/error";
+            valido=false;
         }
         
-        model.addAttribute("user",us.get());
-        model.addAttribute("persona",us.get().getPersona());
-        model.addAttribute("update", true);
-        model.addAttribute("sexo",DatoServicio.consultarPorGrupo(GrupoServicio.obtener("Sexo").get() ));
-        model.addAttribute("sangre",DatoServicio.consultarPorGrupo(GrupoServicio.obtener("Tipos Sanguineos").get() ));
-        model.addAttribute("usr_mgr_registro",true);
-        model.addAttribute("configuracion",true);
-        return "fragments/usr_mgr_registro :: content-default";  
+        //PROCEDEMOS SI TODOS LOS DATOS SON VALIDOS
+        if(valido){
+            model.addAttribute("user",usuarioBD.get());
+            model.addAttribute("persona",usuarioBD.get().getPersona());
+            model.addAttribute("update", true);
+            model.addAttribute("sexo",DatoServicio.consultarPorGrupo(
+                    GrupoServicio.obtener("Sexo").get() ) 
+            );
+            model.addAttribute("sangre",DatoServicio.consultarPorGrupo(
+                    GrupoServicio.obtener("Tipos Sanguineos").get() )
+            );
+            model.addAttribute("usr_mgr_registro",true);
+            model.addAttribute("configuracion",true);
+        }
+        
+        return plantillaRespuesta;  
     }
 //----------------------------------------------------------------------------//
 
@@ -419,11 +455,9 @@ public class SistemaCntr {
     @PostMapping("/usrmgr/vfyUsr")
     @ResponseBody
     public boolean VerificarUsuario(
-            HttpServletRequest request, 
-            Model model, 
-            @RequestParam("username") String usuario
+        @RequestParam("username") String nombreUsuario
     ){
-       return ! UsuarioServicio.obtener(usuario).isPresent();
+       return ! UsuarioServicio.obtener(nombreUsuario).isPresent();
     }
 //----------------------------------------------------------------------------//
     
@@ -431,9 +465,7 @@ public class SistemaCntr {
     @PostMapping("/usrmgr/vfyMail")
     @ResponseBody
     public boolean VerificarCorreo(
-            HttpServletRequest request, 
-            Model model, 
-            @RequestParam("correo") String correo
+        @RequestParam("correo") String correo
     ){
         return ! UsuarioServicio.obtenerPorCorreo(correo).isPresent();
     }
@@ -442,156 +474,219 @@ public class SistemaCntr {
     @PostMapping("/usrmgr/vfyPwd")
     @ResponseBody
     public boolean VerificarPassword(
-            HttpServletRequest request, 
-            Model model, 
-            @RequestParam("pwd") String password
+        @RequestParam("pwd") String password
     ){
-       Usuario u=ModeloServicio.getUsuarioLogueado();
-       return UsuarioServicio.coincidenContraseña(password,u.getId());
+       Usuario usuarioLogeado=ModeloServicio.getUsuarioLogueado();
+       return UsuarioServicio.coincidenContraseña(password,usuarioLogeado.getId());
     }
 //----------------------------------------------------------------------------//
     
     
     @PostMapping(value="/usrmgr/closeUsrSess")
     public String CerrarSesionUsuario(
-            HttpServletRequest request, 
-            Model model, 
-            String usuario
+        Model model, 
+        String nombreUsuario
     ) throws ParseException {
         
-        Usuario u=ModeloServicio.getUsuarioLogueado();
+        boolean valido;
+        String plantillaRespuesta="fragments/usr_mgr_principal :: content-default";
+        
+        Usuario usuarioLogeado=ModeloServicio.getUsuarioLogueado();
         
         
-        String verificarPermisos= ModeloServicio.verificarPermisos("usr_mgr_registro", model, u);
-        if (! verificarPermisos.equals("")) return verificarPermisos;
+        //VERIFICAMOS PERMISOS PARA ESTA ACCION
+        String sinPermisoPlantilla= ModeloServicio.verificarPermisos(
+                "usr_mgr_registro", model, usuarioLogeado );
         
-        UsuarioServicio.cerrarSesion(usuario);
+        valido = ! sinPermisoPlantilla.equals("");
         
-        model.addAttribute("status", true);
-        model.addAttribute("msg", "Sesión Cerrada Exitosamente!");
+        //PROCEDEMOS SI TODOS LOS DATOS SON VALIDOS
+        if(valido){
+            
+            UsuarioServicio.cerrarSesion(nombreUsuario);
 
-        ModeloServicio.load("usr_mgr_principal", model, u.getId());
-        
-        return "fragments/usr_mgr_principal :: content-default";
+            model.addAttribute("status", valido);
+            model.addAttribute("msg", "Sesión Cerrada Exitosamente!");
+
+            ModeloServicio.load("usr_mgr_principal", model, usuarioLogeado.getId());
+            
+        }
+        return sinPermisoPlantilla.equals("") ? plantillaRespuesta : sinPermisoPlantilla;
 
     }
 //----------------------------------------------------------------------------//        
     
     @PostMapping(value="/usrmgr/resetPwd")
     public String ResetearContraseña(
-            HttpServletRequest request, 
-            Model model, 
-            String usuario
+        Model model, 
+        String nombreUsuario
     ) throws ParseException {
         
-        Usuario u = ModeloServicio.getUsuarioLogueado();
+        boolean valido;
+        String plantillaRespuesta="fragments/usr_mgr_principal :: content-default";
         
-        String verificarPermisos= ModeloServicio.verificarPermisos("usr_mgr_registro", model, u);
-        if (! verificarPermisos.equals("")) return verificarPermisos;
+        Usuario usuarioLogeado = ModeloServicio.getUsuarioLogueado();
         
-        Usuario us=UsuarioServicio.obtener(usuario).get();
-        UsuarioServicio.cerrarSesion(usuario);
-        UsuarioServicio.cambiarPassword(us,UsuarioServicio.generarPassword(),true);
- 
-        model.addAttribute("status", true);
-        model.addAttribute("msg", "Contraseña Reseteada Exitosamente! Comuniquese con el usuario para que revise su correo.");
+        //VERIFICAMOS PERMISOS PARA ESTA ACCION
+        String sinPermisoPlantilla= ModeloServicio.verificarPermisos(
+                "usr_mgr_registro", model, usuarioLogeado );
+        
+        valido = ! sinPermisoPlantilla.equals("");
+        
+        if(valido){
+            
+            Optional<Usuario> usuarioBD=UsuarioServicio.obtener(nombreUsuario); 
 
-        ModeloServicio.load("usr_mgr_principal", model, u.getId());
+            if( ! usuarioBD.isPresent() ){
+                log.error("Error COD: 00537 al resetear Password. Usuario no encontrado ({})",nombreUsuario);
+                plantillaRespuesta = "redirect:/error";
+                valido=false;
+            }
+            
+            //PROCEDEMOS SI TODOS LOS DATOS SON VALIDOS
+            if(valido){
+                UsuarioServicio.cerrarSesion(nombreUsuario);
+                UsuarioServicio.cambiarPassword(usuarioBD.get(),UsuarioServicio.generarPassword(),true);
+
+                model.addAttribute("status", valido);
+                model.addAttribute(
+                        "msg", 
+                        "Contraseña Reseteada Exitosamente! Comuniquese con el usuario para que revise su correo."
+                );
+
+                ModeloServicio.load("usr_mgr_principal", model, usuarioLogeado.getId());
+            }
+        }
         
-        return "fragments/usr_mgr_principal :: content-default";
+        return sinPermisoPlantilla.equals("") ? plantillaRespuesta : sinPermisoPlantilla;
 
     }
 //----------------------------------------------------------------------------//   
     
     @PostMapping("/usrmgr/access")
     public String PermisosUsuario(
-            HttpServletRequest request, 
-            Model model, 
-            String idUsuario
+        Model model, 
+        String nombreUsuario
     ) {  
         
-        Usuario u = ModeloServicio.getUsuarioLogueado();
+        boolean valido;
+        String plantillaRespuesta="fragments/usr_mgr_permisos :: content-default";
         
-        String verificarPermisos= ModeloServicio.verificarPermisos("usr_mgr_registro", model, u);
-        if (! verificarPermisos.equals("")) return verificarPermisos;
+        Usuario usuarioLogeado = ModeloServicio.getUsuarioLogueado();
         
-        Optional<Usuario> us=UsuarioServicio.obtener(idUsuario); 
-
-        if(!us.isPresent()){
-
-            log.error("Error COD: 00537 al editar Usuario. Usuario no encontrado ("+idUsuario+")");
-            request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, HttpStatus.NOT_FOUND.value());
+        //VERIFICAMOS PERMISOS PARA ESTA ACCION
+        String sinPermisoPlantilla= ModeloServicio.verificarPermisos(
+                "usr_mgr_registro", model, usuarioLogeado );
+        
+        valido = ! sinPermisoPlantilla.equals("");
+        
+        if(valido){
             
-            return "redirect:/error";
+            Optional<Usuario> usuarioBD=UsuarioServicio.obtener(nombreUsuario); 
 
+            if( ! usuarioBD.isPresent() ){
+                log.error("Error COD: 00537 al editar Usuario. Usuario no encontrado ({})",nombreUsuario);
+                plantillaRespuesta = "redirect:/error";
+                valido=false;
+            }
+            
+            
+            //PROCEDEMOS SI TODOS LOS DATOS SON VALIDOS
+            if(valido) model.addAttribute("usuario",usuarioBD.get());
+            
         }
         
-        model.addAttribute("usuario",us.get());
-        model.addAllAttributes(AccesoServicio.consultarAccesosPantallaUsuario(u.getId(), "usr_mgr_registro"));
-        return "fragments/usr_mgr_permisos :: content-default";  
+        model.addAllAttributes(
+                AccesoServicio.consultarAccesosPantallaUsuario(
+                        usuarioLogeado.getId(), "usr_mgr_registro" )
+        );
+        
+        return sinPermisoPlantilla.equals("") ? plantillaRespuesta : sinPermisoPlantilla;  
     }
 //----------------------------------------------------------------------------//
     
     @PostMapping(value="/usrmgr/get-access", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity ObtenerListadoPermisosUsuario(
-            HttpServletRequest request, 
-            @RequestParam("idUsuario") String idUsuario
+        @RequestParam("idUsuario") String nombreUsuario
     ) {  
+        boolean valido;
         
-        Usuario u = ModeloServicio.getUsuarioLogueado();
+        Usuario usuarioLogeado = ModeloServicio.getUsuarioLogueado();
         
-        String verificarPermisos= ModeloServicio.verificarPermisos("usr_mgr_registro", null, u);
-        if (! verificarPermisos.equals("")) return null;
+        //VERIFICAMOS PERMISOS PARA ESTA ACCION
+        String sinPermisoPlantilla= ModeloServicio.verificarPermisos(
+                "usr_mgr_registro", null, usuarioLogeado );
         
-        Optional<Usuario> us=UsuarioServicio.obtener(idUsuario); 
+        valido = ! sinPermisoPlantilla.equals("");
+        
+        
+        List<Object[]> permisosUsuario = null;
+        
+        if(valido){
+            Optional<Usuario> usuarioBD=UsuarioServicio.obtener(nombreUsuario); 
 
-        if(!us.isPresent()){
-
-            log.error("Error COD: 00539 al editar Usuario. Usuario no encontrado ("+idUsuario+")");
-            request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, HttpStatus.NOT_FOUND.value());
+            if(!usuarioBD.isPresent()){
+                log.error("Error COD: 00539 al editar Usuario. Usuario no encontrado ({})",nombreUsuario);
+                valido=false;
+            }
+        
             
-            return null;
-
+            //PROCEDEMOS SI TODOS LOS DATOS SON VALIDOS
+            if(valido) permisosUsuario = AccesoServicio.ListadoAccesosUsuarioEditar(
+                    usuarioBD.get().getId() );
+            
         }
         
         return new ResponseEntity<>(
-                AccesoServicio.ListadoAccesosUsuarioEditar(us.get().getId()),
-                new HttpHeaders(),
-                HttpStatus.OK);  
+            permisosUsuario,
+            new HttpHeaders(),
+            valido ? HttpStatus.OK: HttpStatus.NOT_FOUND
+        );  
     }
 //----------------------------------------------------------------------------//
     
     @PostMapping(value="/usrmgr/save-acc")
     public String GuardarPermisosUsuario(
-            HttpServletRequest request, 
-            Model model,
-            @RequestParam Map<String,String> data
+        Model model,
+        @RequestParam Map<String,String> data
     ) {
         
-        Usuario u= ModeloServicio.getUsuarioLogueado();
+        boolean valido;
+        String plantillaRespuesta="fragments/usr_mgr_principal :: content-default";
         
-        String verificarPermisos= ModeloServicio.verificarPermisos("usr_mgr_registro", model, u);
-        if (! verificarPermisos.equals("")) return verificarPermisos;
+        Usuario usuarioLogeado= ModeloServicio.getUsuarioLogueado();
         
-        Optional<Usuario> usuario=UsuarioServicio.obtener(data.get("idUsuario"));
-        if(usuario.isPresent()){
-            UsuarioServicio.cerrarSesion(usuario.get().getUsername());
-            AccesoServicio.GuardarTodosMap(data, usuario.get());
-            model.addAttribute("status", true);
-            model.addAttribute("msg", "Permisos guardados exitosamente!");
-           
-        } else {
+        //VERIFICAMOS PERMISOS PARA ESTA ACCION
+        String sinPermisoPlantilla= ModeloServicio.verificarPermisos(
+                "usr_mgr_registro", model, usuarioLogeado );
+        
+        valido = ! sinPermisoPlantilla.equals("");
+        
+        if(valido){
+            Optional<Usuario> usuarioBD=UsuarioServicio.obtener(data.getOrDefault("idUsuario",""));
+
+            if(!usuarioBD.isPresent()){
+                valido=false;
+                model.addAttribute("msg", 
+                        "No pudimos encontrar al usuario. Por favor, inténtalo otra vez. COD: 00545"
+                );
+            }
             
-            model.addAttribute("status", false);
-            model.addAttribute("msg", "Al parecer alguien hubo un inconveniente con la transacción. Por favor, inténtalo otra vez. COD: 00545");
+            //PROCEDEMOS SI TODOS LOS DATOS SON VALIDOS
+            if(valido){
+                UsuarioServicio.cerrarSesion(usuarioBD.get().getUsername());
+                AccesoServicio.GuardarTodosMap(data, usuarioBD.get());
+                model.addAttribute("msg", "Permisos guardados exitosamente!");
+
+                ModeloServicio.load("usr_mgr_principal", model, usuarioLogeado.getId());
+
+            }
             
+            model.addAttribute("status", valido);
         }
         
-        ModeloServicio.load("usr_mgr_principal", model, u.getId());
-        
-        return "fragments/usr_mgr_principal :: content-default";
-
+        return sinPermisoPlantilla.equals("") ? plantillaRespuesta : sinPermisoPlantilla;
     }
 //----------------------------------------------------------------------------//
 }
