@@ -95,7 +95,7 @@ public class TransporteCntr {
             "trp_vehiculo_registro", model, u );
         
         //USUARIO NO TIENE PERMISOS PARA EJECUTAR ESTA ACCION
-        valido = ! sinPermisoPlantilla.equals("");
+        valido = sinPermisoPlantilla.equals("");
         
         
         if(valido){
@@ -249,7 +249,7 @@ public class TransporteCntr {
             "trp_vehiculo_registro", null, u 
             );
         
-        valido = ! sinPermisoPlantilla.equals("");
+        valido = sinPermisoPlantilla.equals("");
         
         List<Dato> modelos = null; 
         
@@ -288,7 +288,7 @@ public class TransporteCntr {
             "trp_vehiculo_registro", null, u 
             );
         
-        valido = ! sinPermisoPlantilla.equals("");
+        valido = sinPermisoPlantilla.equals("");
         
         Map<String, Object> respuesta= new HashMap<>();
         

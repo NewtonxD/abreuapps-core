@@ -14,8 +14,6 @@ import abreusapp.core.control.usuario.Usuario;
 import abreusapp.core.control.usuario.UsuarioServ;
 import abreusapp.core.control.utils.DateUtils;
 import abreusapp.core.control.utils.ModelServ;
-import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
@@ -62,207 +60,227 @@ public class SistemaCntr {
     
     
 //----------------------------------------------------------------------------//
-//----------------------------GRUPO DE DATOS----------------------------------//
+//-------------------ENDPOINTS GRUPO DE DATOS---------------------------------//
 //----------------------------------------------------------------------------//
     @PostMapping("/dtgrp/save")
     public String GuardarGrupoDato(
         Model model,
         GrupoDato grpdt,
-        @RequestParam(name = "fecha_actualizacionn", required = false) String dateInput
+        @RequestParam(name = "fecha_actualizacionn", required = false) String fechaActualizacionCliente
     ) throws ParseException {
 
-        Usuario u = ModeloServicio.getUsuarioLogueado();
+        boolean valido;
+        String plantillaRespuesta = "fragments/dat_gen_consulta_grupos :: content-default";
+        Usuario usuarioLogueado = ModeloServicio.getUsuarioLogueado();
         
-        String verificarPermisos= ModeloServicio.verificarPermisos("dat_gen_registro_grupos", model, u);
-        if (! verificarPermisos.equals("")) return verificarPermisos;
+        String sinPermisoPlantilla= ModeloServicio.verificarPermisos(
+                "dat_gen_registro_grupos", model, usuarioLogueado );
+        
+        valido = sinPermisoPlantilla.equals("");
+        
+        if(valido){
 
-        HashMap<String, Object> map = new HashMap<>();
-
-        if (dateInput != null && !dateInput.equals("")) {
-
-            grpdt.setFecha_actualizacion(FechaUtils.Formato2ToDate(dateInput));
-
-        }
-
-        Optional<GrupoDato> grupo = GrupoServicio.obtener(grpdt.getGrupo());
-
-        boolean ext = false, ss = true;
-
-        if (grupo.isPresent()) {
-
-            ext = true;
-
-            if (!FechaUtils.FechaFormato2.format(grupo.get().getFecha_actualizacion()).equals(dateInput)) {
-
-                ss = false;
-
-            } else {
-
-                grpdt.setFecha_registro(grupo.get().getFecha_registro());
-                grpdt.setHecho_por(grupo.get().getHecho_por());
-
+            Optional<GrupoDato> grupoBD = GrupoServicio.obtener(grpdt.getGrupo());
+            
+            if (grupoBD.isPresent() &&
+                !FechaUtils.FechaFormato2.format(
+                grupoBD.get().getFecha_actualizacion() )
+                .equals(fechaActualizacionCliente)
+            ) {
+                valido = false;
+                model.addAttribute(
+                        "msg", 
+                         ( !(fechaActualizacionCliente == null || 
+                            fechaActualizacionCliente.equals("") )  ? 
+                            "Al parecer alguien ha realizado cambios en la información primero. Por favor, inténtalo otra vez. COD: 00535" :
+                            "No podemos realizar los cambios porque ya este Grupo se encuentra registrado."
+                         )
+                );
             }
 
-        }
+            if (valido) {
 
-        if (ss) {
+                if ( !(fechaActualizacionCliente == null || 
+                    fechaActualizacionCliente.equals("") ) 
+                ) grpdt.setFecha_actualizacion(
+                        FechaUtils.Formato2ToDate(fechaActualizacionCliente) );
 
-            GrupoDato d = GrupoServicio.guardar(grpdt, u, ext);
-            model.addAttribute("status", true);
-            model.addAttribute("msg", "Registro guardado exitosamente!");
-            map.put(ext ? "U" : "I", d);
-            map.put("date", FechaUtils.FechaFormato1.format(new Date()));
+                if(grupoBD.isPresent()){
+                    grpdt.setFecha_registro(grupoBD.get().getFecha_registro());
+                    grpdt.setHecho_por(grupoBD.get().getHecho_por());
+                }
 
-        } else {
-
-            model.addAttribute("status", false);
-            model.addAttribute(
-                    "msg", 
-                     ( dateInput!=null ? 
-                        "Al parecer alguien ha realizado cambios en la información primero. Por favor, inténtalo otra vez. COD: 00535" :
-                        "No podemos realizar los cambios porque ya este Grupo se encuentra registrado."
-                     )
-            );
-
+                GrupoDato grupoNuevo = GrupoServicio.guardar(grpdt, usuarioLogueado, grupoBD.isPresent());
+                model.addAttribute("msg", "Registro guardado exitosamente!");
+                
+                HashMap<String, Object> map = new HashMap<>();
+                map.put(grupoBD.isPresent() ? "U" : "I", grupoNuevo);
+                map.put("date", FechaUtils.FechaFormato1.format(new Date()));
+                SSEControlador.publicar("dtgrp", map);
+            } 
+            
+            model.addAttribute("status", valido);
         }
         
-        ModeloServicio.load("dat_gen_consulta_grupos", model, u.getId());
+        if(sinPermisoPlantilla.equals(""))
+            ModeloServicio.load(
+                    "dat_gen_consulta_grupos", model, usuarioLogueado.getId() );
 
-        if (!map.isEmpty()) {
-            SSEControlador.publicar("dtgrp", map);
-        }
-
-        return "fragments/dat_gen_consulta_grupos :: content-default";
+        return sinPermisoPlantilla.equals("") ? plantillaRespuesta : sinPermisoPlantilla;
 
     }
 //----------------------------------------------------------------------------//
     
     @PostMapping("/dtgrp/update")
     public String ActualizarGrupo(
-        HttpServletRequest request,
         Model model,
         String idGrupo
     ) {
 
-        Usuario u = ModeloServicio.getUsuarioLogueado();
+        boolean valido=true;
+        String plantillaRespuesta = "fragments/dat_gen_registro_grupos :: content-default";
+        
+        Usuario usuarioLogueado = ModeloServicio.getUsuarioLogueado();
 
-        Optional<GrupoDato> g = GrupoServicio.obtener(idGrupo);
+        Optional<GrupoDato> grupoDB = GrupoServicio.obtener(idGrupo);
 
-        if (!g.isPresent()) {
-
-            log.error("Error COD: 00537 al editar grupos de datos.");
-            request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, HttpStatus.NOT_FOUND.value());
-
-            return "redirect:/error";
-
+        if (! grupoDB.isPresent()) {
+            
+            log.error("Error COD: 00537 al editar grupos de datos, ({}) no existe.",idGrupo);
+            plantillaRespuesta = "redirect:/error";
+            valido = false;
+            
         }
-
-        model.addAttribute("grupo", g.get());
-        model.addAttribute("update", true);
-        model.addAllAttributes(AccesoServicio.consultarAccesosPantallaUsuario(u.getId(), "dat_gen_registro_grupos"));
-
-        return "fragments/dat_gen_registro_grupos :: content-default";
+        
+        if(valido){
+            
+            model.addAttribute("grupo", grupoDB.get());
+            model.addAttribute("update", true);
+            model.addAllAttributes(AccesoServicio.consultarAccesosPantallaUsuario(
+                    usuarioLogueado.getId(), "dat_gen_registro_grupos") );
+            
+        }
+        
+        return plantillaRespuesta;
     }
 
 //----------------------------------------------------------------------------//
-//-------------------------------------DATOS----------------------------------//
+//---------------------------ENDPOINTS DATOS----------------------------------//
 //----------------------------------------------------------------------------//
     @PostMapping("/dtgnr/save")
     public String GuardarDatoGeneral(
         Model model, 
         Dato dtgnr,
-        @RequestParam(value = "fecha_actualizacionn", required = false) String dateInput
+        @RequestParam(value = "fecha_actualizacionn", required = false) String fechaActualizacionCliente
     ) throws ParseException {
 
-        Usuario u = ModeloServicio.getUsuarioLogueado();
+        boolean valido;
+        String plantillaRespuesta = "fragments/dat_gen_consulta_datos :: content-default";
+        Usuario usuarioLogueado = ModeloServicio.getUsuarioLogueado();
         
-        String verificarPermisos= ModeloServicio.verificarPermisos("dat_gen_registro_datos", model, u);
-        if (! verificarPermisos.equals("")) return verificarPermisos;
-
-        HashMap<String, Object> map = new HashMap<>();
-
-        if (dateInput != null && !dateInput.equals("")) {
-
-            dtgnr.setFecha_actualizacion(FechaUtils.Formato2ToDate(dateInput));
-
-        }
-
-        Optional<Dato> dato = DatoServicio.obtener(dtgnr.getDato());
-        boolean ext = false, ss = true;
-
-        if (dato.isPresent()) {
-
-            ext = true;
-
-            if (!FechaUtils.FechaFormato2.format(dato.get().getFecha_actualizacion()).equals(dateInput)) {
-
-                ss = false;
-
-            } else {
-
-                dtgnr.setFecha_registro(dato.get().getFecha_registro());
-                dtgnr.setHecho_por(dato.get().getHecho_por());
-
+        String sinPermisoPlantilla = ModeloServicio.verificarPermisos(
+                "dat_gen_registro_datos", model, usuarioLogueado );
+        
+        valido = sinPermisoPlantilla.equals("");
+        
+        if(valido){
+            
+            if(dtgnr==null){
+                model.addAttribute(
+                        "msg",
+                        "La información del dato no puede ser guardada. Por favor, inténtalo otra vez. COD: 00562");
+                valido=false;
             }
+            
+            if(valido){
+                
+                Optional<Dato> datoBD = DatoServicio.obtener(dtgnr.getDato());
+                
+                if ( datoBD.isPresent() && 
+                        ! FechaUtils.FechaFormato2.format(datoBD.get().getFecha_actualizacion())
+                        .equals(fechaActualizacionCliente) 
+                ) {
+                    valido = false;
+                    model.addAttribute(
+                            "msg", 
+                             ( !(fechaActualizacionCliente==null || fechaActualizacionCliente.equals("")) ? 
+                                "Al parecer alguien ha realizado cambios en la información primero. Por favor, inténtalo otra vez. COD: 00535" :
+                                "No podemos realizar los cambios porque ya este Dato se encuentra registrado."
+                             )
+                    );
+                }
+                
+                //PROCEDEMOS SI TODOS LOS DATOS SON VALIDOS
+                if (valido) {
 
-        }
+                    if (! (fechaActualizacionCliente == null || 
+                            fechaActualizacionCliente.equals("") )
+                    ) dtgnr.setFecha_actualizacion(
+                            FechaUtils.Formato2ToDate(fechaActualizacionCliente)
+                    );
 
-        if (ss) {
-
-            Dato d = DatoServicio.guardar(dtgnr, u, ext);
-            model.addAttribute("status", true);
-            model.addAttribute("msg", "Registro guardado exitosamente!");
-            map.put(ext ? "U" : "I", d);
-            map.put("date", FechaUtils.FechaFormato1.format(new Date()));
-
-        } else {
-
-            model.addAttribute("status", false);
-            model.addAttribute(
-                    "msg", 
-                     ( dateInput!=null ? 
-                        "Al parecer alguien ha realizado cambios en la información primero. Por favor, inténtalo otra vez. COD: 00535" :
-                        "No podemos realizar los cambios porque ya este Dato se encuentra registrado."
-                     )
-            );
+                    if(datoBD.isPresent()){
+                        dtgnr.setFecha_registro(datoBD.get().getFecha_registro());
+                        dtgnr.setHecho_por(datoBD.get().getHecho_por());
+                    }
+                    
+                    Dato datoNuevo = DatoServicio.guardar(dtgnr, usuarioLogueado, datoBD.isPresent());
+                    model.addAttribute("msg", "Registro guardado exitosamente!");
+                    
+                    HashMap<String, Object> map = new HashMap<>();
+                    map.put(datoBD.isPresent() ? "U" : "I", datoNuevo);
+                    map.put("date", FechaUtils.FechaFormato1.format(new Date()));
+                    SSEControlador.publicar("dtgnr", map);
+                    
+                } 
+                
+            }
+            
+            model.addAttribute("status", valido);
+            
         }
         
-        ModeloServicio.load("dat_gen_consulta_datos", model, u.getId());
+        if(sinPermisoPlantilla.equals(""))
+            ModeloServicio.load(
+                    "dat_gen_consulta_datos", model, usuarioLogueado.getId() );
 
-        if (!map.isEmpty()) {
-            SSEControlador.publicar("dtgnr", map);
-        }
-
-        return "fragments/dat_gen_consulta_datos :: content-default";
-
+        
+        return sinPermisoPlantilla.equals("") ? plantillaRespuesta : sinPermisoPlantilla;
     }
 //----------------------------------------------------------------------------//
 
     @PostMapping("/dtgnr/update")
     public String ActualizarDatosGenerales(
-        HttpServletRequest request,
         Model model,
         String idDato
     ) {
 
-        Usuario u = ModeloServicio.getUsuarioLogueado();
+        String plantillaRespuesta="fragments/dat_gen_registro_datos :: content-default";
+        boolean valido = true;
+        
+        Usuario usuarioLogueado = ModeloServicio.getUsuarioLogueado();
 
-        Optional<Dato> d = DatoServicio.obtener(idDato);
+        Optional<Dato> datoDB = DatoServicio.obtener(idDato);
 
-        if (!d.isPresent()) {
+        if (! datoDB.isPresent()) {
 
-            log.error("Error COD: 00535 al editar datos generales.");
-            request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, HttpStatus.NOT_FOUND.value());
-            return "redirect:/error";
+            log.error("Error COD: 00535 al editar datos generales, ({}) no existe.",idDato);
+            valido=false;
+            plantillaRespuesta="redirect:/error";
 
         }
+        
+        if(valido){
+            model.addAttribute("dato", datoDB.get());
+            model.addAttribute("update", true);
+            model.addAttribute("grupos", GrupoServicio.consultar());
+            model.addAllAttributes(
+                    AccesoServicio.consultarAccesosPantallaUsuario(
+                    usuarioLogueado.getId(), "dat_gen_registro_datos" ) 
+            );
+        }
 
-        model.addAttribute("dato", d.get());
-        model.addAttribute("update", true);
-        model.addAttribute("grupos", GrupoServicio.consultar());
-        model.addAllAttributes(AccesoServicio.consultarAccesosPantallaUsuario(u.getId(), "dat_gen_registro_datos"));
-
-        return "fragments/dat_gen_registro_datos :: content-default";
+        return plantillaRespuesta;
 
     }
     
@@ -283,7 +301,9 @@ public class SistemaCntr {
         
         Usuario usuarioLogueado= ModeloServicio.getUsuarioLogueado();
         
-        String sinPermisoPlantilla= ModeloServicio.verificarPermisos("usr_mgr_registro", model, usuarioLogueado);
+        String sinPermisoPlantilla= ModeloServicio.verificarPermisos(
+                "usr_mgr_registro", model, usuarioLogueado );
+        
         valido =  sinPermisoPlantilla.equals("");
             
         if(valido){
@@ -328,6 +348,7 @@ public class SistemaCntr {
                     );
                 }
                 
+                //PROCEDEMOS SI TODOS LOS DATOS SON VALIDOS
                 if (valido) {
 
                     if (! (fechaActualizacionCliente == null || 
@@ -340,7 +361,6 @@ public class SistemaCntr {
 
 
                     if(usuarioBD.isPresent()){
-
                         usuario.setFecha_registro(usuarioBD.get().getFecha_registro());
                         usuario.setHecho_por(usuarioBD.get().getHecho_por());
                         usuario.setPassword(usuarioBD.get().getPassword());
@@ -498,7 +518,7 @@ public class SistemaCntr {
         String sinPermisoPlantilla= ModeloServicio.verificarPermisos(
                 "usr_mgr_registro", model, usuarioLogeado );
         
-        valido = ! sinPermisoPlantilla.equals("");
+        valido = sinPermisoPlantilla.equals("");
         
         //PROCEDEMOS SI TODOS LOS DATOS SON VALIDOS
         if(valido){
@@ -531,7 +551,7 @@ public class SistemaCntr {
         String sinPermisoPlantilla= ModeloServicio.verificarPermisos(
                 "usr_mgr_registro", model, usuarioLogeado );
         
-        valido = ! sinPermisoPlantilla.equals("");
+        valido = sinPermisoPlantilla.equals("");
         
         if(valido){
             
@@ -566,7 +586,7 @@ public class SistemaCntr {
     @PostMapping("/usrmgr/access")
     public String PermisosUsuario(
         Model model, 
-        String nombreUsuario
+        String idUsuario
     ) {  
         
         boolean valido;
@@ -578,14 +598,14 @@ public class SistemaCntr {
         String sinPermisoPlantilla= ModeloServicio.verificarPermisos(
                 "usr_mgr_registro", model, usuarioLogeado );
         
-        valido = ! sinPermisoPlantilla.equals("");
+        valido = sinPermisoPlantilla.equals("");
         
         if(valido){
             
-            Optional<Usuario> usuarioBD=UsuarioServicio.obtener(nombreUsuario); 
+            Optional<Usuario> usuarioBD=UsuarioServicio.obtener(idUsuario); 
 
             if( ! usuarioBD.isPresent() ){
-                log.error("Error COD: 00537 al editar Usuario. Usuario no encontrado ({})",nombreUsuario);
+                log.error("Error COD: 00537 al editar Usuario. Usuario no encontrado ({})",idUsuario);
                 plantillaRespuesta = "redirect:/error";
                 valido=false;
             }
@@ -618,7 +638,7 @@ public class SistemaCntr {
         String sinPermisoPlantilla= ModeloServicio.verificarPermisos(
                 "usr_mgr_registro", null, usuarioLogeado );
         
-        valido = ! sinPermisoPlantilla.equals("");
+        valido = sinPermisoPlantilla.equals("");
         
         
         List<Object[]> permisosUsuario = null;
@@ -661,7 +681,7 @@ public class SistemaCntr {
         String sinPermisoPlantilla= ModeloServicio.verificarPermisos(
                 "usr_mgr_registro", model, usuarioLogeado );
         
-        valido = ! sinPermisoPlantilla.equals("");
+        valido = sinPermisoPlantilla.equals("");
         
         if(valido){
             Optional<Usuario> usuarioBD=UsuarioServicio.obtener(data.getOrDefault("idUsuario",""));
