@@ -182,8 +182,7 @@ public class MainCntr {
     
     @GetMapping("/")
     public String redirectLogin(){
-        
-        return "redirect:/auth/login";
+        return "mapa";
     }
 //----------------------------------------------------------------------------//
 }
