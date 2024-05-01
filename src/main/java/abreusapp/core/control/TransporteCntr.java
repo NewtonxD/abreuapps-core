@@ -10,6 +10,8 @@ import abreusapp.core.control.general.GrupoDato;
 import abreusapp.core.control.general.GrupoDatoServ;
 import abreusapp.core.control.transporte.LocVehiculo;
 import abreusapp.core.control.transporte.LocVehiculoServ;
+import abreusapp.core.control.transporte.Parada;
+import abreusapp.core.control.transporte.ParadaServ;
 import abreusapp.core.control.transporte.Vehiculo;
 import abreusapp.core.control.transporte.VehiculoServ;
 import abreusapp.core.control.usuario.AccesoServ;
@@ -63,6 +65,8 @@ public class TransporteCntr {
     
     private final DatoServ DatosServicio;
     
+    private final ParadaServ ParadaServicio;
+    
     private final LocVehiculoServ LocVehiculoServicio;
     
     private final TransportTokenServ TrpTokenServ;
@@ -70,6 +74,130 @@ public class TransporteCntr {
     private final PasswordEncoder passwordEncoder;
     
     private static final String PWD_HASH="$2a$10$FD.HVab6z8H3Tba.hw.SvukdeJDfZ5aIIzCN87AL7T2SSAJqoi8Bq";
+    
+    
+    
+//----------------------------------------------------------------------------//
+//------------------ENDPOINTS PARADAS-----------------------------------------//
+//----------------------------------------------------------------------------//
+    @PostMapping("/pda/save")
+    public String GuardarParada(
+        Model model,
+        Parada paradaCliente,
+        @RequestParam(name = "fecha_actualizacionn", 
+                        required = false) String fechaActualizacionCliente
+    ) throws ParseException {
+
+        boolean valido;
+        
+        String plantillaRespuesta="fragments/trp_paradas_consulta :: content-default";
+        
+        Usuario u = ModeloServicio.getUsuarioLogueado();
+        
+        //INICIO DE VALIDACIONES
+        String sinPermisoPlantilla = ModeloServicio.verificarPermisos(
+            "trp_paradas_consulta", model, u );
+        
+        //USUARIO NO TIENE PERMISOS PARA EJECUTAR ESTA ACCION
+        valido = sinPermisoPlantilla.equals("");
+        
+        
+        if(valido){
+            
+            Optional<Parada> paradaDB = ParadaServicio.obtener(paradaCliente.getId());
+
+            if (paradaDB.isPresent()) {
+
+                if (! FechaUtils.FechaFormato2.format(
+                        paradaDB.get().getFecha_actualizacion()
+                        ).equals(fechaActualizacionCliente)
+                ) {
+                    
+                    model.addAttribute(
+                        "msg",
+                        ! ( fechaActualizacionCliente == null || 
+                             fechaActualizacionCliente.equals("") ) ? 
+                        "Al parecer alguien ha realizado cambios en la información primero. Por favor, inténtalo otra vez. COD: 00656" :
+                        "No podemos realizar los cambios porque ya esta Parada se encuentra registrado."
+                    );
+                    valido = false;
+                    
+                }
+
+            }
+            
+            //SI TODAS LAS ANTERIORES SON VALIDAS PROCEDEMOS
+            if(valido){
+                
+            
+                if ( ! ( fechaActualizacionCliente == null || 
+                        fechaActualizacionCliente.equals("") )
+                ) {
+                    paradaCliente.setFecha_actualizacion(
+                        FechaUtils.Formato2ToDate(fechaActualizacionCliente)
+                    );
+                }
+                
+                if (paradaDB.isPresent()) {
+                    paradaCliente.setFecha_registro(paradaDB.get().getFecha_registro());
+                    paradaCliente.setHecho_por(paradaDB.get().getHecho_por());
+                }
+
+                Parada d = ParadaServicio.guardar(paradaCliente, u, paradaDB.isPresent());
+                model.addAttribute("msg", "Registro guardado exitosamente!");
+
+                HashMap<String, Object> map = new HashMap<>();
+                
+                // LOS OBJETOS CON LLAVES FK DENTRO Y LAZY LOADING TIENEN QUE PASAR
+                // A SER DTO PARA PODER SER DEVUELTOS SIN ERROR
+                map.put(paradaDB.isPresent() ? "U" : "I", MapperServ.paradaToDTO(d));
+                
+                map.put("date", FechaUtils.FechaFormato1.format(new Date()));
+                SSEControlador.publicar("pda", map);
+
+                ModeloServicio.load("trp_paradas_consulta", model, u.getId());
+            }
+            
+            model.addAttribute("status", valido);
+        }
+
+        return sinPermisoPlantilla.equals("") ? plantillaRespuesta : sinPermisoPlantilla;
+
+    }    
+//----------------------------------------------------------------------------//
+    @PostMapping("/pda/update")
+    public String ActualizarParada(
+        HttpServletRequest request,
+        Model model,
+        @RequestParam("idParada") String idParada
+    ) {
+        
+        boolean valido=true;
+        String plantillaRespuesta="fragments/trp_paradas_registro :: content-default";
+        
+        Usuario usuarioLogueado = ModeloServicio.getUsuarioLogueado();
+
+        Optional<Parada> parada = ParadaServicio.obtener(Integer.parseInt(idParada));
+
+        if (!parada.isPresent()) {
+
+            log.error("Error COD: 00637 al editar parada. No encontrado ({})",idParada);
+            plantillaRespuesta = "redirect:/error";
+            valido=false;
+
+        }
+        
+        //SI TODAS LAS ANTERIORES SON VALIDAS PROCEDEMOS
+        if(valido){
+            model.addAttribute("parada", parada.get());
+            model.addAllAttributes(
+                    AccesoServicio.consultarAccesosPantallaUsuario(
+                            usuarioLogueado.getId(), "trp_paradas_registro" )
+            );
+        }
+
+        return plantillaRespuesta;
+    }
     
     
 //----------------------------------------------------------------------------//
@@ -109,7 +237,7 @@ public class TransporteCntr {
                         ).equals(fechaActualizacionCliente)
                 ) {
                     
-                    model.addAttribute("status", valido);
+                    
                     model.addAttribute(
                         "msg",
                         ! ( fechaActualizacionCliente == null || 
@@ -141,7 +269,7 @@ public class TransporteCntr {
                 }
 
                 Vehiculo d = VehiculoServicio.guardar(vehiculoCliente, u, vehiculoBD.isPresent());
-                model.addAttribute("status", true);
+                
                 model.addAttribute("msg", "Registro guardado exitosamente!");
 
                 HashMap<String, Object> map = new HashMap<>();
@@ -155,6 +283,8 @@ public class TransporteCntr {
 
                 ModeloServicio.load("trp_vehiculo_consulta", model, u.getId());
             }
+            
+            model.addAttribute("status", valido);
             
             
         }
@@ -406,7 +536,7 @@ public class TransporteCntr {
        
         
         //INICIO DE VALIDACIONES
-        if(!(placa.isBlank() || lat.isNaN() || lon.isNaN())){
+        if(!(placa.isBlank() || lat.isNaN() || lon.isNaN() )){
             mensaje = "Datos invalidos! intentelo de nuevo.";
             valido=false;
         }
