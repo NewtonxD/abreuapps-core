@@ -9,6 +9,8 @@ import abreusapp.core.control.general.Dato;
 import abreusapp.core.control.general.DatoServ;
 import abreusapp.core.control.general.GrupoDatoServ;
 import abreusapp.core.control.general.Persona;
+import abreusapp.core.control.transporte.Parada;
+import abreusapp.core.control.transporte.ParadaServ;
 import abreusapp.core.control.transporte.Vehiculo;
 import abreusapp.core.control.transporte.VehiculoServ;
 import abreusapp.core.control.usuario.AccesoServ;
@@ -41,7 +43,14 @@ public class ModelServ {
     private final AccesoServ AccesoServicio;
     
     //  custom constructor injection
-    public ModelServ(GrupoDatoServ GrupoServicio,DatoServ DatoServicio,AccesoServ AccesoServicio,UsuarioServ UsuarioServicio,ConfServ ConfServ,VehiculoServ VehiculoServ){
+    public ModelServ(
+            GrupoDatoServ GrupoServicio,
+            DatoServ DatoServicio,
+            AccesoServ AccesoServicio,
+            UsuarioServ UsuarioServicio,
+            ConfServ ConfServicio,
+            VehiculoServ VehiculoServicio,
+            ParadaServ ParadaServicio){
         
         this.AccesoServicio=AccesoServicio;
         
@@ -103,14 +112,14 @@ public class ModelServ {
         
         this.actions.put("sys_configuracion", ()->{
                 Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "sys_configuracion");
-                dataModel.addAttribute("conf", ConfServ.consultar());
+                dataModel.addAttribute("conf", ConfServicio.consultar());
                 dataModel.addAllAttributes(acc);                
             }
         );
         
         this.actions.put("trp_vehiculo_consulta", ()->{
                 Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "trp_vehiculo_consulta");
-                dataModel.addAttribute("vehiculos", VehiculoServ.consultar());
+                dataModel.addAttribute("vehiculos", VehiculoServicio.consultar());
                 dataModel.addAllAttributes(acc);                
             }
         );
@@ -148,6 +157,21 @@ public class ModelServ {
                                 GrupoServicio.obtener( marcas.getFirst().getDato() ).get() 
                         )
                 );
+                dataModel.addAllAttributes(acc);                
+            }
+        );
+        
+        this.actions.put("trp_paradas_consulta", ()->{
+                Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "trp_paradas_consulta");
+                dataModel.addAttribute("paradas", ParadaServicio.consultar());
+                dataModel.addAllAttributes(acc);                
+            }
+        );
+        
+        this.actions.put("trp_paradas_registro", ()->{
+                Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "trp_paradas_registro");
+                Parada p=new Parada();
+                dataModel.addAttribute("parada",p);
                 dataModel.addAllAttributes(acc);                
             }
         );

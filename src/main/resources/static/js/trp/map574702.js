@@ -17,11 +17,16 @@ $(function(){
     const API_KEY='6e5478c8a4f54c779f85573c0e399391';
     
     
-
+    /*
     L.tileLayer(`https://c.tile.thunderforest.com/transport/{z}/{x}/{y}.png?apikey=${API_KEY}`, {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    }).addTo(map);
+    }).addTo(map);*/
+    
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          attribution:
+            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        }).addTo(map);
 
     var marker = L.marker([lat, lng]).addTo(map);
         

@@ -4,6 +4,8 @@
  */
 package abreusapp.core.control.utils;
 
+import abreusapp.core.control.transporte.Parada;
+import abreusapp.core.control.transporte.ParadaDTO;
 import abreusapp.core.control.transporte.Vehiculo;
 import abreusapp.core.control.transporte.VehiculoDTO;
 
@@ -33,6 +35,25 @@ public class MapperServ {
                 .actualizado_por(vehiculo.getActualizado_por() ==null ? null : vehiculo.getActualizado_por().getId())
                 .fecha_actualizacion(vehiculo.getFecha_actualizacion())
                 .token(vehiculo.getToken())
+                .build();
+    }
+    
+    public static ParadaDTO paradaToDTO(Parada parada){
+        if(parada==null) return null;
+        else return ParadaDTO
+                .builder()
+                .id(parada.getId())
+                .descripción(parada.getDescripción())
+                .longitud(parada.getLongitud())
+                .latitud(parada.getLatitud())
+                .longitud_apunta(parada.getLongitud_apunta())
+                .latitud_apunta(parada.getLatitud_apunta())
+                .puntos_cercanos(parada.getPuntos_cercanos())
+                .activo(parada.isActivo())
+                .hecho_por(parada.getHecho_por()==null ? null : parada.getHecho_por().getId())
+                .fecha_registro(parada.getFecha_registro())
+                .actualizado_por(parada.getActualizado_por() ==null ? null : parada.getActualizado_por().getId())
+                .fecha_actualizacion(parada.getFecha_actualizacion())
                 .build();
     }
     

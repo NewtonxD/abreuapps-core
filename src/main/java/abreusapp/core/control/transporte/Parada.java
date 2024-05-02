@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
@@ -49,24 +50,24 @@ public class Parada {
     private String descripción;
     
     @Column(name = "lon")
-    private float longitud;
+    private Double longitud;
     
     @Column(name = "lat")
-    private float latitud;
+    private Double latitud;
     
     @Column(name = "lon_ptr")
-    private float longitud_apunta;
+    private Double longitud_apunta;
     
     @Column(name = "lat_ptr")
-    private float latitud_apunta;
+    private Double latitud_apunta;
     
     @Column(name = "dsc_ptr")
-    private String descripción_apunta;
+    private String puntos_cercanos;
     
     @Column(name = "act")
     private boolean activo;
     
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn
     private Usuario hecho_por;
     
@@ -74,7 +75,7 @@ public class Parada {
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date fecha_registro;
     
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn
     private Usuario actualizado_por;
     

@@ -38,6 +38,8 @@ public class SSECntr {
     private final Map<String,SseEmitter> usrMgrEmitters = new ConcurrentHashMap<>();
     
     private final Map<String,SseEmitter> vhlEmitters = new ConcurrentHashMap<>();
+        
+    private final Map<String,SseEmitter> pdaEmitters = new ConcurrentHashMap<>();
     
     private final Map<String,Runnable> actions=new HashMap<>();
     
@@ -63,6 +65,11 @@ public class SSECntr {
         
         this.actions.put("vhl", ()->{
                 this.SSEServicio.emitir(vhlEmitters, Datos);
+            }
+        );
+        
+        this.actions.put("pda", ()->{
+                this.SSEServicio.emitir(pdaEmitters, Datos);
             }
         );
     }
@@ -157,6 +164,25 @@ public class SSECntr {
     }
 //----------------------------------------------------------------------------//
     
+    @GetMapping(value="/pda", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter consultarParada(
+        @RequestParam String clientId
+    ) {
+        return SSEServicio.agregar(clientId,pdaEmitters);
+    }
+//----------------------------------------------------------------------------//
+    
+    @GetMapping(value = "/pda/close")
+    @ResponseBody
+    public void cerrarSSEVParada(
+        @RequestParam String clientId
+    ) {
+        if (pdaEmitters.get(clientId)!=null){
+            pdaEmitters.get(clientId).complete();
+            pdaEmitters.remove(clientId);
+        }
+    }
+//----------------------------------------------------------------------------//   
     
     
 }
