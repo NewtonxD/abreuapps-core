@@ -48,7 +48,7 @@ public class MapperServ {
                 .latitud(parada.getLatitud())
                 .longitud_apunta(parada.getLongitud_apunta())
                 .latitud_apunta(parada.getLatitud_apunta())
-                .descripción_apunta(parada.getDescripción_apunta())
+                .puntos_cercanos(parada.getPuntos_cercanos())
                 .activo(parada.isActivo())
                 .hecho_por(parada.getHecho_por()==null ? null : parada.getHecho_por().getId())
                 .fecha_registro(parada.getFecha_registro())

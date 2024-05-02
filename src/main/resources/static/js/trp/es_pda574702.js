@@ -1,4 +1,3 @@
-
 var eventSource_dtgnr = null;
 
 var clientId="";
@@ -14,7 +13,7 @@ function generateClientId() {
 function createEventSource() {
   if (eventSource_dtgnr === null || eventSource_dtgnr === undefined) {
     clientId=generateClientId();
-    eventSource_dtgnr = new EventSource('/see/vhl?clientId='+clientId,{withCredentials:true});
+    eventSource_dtgnr = new EventSource('/see/pda?clientId='+clientId,{withCredentials:true});
     eventSource_dtgnr.onmessage = function(event) {
   
         var data = JSON.parse(event.data); 
@@ -47,16 +46,15 @@ function closeEventSource(callServer=true){
     if(eventSource_dtgnr!==null && eventSource_dtgnr!==undefined){
         eventSource_dtgnr.close();
         eventSource_dtgnr=undefined;
-        if(callServer) $.get('/see/vhl/close?clientId='+clientId);
+        if(callServer) $.get('/see/pda/close?clientId='+clientId);
     }
 }
 
 function createTableRow(d,update=false) {
-    var row = !update ? '<tr data-id="' + d.placa + '">' : '';
-    row += '<th>'+ d.placa + '</th>';
-    row += '<td>' + d.marca.dato + ' ' + d.modelo.dato + '</td>';
-    row += '<td>' + d.color.dato + '</td>'; 
-    row += '<td>' + d.estado.dato + '</td>'; 
+    var row = !update ? '<tr data-id="' + d.id + '">' : '';
+    row += '<th>'+ d.id + '</th>';
+    row += '<td>' + d.descripción+'</td>';
+    row += '<td>' + d.puntos_cercanos + '</td>'; 
     row += '<td>' + (d.activo?'Activo':'Inactivo') + '</td>';
     row +=  !update ? '</tr>' : '';
     return row;
@@ -67,3 +65,4 @@ $(function(){
         createEventSource();
     }
 });
+

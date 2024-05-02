@@ -62,7 +62,7 @@ public class Parada {
     private Double latitud_apunta;
     
     @Column(name = "dsc_ptr")
-    private String descripción_apunta;
+    private String puntos_cercanos;
     
     @Column(name = "act")
     private boolean activo;

@@ -198,6 +198,41 @@ public class TransporteCntr {
 
         return plantillaRespuesta;
     }
+//----------------------------------------------------------------------------//
+    
+    @PostMapping(value="/pda/getLoc", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity ObtenerLocParada(
+        @RequestParam("idParada") String idParada
+    ) {  
+        boolean valido;
+        Usuario u = ModeloServicio.getUsuarioLogueado();
+        
+        //VERIFICAMOS PERMISOS PARA ESTA ACCION
+        String sinPermisoPlantilla = 
+            ModeloServicio.verificarPermisos(
+            "trp_paradas_registro", null, u 
+            );
+        
+        valido = sinPermisoPlantilla.equals("");
+        
+        Map<String, Object> respuesta= new HashMap<>();
+        
+        if(valido){
+            Optional<Parada> LocParada = ParadaServicio.obtener(Integer.parseInt(idParada) ); 
+        
+            //SI TODAS LAS ANTERIORES SON VALIDAS PROCEDEMOS
+            if(LocParada.isPresent()){
+                respuesta.put("lon",LocParada.get().getLongitud());
+                respuesta.put("lat", LocParada.get().getLatitud());
+            }
+        }
+        
+        return new ResponseEntity<>(
+                respuesta.isEmpty() ? null: respuesta,
+                new HttpHeaders(),
+                HttpStatus.OK);  
+    }
     
     
 //----------------------------------------------------------------------------//
