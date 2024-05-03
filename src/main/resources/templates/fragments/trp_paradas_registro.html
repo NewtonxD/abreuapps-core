@@ -42,8 +42,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                         <input type="text" style="display: none; width: 1px;height: 1px;" th:if="${parada.id!=null}" name="id" th:value="${parada.id}" placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">
 
                                         <div class="mb-3 col-12">
-                                            <label for="descripcion" class="form-label text-muted">Descripción:</label>
-                                            <textarea class="form-control" th:field="*{descripción}" rows="3" required maxlength="255"></textarea>
+                                            <label for="descripcion" class="form-label text-muted">Descripción o nombre identificativo:</label>
+                                            <textarea class="form-control" th:field="*{descripción}" rows="2" required maxlength="255"></textarea>
                                         </div>
                                         
                                         <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" th:value="${#dates.format(parada.fecha_actualizacion, 'yyyy-MM-dd HH:mm:ss')}">
@@ -51,8 +51,48 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                         <div class="col-12  d-flex justify-content-center text-start ">
                                             <h5>Ubicación:</h5>
                                         </div>
-                                        <div class="col-12 d-flex justify-content-center">
+                                        <div class="mb-3 col-12 d-flex justify-content-center">
                                             <div id="map" class="map-regular"></div>
+                                        </div>
+                                            
+                                        <div class="mb-3 col-12 text-center">
+                                            <label for="" class="form-label text-muted">Dirección: (A que dirección te lleva esta parada? en qué sentido de la calle está?).</label>
+                                            <!--
+                                            izquierda &#129144;
+                                            izq+arriba &#129148;
+                                            arriba &#129145;
+                                            der+arriba &#129149;
+                                            derecha &#129146; 
+                                            der+abajo &#129150;
+                                            abajo &#129147;
+                                            izq+abajo &#129151;
+                                            -->
+                                            <br> 
+                                                
+                                                <input type="radio" class="btn-check" name="options-base" id="option5" autocomplete="off">
+                                                <label class="btn" for="option5">&#129144;</label>
+
+                                                <input type="radio" class="btn-check" name="options-base" id="option6" autocomplete="off">
+                                                <label class="btn" for="option6">&#129148;</label>
+
+                                                <input type="radio" class="btn-check" name="options-base" id="option7" autocomplete="off">
+                                                <label class="btn" for="option7">&#129145;</label>
+                                                
+                                                <input type="radio" class="btn-check" name="options-base" id="option8" autocomplete="off">
+                                                <label class="btn" for="option8">&#129149;</label>
+                                                
+                                                <input type="radio" class="btn-check" name="options-base" id="option9" autocomplete="off">
+                                                <label class="btn" for="option9">&#129146;</label>
+                                                
+                                                <input type="radio" class="btn-check" name="options-base" id="option10" autocomplete="off">
+                                                <label class="btn" for="option10">&#129150;</label>
+                                                
+                                                <input type="radio" class="btn-check" name="options-base" id="option11" autocomplete="off">
+                                                <label class="btn" for="option11">&#129147;</label>
+                                                
+                                                <input type="radio" class="btn-check" name="options-base" id="option12" autocomplete="off">
+                                                <label class="btn" for="option12">&#129151;</label>
+                                                
                                         </div>
                                         
                                         <div class="col-6 d-flex justify-content-start">
@@ -79,6 +119,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                         </div>
                     </div>
                 </div>
+                <script th:src="@{/content/js/trp/svd_pda574702.js}"></script>
+                <script th:src="@{/content/js/lib/leaflet.js}"></script>
+                <script th:src="@{/content/js/trp/pda544702loc.js}"></script>
             </th:block>
             <th:block th:unless="${trp_paradas_registro}">
                 <div class="container-fluid px-4">
