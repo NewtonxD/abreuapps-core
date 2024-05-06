@@ -21,6 +21,10 @@ import abreusapp.core.control.utils.MapperServ;
 import abreusapp.core.control.utils.ModelServ;
 import abreusapp.core.control.utils.TransportTokenServ;
 import jakarta.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
@@ -29,6 +33,7 @@ import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -36,6 +41,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -75,6 +82,8 @@ public class TransporteCntr {
     
     private static final String PWD_HASH="$2a$10$FD.HVab6z8H3Tba.hw.SvukdeJDfZ5aIIzCN87AL7T2SSAJqoi8Bq";
     
+    @Value("${abreuapps.core.map.tiles.directory}")
+    private String TILE_DIRECTORY;    
     
     
 //----------------------------------------------------------------------------//
@@ -680,7 +689,24 @@ public class TransporteCntr {
         
         return respuesta;  
     } 
+    
+//----------------------------------------------------------------------------//
+//------------------ENDPOINTS TILES MAPA--------------------------------------//
 //----------------------------------------------------------------------------//
     
+    @GetMapping(value = "/API/tiles/{zoom}/{x}/{y}", produces = MediaType.IMAGE_PNG_VALUE)
+    public @ResponseBody byte[] getMapTile(@PathVariable int zoom, @PathVariable int x, @PathVariable int y) throws IOException {
+        String tilePath = String.format("%s/%d/%d/%d.png", TILE_DIRECTORY, zoom, x, y);
+        File file = new File(tilePath);
+        if (!file.exists()) {
+            file = new File(TILE_DIRECTORY+"/default_tile.png"); // Provide default tile image
+        }
+        
+        try (InputStream inputStream = new FileInputStream(file)) {
+            return inputStream.readAllBytes();
+        }
+    }
+
+//----------------------------------------------------------------------------//    
     
 }
