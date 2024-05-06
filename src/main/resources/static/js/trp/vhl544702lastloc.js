@@ -6,7 +6,7 @@
 $(function(){
     
     var data=window.data_lastloc;
-    if(data.lat!==undefined && data.lat!==null){
+    if(data!==undefined && data!==null){
         
         delete window.data_lastloc;
         
@@ -26,6 +26,8 @@ $(function(){
           attribution:
             '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         }).addTo(map);
+        
+        L.control.scale({imperial: false,}).addTo(map);
         
         var marker = L.marker([lat, lng]).addTo(map);
         
