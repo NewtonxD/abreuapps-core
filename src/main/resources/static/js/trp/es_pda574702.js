@@ -54,7 +54,6 @@ function createTableRow(d,update=false) {
     var row = !update ? '<tr data-id="' + d.id + '">' : '';
     row += '<th>'+ d.id + '</th>';
     row += '<td>' + d.descripción+'</td>';
-    row += '<td>' + d.puntos_cercanos + '</td>'; 
     row += '<td>' + (d.activo?'Activo':'Inactivo') + '</td>';
     row +=  !update ? '</tr>' : '';
     return row;

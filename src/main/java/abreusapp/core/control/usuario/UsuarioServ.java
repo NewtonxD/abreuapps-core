@@ -119,6 +119,7 @@ public class UsuarioServ {
     }
     
     public Optional<Usuario> obtenerPorId(Integer id){
+        if(id==null || id==0) Optional.empty();
         return repo.findById(id);
     }
     

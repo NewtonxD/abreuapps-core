@@ -55,15 +55,6 @@ public class Parada {
     @Column(name = "lat")
     private Double latitud;
     
-    @Column(name = "lon_ptr")
-    private Double longitud_apunta;
-    
-    @Column(name = "lat_ptr")
-    private Double latitud_apunta;
-    
-    @Column(name = "dsc_ptr")
-    private String puntos_cercanos;
-    
     @Column(name = "act")
     private boolean activo;
     

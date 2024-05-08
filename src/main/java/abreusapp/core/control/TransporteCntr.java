@@ -11,6 +11,7 @@ import abreusapp.core.control.general.GrupoDatoServ;
 import abreusapp.core.control.transporte.LocVehiculo;
 import abreusapp.core.control.transporte.LocVehiculoServ;
 import abreusapp.core.control.transporte.Parada;
+import abreusapp.core.control.transporte.ParadaDTO;
 import abreusapp.core.control.transporte.ParadaServ;
 import abreusapp.core.control.transporte.Vehiculo;
 import abreusapp.core.control.transporte.VehiculoServ;
@@ -26,6 +27,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -186,7 +188,7 @@ public class TransporteCntr {
         
         Usuario usuarioLogueado = ModeloServicio.getUsuarioLogueado();
 
-        Optional<Parada> parada = ParadaServicio.obtener(Integer.parseInt(idParada));
+        Optional<Parada> parada = ParadaServicio.obtener(Integer.valueOf(idParada));
 
         if (!parada.isPresent()) {
 
@@ -228,7 +230,19 @@ public class TransporteCntr {
         Map<String, Object> respuesta= new HashMap<>();
         
         if(valido){
-            Optional<Parada> LocParada = ParadaServicio.obtener(Integer.parseInt(idParada) ); 
+            Optional<Parada> LocParada = ParadaServicio.obtener(Integer.valueOf(idParada) ); 
+            
+            List<Parada> otrasParadas = ParadaServicio.consultarTodo( 
+                Integer.valueOf(idParada) , 
+                true
+            );
+            
+            List<ParadaDTO> otrasParadasDTO = new ArrayList<>();
+            for (Parada parada : otrasParadas) {
+                otrasParadasDTO.add(MapperServ.paradaToDTO(parada));
+            }
+            
+            respuesta.put("paradas",otrasParadasDTO);
         
             //SI TODAS LAS ANTERIORES SON VALIDAS PROCEDEMOS
             if(LocParada.isPresent()){

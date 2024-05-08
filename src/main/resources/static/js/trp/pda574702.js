@@ -3,6 +3,20 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Other/javascript.js to edit this template
  */
 
+function pdaGetLoc(IdParada){        
+    $.ajax({
+       url:'/pda/getLoc',
+       type:"POST",
+       async:false,
+       data:{idParada:IdParada},
+       success: function(res){
+           window.data_loc=res;
+       },
+       error: function(xhr, status, error){
+
+       }
+   });
+}
 
 $(function (){
     
@@ -18,18 +32,7 @@ $(function (){
         
         closeEventSource();
         
-         $.ajax({
-            url:'/pda/getLoc',
-            type:"POST",
-            async:false,
-            data:{idParada:IdParada},
-            success: function(res){
-                window.data_loc=res;
-            },
-            error: function(xhr, status, error){
-
-            }
-        });
+        pdaGetLoc(IdParada);
         
         $.ajax({
             url:'/pda/update',
