@@ -237,10 +237,7 @@ public class TransporteCntr {
                 true
             );
             
-            List<ParadaDTO> otrasParadasDTO = new ArrayList<>();
-            for (Parada parada : otrasParadas) {
-                otrasParadasDTO.add(MapperServ.paradaToDTO(parada));
-            }
+            List<ParadaDTO> otrasParadasDTO = MapperServ.listParadaToDTO(otrasParadas);
             
             respuesta.put("paradas",otrasParadasDTO);
         
