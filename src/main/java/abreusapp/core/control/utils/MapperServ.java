@@ -8,6 +8,8 @@ import abreusapp.core.control.transporte.Parada;
 import abreusapp.core.control.transporte.ParadaDTO;
 import abreusapp.core.control.transporte.Vehiculo;
 import abreusapp.core.control.transporte.VehiculoDTO;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -38,6 +40,14 @@ public class MapperServ {
                 .build();
     }
     
+    public static List<VehiculoDTO> listVehiculoToDTO(List<Vehiculo> vehiculos){
+            List<VehiculoDTO> listaDTO = new ArrayList<>();
+            for (Vehiculo vehiculo : vehiculos) {
+                listaDTO.add(vehiculoToDTO(vehiculo));
+            }
+            return listaDTO;
+    }
+    
     public static ParadaDTO paradaToDTO(Parada parada){
         if(parada==null) return null;
         else return ParadaDTO
@@ -52,6 +62,14 @@ public class MapperServ {
                 .actualizado_por(parada.getActualizado_por() ==null ? null : parada.getActualizado_por().getId())
                 .fecha_actualizacion(parada.getFecha_actualizacion())
                 .build();
+    }
+    
+    public static List<ParadaDTO> listParadaToDTO(List<Parada> paradas){
+            List<ParadaDTO> listaDTO = new ArrayList<>();
+            for (Parada parada : paradas) {
+                listaDTO.add(paradaToDTO(parada));
+            }
+            return listaDTO;
     }
     
 }
