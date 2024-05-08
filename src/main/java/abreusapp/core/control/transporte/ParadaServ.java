@@ -23,12 +23,8 @@ public class ParadaServ {
     
     private final ParadaRepo repo;
     
-    public List<Parada> consultar(){
-        return repo.findAll();
-    }
-    
-    public List<Parada> consultarActivo(){
-        return repo.findByActivo(true);
+    public List<Parada> consultarTodo(Integer excluyeParada,Boolean activo){
+        return repo.findAllCustom(excluyeParada, activo);
     }
     
     public Parada guardar(Parada gd, Usuario usuario,boolean existe){
@@ -46,7 +42,10 @@ public class ParadaServ {
         return repo.save(gd);
     }
     
-    public Optional<Parada> obtener(int id){
+    public Optional<Parada> obtener(Integer id){
+        if(id==null){
+            return Optional.empty();
+        }
         return repo.findById(id);
     }
 }

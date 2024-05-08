@@ -41,6 +41,7 @@ public class PersonaServ {
     }
     
     public Optional<Persona> obtenerPorId(Integer id){
+        if(id==null || id==0) Optional.empty();
         return repo.findById(id);
     }
     

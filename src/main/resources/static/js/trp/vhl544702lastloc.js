@@ -11,7 +11,7 @@ $(function(){
         delete window.data_lastloc;
         
         let config = {
-            minZoom: 13,
+            minZoom: 7,
             maxZoom: 18
         };
         const zoom = 16;
@@ -22,7 +22,10 @@ $(function(){
         
         const map = L.map("map", config).setView([lat, lng], zoom);
         
-        L.tileLayer("/API/tiles/{z}/{x}/{y}").addTo(map);
+        L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            attribution:
+              '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        }).addTo(map);
         
         L.control.scale({imperial: false,}).addTo(map);
         

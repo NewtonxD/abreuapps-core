@@ -163,7 +163,7 @@ public class ModelServ {
         
         this.actions.put("trp_paradas_consulta", ()->{
                 Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "trp_paradas_consulta");
-                dataModel.addAttribute("paradas", ParadaServicio.consultar());
+                dataModel.addAttribute("paradas", ParadaServicio.consultarTodo(null,null));
                 dataModel.addAllAttributes(acc);                
             }
         );

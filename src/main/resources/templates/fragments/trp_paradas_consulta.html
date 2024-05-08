@@ -30,7 +30,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 <button th:if="${trp_paradas_registro}"
                                     type="button"
                                     class="btn btn-success"
-                                    onclick="event.preventDefault();closeEventSource();cargar_contenido('trp_paradas_registro');"
+                                    onclick="
+                                        event.preventDefault();
+                                        closeEventSource();
+                                        pdaGetLoc('0');
+                                        cargar_contenido('trp_paradas_registro');"
                                     >
                                     <b><i class="fa fa-plus"></i></b>
                                 </button>
@@ -65,7 +69,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                             <tr>
                                                 <th scope="col">ID</th>
                                                 <th scope="col">Descripción</th>
-                                                <th scope="col">Puntos Cercanos</th>
                                                 <th scope="col">Activo</th>
                                             </tr>
                                         </thead>
@@ -73,7 +76,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                             <tr th:each="d: ${paradas}" th:attr="data-id=${d.id}">
                                                 <th scope="row" th:text="${d.id}"></th>
                                                 <td th:text="${d.descripción}"></td>
-                                                <td th:text="${d.puntos_cercanos}"></td>
                                                 <td th:text="${d.activo?'Activo':'Inactivo'}"></td>
                                             </tr>
                                         </tbody>

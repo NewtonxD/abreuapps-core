@@ -21,9 +21,6 @@ public class ParadaDTO {
     private String descripción;
     private Double longitud;
     private Double latitud;
-    private Double longitud_apunta;
-    private Double latitud_apunta;
-    private String puntos_cercanos;
     private boolean activo;
     private Integer hecho_por;
     private Date fecha_registro;

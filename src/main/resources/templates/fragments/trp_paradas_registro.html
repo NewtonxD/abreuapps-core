@@ -42,22 +42,23 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                         <input type="text" style="display: none; width: 1px;height: 1px;" th:if="${parada.id!=null}" name="id" th:value="${parada.id}" placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">
 
                                         <div class="mb-3 col-12">
-                                            <label for="descripcion" class="form-label text-muted">Descripción o nombre identificativo:</label>
+                                            <label for="descripcion" class="form-label text-muted">Descripción o texto identificativo:</label>
                                             <textarea class="form-control" th:field="*{descripción}" rows="2" required maxlength="255"></textarea>
                                         </div>
                                         
                                         <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" th:value="${#dates.format(parada.fecha_actualizacion, 'yyyy-MM-dd HH:mm:ss')}">
                                         
-                                        <div class="col-12  d-flex justify-content-center text-start ">
+                                        <div class="col-12 text-start ">
                                             <h5>Ubicación:</h5>
+                                            <label for="" th:if="${parada.id==null}" class="form-label text-muted">Trate de colocar la parada del lado de la acera que corresponde. Nunca encima de la calle.</label>
                                         </div>
                                         <div class="mb-3 col-12 d-flex justify-content-center">
                                             <div id="map" class="map-regular"></div>
                                         </div>
-                                            
+                                        <!--    
                                         <div class="mb-3 col-12 text-center">
                                             <label for="" class="form-label text-muted">Dirección: (A que dirección te lleva esta parada? en qué sentido de la calle está?).</label>
-                                            <!--
+                                            
                                             izquierda &#129144;
                                             izq+arriba &#129148;
                                             arriba &#129145;
@@ -66,7 +67,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                             der+abajo &#129150;
                                             abajo &#129147;
                                             izq+abajo &#129151;
-                                            -->
                                             <br> 
                                                 
                                                 <input type="radio" class="btn-check" name="options-base" id="option5" autocomplete="off">
@@ -93,6 +93,17 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                 <input type="radio" class="btn-check" name="options-base" id="option12" autocomplete="off">
                                                 <label class="btn" for="option12">&#129151;</label>
                                                 
+                                        </div> 
+                                            -->
+                                            
+                                        <div class="col-6 justify-content-center mb-3">
+                                            <label for="latitud" class="form-label text-muted">Latitud:</label>
+                                            <input type="number" class="form-control" th:field="*{latitud}"  step=".00000000000000001" required />
+                                        </div>
+                                        
+                                        <div class="col-6 justify-content-center mb-3">
+                                            <label for="longitud" class="form-label text-muted">Longitud:</label>
+                                            <input type="number" class="form-control" th:field="*{longitud}" step=".00000000000000001" required />
                                         </div>
                                         
                                         <div class="col-6 d-flex justify-content-start">
