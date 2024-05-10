@@ -10,12 +10,14 @@ import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+import org.springframework.stereotype.Service;
 
 /**
  *
  * @author cabreu
  */
 
+@Service
 public class TransportTokenServ {
     
     private static final String SECRET_KEY="*@3ad_@4%dE*ez";
