@@ -3,13 +3,112 @@
 Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
 Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
 -->
-<html>
-    <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        <div>TODO write content</div>
-    </body>
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>TODO supply a title</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <main th:fragment="content-default" id="content-page">
+        <th:block th:if="${trp_rutas_consulta}">
+            <div class="container-fluid px-4">
+                <div class="row d-flex align-items-center justify-content-center mt-5 mb-5">
+                    <div class="card col-12 col-md-10 col-lg-8"> 
+                        <div class="card-body mt-3 mb-3">
+                            <div class="row">
+                                <div
+                                class="col-8 d-flex align-items-start justify-content-start"
+                                >
+                                <h4>
+                                    Rutas&nbsp;
+                                </h4>
+                            </div>
+                            <div
+                                class="col-4 d-flex align-items-end justify-content-end"
+                                >
+                                <button th:if="${trp_rutas_registro}"
+                                    type="button"
+                                    class="btn btn-success"
+                                    onclick="
+                                        event.preventDefault();
+                                        closeEventSource();
+                                        rtaGetLoc('0');
+                                        cargar_contenido('trp_rutas_registro');"
+                                    >
+                                    <b><i class="fa fa-plus"></i></b>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col mt-2 mb-2">
+                                <th:block th:if="${msg!=null}">
+                                    <div
+                                        th:class="'alert '+${status ? 'alert-success' : 'alert-warning'}+' alert-dismissible fade show'"
+                                        role="alert"
+                                        >
+                                        <b><span th:text="${msg}"></span></b>
+                                        <button
+                                            type="button"
+                                            class="btn-close"
+                                            data-bs-dismiss="alert"
+                                            aria-label="Close"
+                                            ></button>
+                                    </div>
+                                </th:block>
+                            </div>
+                        </div>
+                        <br>
+                            <div class="row">
+                                <div class="table-responsive table-responsive-md">
+                                    <table
+                                        class="table table-hover table-borderless mt-2"
+                                        id="table"
+                                        >
+                                        <thead class="bg-secondary text-white">
+                                            <tr>
+                                                <th scope="col">Ruta</th>
+                                                <th scope="col">Sale desde: </th>
+                                                <th scope="col">Se dirige a: </th>
+                                                <th scope="col">Activo</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr th:each="d: ${rutas}" th:attr="data-id=${d.ruta}">
+                                                <th scope="row" th:text="${d.ruta}"></th>
+                                                <td th:text="${d.localizacion_inicial}"></td>
+                                                <td th:text="${d.localizacion_final}"></td>
+                                                <td th:text="${d.activo?'Activo':'Inactivo'}"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script th:src="@{/content/js/tb_init.js}"></script>
+            <script th:if="${trp_rutas_registro}"  th:src="@{/content/js/trp/rta5984502.js}"></script>
+            <script th:src="@{/content/js/trp/es_rta5984502.js}"></script>
+    </th:block>
+    <th:block th:unless="${trp_rutas_consulta}">
+        <div class="container-fluid px-4">
+            <div class="row d-flex align-items-center justify-content-center mt-5 mb-5">
+                <div class="col-lg-6">
+                    <div class="text-center mt-4">
+                        <h1 class="display-1">403</h1>
+                        <p class="lead">Acceso No Autorizado!</p>
+                        <p>El acceso a este recurso ha sido denegado.</p>
+                        <a th:href="@{/auth/login}">
+                            <i class="fa fa-arrow-left me-1"></i>
+                            Volver a Inicio
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </th:block>
+    </main>
+</body>
 </html>
