@@ -130,26 +130,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                         </div>
                     </div>
                 </div>
-                <script th:src="@{/content/js/trp/svd_pda574702.js}"></script>
-                <script th:src="@{/content/js/lib/leaflet.js}"></script>
-                <script th:src="@{/content/js/trp/pda544702loc.js}"></script>
             </th:block>
-            <th:block th:unless="${trp_rutas_registro}">
-                <div class="container-fluid px-4">
-                    <div class="row d-flex align-items-center justify-content-center mt-5 mb-5">
-                        <div class="col-lg-6">
-                            <div class="text-center mt-4">
-                                <h1 class="display-1">403</h1>
-                                <p class="lead">Acceso No Autorizado!</p>
-                                <p>El acceso a este recurso ha sido denegado.</p>
-                                <a th:href="@{/auth/login}">
-                                    <i class="fa fa-arrow-left me-1"></i>
-                                    Volver a Inicio
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <th:block th:unless="${trp_rutas_registro}" th:insert="~{error/403 :: error403}">
             </th:block>
         </main>
     </body>

@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class RutaServ {
     
-    private RutaRepo repo;
+    private final RutaRepo repo;
     
     public List<Ruta> consultar(){
         return repo.findAll();

@@ -41,6 +41,8 @@ public class SSECntr {
         
     private final Map<String,SseEmitter> pdaEmitters = new ConcurrentHashMap<>();
     
+    private final Map<String,SseEmitter> rtaEmitters = new ConcurrentHashMap<>();
+    
     private final Map<String,Runnable> actions=new HashMap<>();
     
     private HashMap<String, Object> Datos;
@@ -70,6 +72,11 @@ public class SSECntr {
         
         this.actions.put("pda", ()->{
                 this.SSEServicio.emitir(pdaEmitters, Datos);
+            }
+        );
+        
+        this.actions.put("rta", ()->{
+                this.SSEServicio.emitir(rtaEmitters, Datos);
             }
         );
     }
@@ -174,7 +181,7 @@ public class SSECntr {
     
     @GetMapping(value = "/pda/close")
     @ResponseBody
-    public void cerrarSSEVParada(
+    public void cerrarSSEParada(
         @RequestParam String clientId
     ) {
         if (pdaEmitters.get(clientId)!=null){
@@ -182,7 +189,29 @@ public class SSECntr {
             pdaEmitters.remove(clientId);
         }
     }
-//----------------------------------------------------------------------------//   
+    
+    
+//----------------------------------------------------------------------------//
+    
+    @GetMapping(value="/rta", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter consultarRuta(
+        @RequestParam String clientId
+    ) {
+        return SSEServicio.agregar(clientId,rtaEmitters);
+    }
+//----------------------------------------------------------------------------//
+    
+    @GetMapping(value = "/rta/close")
+    @ResponseBody
+    public void cerrarSSERuta(
+        @RequestParam String clientId
+    ) {
+        if (rtaEmitters.get(clientId)!=null){
+            rtaEmitters.get(clientId).complete();
+            rtaEmitters.remove(clientId);
+        }
+    }
+//----------------------------------------------------------------------------// 
     
     
 }

@@ -13,6 +13,8 @@ import abreusapp.core.control.transporte.LocVehiculoServ;
 import abreusapp.core.control.transporte.Parada;
 import abreusapp.core.control.transporte.ParadaDTO;
 import abreusapp.core.control.transporte.ParadaServ;
+import abreusapp.core.control.transporte.Ruta;
+import abreusapp.core.control.transporte.RutaServ;
 import abreusapp.core.control.transporte.Vehiculo;
 import abreusapp.core.control.transporte.VehiculoServ;
 import abreusapp.core.control.usuario.AccesoServ;
@@ -80,12 +82,181 @@ public class TransporteCntr {
     
     private final TransportTokenServ TrpTokenServ;
     
+    private final RutaServ RutaServicio;
+    
     private final PasswordEncoder passwordEncoder;
     
     private static final String PWD_HASH="$2a$10$FD.HVab6z8H3Tba.hw.SvukdeJDfZ5aIIzCN87AL7T2SSAJqoi8Bq";
     
     @Value("${abreuapps.core.map.tiles.directory}")
-    private String TILE_DIRECTORY;    
+    private String TILE_DIRECTORY; 
+    
+    
+//----------------------------------------------------------------------------//
+//------------------ENDPOINTS RUTAS-------------------------------------------//
+//----------------------------------------------------------------------------//   
+    @PostMapping("/rta/save")
+    public String GuardarRuta(
+        Model model,
+        Ruta rutaCliente,
+        @RequestParam(name = "fecha_actualizacionn", 
+                        required = false) String fechaActualizacionCliente
+    ) throws ParseException {
+
+        boolean valido;
+        
+        String plantillaRespuesta="fragments/trp_rutas_consulta :: content-default";
+        
+        Usuario u = ModeloServicio.getUsuarioLogueado();
+        
+        //INICIO DE VALIDACIONES
+        String sinPermisoPlantilla = ModeloServicio.verificarPermisos(
+            "trp_rutas_consulta", model, u );
+        
+        //USUARIO NO TIENE PERMISOS PARA EJECUTAR ESTA ACCION
+        valido = sinPermisoPlantilla.equals("");
+        
+        
+        if(valido){
+            
+            Optional<Ruta> rutaDB = RutaServicio.obtener(rutaCliente.getRuta());
+
+            if (rutaDB.isPresent()) {
+
+                if (! FechaUtils.FechaFormato2.format(
+                        rutaDB.get().getFecha_actualizacion()
+                        ).equals(fechaActualizacionCliente)
+                ) {
+                    
+                    model.addAttribute(
+                        "msg",
+                        ! ( fechaActualizacionCliente == null || 
+                             fechaActualizacionCliente.equals("") ) ? 
+                        "Al parecer alguien ha realizado cambios en la información primero. Por favor, inténtalo otra vez. COD: 00656" :
+                        "No podemos realizar los cambios porque ya esta Ruta se encuentra registrado."
+                    );
+                    valido = false;
+                    
+                }
+
+            }
+            
+            //SI TODAS LAS ANTERIORES SON VALIDAS PROCEDEMOS
+            if(valido){
+                
+            
+                if ( ! ( fechaActualizacionCliente == null || 
+                        fechaActualizacionCliente.equals("") )
+                ) {
+                    rutaCliente.setFecha_actualizacion(
+                        FechaUtils.Formato2ToDate(fechaActualizacionCliente)
+                    );
+                }
+                
+                if (rutaDB.isPresent()) {
+                    rutaCliente.setFecha_registro(rutaDB.get().getFecha_registro());
+                    rutaCliente.setHecho_por(rutaDB.get().getHecho_por());
+                }
+
+                Ruta d = RutaServicio.guardar(rutaCliente, u, rutaDB.isPresent());
+                model.addAttribute("msg", "Registro guardado exitosamente!");
+
+                HashMap<String, Object> map = new HashMap<>();
+                
+                // LOS OBJETOS CON LLAVES FK DENTRO Y LAZY LOADING TIENEN QUE PASAR
+                // A SER DTO PARA PODER SER DEVUELTOS SIN ERROR
+                map.put(rutaDB.isPresent() ? "U" : "I", MapperServ.rutaToDTO(d));
+                
+                map.put("date", FechaUtils.FechaFormato1.format(new Date()));
+                SSEControlador.publicar("rta", map);
+
+                ModeloServicio.load("trp_rutas_consulta", model, u.getId());
+            }
+            
+            model.addAttribute("status", valido);
+        }
+
+        return sinPermisoPlantilla.equals("") ? plantillaRespuesta : sinPermisoPlantilla;
+
+    }    
+//----------------------------------------------------------------------------//
+    @PostMapping("/rta/update")
+    public String ActualizarRuta(
+        HttpServletRequest request,
+        Model model,
+        @RequestParam("idParada") String idParada
+    ) {
+        
+        boolean valido=true;
+        String plantillaRespuesta="fragments/trp_paradas_registro :: content-default";
+        
+        Usuario usuarioLogueado = ModeloServicio.getUsuarioLogueado();
+
+        Optional<Parada> parada = ParadaServicio.obtener(Integer.valueOf(idParada));
+
+        if (!parada.isPresent()) {
+
+            log.error("Error COD: 00637 al editar parada. No encontrado ({})",idParada);
+            plantillaRespuesta = "redirect:/error";
+            valido=false;
+
+        }
+        
+        //SI TODAS LAS ANTERIORES SON VALIDAS PROCEDEMOS
+        if(valido){
+            model.addAttribute("parada", parada.get());
+            model.addAllAttributes(
+                    AccesoServicio.consultarAccesosPantallaUsuario(
+                            usuarioLogueado.getId(), "trp_paradas_registro" )
+            );
+        }
+
+        return plantillaRespuesta;
+    }
+//----------------------------------------------------------------------------//
+    
+    @PostMapping(value="/rta/getLoc", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity ObtenerLocRuta(
+        @RequestParam("idParada") String idParada
+    ) {  
+        boolean valido;
+        Usuario u = ModeloServicio.getUsuarioLogueado();
+        
+        //VERIFICAMOS PERMISOS PARA ESTA ACCION
+        String sinPermisoPlantilla = 
+            ModeloServicio.verificarPermisos(
+            "trp_paradas_registro", null, u 
+            );
+        
+        valido = sinPermisoPlantilla.equals("");
+        
+        Map<String, Object> respuesta= new HashMap<>();
+        
+        if(valido){
+            Optional<Parada> LocParada = ParadaServicio.obtener(Integer.valueOf(idParada) ); 
+            
+            List<Parada> otrasParadas = ParadaServicio.consultarTodo( 
+                Integer.valueOf(idParada) , 
+                true
+            );
+            
+            List<ParadaDTO> otrasParadasDTO = MapperServ.listParadaToDTO(otrasParadas);
+            
+            respuesta.put("paradas",otrasParadasDTO);
+        
+            //SI TODAS LAS ANTERIORES SON VALIDAS PROCEDEMOS
+            if(LocParada.isPresent()){
+                respuesta.put("lon",LocParada.get().getLongitud());
+                respuesta.put("lat", LocParada.get().getLatitud());
+            }
+        }
+        
+        return new ResponseEntity<>(
+                respuesta.isEmpty() ? null: respuesta,
+                new HttpHeaders(),
+                HttpStatus.OK);  
+    }
     
     
 //----------------------------------------------------------------------------//

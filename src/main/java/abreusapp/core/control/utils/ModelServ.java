@@ -11,6 +11,8 @@ import abreusapp.core.control.general.GrupoDatoServ;
 import abreusapp.core.control.general.Persona;
 import abreusapp.core.control.transporte.Parada;
 import abreusapp.core.control.transporte.ParadaServ;
+import abreusapp.core.control.transporte.Ruta;
+import abreusapp.core.control.transporte.RutaServ;
 import abreusapp.core.control.transporte.Vehiculo;
 import abreusapp.core.control.transporte.VehiculoServ;
 import abreusapp.core.control.usuario.AccesoServ;
@@ -50,7 +52,9 @@ public class ModelServ {
             UsuarioServ UsuarioServicio,
             ConfServ ConfServicio,
             VehiculoServ VehiculoServicio,
-            ParadaServ ParadaServicio){
+            ParadaServ ParadaServicio,
+            RutaServ RutaServicio
+    ){
         
         this.AccesoServicio=AccesoServicio;
         
@@ -172,6 +176,21 @@ public class ModelServ {
                 Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "trp_paradas_registro");
                 Parada p=new Parada();
                 dataModel.addAttribute("parada",p);
+                dataModel.addAllAttributes(acc);                
+            }
+        );
+        
+        this.actions.put("trp_rutas_consulta", ()->{
+                Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "trp_rutas_consulta");
+                dataModel.addAttribute("rutas", RutaServicio.consultar());
+                dataModel.addAllAttributes(acc);                
+            }
+        );
+        
+        this.actions.put("trp_rutas_registro", ()->{
+                Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "trp_rutas_registro");
+                Ruta r=new Ruta();
+                dataModel.addAttribute("rutas",r);
                 dataModel.addAllAttributes(acc);                
             }
         );
