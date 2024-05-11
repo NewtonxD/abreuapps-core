@@ -6,6 +6,8 @@ package abreusapp.core.control.utils;
 
 import abreusapp.core.control.transporte.Parada;
 import abreusapp.core.control.transporte.ParadaDTO;
+import abreusapp.core.control.transporte.Ruta;
+import abreusapp.core.control.transporte.RutaDTO;
 import abreusapp.core.control.transporte.Vehiculo;
 import abreusapp.core.control.transporte.VehiculoDTO;
 import java.util.ArrayList;
@@ -72,4 +74,26 @@ public class MapperServ {
             return listaDTO;
     }
     
+    public static RutaDTO rutaToDTO(Ruta ruta){
+        if(ruta==null) return null;
+        else return RutaDTO
+                .builder()
+                .ruta(ruta.getRuta())
+                .localizacion_inicial(ruta.getLocalizacion_inicial())
+                .localizacion_final(ruta.getLocalizacion_final())
+                .activo(ruta.isActivo())
+                .hecho_por(ruta.getHecho_por()==null ? null : ruta.getHecho_por().getId())
+                .fecha_registro(ruta.getFecha_registro())
+                .actualizado_por(ruta.getActualizado_por() ==null ? null : ruta.getActualizado_por().getId())
+                .fecha_actualizacion(ruta.getFecha_actualizacion())
+                .build();
+    }
+    
+    public static List<RutaDTO> listRutaToDTO(List<Ruta> rutas){
+            List<RutaDTO> listaDTO = new ArrayList<>();
+            for (Ruta ruta : rutas) {
+                listaDTO.add(rutaToDTO(ruta));
+            }
+            return listaDTO;
+    }
 }
