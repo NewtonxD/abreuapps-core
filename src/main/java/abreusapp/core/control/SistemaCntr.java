@@ -51,8 +51,6 @@ public class SistemaCntr {
     private final ModelServ ModeloServicio;
 
     private final DatoServ DatoServicio;
-
-    private final SSECntr SSEControlador;
     
     private final PersonaServ PersonaServicio;
     
@@ -110,13 +108,9 @@ public class SistemaCntr {
                     grpdt.setHecho_por(grupoBD.get().getHecho_por());
                 }
 
-                GrupoDato grupoNuevo = GrupoServicio.guardar(grpdt, usuarioLogueado, grupoBD.isPresent());
+                GrupoServicio.guardar(grpdt, usuarioLogueado, grupoBD.isPresent());
                 model.addAttribute("msg", "Registro guardado exitosamente!");
                 
-                HashMap<String, Object> map = new HashMap<>();
-                map.put(grupoBD.isPresent() ? "U" : "I", grupoNuevo);
-                map.put("date", FechaUtils.FechaFormato1.format(new Date()));
-                SSEControlador.publicar("dtgrp", map);
             } 
             
             model.addAttribute("status", valido);
@@ -226,11 +220,6 @@ public class SistemaCntr {
                     
                     Dato datoNuevo = DatoServicio.guardar(dtgnr, usuarioLogueado, datoBD.isPresent());
                     model.addAttribute("msg", "Registro guardado exitosamente!");
-                    
-                    HashMap<String, Object> map = new HashMap<>();
-                    map.put(datoBD.isPresent() ? "U" : "I", datoNuevo);
-                    map.put("date", FechaUtils.FechaFormato1.format(new Date()));
-                    SSEControlador.publicar("dtgnr", map);
                     
                 } 
                 
@@ -370,13 +359,8 @@ public class SistemaCntr {
                     if(! usuario.getUsername().equals(usuarioLogueado.getUsername()) )
                         UsuarioServicio.cerrarSesion(usuario.getUsername());
 
-                    Usuario d = UsuarioServicio.guardar(usuario, usuarioLogueado, usuarioBD.isPresent());
+                    UsuarioServicio.guardar(usuario, usuarioLogueado, usuarioBD.isPresent());
                     model.addAttribute("msg", "Registro guardado exitosamente!");
-
-                    HashMap<String, Object> map = new HashMap<>();
-                    map.put(usuarioBD.isPresent() ? "U" : "I", d);
-                    map.put("date", FechaUtils.FechaFormato1.format(new Date()));
-                    SSEControlador.publicar("usrmgr", map);
 
                 } 
                 

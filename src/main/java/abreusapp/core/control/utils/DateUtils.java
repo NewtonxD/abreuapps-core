@@ -11,6 +11,9 @@ package abreusapp.core.control.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.converter.Converter;
@@ -54,6 +57,12 @@ public class DateUtils implements Converter<String, Date> {
             log.error(" Error al parsear fecha : "+e.getLocalizedMessage());
             return null;
         }
+    }
+    
+    public String FromLocalDTToFormato1(String timestampString){
+        LocalDateTime timestamp = LocalDateTime.parse(timestampString, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        Date fecha = Date.from(timestamp.atZone(ZoneId.systemDefault()).toInstant());
+        return FechaFormato1.format(fecha);
     }
     
     public String DateToFormato1(Date dt){

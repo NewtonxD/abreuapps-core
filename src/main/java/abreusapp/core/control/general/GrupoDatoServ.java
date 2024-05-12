@@ -25,7 +25,7 @@ public class GrupoDatoServ {
     
     private final GrupoDatoRepo repo;
     
-    public GrupoDato guardar(GrupoDato gd, Usuario usuario,boolean existe){
+    public void guardar(GrupoDato gd, Usuario usuario,boolean existe){
         if(existe){ 
             gd.setActualizado_por(usuario);
         }else{
@@ -33,7 +33,7 @@ public class GrupoDatoServ {
             gd.setFecha_registro(new Date(System.currentTimeMillis()));
         }
         gd.setFecha_actualizacion(new Date(System.currentTimeMillis()));
-        return repo.save(gd);
+        repo.save(gd);
     }
     
     public List<GrupoDato> consultar(){

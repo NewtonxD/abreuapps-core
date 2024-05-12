@@ -12,6 +12,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import abreusapp.core.control.usuario.UsuarioRepo;
+import abreusapp.core.control.utils.NotificationHandler;
+import abreusapp.core.control.utils.NotifierServ;
+import com.zaxxer.hikari.util.DriverDataSource;
+import java.util.Properties;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 
@@ -52,5 +59,31 @@ public class AppConf {
     public SessionRegistry sessionRegistry() { 
         return new SessionRegistryImpl(); 
     }
+    
+    @Bean
+    NotifierServ notifier(DataSourceProperties props) {
+        
+        DriverDataSource ds = new DriverDataSource(
+           props.determineUrl(), 
+           props.determineDriverClassName(),
+           new Properties(), 
+           props.determineUsername(),
+           props.determinePassword());
+        
+        JdbcTemplate tpl = new JdbcTemplate(ds);
+
+        return new NotifierServ(tpl);
+    }
+    
+    @Bean
+    CommandLineRunner startListener(NotifierServ notifier, NotificationHandler handler) {
+        return (args) -> {         
+            Runnable listener = notifier.createNotificationHandler(handler);            
+            Thread t = new Thread(listener, "DBNotification-listener");
+            t.start();
+        };
+    }
+    
+    
     
 }
