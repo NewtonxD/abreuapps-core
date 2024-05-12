@@ -29,7 +29,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -67,8 +66,6 @@ public class TransporteCntr {
     private final AccesoServ AccesoServicio;
 
     private final ModelServ ModeloServicio;
-
-    private final SSECntr SSEControlador;
     
     private final VehiculoServ VehiculoServicio;
     
@@ -160,15 +157,6 @@ public class TransporteCntr {
 
                 Ruta d = RutaServicio.guardar(rutaCliente, u, rutaDB.isPresent());
                 model.addAttribute("msg", "Registro guardado exitosamente!");
-
-                HashMap<String, Object> map = new HashMap<>();
-                
-                // LOS OBJETOS CON LLAVES FK DENTRO Y LAZY LOADING TIENEN QUE PASAR
-                // A SER DTO PARA PODER SER DEVUELTOS SIN ERROR
-                map.put(rutaDB.isPresent() ? "U" : "I", MapperServ.rutaToDTO(d));
-                
-                map.put("date", FechaUtils.FechaFormato1.format(new Date()));
-                SSEControlador.publicar("rta", map);
 
                 ModeloServicio.load("trp_rutas_consulta", model, u.getId());
             }
@@ -327,15 +315,6 @@ public class TransporteCntr {
 
                 Parada d = ParadaServicio.guardar(paradaCliente, u, paradaDB.isPresent());
                 model.addAttribute("msg", "Registro guardado exitosamente!");
-
-                HashMap<String, Object> map = new HashMap<>();
-                
-                // LOS OBJETOS CON LLAVES FK DENTRO Y LAZY LOADING TIENEN QUE PASAR
-                // A SER DTO PARA PODER SER DEVUELTOS SIN ERROR
-                map.put(paradaDB.isPresent() ? "U" : "I", MapperServ.paradaToDTO(d));
-                
-                map.put("date", FechaUtils.FechaFormato1.format(new Date()));
-                SSEControlador.publicar("pda", map);
 
                 ModeloServicio.load("trp_paradas_consulta", model, u.getId());
             }
@@ -497,15 +476,6 @@ public class TransporteCntr {
                 Vehiculo d = VehiculoServicio.guardar(vehiculoCliente, u, vehiculoBD.isPresent());
                 
                 model.addAttribute("msg", "Registro guardado exitosamente!");
-
-                HashMap<String, Object> map = new HashMap<>();
-                
-                // LOS OBJETOS CON LLAVES FK DENTRO Y LAZY LOADING TIENEN QUE PASAR
-                // A SER DTO PARA PODER SER DEVUELTOS SIN ERROR
-                map.put(vehiculoBD.isPresent() ? "U" : "I", MapperServ.vehiculoToDTO(d));
-                
-                map.put("date", FechaUtils.FechaFormato1.format(new Date()));
-                SSEControlador.publicar("vhl", map);
 
                 ModeloServicio.load("trp_vehiculo_consulta", model, u.getId());
             }
@@ -725,14 +695,6 @@ public class TransporteCntr {
             h.setEstado(DatosServicio.obtener("En Camino").get());
             h.setToken(token);
             VehiculoServicio.guardar(h, null, true);
-
-            HashMap<String, Object> map = new HashMap<>();
-
-            // LOS OBJETOS CON LLAVES FK DENTRO Y LAZY LOADING TIENEN QUE PASAR
-            // A SER DTO PARA PODER SER DEVUELTOS SIN ERROR
-            map.put("U", MapperServ.vehiculoToDTO(h));
-            map.put("date", FechaUtils.FechaFormato1.format(new Date()));
-            SSEControlador.publicar("vhl", map);
             
         }
         
@@ -851,18 +813,7 @@ public class TransporteCntr {
             h.setToken("");
             h.setEstado(DatosServicio.obtener(estado).get());
             VehiculoServicio.guardar(h, null, true);
-
-            HashMap<String, Object> map = new HashMap<>();
-            // LOS OBJETOS CON LLAVES FK DENTRO Y LAZY LOADING TIENEN QUE PASAR
-            // A SER DTO PARA PODER SER DEVUELTOS SIN ERROR
-            map.put("U", MapperServ.vehiculoToDTO(h));
             
-            map.put(
-                    "date", 
-                    FechaUtils.FechaFormato1.format(new Date())
-            );
-            
-            SSEControlador.publicar("vhl", map);
         }
         
         Map<String, Object> respuesta= new HashMap<>();

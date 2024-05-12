@@ -343,6 +343,57 @@ ENABLE TRIGGER ALL;
 INSERT INTO public.sys_cnf (cod,dsc,val,upd_at,actualizado_por_id) VALUES
 	 ('appnombre','Nombre del sistema','STP OMSA','2024-03-23 20:00:38.714',1);
 
+-- la semilla la para
+
+CREATE OR REPLACE FUNCTION public.notify_trigger()
+	RETURNS trigger
+	LANGUAGE plpgsql
+AS $function$
+	DECLARE 
+		rec RECORD;
+		dat RECORD;
+		payload TEXT;
+		  column_name TEXT;
+		  column_value TEXT;
+		  payload_items json;
+	BEGIN
+		-- Identify operation
+		case TG_OP
+		when 'UPDATE' then
+			rec :=new;
+			dat:=old;
+		when 'INSERT' then
+			rec:=new;
+		when 'DELETE' then
+			rec:=old;
+		else
+			raise exception 'No es posible notificar esto : "%"',TG_OP;
+		end case;
+	
+		 -- Get required fields
+		  IF TG_ARGV[0] IS NOT NULL THEN
+		    FOREACH column_name IN ARRAY TG_ARGV LOOP
+		      EXECUTE format('SELECT $1.%I::TEXT', column_name)
+		      INTO column_value
+		      USING rec;
+		      payload_items := array_to_json(array_append(payload_items, '"' || replace(column_name, '"', '\"') || '":"' || replace(column_value, '"', '\"') || '"'));
+		    END LOOP;
+		  ELSE
+		    payload_items := row_to_json(rec);
+		  END IF;
+		
+		  -- Build the payload
+		  payload := json_build_object('timestamp',CURRENT_TIMESTAMP,'operation',TG_OP,'schema',TG_TABLE_SCHEMA,'table',TG_TABLE_NAME,'data',payload_items);
+
+		  -- Notify the channel
+		  PERFORM pg_notify('core_db_event',payload);
+		  
+		  RETURN rec;
+	
+	END;
+$function$
+;
+
 
 
 phase 4 enjoy!
