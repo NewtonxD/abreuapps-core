@@ -49,14 +49,17 @@ public class NotificationHandler implements Consumer<PGNotification> {
             JsonNode jsonNode = objectMapper.readTree(RawData);
             
             String DBNombre=jsonNode.get("schema").asText()+"."+jsonNode.get("table").asText();
-            char DBOperacion=jsonNode.get("operation").asText().charAt(0);
-            JsonNode DBData=jsonNode.get("data");
-            String DBDate=FechaUtils.FromLocalDTToFormato1(jsonNode.get("timestamp").asText() );
             
-            HashMap<String, Object> map = new HashMap<>();
-            map.put(String.valueOf(DBOperacion), DBData);
-            map.put("date", DBDate);
-            SSEControlador.publicar(DBNOMBRE_VS_DOMINIO.get(DBNombre), map);
+            if(!DBNOMBRE_VS_DOMINIO.getOrDefault(DBNombre,"").isEmpty()){
+                char DBOperacion=jsonNode.get("operation").asText().charAt(0);
+                JsonNode DBData=jsonNode.get("data");
+                String DBDate=FechaUtils.FromLocalDTToFormato1(jsonNode.get("timestamp").asText() );
+
+                HashMap<String, Object> map = new HashMap<>();
+                map.put(String.valueOf(DBOperacion), DBData);
+                map.put("date", DBDate);
+                SSEControlador.publicar(DBNOMBRE_VS_DOMINIO.get(DBNombre), map);
+            }
             
         }catch(JsonProcessingException e){
             log.error(e.getMessage());
