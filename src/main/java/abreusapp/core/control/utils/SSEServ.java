@@ -23,13 +23,14 @@ public class SSEServ {
     
     @Async
     public void emitir(Map<String,SseEmitter> emitters,HashMap<String, Object> Datos){
-        
-        for (Map.Entry<String,SseEmitter> val : emitters.entrySet()) {
-            try {
-                val.getValue().send(Datos);
-            } catch (IOException e) {
-                val.getValue().completeWithError(e);
-                emitters.remove(val.getKey());
+        if(emitters!=null){
+            for (Map.Entry<String,SseEmitter> val : emitters.entrySet()) {
+                try {
+                    val.getValue().send(Datos);
+                } catch (IOException e) {
+                    val.getValue().completeWithError(e);
+                    emitters.remove(val.getKey());
+                }
             }
         }
     }

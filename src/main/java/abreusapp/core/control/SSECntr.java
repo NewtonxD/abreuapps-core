@@ -31,6 +31,10 @@ public class SSECntr {
     
     private final SSEServ SSEServicio;
     
+    public SSECntr(SSEServ SSEServicio) {
+        this.SSEServicio = SSEServicio;
+    }
+    
     private final Map<String,SseEmitter> dtGnrEmitters = new ConcurrentHashMap<>();
 
     private final Map<String,SseEmitter> dtGrpEmitters = new ConcurrentHashMap<>();
@@ -42,48 +46,30 @@ public class SSECntr {
     private final Map<String,SseEmitter> pdaEmitters = new ConcurrentHashMap<>();
     
     private final Map<String,SseEmitter> rtaEmitters = new ConcurrentHashMap<>();
-    
-    private final Map<String,Runnable> actions=new HashMap<>();
-    
-    private HashMap<String, Object> Datos;
-    
-    public SSECntr(SSEServ SSEServicio){
-        this.SSEServicio = SSEServicio; 
-        
-        this.actions.put("dtgnr", ()->{
-                this.SSEServicio.emitir(dtGnrEmitters, Datos);
-            }
-        );
-        
-        this.actions.put("dtgrp", ()->{
-                this.SSEServicio.emitir(dtGrpEmitters, Datos);
-            }
-        );
-        
-        this.actions.put("usrmgr", ()->{
-                this.SSEServicio.emitir(usrMgrEmitters, Datos);
-            }
-        );
-        
-        this.actions.put("vhl", ()->{
-                this.SSEServicio.emitir(vhlEmitters, Datos);
-            }
-        );
-        
-        this.actions.put("pda", ()->{
-                this.SSEServicio.emitir(pdaEmitters, Datos);
-            }
-        );
-        
-        this.actions.put("rta", ()->{
-                this.SSEServicio.emitir(rtaEmitters, Datos);
-            }
-        );
+
+    private Map<String,SseEmitter> obtenerEmitter(String nombre){
+        switch(nombre){
+            case "dtgnr":
+                return dtGnrEmitters;
+            case "dtgrp":
+                return dtGrpEmitters;
+            case "usrmgr":
+                return usrMgrEmitters;
+            case "vhl":
+                return vhlEmitters;
+            case "pda":
+                return pdaEmitters;
+            case "rta":
+                return rtaEmitters;
+            case "": 
+                return null;
+            default:
+                return null;
+        }
     }
     
-    public void publicar(String nombre,HashMap<String, Object> datos){
-        this.Datos=datos;
-        actions.get(nombre).run();
+    public void publicar(String nombre,HashMap<String, Object> Datos){
+        SSEServicio.emitir(obtenerEmitter(nombre),Datos);
     }
     
     

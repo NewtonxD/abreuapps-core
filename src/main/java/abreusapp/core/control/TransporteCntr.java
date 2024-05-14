@@ -827,16 +827,18 @@ public class TransporteCntr {
 //------------------ENDPOINTS TILES MAPA--------------------------------------//
 //----------------------------------------------------------------------------//
     
-    @GetMapping(value = "/API/tiles/{zoom}/{x}/{y}", produces = MediaType.IMAGE_PNG_VALUE)
-    public @ResponseBody byte[] getMapTile(@PathVariable int zoom, @PathVariable int x, @PathVariable int y) throws IOException {
-        String tilePath = String.format("%s/%d/%d/%d.png", TILE_DIRECTORY, zoom, x, y);
+    @GetMapping(value = "/API/tiles/{zoom}/{x}/{y}", produces = "image/webp")
+    public @ResponseBody byte[] getMapTile(@PathVariable int zoom, @PathVariable int x, @PathVariable int y) {
+        String tilePath = String.format("%s/%d/%d/%d.webp", TILE_DIRECTORY, zoom, x, y);
         File file = new File(tilePath);
         if (!file.exists()) {
-            file = new File(TILE_DIRECTORY+"/default_tile.png"); // Provide default tile image
+            file = new File(TILE_DIRECTORY+"/default_tile.webp"); // Provide default tile image
         }
-        
-        try (InputStream inputStream = new FileInputStream(file)) {
+        try{
+            InputStream inputStream = new FileInputStream(file);
             return inputStream.readAllBytes();
+        }catch(IOException e){
+            return new byte[0];
         }
     }
 
