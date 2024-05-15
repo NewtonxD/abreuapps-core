@@ -394,6 +394,24 @@ AS $function$
 $function$
 ;
 
+CREATE TRIGGER dat_grp_notify AFTER INSERT OR UPDATE OR DELETE ON public.dat_grp
+FOR EACH ROW EXECUTE PROCEDURE notify_trigger();
+
+CREATE TRIGGER gnr_dat_notify AFTER INSERT OR UPDATE OR DELETE ON public.gnr_dat
+FOR EACH ROW EXECUTE PROCEDURE notify_trigger();
+
+CREATE TRIGGER usr_notify AFTER INSERT OR UPDATE OR DELETE ON public.usr
+FOR EACH ROW EXECUTE PROCEDURE notify_trigger();
+
+CREATE TRIGGER vhl_notify AFTER INSERT OR UPDATE OR DELETE ON transport.vhl
+FOR EACH ROW EXECUTE PROCEDURE notify_trigger();
+
+CREATE TRIGGER pda_notify AFTER INSERT OR UPDATE OR DELETE ON transport.pda
+FOR EACH ROW EXECUTE PROCEDURE notify_trigger();
+
+CREATE TRIGGER rta_notify AFTER INSERT OR UPDATE OR DELETE ON transport.rta
+FOR EACH ROW EXECUTE PROCEDURE notify_trigger();
+
 
 
 phase 4 enjoy!
