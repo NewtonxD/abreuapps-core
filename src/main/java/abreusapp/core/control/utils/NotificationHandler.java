@@ -4,7 +4,6 @@
  */
 package abreusapp.core.control.utils;
 
-import abreusapp.core.control.SSECntr;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,7 +26,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class NotificationHandler implements Consumer<PGNotification> {
 
-    private final SSECntr SSEControlador;
+    private final SSEServ SSEServicio;
     
     private final DateUtils FechaUtils;
     
@@ -58,7 +57,7 @@ public class NotificationHandler implements Consumer<PGNotification> {
                 HashMap<String, Object> map = new HashMap<>();
                 map.put(String.valueOf(DBOperacion), DBData);
                 map.put("date", DBDate);
-                SSEControlador.publicar(DBNOMBRE_VS_DOMINIO.get(DBNombre), map);
+                SSEServicio.publicar(DBNOMBRE_VS_DOMINIO.get(DBNombre), map);
             }
             
         }catch(JsonProcessingException e){

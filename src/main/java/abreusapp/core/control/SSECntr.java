@@ -5,9 +5,7 @@
 package abreusapp.core.control;
 
 import abreusapp.core.control.utils.SSEServ;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -28,42 +26,10 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @Slf4j
 @RequestMapping("/see")
 @CrossOrigin
+@RequiredArgsConstructor
 public class SSECntr {
     
     private final SSEServ SSEServicio;
-    
-    public SSECntr(SSEServ SSEServicio) {
-        this.SSEServicio = SSEServicio;
-    }
-    
-    private final Map<String,SseEmitter> dtGnrEmitters = new ConcurrentHashMap<>();
-
-    private final Map<String,SseEmitter> dtGrpEmitters = new ConcurrentHashMap<>();
-    
-    private final Map<String,SseEmitter> usrMgrEmitters = new ConcurrentHashMap<>();
-    
-    private final Map<String,SseEmitter> vhlEmitters = new ConcurrentHashMap<>();
-        
-    private final Map<String,SseEmitter> pdaEmitters = new ConcurrentHashMap<>();
-    
-    private final Map<String,SseEmitter> rtaEmitters = new ConcurrentHashMap<>();
-
-    private Map<String,SseEmitter> obtenerEmitter(String nombre){
-        return switch (nombre) {
-            case "dtgnr" -> dtGnrEmitters;
-            case "dtgrp" -> dtGrpEmitters;
-            case "usrmgr" -> usrMgrEmitters;
-            case "vhl" -> vhlEmitters;
-            case "pda" -> pdaEmitters;
-            case "rta" -> rtaEmitters;
-            case "" -> null;
-            default -> null;
-        };
-    }
-    
-    public void publicar(String nombre,HashMap<String, Object> Datos){
-        SSEServicio.emitir(obtenerEmitter(nombre),Datos);
-    }
     
     
 //----------------------------------------------------------------------------//
@@ -75,7 +41,7 @@ public class SSECntr {
         @RequestParam String clientId,
         @PathVariable String nombre
     ) {
-        return SSEServicio.agregar(clientId,obtenerEmitter(nombre));
+        return SSEServicio.agregar(clientId,nombre);
     }
 //----------------------------------------------------------------------------//
     
@@ -85,13 +51,7 @@ public class SSECntr {
         @RequestParam String clientId,
         @PathVariable String nombre
     ) {
-        Map<String,SseEmitter> emitter=obtenerEmitter(nombre);
-        if(emitter!=null){
-            if (emitter.get(clientId)!=null){
-                emitter.get(clientId).complete();
-                emitter.remove(clientId);
-            }
-        }
+        SSEServicio.cerrar(clientId,nombre);
     }
 //----------------------------------------------------------------------------//
     
