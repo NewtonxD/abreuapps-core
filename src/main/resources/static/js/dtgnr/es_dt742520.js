@@ -28,7 +28,7 @@ function createEventSource() {
         // Determinar si es una actualización o inserción basado en los datos recibidos
         if (data['U']!==undefined && data['U']!==null) {
           // Buscar y actualizar la fila correspondiente en la tabla
-          $('#table tbody tr[data-id="' + data['U'].dato + '"]').html(createTableRow(data['U'],true));
+          $('#table tbody tr[data-id="' + data['U'].dat + '"]').html(createTableRow(data['U'],true));
         } else {          
           var t=$('#table').DataTable();
           t.row.add($(createTableRow(data["I"])));
@@ -58,11 +58,11 @@ function closeEventSource(callServer=true){
 }
 
 function createTableRow(d,update=false) {
-    var row = !update ? '<tr data-id="' + d.dato + '">' : '';
-    row += '<th>'+ d.dato + '</th>';
-    row += '<td>' + d.descripcion + '</td>';
-    row += '<td>' + d.grupo.grupo + '</td>'; 
-    row += '<td>' + (d.activo?'Activo':'Inactivo') + '</td>'; 
+    var row = !update ? '<tr data-id="' + d.dat + '">' : '';
+    row += '<th>'+ d.dat + '</th>';
+    row += '<td>' + d.dsc + '</td>';
+    row += '<td>' + d.grupo_grp + '</td>'; 
+    row += '<td>' + (d.act?'Activo':'Inactivo') + '</td>'; 
     row +=  !update ? '</tr>' : '';
     return row;
 

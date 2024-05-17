@@ -22,7 +22,7 @@ function createEventSource() {
         // Determinar si es una actualización o inserción basado en los datos recibidos
         if (data['U']!==undefined && data['U']!==null) {
           // Buscar y actualizar la fila correspondiente en la tabla
-          $('#table tbody tr[data-id="' + data['U'].dato + '"]').html(createTableRow(data['U'],true));
+          $('#table tbody tr[data-id="' + data['U'].pl + '"]').html(createTableRow(data['U'],true));
         } else {          
           var t=$('#table').DataTable();
           t.row.add($(createTableRow(data["I"])));
@@ -52,12 +52,12 @@ function closeEventSource(callServer=true){
 }
 
 function createTableRow(d,update=false) {
-    var row = !update ? '<tr data-id="' + d.placa + '">' : '';
-    row += '<th>'+ d.placa + '</th>';
-    row += '<td>' + d.marca.dato + ' ' + d.modelo.dato + '</td>';
-    row += '<td>' + d.color.dato + '</td>'; 
-    row += '<td>' + d.estado.dato + '</td>'; 
-    row += '<td>' + (d.activo?'Activo':'Inactivo') + '</td>';
+    var row = !update ? '<tr data-id="' + d.pl + '">' : '';
+    row += '<th>'+ d.pl + '</th>';
+    row += '<td>' + d.marca_dat + ' ' + d.modelo_dat + '</td>';
+    row += '<td>' + d.color_dat + '</td>'; 
+    row += '<td>' + d.estado_dat + '</td>'; 
+    row += '<td>' + (d.act?'Activo':'Inactivo') + '</td>';
     row +=  !update ? '</tr>' : '';
     return row;
 }
