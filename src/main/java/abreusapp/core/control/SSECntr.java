@@ -4,7 +4,11 @@
  */
 package abreusapp.core.control;
 
+import abreusapp.core.control.utils.ModelServ;
 import abreusapp.core.control.utils.SSEServ;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -31,6 +35,10 @@ public class SSECntr {
     
     private final SSEServ SSEServicio;
     
+    private final ModelServ ModeloServicio;
+    
+    private static final List<String> REQUIRED_AUTH = new ArrayList<>(Arrays.asList("dtgnr" ,"dtgrp","usrmgr","vhl" ,"pda","rta"));
+    
     
 //----------------------------------------------------------------------------//
 //--------------ENDPOINTS SERVER SIDE EVENTS----------------------------------//
@@ -41,6 +49,10 @@ public class SSECntr {
         @RequestParam String clientId,
         @PathVariable String nombre
     ) {
+        if(REQUIRED_AUTH.contains(nombre) && 
+            ModeloServicio.getUsuarioLogueado()==null
+        ) return null;
+        
         return SSEServicio.agregar(clientId,nombre);
     }
 //----------------------------------------------------------------------------//
@@ -51,7 +63,10 @@ public class SSECntr {
         @RequestParam String clientId,
         @PathVariable String nombre
     ) {
-        SSEServicio.cerrar(clientId,nombre);
+        if(
+            (REQUIRED_AUTH.contains(nombre) && ModeloServicio.getUsuarioLogueado()!=null)||
+            (!REQUIRED_AUTH.contains(nombre))
+        ) SSEServicio.cerrar(clientId,nombre);
     }
 //----------------------------------------------------------------------------//
     

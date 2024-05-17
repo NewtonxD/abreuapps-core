@@ -65,16 +65,16 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                             <thead class="bg-secondary text-white">
                                                 <tr>
                                                     <th scope="col">Usuario</th>
-                                                    <th scope="col">Nombre</th>
                                                     <th scope="col">Correo</th>
+                                                    <th scope="col">Clave Vencida</th>
                                                     <th scope="col">Estado</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr th:each="u: ${usuarios}" th:attr="data-id=${u.username}">
                                                     <th th:text="${u.username}"></th>
-                                                    <td th:text="${u.persona.nombre+' '+u.persona.apellido}"></td>
                                                     <td th:text="${u.correo}"></td>
+                                                    <td th:text="${u.cambiarPassword?'Si':'No'}"></td>
                                                     <td th:text="${u.activo?'Activo':'Inactivo'}"></td>
                                                 </tr>
                                             </tbody>
