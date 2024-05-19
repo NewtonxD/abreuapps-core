@@ -20,13 +20,11 @@ function createEventSource() {
     clientId=generateClientId();
     eventSource_dtgnr = new EventSource('/see/usrmgr?clientId='+clientId,{withCredentials:true});
     eventSource_dtgnr.onmessage = function(event) {
-  
         var data = JSON.parse(event.data); 
-
         // Determinar si es una actualización o inserción basado en los datos recibidos
         if (data['U']!==undefined && data['U']!==null) {
           // Buscar y actualizar la fila correspondiente en la tabla
-          $('#table tbody tr[data-id="' + data['U'].usr + '"]').replaceWith(createTableRow(data['U'],true));
+          $('#table tbody tr[data-id="' + data['U'].usr + '"]').replaceWith(createTableRow(data['U']));
         } else {          
           var t=$('#table').DataTable();
           t.row.add($(createTableRow(data["I"])));
@@ -41,7 +39,7 @@ function createEventSource() {
     };
     
     eventSource_dtgnr.onerror = function(event){
-        closeEventSource(false);
+        // falta implementar toast para notificar de falta de conexion
     };
   
   }
@@ -50,20 +48,12 @@ function createEventSource() {
 function closeEventSource(callServer=true){
     if(eventSource_dtgnr!==null && eventSource_dtgnr!==undefined){
         eventSource_dtgnr.close();
-        eventSource_dtgnr=undefined;
         if(callServer) $.get('/see/usrmgr/close?clientId='+clientId);
     }
 }
 
-function createTableRow(d,update=false) {
-    var row = !update ? '<tr data-id="' + d.usr + '">' : '';
-    row += '<th>' + d.usr + '</th>';
-    row += '<td>' + d.mail + '</td>';
-    row += '<td>'+ (d.pwd_chg?'Si':'No') +  '</td>';
-    row += '<td>' + (d.act?'Activo':'Inactivo') + '</td>'; 
-    row += !update ? '</tr>' : '';
-    return row;
-
+function createTableRow(d) {
+    return `<tr data-id="${d.usr}"><th>${d.usr}</th><td>${d.mail}</td><td>${d.pwd_chg?'Si':'No'}</td><td>${d.act?'Activo':'Inactivo'}</td></tr>`;
 }
 
 $(function(){
