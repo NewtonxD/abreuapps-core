@@ -18,54 +18,51 @@ function pdaGetLoc(IdParada){
    });
 }
 
-$(function (){
-    
-    $("tbody tr").click(function(){
+
+$(document).on("click","tr",function(){
         
-        let IdParada=$(this).find('th').html();
-        
-        if(IdParada===undefined || IdParada===null)
-            return;
-        
-        $("#content-page").css("overflow-y","hidden");
-        var fadeout=$("#content-page").hide().delay(100).promise();
-        
-        closeEventSource();
-        
-        pdaGetLoc(IdParada);
-        
-        $.ajax({
-            url:'/pda/update',
-            type:"POST",
-            async:true,
-            data:{idParada:IdParada},
-            success: function(res){
-                        
-                if(res.indexOf('Login') !== -1 || res.indexOf('This session has been expired') !== -1)
-                    window.location.href="/auth/login?logout=true";
-            
-                fadeout.then(function(){
-                    $("#content-page").html(res).fadeIn(100).promise().then(function(){
-                        $("#content-page").css("overflow-y","hidden");
-                    }); 
-                });
-            },
-            error: function(xhr, status, error){
-                // Maneja cualquier error que ocurra durante la llamada    
-                
-                if(xhr.responseText.indexOf('This session has been expired') !== -1)
-                    window.location.href="/auth/login?logout=true";  
-                
-                fadeout.then(function(){
-                    var fadein=$("#content-page").html(xhr.responseText).fadeIn(100).promise();
-                    
-                    fadein.then(function(){
-                        $("#content-page").css("overflow-y","hidden");
-                    }); 
-                });
-            }
-        });
-        
+    let IdParada=$(this).find('th').html();
+
+    if(IdParada===undefined || IdParada===null)
+        return;
+
+    $("#content-page").css("overflow-y","hidden");
+    var fadeout=$("#content-page").hide().delay(100).promise();
+
+    closeEventSource();
+
+    pdaGetLoc(IdParada);
+
+    $.ajax({
+        url:'/pda/update',
+        type:"POST",
+        async:true,
+        data:{idParada:IdParada},
+        success: function(res){
+
+            if(res.indexOf('Login') !== -1 || res.indexOf('This session has been expired') !== -1)
+                window.location.href="/auth/login?logout=true";
+
+            fadeout.then(function(){
+                $("#content-page").html(res).fadeIn(100).promise().then(function(){
+                    $("#content-page").css("overflow-y","hidden");
+                }); 
+            });
+        },
+        error: function(xhr, status, error){
+            // Maneja cualquier error que ocurra durante la llamada    
+
+            if(xhr.responseText.indexOf('This session has been expired') !== -1)
+                window.location.href="/auth/login?logout=true";  
+
+            fadeout.then(function(){
+                var fadein=$("#content-page").html(xhr.responseText).fadeIn(100).promise();
+
+                fadein.then(function(){
+                    $("#content-page").css("overflow-y","hidden");
+                }); 
+            });
+        }
     });
-    
+
 });

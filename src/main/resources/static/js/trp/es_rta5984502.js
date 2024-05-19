@@ -42,7 +42,7 @@ function createEventSource() {
     };
     
     eventSource_dtgnr.onerror = function(event){
-        closeEventSource(false);
+        // falta implementar toast para notificar de falta de conexion
     };
     
   }

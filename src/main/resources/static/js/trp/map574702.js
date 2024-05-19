@@ -12,7 +12,13 @@ $(function(){
     const zoom = 16;
     const lat = 19.4765428;
     const lng = -70.7097998;
-
+    
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js',{scope:"/"}).then(function() {
+            console.log('Service Worker Registered');
+        });
+    }
+    
     const map = L.map("map", config).setView([lat, lng], zoom);
     
     L.tileLayer("/API/tiles/{z}/{x}/{y}", {}).addTo(map);

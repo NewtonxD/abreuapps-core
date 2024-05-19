@@ -70,7 +70,7 @@ public class MainCntr {
     public String LeatLeaftJsMap() {        
         return "redirect:/content/js/lib/leaflet.js.map";
     }
-//----------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//  
 
     @RequestMapping(value = "/main/content-page/", method = RequestMethod.POST)
     public String loadContetPage(

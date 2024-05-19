@@ -28,7 +28,7 @@ function createEventSource() {
         // Determinar si es una actualización o inserción basado en los datos recibidos
         if (data['U']!==undefined && data['U']!==null) {
           // Buscar y actualizar la fila correspondiente en la tabla
-          $('#table tbody tr[data-id="' + data['U'].dat + '"]').html(createTableRow(data['U'],true));
+          $('#table tbody tr[data-id="' + data['U'].dat + '"]').html(createTableRow(data['U']));
         } else {          
           var t=$('#table').DataTable();
           t.row.add($(createTableRow(data["I"])));
@@ -43,7 +43,7 @@ function createEventSource() {
     };
     
     eventSource_dtgnr.onerror = function(event){
-        closeEventSource(false);
+        // falta implementar toast para notificar de falta de conexion
     };
     
   }
@@ -57,15 +57,8 @@ function closeEventSource(callServer=true){
     }
 }
 
-function createTableRow(d,update=false) {
-    var row = !update ? '<tr data-id="' + d.dat + '">' : '';
-    row += '<th>'+ d.dat + '</th>';
-    row += '<td>' + d.dsc + '</td>';
-    row += '<td>' + d.grupo_grp + '</td>'; 
-    row += '<td>' + (d.act?'Activo':'Inactivo') + '</td>'; 
-    row +=  !update ? '</tr>' : '';
-    return row;
-
+function createTableRow(d) {
+    return `<tr data-id="${d.dat}"> <th>${d.dat}</th> <td>${d.dsc}</td> <td>${d.grupo_grp}</td> <td>${d.act?'Activo':'Inactivo'}</td></tr>`;
 }
 
 $(function(){
