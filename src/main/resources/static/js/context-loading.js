@@ -15,12 +15,12 @@ $(function(){
         var fadeout=$("#content-page").hide().delay(100).promise();
         
         $.get({
-            url: '/usrmgr/myupdate',
+            url: `${SERVER_IP}/usrmgr/myupdate`,
             async:true,
             success: function(xhr, status, error) {
                 
                 if(xhr.indexOf('Login') !== -1 || xhr.indexOf('This session has been expired') !== -1)
-                    window.location.href="/auth/login?logout=true";
+                    window.location.href=`${SERVER_IP}/auth/login?logout=true`;
                 
                 fadeout.then(function(){
                     
@@ -35,7 +35,7 @@ $(function(){
             error: function(xhr, status, error) {
                 
                 if(xhr.responseText.indexOf('This session has been expired') !== -1)
-                    window.location.href="/auth/login?logout=true";  
+                    window.location.href=`${SERVER_IP}/auth/login?logout=true`;  
                 
                 fadeout.then(function(){
                     var fadein=$("#content-page").html(xhr.responseText).fadeIn(100).promise();
@@ -63,7 +63,7 @@ $(function(){
         var fadeout=$("#content-page").hide().delay(100).promise();
         
         $.post({
-            url: '/main/content-page/',
+            url: `${SERVER_IP}/main/content-page/`,
             async:true,
             data: {id:id},
             success: function(xhr, status, error) {
@@ -71,7 +71,7 @@ $(function(){
                 toggleSidebar();
                 
                 if(xhr.indexOf('Login') !== -1 || xhr.indexOf('This session has been expired') !== -1)
-                    window.location.href="/auth/login?logout=true";
+                    window.location.href=`${SERVER_IP}/auth/login?logout=true`;
                 
                 fadeout.then(function(){
                     
@@ -89,7 +89,7 @@ $(function(){
                 toggleSidebar();
                 
                 if(xhr.responseText.indexOf('This session has been expired') !== -1)
-                    window.location.href="/auth/login?logout=true";  
+                    window.location.href=`${SERVER_IP}/auth/login?logout=true`;  
                 
                 fadeout.then(function(){
                     var fadein=$("#content-page").html(xhr.responseText).fadeIn(100).promise();

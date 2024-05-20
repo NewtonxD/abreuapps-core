@@ -20,7 +20,7 @@ function generateClientId() {
 function createEventSource() {
   if (eventSource_dtgnr === null || eventSource_dtgnr === undefined) {
     clientId=generateClientId();
-    eventSource_dtgnr = new EventSource('/see/dtgnr?clientId='+clientId,{withCredentials:true});
+    eventSource_dtgnr = new EventSource(`${SERVER_IP}/see/dtgnr?clientId=${clientId}`,{withCredentials:true});
     eventSource_dtgnr.onmessage = function(event) {
   
         var data = JSON.parse(event.data); 
@@ -36,7 +36,7 @@ function createEventSource() {
 
         }
         
-        var notificacion=new Audio('/content/audio/n44.mp3');
+        var notificacion=new Audio(`${SERVER_IP}/content/audio/n44.mp3`);
         notificacion.volume=1;
         notificacion.play();
         
@@ -53,7 +53,7 @@ function closeEventSource(callServer=true){
     if(eventSource_dtgnr!==null && eventSource_dtgnr!==undefined){
         eventSource_dtgnr.close();
         eventSource_dtgnr=undefined;
-        if(callServer) $.get('/see/dtgnr/close?clientId='+clientId);
+        if(callServer) $.get(`${SERVER_IP}/see/dtgnr/close?clientId=${clientId}`);
     }
 }
 

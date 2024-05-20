@@ -10,7 +10,7 @@ function constructForest(data) {
     });
     
     var scriptEvent = $('<script>');
-    scriptEvent.attr('src', '/content/js/lib/treeclickevent.js');
+    scriptEvent.attr('src', `${SERVER_IP}/content/js/lib/treeclickevent.js`);
     forest.append(scriptEvent);
 
 
