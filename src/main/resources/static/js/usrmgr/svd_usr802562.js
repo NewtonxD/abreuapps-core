@@ -19,7 +19,7 @@ function verificarCedula(){
     if($("#cedula").val()===$("#original_cedula").val()) respuesta=true;
     else{
         $.ajax({
-            url:'/infppl/vfyCedInUsr',
+            url:`${SERVER_IP}/infppl/vfyCedInUsr`,
             type:"POST",
             async:false,
             data:{"cedula":$("#cedula").val()},
@@ -40,7 +40,7 @@ function verificarCorreo(){
     if($("#correo").val()===$("#original_correo").val()) respuesta=true;
     else{
         $.ajax({
-            url:'/usrmgr/vfyMail',
+            url:`${SERVER_IP}/usrmgr/vfyMail`,
             type:"POST",
             async:false,
             data:{"correo":$("#correo").val()},
@@ -58,7 +58,7 @@ function verificarCorreo(){
 function obtenerInfoPorCedula(){
     if($("#original_cedula").val!==$("#cedula").val())
     $.ajax({
-            url:'/infppl/getAllInfCed',
+            url:`${SERVER_IP}/infppl/getAllInfCed`,
             type:"POST",
             async:true,
             data:{"cedula":$("#cedula").val(),update:$("#update").val()},
@@ -76,7 +76,7 @@ function verificarUsuario(){
     if($("#username").val()===$("#original_usuario").val()) respuesta=true;
     else{
         $.ajax({
-            url:'/usrmgr/vfyUsr',
+            url:`${SERVER_IP}/usrmgr/vfyUsr`,
             type:"POST",
             async:false,
             data:{"username":$("#username").val()},
@@ -92,7 +92,7 @@ function verificarUsuario(){
 }
 
 function cerrarSesion(){
-    window.location.href="/auth/logout"; 
+    window.location.href=`${SERVER_IP}/auth/logout`; 
 }
 
 function verificarPassword(){
@@ -100,7 +100,7 @@ function verificarPassword(){
     
     
         $.ajax({
-            url:'/usrmgr/vfyPwd',
+            url:`${SERVER_IP}/usrmgr/vfyPwd`,
             type:"POST",
             async:false,
             data:{"pwd":$("#password").val()},
@@ -121,13 +121,13 @@ function cambiarPassword(){
     var fadeout=$("#content-page").hide().delay(100).promise();
     
     $.ajax({
-        url:'/main/changePwd',
+        url:`${SERVER_IP}/main/changePwd`,
         type:"POST",
         async:false,
         success: function(res){
 
             if(res.indexOf('Login') !== -1)
-                    window.location.href="/auth/login?logout=true";
+                    window.location.href=`${SERVER_IP}/auth/login?logout=true`;
 
             fadeout.then(function(){
                 $("#content-page").html(res).fadeIn(100).promise().then(function(){
@@ -139,7 +139,7 @@ function cambiarPassword(){
             // Maneja cualquier error que ocurra durante la llamada    
                 
             if(xhr.responseText.indexOf('This session has been expired') !== -1)
-                window.location.href="/auth/login?logout=true";  
+                window.location.href=`${SERVER_IP}/auth/login?logout=true`;  
                 
             fadeout.then(function(){
                 var fadein=$("#content-page").html(xhr.responseText).fadeIn(100).promise();
@@ -212,7 +212,7 @@ function guardar_datos(){
     let datosPersona=dataPrepare("inf_personal");
     var idPersona=0;
     $.ajax({
-        url:'/infppl/save',
+        url:`${SERVER_IP}/infppl/save`,
         type:"POST",
         async:false,
         data:datosPersona,
@@ -229,14 +229,14 @@ function guardar_datos(){
     datosUsuario.push({name:"idPersona",value:idPersona});
     
     $.ajax({
-        url:'/usrmgr/save',
+        url:`${SERVER_IP}/usrmgr/save`,
         type:"POST",
         async:true,
         data:datosUsuario,
         success: function(res){
 
             if(res.indexOf('Login') !== -1 || res.indexOf('This session has been expired') !== -1)
-                    window.location.href="/auth/login?logout=true";
+                    window.location.href=`${SERVER_IP}/auth/login?logout=true`;
 
             fadeout.then(function(){
                 window.location.href="/";
@@ -246,7 +246,7 @@ function guardar_datos(){
             // Maneja cualquier error que ocurra durante la llamada    
                 
             if(xhr.responseText.indexOf('This session has been expired') !== -1)
-                window.location.href="/auth/login?logout=true";  
+                window.location.href=`${SERVER_IP}/auth/login?logout=true`;  
                 
                 
             fadeout.then(function(){

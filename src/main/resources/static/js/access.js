@@ -13,13 +13,13 @@ function cargar_contenido(id){
     var fadeout=$("#content-page").hide().delay(100).promise();
 
     $.post({
-        url: '/main/content-page/',
+        url: `${SERVER_IP}/main/content-page/`,
         async:true,
         data: {id:id},
         success: function(response) {
 
             if(response.indexOf('Login') !== -1 || response.indexOf('This session has been expired') !== -1)
-                window.location.href="/auth/login?logout=true";
+                window.location.href=`${SERVER_IP}/auth/login?logout=true`;
 
           fadeout.then(function(){
                 var fadein=$("#content-page").html(response).fadeIn(100).promise();
@@ -34,7 +34,7 @@ function cargar_contenido(id){
           // Maneja cualquier error que ocurra durante la llamada
             
             if(xhr.responseText.indexOf('This session has been expired') !== -1)
-                    window.location.href="/auth/login?logout=true";
+                    window.location.href=`${SERVER_IP}/auth/login?logout=true`;
                 
           fadeout.then(function(){
 

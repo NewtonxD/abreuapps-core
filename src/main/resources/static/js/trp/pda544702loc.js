@@ -20,19 +20,22 @@ $(function(){
     const lat = data.lat;
     const lng = data.lon;
     
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register(`${SERVER_IP}/service-worker.js`,{scope:"/"}).then(function() {
+            console.log('Service Worker Registered Successfully');
+        });
+    }
+    
     const map = L.map("map", config).setView([lat, lng], zoom);
 
-    L.tileLayer("/API/tiles/{z}/{x}/{y}", {}).addTo(map);
+    L.tileLayer(TILE_API_IP, {}).addTo(map);
     
     L.control.scale({imperial: false,}).addTo(map);
   
     var marker = L.marker([lat, lng]).addTo(map);
     
     if(data.paradas!==null && data.paradas!==undefined){
-        
-        console.log(data.paradas);
         for (let i = 0; i < data.paradas.length; i++) {
-            console.log(data.paradas[i]);
             L.marker([data.paradas[i].latitud,data.paradas[i].longitud], {
               icon: L.divIcon({
                 className: "custom-icon-marker",

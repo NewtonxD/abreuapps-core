@@ -18,7 +18,7 @@ function generateClientId() {
 function createEventSource() {
   if (eventSource_dtgnr === null || eventSource_dtgnr === undefined) {
     clientId=generateClientId();
-    eventSource_dtgnr = new EventSource('/see/usrmgr?clientId='+clientId,{withCredentials:true});
+    eventSource_dtgnr = new EventSource(`${SERVER_IP}/see/usrmgr?clientId=${clientId}`,{withCredentials:true});
     eventSource_dtgnr.onmessage = function(event) {
         var data = JSON.parse(event.data); 
         // Determinar si es una actualización o inserción basado en los datos recibidos
@@ -32,7 +32,7 @@ function createEventSource() {
 
         }
         
-        var notificacion=new Audio('/content/audio/n44.mp3');
+        var notificacion=new Audio(`${SERVER_IP}/content/audio/n44.mp3`);
         notificacion.volume=1;
         notificacion.play();
         
@@ -48,7 +48,7 @@ function createEventSource() {
 function closeEventSource(callServer=true){
     if(eventSource_dtgnr!==null && eventSource_dtgnr!==undefined){
         eventSource_dtgnr.close();
-        if(callServer) $.get('/see/usrmgr/close?clientId='+clientId);
+        if(callServer) $.get(`${SERVER_IP}/see/usrmgr/close?clientId=${clientId}`);
     }
 }
 

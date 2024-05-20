@@ -5,7 +5,7 @@
 
 function rtaGetLoc(idRuta){        
     $.ajax({
-       url:'/rta/getLoc',
+       url:`${SERVER_IP}/rta/getLoc`,
        type:"POST",
        async:false,
        data:{idRuta:idRuta},
@@ -33,14 +33,14 @@ $(document).on("click","tr",function(){
     rtaGetLoc(idRuta);
 
     $.ajax({
-        url:'/rta/update',
+        url:`${SERVER_IP}/rta/update`,
         type:"POST",
         async:true,
         data:{idRuta:idRuta},
         success: function(res){
 
             if(res.indexOf('Login') !== -1 || res.indexOf('This session has been expired') !== -1)
-                window.location.href="/auth/login?logout=true";
+                window.location.href=`${SERVER_IP}/auth/login?logout=true`;
 
             fadeout.then(function(){
                 $("#content-page").html(res).fadeIn(100).promise().then(function(){
@@ -52,7 +52,7 @@ $(document).on("click","tr",function(){
             // Maneja cualquier error que ocurra durante la llamada    
 
             if(xhr.responseText.indexOf('This session has been expired') !== -1)
-                window.location.href="/auth/login?logout=true";  
+                window.location.href=`${SERVER_IP}/auth/login?logout=true`;  
 
             fadeout.then(function(){
                 var fadein=$("#content-page").html(xhr.responseText).fadeIn(100).promise();

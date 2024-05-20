@@ -9,19 +9,20 @@ $(function(){
         minZoom: 7,
         maxZoom: 18
     };
+    
     const zoom = 16;
     const lat = 19.4765428;
     const lng = -70.7097998;
     
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/service-worker.js',{scope:"/"}).then(function() {
-            console.log('Service Worker Registered');
+        navigator.serviceWorker.register(`${SERVER_IP}/service-worker.js`,{scope:"/"}).then(function() {
+            console.log('Service Worker Registered Successfully');
         });
     }
     
     const map = L.map("map", config).setView([lat, lng], zoom);
     
-    L.tileLayer("/API/tiles/{z}/{x}/{y}", {}).addTo(map);
+    L.tileLayer(TILE_API_IP, {}).addTo(map);
         
     L.control.scale({imperial: false,}).addTo(map);
 

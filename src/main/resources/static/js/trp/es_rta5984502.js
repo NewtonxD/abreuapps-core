@@ -19,7 +19,7 @@ function generateClientId() {
 function createEventSource() {
   if (eventSource_dtgnr === null || eventSource_dtgnr === undefined) {
     clientId=generateClientId();
-    eventSource_dtgnr = new EventSource('/see/rta?clientId='+clientId,{withCredentials:true});
+    eventSource_dtgnr = new EventSource(`${SERVER_IP}/see/rta?clientId=${clientId}`,{withCredentials:true});
     eventSource_dtgnr.onmessage = function(event) {
   
         var data = JSON.parse(event.data); 
@@ -27,7 +27,7 @@ function createEventSource() {
         // Determinar si es una actualización o inserción basado en los datos recibidos
         if (data['U']!==undefined && data['U']!==null) {
           // Buscar y actualizar la fila correspondiente en la tabla
-          $('#table tbody tr[data-id="' + data['U'].rta + '"]').html(createTableRow(data['U'],true));
+          $('#table tbody tr[data-id="' + data['U'].rta + '"]').html(createTableRow(data['U']));
         } else {          
           var t=$('#table').DataTable();
           t.row.add($(createTableRow(data["I"])));
@@ -35,7 +35,7 @@ function createEventSource() {
 
         }
         
-        var notificacion=new Audio('/content/audio/n44.mp3');
+        var notificacion=new Audio(`${SERVER_IP}/content/audio/n44.mp3`);
         notificacion.volume=1;
         notificacion.play();
         
@@ -52,18 +52,12 @@ function closeEventSource(callServer=true){
     if(eventSource_dtgnr!==null && eventSource_dtgnr!==undefined){
         eventSource_dtgnr.close();
         eventSource_dtgnr=undefined;
-        if(callServer) $.get('/see/rta/close?clientId='+clientId);
+        if(callServer) $.get(`${SERVER_IP}/see/rta/close?clientId=${clientId}`);
     }
 }
 
-function createTableRow(d,update=false) {
-    var row = !update ? '<tr data-id="' + d.rta + '">' : '';
-    row += '<th>'+ d.rta + '</th>';
-    row += '<td>' + d.loc_ini+'</td>';
-    row += '<td>' + d.loc_fin+'</td>';
-    row += '<td>' + (d.act?'Activo':'Inactivo') + '</td>';
-    row +=  !update ? '</tr>' : '';
-    return row;
+function createTableRow(d) {
+    return `<tr data-id="${d.rta}"><th>${d.rta}</th><td>${d.loc_ini}</td><td>${d.loc_fin}</td><td>${d.act?'Activo':'Inactivo'}</td></tr>`;
 }
 
 $(function(){

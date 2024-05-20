@@ -92,7 +92,7 @@ $(function () {
         e.preventDefault();
         var data=dataPrepare("form-guardar");
         $.ajax({
-            url:'/main/changeMyPwdNow',
+            url:`${SERVER_IP}/main/changeMyPwdNow`,
             type:"POST",
             async:false,
             data:data,
@@ -105,7 +105,7 @@ $(function () {
                 '</div>');
                 if(res.status==="success"){
                     setTimeout(function() {
-                        window.location.href = "/main/index";
+                        window.location.href = `${SERVER_IP}/main/index`;
                     }, 5000);
                 }
             }
@@ -115,7 +115,7 @@ $(function () {
     $("#btnSalir").on("click",function(){
         if($("#credentialNonExpired").val()==="false"){
             
-            window.location.href = "/auth/logout";
+            window.location.href = `${SERVER_IP}/auth/logout`;
         } else {
             $(".config-user").click();
         }
