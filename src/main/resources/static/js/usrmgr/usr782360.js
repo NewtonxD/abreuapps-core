@@ -3,6 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Other/javascript.js to edit this template
  */
     
+    
+$(document).off("click","tr");
+
 $(document).on("click","tr",function(){
 
     let idUsuario=$(this).find('th').html();
