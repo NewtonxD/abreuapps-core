@@ -13,7 +13,7 @@ $(function(){
     
     $(".acceso").on("click",function(e){
         e.preventDefault;
-        $(document).off("click","tr");
+        $(document).off("click","tbody tr");
         
         if(typeof closeEventSource==='function') closeEventSource();
         

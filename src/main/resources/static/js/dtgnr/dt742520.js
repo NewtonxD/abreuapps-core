@@ -1,4 +1,4 @@
-$(document).on("click","tr",function(){
+$(document).on("click","tbody tr",function(){
         
     let idDato=$(this).find('th').html();
 
