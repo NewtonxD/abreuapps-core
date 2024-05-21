@@ -1,8 +1,4 @@
-/* 
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Other/javascript.js to edit this template
- */
-//document ready
+
 $(function(){
     
     $(".config-user").on("click",function(e){
@@ -11,96 +7,22 @@ $(function(){
         
         if(typeof closeEventSource==='function') closeEventSource();
         
-        $("#content-page").css("overflow-y","hidden");
-        var fadeout=$("#content-page").hide().delay(100).promise();
-        
-        $.get({
-            url: `${SERVER_IP}/usrmgr/myupdate`,
-            async:true,
-            success: function(xhr, status, error) {
-                
-                if(xhr.indexOf('Login') !== -1 || xhr.indexOf('This session has been expired') !== -1)
-                    window.location.href=`${SERVER_IP}/auth/login?logout=true`;
-                
-                fadeout.then(function(){
-                    
-                    var fadein=$("#content-page").html(xhr).fadeIn(100).promise();
-                    
-                    fadein.then(function(){
-                        $("#content-page").css("overflow-y","hidden");
-                        
-                    }); 
-                });
-            },
-            error: function(xhr, status, error) {
-                
-                if(xhr.responseText.indexOf('This session has been expired') !== -1)
-                    window.location.href=`${SERVER_IP}/auth/login?logout=true`;  
-                
-                fadeout.then(function(){
-                    var fadein=$("#content-page").html(xhr.responseText).fadeIn(100).promise();
-                    
-                    fadein.then(function(){
-                        $("#content-page").css("overflow-y","hidden");
-                        
-                    }); 
-                });
-            }
-        });
+        get_plantilla("/usrmgr/myupdate");
         
     });
     
     $(".acceso").on("click",function(e){
         e.preventDefault;
-        
+        $(document).off("click","tr");
         
         if(typeof closeEventSource==='function') closeEventSource();
         
         var id=$(this).attr("id");
-        //$('.nav').children('a.acceso').removeClass('active');
-        //$(this).addClass("active");
-        $("#content-page").css("overflow-y","hidden");
-        var fadeout=$("#content-page").hide().delay(100).promise();
         
-        $.post({
-            url: `${SERVER_IP}/main/content-page/`,
-            async:true,
-            data: {id:id},
-            success: function(xhr, status, error) {
-                
-                toggleSidebar();
-                
-                if(xhr.indexOf('Login') !== -1 || xhr.indexOf('This session has been expired') !== -1)
-                    window.location.href=`${SERVER_IP}/auth/login?logout=true`;
-                
-                fadeout.then(function(){
-                    
-                    var fadein=$("#content-page").html(xhr).fadeIn(100).promise();
-                    
-                    fadein.then(function(){
-                        $("#content-page").css("overflow-y","hidden");
-                        
-                    }); 
-                });
-            },
-            error: function(xhr, status, error) {
-              // Maneja cualquier error que ocurra durante la llamada    
-              
-                toggleSidebar();
-                
-                if(xhr.responseText.indexOf('This session has been expired') !== -1)
-                    window.location.href=`${SERVER_IP}/auth/login?logout=true`;  
-                
-                fadeout.then(function(){
-                    var fadein=$("#content-page").html(xhr.responseText).fadeIn(100).promise();
-                    
-                    fadein.then(function(){
-                        $("#content-page").css("overflow-y","hidden");
-                        
-                    }); 
-                });
-            }
-        });
+        toggleSidebar();
+        
+        var data={id:id};
+        post_plantilla("/main/content-page/",data);
         
     });
     

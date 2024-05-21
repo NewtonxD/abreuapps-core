@@ -18,9 +18,6 @@ function pdaGetLoc(IdParada){
    });
 }
 
-
-$(document).off("click","tr");
-
 $(document).on("click","tr",function(){
         
     let IdParada=$(this).find('th').html();

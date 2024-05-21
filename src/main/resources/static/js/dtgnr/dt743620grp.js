@@ -4,8 +4,6 @@
  */
 
 
-$(document).off("click","tr");
-
 $(document).on("click","tr",function(){
         
     let idGrupo=$(this).find('th').html();
