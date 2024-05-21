@@ -18,6 +18,7 @@ function rtaGetLoc(idRuta){
    });
 }
 
+
 $(document).on("click","tr",function(){
         
     let idRuta=$(this).find('th').html();

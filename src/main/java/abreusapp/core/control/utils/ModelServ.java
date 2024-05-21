@@ -190,7 +190,7 @@ public class ModelServ {
         this.actions.put("trp_rutas_registro", ()->{
                 Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "trp_rutas_registro");
                 Ruta r=new Ruta();
-                dataModel.addAttribute("rutas",r);
+                dataModel.addAttribute("ruta",r);
                 dataModel.addAllAttributes(acc);                
             }
         );

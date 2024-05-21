@@ -26,12 +26,12 @@ public class WebConf implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/content/**")
             .addResourceLocations("classpath:/static/")
-            .setCacheControl(CacheControl.maxAge(365, TimeUnit.DAYS));
+            .setCacheControl(CacheControl.maxAge(7, TimeUnit.DAYS));
         
         
         registry.addResourceHandler("/service-worker.js")
             .addResourceLocations("classpath:/static/js/lib/service-worker.js")
-            .setCacheControl(CacheControl.maxAge(365, TimeUnit.DAYS));
+            .setCacheControl(CacheControl.maxAge(7, TimeUnit.DAYS));
     }
     
     @Override

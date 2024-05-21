@@ -8,6 +8,7 @@ import abreusapp.core.control.general.Dato;
 import abreusapp.core.control.general.DatoServ;
 import abreusapp.core.control.general.GrupoDato;
 import abreusapp.core.control.general.GrupoDatoServ;
+import abreusapp.core.control.transporte.LocRutaServ;
 import abreusapp.core.control.transporte.LocVehiculo;
 import abreusapp.core.control.transporte.LocVehiculoServ;
 import abreusapp.core.control.transporte.Parada;
@@ -79,6 +80,8 @@ public class TransporteCntr {
     private final TransportTokenServ TrpTokenServ;
     
     private final RutaServ RutaServicio;
+    
+    private final LocRutaServ LocRutaServicio;
     
     private final PasswordEncoder passwordEncoder;
     
@@ -171,19 +174,19 @@ public class TransporteCntr {
     public String ActualizarRuta(
         HttpServletRequest request,
         Model model,
-        @RequestParam("idParada") String idParada
+        @RequestParam("idRuta") String idRuta
     ) {
         
         boolean valido=true;
-        String plantillaRespuesta="fragments/trp_paradas_registro :: content-default";
+        String plantillaRespuesta="fragments/trp_rutas_registro :: content-default";
         
         Usuario usuarioLogueado = ModeloServicio.getUsuarioLogueado();
 
-        Optional<Parada> parada = ParadaServicio.obtener(Integer.valueOf(idParada));
+        Optional<Ruta> ruta = RutaServicio.obtener(idRuta);
 
-        if (!parada.isPresent()) {
+        if (!ruta.isPresent()) {
 
-            log.error("Error COD: 00637 al editar parada. No encontrado ({})",idParada);
+            log.error("Error COD: 00637 al editar parada. No encontrado ({})",idRuta);
             plantillaRespuesta = "redirect:/error";
             valido=false;
 
@@ -191,10 +194,10 @@ public class TransporteCntr {
         
         //SI TODAS LAS ANTERIORES SON VALIDAS PROCEDEMOS
         if(valido){
-            model.addAttribute("parada", parada.get());
+            model.addAttribute("ruta", ruta.get());
             model.addAllAttributes(
                     AccesoServicio.consultarAccesosPantallaUsuario(
-                            usuarioLogueado.getId(), "trp_paradas_registro" )
+                            usuarioLogueado.getId(), "trp_rutas_registro" )
             );
         }
 
@@ -205,7 +208,7 @@ public class TransporteCntr {
     @PostMapping(value="/rta/getLoc", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity ObtenerLocRuta(
-        @RequestParam("idParada") String idParada
+        @RequestParam("idRuta") String idRuta
     ) {  
         boolean valido;
         Usuario u = ModeloServicio.getUsuarioLogueado();
@@ -221,10 +224,15 @@ public class TransporteCntr {
         Map<String, Object> respuesta= new HashMap<>();
         
         if(valido){
-            Optional<Parada> LocParada = ParadaServicio.obtener(Integer.valueOf(idParada) ); 
+            Optional<Ruta> Ruta = RutaServicio.obtener(idRuta); 
+            
+            if(Ruta.isPresent()){
+                respuesta.put("ruta",LocRutaServicio.consultarPorRuta(Ruta.get()));
+            }
+            //hay que sacar la ubicacion de la ruta
             
             List<Parada> otrasParadas = ParadaServicio.consultarTodo( 
-                Integer.valueOf(idParada) , 
+                null , 
                 true
             );
             
@@ -232,11 +240,6 @@ public class TransporteCntr {
             
             respuesta.put("paradas",otrasParadasDTO);
         
-            //SI TODAS LAS ANTERIORES SON VALIDAS PROCEDEMOS
-            if(LocParada.isPresent()){
-                respuesta.put("lon",LocParada.get().getLongitud());
-                respuesta.put("lat", LocParada.get().getLatitud());
-            }
         }
         
         return new ResponseEntity<>(
