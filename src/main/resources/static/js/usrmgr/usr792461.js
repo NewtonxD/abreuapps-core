@@ -1,16 +1,4 @@
-/* 
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Other/javascript.js to edit this template
- */
-function dataPrepare(idForm){
-    let d=$("#"+idForm+" :input").serializeArray();
-    $("#"+idForm+" input[type=checkbox]").each(function() {
-        if (!$(this)[0].checked) {
-            d.push({name:$(this).attr("name"),value:"false"});
-        }
-    });
-    return d;
-}
+
 
 $(function () {
     

@@ -9,6 +9,53 @@ function dataPrepare(idForm){
     return d;
 }
 
+function generateClientId() {
+    var millis = new Date().getTime();
+    var randomNum = Math.floor(Math.random() * 1000000); // Generate a random number with 6 digits
+    return millis + '-' + randomNum;
+} 
+
+
+
+function createEventSource() {
+  if (sse === null || sse === undefined) {
+    clientId=generateClientId();
+    sse = new EventSource(`${SERVER_IP}${SSE_LINK}?clientId=${clientId}`,{withCredentials:true});
+    sse.onmessage = function(event) {
+  
+        var data = JSON.parse(event.data); 
+
+        // Determinar si es una actualización o inserción basado en los datos recibidos
+        if (data['U']!==undefined && data['U']!==null) {
+          // Buscar y actualizar la fila correspondiente en la tabla
+          $('#table tbody tr[data-id="' + data['U'][SSE_PK] + '"]').replaceWith(createTableRow(data['U']));
+        } else {          
+          var t=$('#table').DataTable();
+          t.row.add($(createTableRow(data["I"])));
+          t.draw();
+
+        }
+        
+        var notificacion=new Audio(`${SERVER_IP}/content/audio/n44.mp3`);
+        notificacion.volume=1;
+        notificacion.play();
+        
+    };
+    
+    sse.onerror = function(event){
+        // falta implementar toast para notificar de falta de conexion
+    };
+  }
+}
+
+function closeEventSource(){
+    if(sse!==null && sse!==undefined){
+        sse.close();
+        sse=null;
+        $.get(`${SERVER_IP}${SSE_LINK}/close?clientId=${clientId}`);
+        clientId="";
+    }
+}
 
 function post_plantilla(LINK,DATA){
     
@@ -20,6 +67,7 @@ function post_plantilla(LINK,DATA){
         url: `${SERVER_IP}${LINK}`,
         async:true,
         data: DATA,
+        dataType : 'html',
         success: function(response) {
 
             if(response.indexOf('Login') !== -1 || response.indexOf('This session has been expired') !== -1)
@@ -61,6 +109,7 @@ function get_plantilla(LINK){
     $.get({
         url: `${SERVER_IP}${LINK}`,
         async:true,
+        dataType : 'html',
         success: function(xhr, status, error) {
 
             if(xhr.indexOf('Login') !== -1 || xhr.indexOf('This session has been expired') !== -1)
@@ -98,7 +147,7 @@ function cargar_contenido(id){
     
     if(typeof closeEventSource==='function') closeEventSource();
     
-    $(document).off("click","tr");
+    $(document).off("click","tbody tr");
     
     var data={id:id};
     
