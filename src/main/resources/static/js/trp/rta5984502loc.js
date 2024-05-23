@@ -30,6 +30,24 @@ $(function(){
 
     L.tileLayer(TILE_API_IP, {}).addTo(map);
     
+    L.control.zoom({ position: "topright" }).addTo(map);
+    
+    const options = {
+        position: "topleft", // toolbar position, options are 'topleft', 'topright', 'bottomleft', 'bottomright'
+        drawMarker: false, // adds button to draw markers
+        drawPolygon: false, // adds button to draw a polygon
+        drawPolyline: true, // adds button to draw a polyline
+        drawCircle: false, // adds button to draw a cricle
+        drawCircleMarker:false,
+        drawRectangle:false,
+        drawText:false,
+        editPolygon: true, // adds button to toggle global edit mode
+        deleteLayer: true, // adds a button to delete layers
+    };
+
+    // add leaflet.pm controls to the map
+    map.pm.addControls(options);
+    
     L.control.scale({imperial: false,}).addTo(map);
     
     if(data.paradas!==null && data.paradas!==undefined){
