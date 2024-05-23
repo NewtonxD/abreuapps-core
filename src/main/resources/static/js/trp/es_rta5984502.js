@@ -2,7 +2,7 @@
 sse = null;
 clientId="";
 
-SSE_LINK="/sse/rta";
+SSE_LINK="/see/rta";
 SSE_PK="rta";
 
 function createTableRow(d) {
