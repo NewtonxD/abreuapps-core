@@ -70,6 +70,11 @@ public class MainCntr {
     public String LeatLeaftJsMap() {        
         return "redirect:/content/js/lib/leaflet.js.map";
     }
+    
+    @RequestMapping("/main/leaflet-geoman.js.map")
+    public String GeomanJsMap(){
+        return "redirect:/content/js/lib/leaflet-geoman.js.map";
+    }
 //----------------------------------------------------------------------------//  
 
     @RequestMapping(value = "/main/content-page/", method = RequestMethod.POST)
