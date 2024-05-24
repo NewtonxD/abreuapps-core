@@ -1,237 +1,224 @@
-<!DOCTYPE html>
-<!--
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
--->
-<html>
-<head>
-    <title>TODO supply a title</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body>
-    <main th:fragment="content-default" id="content-page">
-    <th:block th:if="${usr_mgr_registro}">
-        <div class="container-fluid px-4">
-            <div class="row d-flex align-items-center justify-content-center mt-5 mb-5">
-                <div class="col-12 col-md-10 col-lg-8">
-                <div class="card">
-                    <div class="card-body row">
-                        <div class="mb-2 mt-3 d-flex align-items-start justify-content-start ms-4 me-4">
-                            <button type="submit" class="btn btn-sm btn-secondary" th:unless="${configuracion}"
-                                    onclick="$(function () {
-                                                event.preventDefault();
-                                                cargar_contenido('usr_mgr_principal');
-                                            });"><b><i
-                                        class="fa fa-chevron-left"></i></b></button>
-                            <h4>
-                                <th:block th:if="${configuracion}">Editar&nbsp;Mi</th:block>
-                                <th:block th:unless="${configuracion}">&nbsp;&nbsp;</th:block>
-                                Usuario
-                                <th:block th:if="${!update}">
-                                    <i class="fa fa-plus"></i>
-                                </th:block>
-                                <th:block th:if="${update}">
-                                    <i class="fa fa-pencil"></i>
-                                </th:block>
-                            </h4>
-                        </div>
-                        <form class="form-group" id="form-guardar">
-                        <section class="mt-3 mb-3 me-4 ms-4">
-                            <input type="text" id="original_usuario" th:value="*{user.username}" style="display: none; width: 1px;height: 1px;"  placeholder=" ... " class="form-control">                                            
-                            <input type="text" id="original_correo" th:value="*{user.correo}" style="display: none; width: 1px;height: 1px;"  placeholder=" ... " class="form-control">                                            
-                            <input type="text" id="original_cedula" th:value="*{persona.cedula}" style="display: none; width: 1px;height: 1px;"  placeholder=" ... " class="form-control">                                            
-                            <input type="text" id="update" th:value="*{update}" style="display: none; width: 1px;height: 1px;"  placeholder=" ... " class="form-control">                                            
-                                <article class="pt-2" th:if="${update}">
-                                    <div class="row">
-                                        <div class="mb-3 col-12 col-md-6 col-lg-4 d-flex justify-content-center">
-                                            <button type="button" class="btn btn-danger" id="BtnResetPwd"><b><i class="fa fa-rotate-right"></i>&nbsp;Reestablecer Clave</b></button>
-                                        </div>
-                                        <div class="mb-3 col-12 col-md-6 col-lg-4 d-flex justify-content-center">
-                                            <button type="button" class="btn btn-primary" id="BtnCloseSess"><b><i class="fa fa-sign-out"></i>&nbsp;Cerrar Sesión</b></button>
-                                        </div>
-                                        <div class="mb-3 col-12 col-md-6 col-lg-4 d-flex justify-content-center" th:unless="${configuracion}">
-                                            <button type="button" class="btn btn-success" id="BtnEditAcc"><b><i class="fa fa-users"></i>&nbsp;Editar Permisos</b></button>
-                                        </div>
-                                    </div>
-                                </article>    
-                                <article class="pt-2">
 
-                                    <h5>Información del Usuario</h5>
-                                    <div class="row" id="inf_usuario" th:object="${user}" >
-                                        <div class="col-12 mt-2 mb-2">
-                                            <div
-                                                class="alert alert-warning alert-correo"
-                                                role="alert" style="display:none;"
-                                                ><span>Correo en uso. Verifique y vuelva a intentarlo.</span>
-                                            </div>
-                                            <div
-                                                class="alert alert-warning alert-usuario"
-                                                role="alert" style="display:none;"
-                                                ><span>Usuario en uso. Verifique y vuelva a intentarlo.</span>
-                                            </div>
-
-                                        </div>
-                                        <th:block th:if="${update}">
-                                            <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" th:value="${#dates.format(user.fecha_actualizacion, 'yyyy-MM-dd HH:mm:ss')}">
-                                            <input  type="number" class="idusuario" th:field="*{id}" th:value="*{id}" style="display: none; width: 1px;height: 1px;" required>
-                                        </th:block>
-                                        <div class="mb-3 col-12 col-md-6">
-                                            <label for="usuario" class="form-label text-muted">Usuario:</label>
-                                            <input type="text" th:field="*{username}" th:value="*{username}" placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">        
-                                        </div>
-
-                                        <div class="mb-3 col-12 col-md-6">
-                                            <label for="correo" class="form-label text-muted">Correo:</label>
-                                            <input type="email" th:field="*{correo}" placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">        
-                                        </div>
-
-                                        <div class="col-12 d-flex justify-content-start">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" th:field="*{activo}" aria-describedby="activo">
-                                                <label class="form-check-label text-muted" for="activo">Activo</label>
-                                            </div>
-                                        </div>  
-
-
-                                    </div>
-
-                                </article>
-                                <article class="pt-2">
-                                    <h5>Información Personal &nbsp;<button type="button" class="btn collapsed" data-bs-toggle="collapse" data-bs-target="#inf_personal"><i class="fa fa-angle-down"></i></button></h5>
-                                    <div class="row collapse" id="inf_personal" th:object="${persona}" >
-                                        <div  th:fragment="info-dinamica-personal" id="info-dinamica-personal" class="row">  
-                                            <th:block th:if="${update}">
-                                                <input  type="number" th:field="*{id}" id="idPersona" style="display: none; width: 1px;height: 1px;" required>
-
-                                                <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" th:value="${#dates.format(persona.fecha_actualizacion, 'yyyy-MM-dd HH:mm:ss')}">
-                                            </th:block>
-                                            <div class="col-12 mt-2 mb-2">
-                                                <div
-                                                    class="alert alert-warning alert-cedula"
-                                                    role="alert" style="display:none;"
-                                                    ><span>Cedula en uso. Verifique y vuelva a intentarlo.</span>
-                                                </div>
-                                            </div>
-                                            <div class="mb-3 col-12">
-                                                <label for="cedula" class="form-label text-muted">Cédula:</label>
-                                                <th:block th:if="${update}" >
-                                                    <input type="text" th:field="*{cedula}" style="display: none; width: 1px;height: 1px;" />
-
-                                                    <input type="text" th:value="${persona.cedula}" name="ced" disabled placeholder="XXX-XXXXXXX-X" class="form-control cedula" aria-describedby="cedula" required>
-                                                </th:block>
-
-                                                <th:block th:if="${!update}">
-                                                    <input type="text" th:field="*{cedula}" placeholder="XXX-XXXXXXX-X" class="form-control cedula" aria-describedby="cedula" required>
-
-                                                </th:block>
-                                            </div>
-
-                                            <div class="mb-3 col-12 col-md-6">
-                                                <label for="nombre" class="form-label text-muted">Nombre:</label>
-                                                <input type="text" th:field="*{nombre}" placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">        
-                                            </div>
-
-                                            <div class="mb-3 col-12 col-md-6">
-                                                <label for="apellido" class="form-label text-muted">Apellido:</label>
-                                                <input type="text" th:field="*{apellido}"  placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">        
-                                            </div>
-
-                                            <div class="mb-3 col-12 col-md-6">
-                                                <label for="apodo" class="form-label text-muted">Apodo:</label>
-                                                <input type="text" th:field="*{apodo}"  placeholder=" ... " class="form-control" aria-describedby="basic-addon4">        
-                                            </div>
-
-
-
-                                            <div class="mb-3 col-12 col-md-6">
-                                                <label for="sexo" class="form-label text-muted" required>Sexo:</label>
-                                                <select class="form-select custom-select" th:field="*{sexo}">
-                                                    <option value="0" selected disabled>--Seleccione--</option>
-                                                    <option th:value="${s.dato}" th:each="s :${sexo}" th:text="${s.dato}"></option>
-                                                </select>        
-                                            </div>
-
-
-                                            <div class="mb-3 col-12 col-md-6">
-                                                <label for="numero_celular" class="form-label text-muted">Núm. Celular:</label>
-                                                <input type="tel" th:field="*{numero_celular}" placeholder="809-999-123" class="form-control telefono" aria-describedby="numero_celular" required>
-                                            </div>
-
-                                            <div class="mb-3 col-12">
-                                                <label for="direccion" class="form-label text-muted">Dirección:</label>
-                                                <textarea class="form-control" th:field="*{direccion}" rows="3" required maxlength="255" aria-describedby="direccion"></textarea>
-                                            </div>
-
-                                            <div class="mb-3 col-12 col-md-6">
-                                                <label for="nombre_emergencia" class="form-label text-muted">Nombre Contacto Emergencia:</label>
-                                                <input type="text" th:field="*{nombre_emergencia}" class="form-control" aria-describedby="nombre_emg">
-                                            </div>
-
-                                            <div class="mb-3 col-12 col-md-6">
-                                                <label for="numero_emergencia" class="form-label text-muted">Núm. Celular Emergencia:</label>
-                                                <input type="tel" th:field="*{numero_emergencia}" placeholder="809-999-123" class="form-control telefono" aria-describedby="numero_celular_emg">
-                                            </div>
-
-                                            <div class="mb-3 col-12 col-md-6">
-                                                <label for="fecha_nacimiento" class="form-label text-muted">Fecha de Nacimiento:</label>
-                                                <input type="date" th:field="*{fecha_nacimiento}" class="form-control" aria-describedby="fecha_nacimiento" required>
-                                            </div>
-
-                                            <div class="mb-3 col-12 col-md-6">
-                                                <label for="tipo_sangre" class="form-label text-muted">Tipo de Sangre:</label>
-                                                <select class="form-select custom-select" th:field="*{tipo_sangre}" required>
-                                                    <option value="0" selected disabled>--Seleccione--</option>
-                                                    <option th:value="${ts.dato}" th:each="ts :${sangre}" th:text="${ts.dato}"></option>
-                                                </select> 
-                                            </div>                        
-                                        </div>      
-                                    </div>
-                                </article>
-                        </section>
-
-                        <div class="row pt-2 pb-2 me-4 ms-4  d-flex justify-content-end align-items-center">
-                            <div class="col-12 mt-2 mb-2">
-                                <div class="alert alert-warning alert-pwd" role="alert" style="display:none;">
-                                    <span>Contraseña incorrecta. Verifique e intentelo de nuevo.</span>
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-6 d-flex justify-content-end">
-                            <th:block th:if="${configuracion}">
-                                <input
-                                    class="form-control"
-                                    id="password"
-                                    type="password"
-                                    placeholder="Contraseña"
-                                    required="required"
-                                    /> 
-                            </th:block>
+<main th:fragment="content-default" id="content-page">
+<th:block th:if="${usr_mgr_registro}">
+    <div class="container-fluid px-4">
+        <div class="row d-flex align-items-center justify-content-center mt-5 mb-5">
+            <div class="col-12 col-md-10 col-lg-8">
+            <div class="card">
+                <div class="card-body row">
+                    <div class="mb-2 mt-3 d-flex align-items-start justify-content-start ms-4 me-4">
+                        <button type="submit" class="btn btn-sm btn-secondary" th:unless="${configuracion}"
+                                onclick="$(function () {
+                                            event.preventDefault();
+                                            cargar_contenido('usr_mgr_principal');
+                                        });"><b><i
+                                    class="fa fa-chevron-left"></i></b></button>
+                        <h4>
+                            <th:block th:if="${configuracion}">Editar&nbsp;Mi</th:block>
+                            <th:block th:unless="${configuracion}">&nbsp;&nbsp;</th:block>
+                            Usuario
                             <th:block th:if="${!update}">
-                                <button type="submit" class="btn btn-primary" id="btn_guardar">
-                                    <b>Guardar</b>
-                                </button>
+                                <i class="fa fa-plus"></i>
                             </th:block>
                             <th:block th:if="${update}">
-                                <button type="submit" class="btn btn-primary" id="btn_guardar"><b>Editar</b></button>
+                                <i class="fa fa-pencil"></i>
                             </th:block>
+                        </h4>
+                    </div>
+                    <form class="form-group" id="form-guardar">
+                    <section class="mt-3 mb-3 me-4 ms-4">
+                        <input type="text" id="original_usuario" th:value="*{user.username}" style="display: none; width: 1px;height: 1px;"  placeholder=" ... " class="form-control">                                            
+                        <input type="text" id="original_correo" th:value="*{user.correo}" style="display: none; width: 1px;height: 1px;"  placeholder=" ... " class="form-control">                                            
+                        <input type="text" id="original_cedula" th:value="*{persona.cedula}" style="display: none; width: 1px;height: 1px;"  placeholder=" ... " class="form-control">                                            
+                        <input type="text" id="update" th:value="*{update}" style="display: none; width: 1px;height: 1px;"  placeholder=" ... " class="form-control">                                            
+                            <article class="pt-2" th:if="${update}">
+                                <div class="row">
+                                    <div class="mb-3 col-12 col-md-6 col-lg-4 d-flex justify-content-center">
+                                        <button type="button" class="btn btn-danger" id="BtnResetPwd"><b><i class="fa fa-rotate-right"></i>&nbsp;Reestablecer Clave</b></button>
+                                    </div>
+                                    <div class="mb-3 col-12 col-md-6 col-lg-4 d-flex justify-content-center">
+                                        <button type="button" class="btn btn-primary" id="BtnCloseSess"><b><i class="fa fa-sign-out"></i>&nbsp;Cerrar Sesión</b></button>
+                                    </div>
+                                    <div class="mb-3 col-12 col-md-6 col-lg-4 d-flex justify-content-center" th:unless="${configuracion}">
+                                        <button type="button" class="btn btn-success" id="BtnEditAcc"><b><i class="fa fa-users"></i>&nbsp;Editar Permisos</b></button>
+                                    </div>
+                                </div>
+                            </article>    
+                            <article class="pt-2">
+
+                                <h5>Información del Usuario</h5>
+                                <div class="row" id="inf_usuario" th:object="${user}" >
+                                    <div class="col-12 mt-2 mb-2">
+                                        <div
+                                            class="alert alert-warning alert-correo"
+                                            role="alert" style="display:none;"
+                                            ><span>Correo en uso. Verifique y vuelva a intentarlo.</span>
+                                        </div>
+                                        <div
+                                            class="alert alert-warning alert-usuario"
+                                            role="alert" style="display:none;"
+                                            ><span>Usuario en uso. Verifique y vuelva a intentarlo.</span>
+                                        </div>
+
+                                    </div>
+                                    <th:block th:if="${update}">
+                                        <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" th:value="${#dates.format(user.fecha_actualizacion, 'yyyy-MM-dd HH:mm:ss')}">
+                                        <input  type="number" class="idusuario" th:field="*{id}" th:value="*{id}" style="display: none; width: 1px;height: 1px;" required>
+                                    </th:block>
+                                    <div class="mb-3 col-12 col-md-6">
+                                        <label for="usuario" class="form-label text-muted">Usuario:</label>
+                                        <input type="text" th:field="*{username}" th:value="*{username}" placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">        
+                                    </div>
+
+                                    <div class="mb-3 col-12 col-md-6">
+                                        <label for="correo" class="form-label text-muted">Correo:</label>
+                                        <input type="email" th:field="*{correo}" placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">        
+                                    </div>
+
+                                    <div class="col-12 d-flex justify-content-start">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" th:field="*{activo}" aria-describedby="activo">
+                                            <label class="form-check-label text-muted" for="activo">Activo</label>
+                                        </div>
+                                    </div>  
+
+
+                                </div>
+
+                            </article>
+                            <article class="pt-2">
+                                <h5>Información Personal &nbsp;<button type="button" class="btn collapsed" data-bs-toggle="collapse" data-bs-target="#inf_personal"><i class="fa fa-angle-down"></i></button></h5>
+                                <div class="row collapse" id="inf_personal" th:object="${persona}" >
+                                    <div  th:fragment="info-dinamica-personal" id="info-dinamica-personal" class="row">  
+                                        <th:block th:if="${update}">
+                                            <input  type="number" th:field="*{id}" id="idPersona" style="display: none; width: 1px;height: 1px;" required>
+
+                                            <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" th:value="${#dates.format(persona.fecha_actualizacion, 'yyyy-MM-dd HH:mm:ss')}">
+                                        </th:block>
+                                        <div class="col-12 mt-2 mb-2">
+                                            <div
+                                                class="alert alert-warning alert-cedula"
+                                                role="alert" style="display:none;"
+                                                ><span>Cedula en uso. Verifique y vuelva a intentarlo.</span>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3 col-12">
+                                            <label for="cedula" class="form-label text-muted">Cédula:</label>
+                                            <th:block th:if="${update}" >
+                                                <input type="text" th:field="*{cedula}" style="display: none; width: 1px;height: 1px;" />
+
+                                                <input type="text" th:value="${persona.cedula}" name="ced" disabled placeholder="XXX-XXXXXXX-X" class="form-control cedula" aria-describedby="cedula" required>
+                                            </th:block>
+
+                                            <th:block th:if="${!update}">
+                                                <input type="text" th:field="*{cedula}" placeholder="XXX-XXXXXXX-X" class="form-control cedula" aria-describedby="cedula" required>
+
+                                            </th:block>
+                                        </div>
+
+                                        <div class="mb-3 col-12 col-md-6">
+                                            <label for="nombre" class="form-label text-muted">Nombre:</label>
+                                            <input type="text" th:field="*{nombre}" placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">        
+                                        </div>
+
+                                        <div class="mb-3 col-12 col-md-6">
+                                            <label for="apellido" class="form-label text-muted">Apellido:</label>
+                                            <input type="text" th:field="*{apellido}"  placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">        
+                                        </div>
+
+                                        <div class="mb-3 col-12 col-md-6">
+                                            <label for="apodo" class="form-label text-muted">Apodo:</label>
+                                            <input type="text" th:field="*{apodo}"  placeholder=" ... " class="form-control" aria-describedby="basic-addon4">        
+                                        </div>
+
+
+
+                                        <div class="mb-3 col-12 col-md-6">
+                                            <label for="sexo" class="form-label text-muted" required>Sexo:</label>
+                                            <select class="form-select custom-select" th:field="*{sexo}">
+                                                <option value="0" selected disabled>--Seleccione--</option>
+                                                <option th:value="${s.dato}" th:each="s :${sexo}" th:text="${s.dato}"></option>
+                                            </select>        
+                                        </div>
+
+
+                                        <div class="mb-3 col-12 col-md-6">
+                                            <label for="numero_celular" class="form-label text-muted">Núm. Celular:</label>
+                                            <input type="tel" th:field="*{numero_celular}" placeholder="809-999-123" class="form-control telefono" aria-describedby="numero_celular" required>
+                                        </div>
+
+                                        <div class="mb-3 col-12">
+                                            <label for="direccion" class="form-label text-muted">Dirección:</label>
+                                            <textarea class="form-control" th:field="*{direccion}" rows="3" required maxlength="255" aria-describedby="direccion"></textarea>
+                                        </div>
+
+                                        <div class="mb-3 col-12 col-md-6">
+                                            <label for="nombre_emergencia" class="form-label text-muted">Nombre Contacto Emergencia:</label>
+                                            <input type="text" th:field="*{nombre_emergencia}" class="form-control" aria-describedby="nombre_emg">
+                                        </div>
+
+                                        <div class="mb-3 col-12 col-md-6">
+                                            <label for="numero_emergencia" class="form-label text-muted">Núm. Celular Emergencia:</label>
+                                            <input type="tel" th:field="*{numero_emergencia}" placeholder="809-999-123" class="form-control telefono" aria-describedby="numero_celular_emg">
+                                        </div>
+
+                                        <div class="mb-3 col-12 col-md-6">
+                                            <label for="fecha_nacimiento" class="form-label text-muted">Fecha de Nacimiento:</label>
+                                            <input type="date" th:field="*{fecha_nacimiento}" class="form-control" aria-describedby="fecha_nacimiento" required>
+                                        </div>
+
+                                        <div class="mb-3 col-12 col-md-6">
+                                            <label for="tipo_sangre" class="form-label text-muted">Tipo de Sangre:</label>
+                                            <select class="form-select custom-select" th:field="*{tipo_sangre}" required>
+                                                <option value="0" selected disabled>--Seleccione--</option>
+                                                <option th:value="${ts.dato}" th:each="ts :${sangre}" th:text="${ts.dato}"></option>
+                                            </select> 
+                                        </div>                        
+                                    </div>      
+                                </div>
+                            </article>
+                    </section>
+
+                    <div class="row pt-2 pb-2 me-4 ms-4  d-flex justify-content-end align-items-center">
+                        <div class="col-12 mt-2 mb-2">
+                            <div class="alert alert-warning alert-pwd" role="alert" style="display:none;">
+                                <span>Contraseña incorrecta. Verifique e intentelo de nuevo.</span>
                             </div>
                         </div>
-
-                        </form>
+                        <div class="col-12 col-md-6 d-flex justify-content-end">
+                        <th:block th:if="${configuracion}">
+                            <input
+                                class="form-control"
+                                id="password"
+                                type="password"
+                                placeholder="Contraseña"
+                                required="required"
+                                /> 
+                        </th:block>
+                        <th:block th:if="${!update}">
+                            <button type="submit" class="btn btn-primary" id="btn_guardar">
+                                <b>Guardar</b>
+                            </button>
+                        </th:block>
+                        <th:block th:if="${update}">
+                            <button type="submit" class="btn btn-primary" id="btn_guardar"><b>Editar</b></button>
+                        </th:block>
+                        </div>
                     </div>
-                </div>
+
+                    </form>
                 </div>
             </div>
+            </div>
         </div>
-        <script th:src="@{/content/js/usrmgr/svd_usr782360.js}" th:unless="${configuracion}"></script>
-        <script th:src="@{/content/js/usrmgr/svd_usr802562.js}" th:if="${configuracion}"></script>
-        <script th:src="@{/content/js/lib/input-formats.js}"></script>
+    </div>
+    <script th:src="@{/content/js/usrmgr/svd_usr782360.js}" th:unless="${configuracion}"></script>
+    <script th:src="@{/content/js/usrmgr/svd_usr802562.js}" th:if="${configuracion}"></script>
+    <script th:src="@{/content/js/lib/input-formats.js}"></script>
 
-        </th:block>
+    </th:block>
 
-        <th:block th:unless="${usr_mgr_registro}" th:insert="~{error/403 :: error403}">
-        </th:block>
+    <th:block th:unless="${usr_mgr_registro}" th:insert="~{error/403 :: error403}">
+    </th:block>
 
-    </main>
-</body>
-</html>
+</main>

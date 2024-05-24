@@ -1,104 +1,91 @@
-<!DOCTYPE html>
-<!--
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
--->
-<html>
-    <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    </head>
-    <body>
-        <main th:fragment="content-default" id="content-page">
-            <th:block th:if="${dat_gen_principal}">
-                <div class="container-fluid px-4">
-                    <div
-                        class="row d-flex align-items-center justify-content-center mt-5 mb-5"
-                        >
-                        <div class="card col-12 col-md-10 col-lg-8">
-                            <div class="card-body mt-3 mb-3">
-                                <div class="row d-flex align-items-center justify-content-center mt-1 mb-1">
-                                    <div class="col-10 text-center">
-                                        <h3>Datos del Sistema</h3>
-                                    </div>
-                                </div>
-                                <div class="row d-flex align-items-center justify-content-center">
-                                    <div class="col-12 col-md-6 col-lg-5">
-                                        <th:block th:if="${dat_gen_consulta_datos}">
-                                            <div
-                                                class="card text-center h-50"
-                                                onclick="
-                                                        event.preventDefault();
-                                                        cargar_contenido('dat_gen_consulta_datos');
-                                                "
-                                                >
-                                                <div
-                                                    class="card-header bg-primary btn btn-primary btn-lg text-white"
-                                                    >
-                                                    <a><b>Datos Generales</b></a>
-                                                </div>
-                                        </th:block>
-                                        <th:block th:unless="${dat_gen_consulta_datos}">
-                                            <div
-                                                class="card text-center h-50 bloqueado"
-                                                >
-                                                <div
-                                                    class="card-header bg-secondary btn btn-secondary btn-lg bloqueado text-white"
-                                                    >
-                                                    <a><b>Datos Generales&nbsp;&nbsp;<i class="fa fa-lock"></i></b></a>
-                                                </div>
-                                        </th:block>
 
-                                        <div class="card-body">
-                                            <p class="card-text text-muted">
-                                                Registre, consulte y edite los Datos principales.
-                                            </p>
+<main th:fragment="content-default" id="content-page">
+    <th:block th:if="${dat_gen_principal}">
+        <div class="container-fluid px-4">
+            <div
+                class="row d-flex align-items-center justify-content-center mt-5 mb-5"
+                >
+                <div class="card col-12 col-md-10 col-lg-8">
+                    <div class="card-body mt-3 mb-3">
+                        <div class="row d-flex align-items-center justify-content-center mt-1 mb-1">
+                            <div class="col-10 text-center">
+                                <h3>Datos del Sistema</h3>
+                            </div>
+                        </div>
+                        <div class="row d-flex align-items-center justify-content-center">
+                            <div class="col-12 col-md-6 col-lg-5">
+                                <th:block th:if="${dat_gen_consulta_datos}">
+                                    <div
+                                        class="card text-center h-50"
+                                        onclick="
+                                                event.preventDefault();
+                                                cargar_contenido('dat_gen_consulta_datos');
+                                        "
+                                        >
+                                        <div
+                                            class="card-header bg-primary btn btn-primary btn-lg text-white"
+                                            >
+                                            <a><b>Datos Generales</b></a>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-6 col-lg-5">
-                                    <th:block th:if="${dat_gen_consulta_grupos}">
+                                </th:block>
+                                <th:block th:unless="${dat_gen_consulta_datos}">
+                                    <div
+                                        class="card text-center h-50 bloqueado"
+                                        >
                                         <div
-                                            class="card text-center h-50"
-                                            onclick="
-                                                    event.preventDefault();
-                                                    cargar_contenido('dat_gen_consulta_grupos');
-                                            "
+                                            class="card-header bg-secondary btn btn-secondary btn-lg bloqueado text-white"
                                             >
-                                            <div
-                                                class="card-header bg-primary btn btn-primary btn-lg text-white"
-                                                >
-                                                <a><b>Grupos de Datos</b></a>
-                                            </div>
-                                    </th:block>
-                                    <th:block th:unless="${dat_gen_consulta_grupos}">
-                                        <div
-                                            class="card text-center h-50 bloqueado"
-                                            >
-                                            <div
-                                                class="card-header bg-secondary btn btn-secondary btn-lg bloqueado text-white"
-                                                >
-                                                <a><b>Grupos de Datos&nbsp;&nbsp;<i class="fa fa-lock"></i></b></a>
-                                            </div>
-                                    </th:block>
-                                    <div class="card-body">
-                                        <p class="card-text text-muted">
-                                            Registre, consulte y edite las Categorías de los Datos.
-                                        </p>
-                                    </div>
+                                            <a><b>Datos Generales&nbsp;&nbsp;<i class="fa fa-lock"></i></b></a>
+                                        </div>
+                                </th:block>
+
+                                <div class="card-body">
+                                    <p class="card-text text-muted">
+                                        Registre, consulte y edite los Datos principales.
+                                    </p>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-5">
+                            <th:block th:if="${dat_gen_consulta_grupos}">
+                                <div
+                                    class="card text-center h-50"
+                                    onclick="
+                                            event.preventDefault();
+                                            cargar_contenido('dat_gen_consulta_grupos');
+                                    "
+                                    >
+                                    <div
+                                        class="card-header bg-primary btn btn-primary btn-lg text-white"
+                                        >
+                                        <a><b>Grupos de Datos</b></a>
+                                    </div>
+                            </th:block>
+                            <th:block th:unless="${dat_gen_consulta_grupos}">
+                                <div
+                                    class="card text-center h-50 bloqueado"
+                                    >
+                                    <div
+                                        class="card-header bg-secondary btn btn-secondary btn-lg bloqueado text-white"
+                                        >
+                                        <a><b>Grupos de Datos&nbsp;&nbsp;<i class="fa fa-lock"></i></b></a>
+                                    </div>
+                            </th:block>
+                            <div class="card-body">
+                                <p class="card-text text-muted">
+                                    Registre, consulte y edite las Categorías de los Datos.
+                                </p>
                             </div>
                         </div>
                     </div>
                 </div>
-                </div>
-                </div>
-                </div>
-                </div>
-            </th:block>
-            <th:block th:unless="${dat_gen_principal}" th:insert="~{error/403 :: error403}">
-            </th:block>
-        </main>
-    </body>
-</html>
+            </div>
+        </div>
+        </div>
+        </div>
+        </div>
+        </div>
+    </th:block>
+    <th:block th:unless="${dat_gen_principal}" th:insert="~{error/403 :: error403}">
+    </th:block>
+</main>

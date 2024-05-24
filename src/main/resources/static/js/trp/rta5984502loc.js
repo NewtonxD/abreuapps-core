@@ -66,7 +66,18 @@ $(function(){
         }
         
     }
-        
+
+    function getPolyline() {
+        var polylines = [];
+        map.eachLayer(function(layer) {
+            if (layer instanceof L.Polyline && !(layer instanceof L.Polygon)) {
+                polylines.push(layer.getLatLngs());
+            }
+        });
+        return polylines;
+    }
+    
+    
     
 });
 
