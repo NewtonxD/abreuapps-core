@@ -1,8 +1,4 @@
-/* 
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Other/javascript.js to edit this template
- */
-
+var map;
 $(function(){
     
     var data=window.data_lastloc;
@@ -19,14 +15,13 @@ $(function(){
         const lng = data.lon;
     
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register(`${SERVER_IP}/service-worker.js`,{scope:"/"}).then(function() {
-                console.log('Service Worker Registered Successfully');
-            });
+            navigator.serviceWorker.register(`${SERVER_IP}/service-worker.js`,{scope:"/"});
         }
         
         $("#date_last_loc").html(data.fecha);
         
-        const map = L.map("map", config).setView([lat, lng], zoom);
+        if (map != undefined) map.remove();
+        map = L.map("map", config).setView([lat, lng], zoom);
         
         L.tileLayer(TILE_API_IP, {}).addTo(map);
         

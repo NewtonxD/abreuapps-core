@@ -72,8 +72,8 @@ function post_plantilla(LINK,DATA){
 
             if(response.indexOf('Login') !== -1 || response.indexOf('This session has been expired') !== -1)
                 window.location.href=`${SERVER_IP}/auth/login?logout=true`;
-
-          fadeout.then(function(){
+            
+            fadeout.then(function(){
                 var fadein=$("#content-page").html(response).fadeIn(100).promise();
 
                 fadein.then(function(){

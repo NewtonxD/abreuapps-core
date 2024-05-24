@@ -1,3 +1,5 @@
+var map;
+
 $(function(){
     var data=[];
     var tmp=window.data_loc;
@@ -7,7 +9,7 @@ $(function(){
     }
     
     if( data["lat"] === undefined || data["lat"]===null){
-//         por defecto omsa oficina santiago o actual
+    //  por defecto omsa oficina santiago o actual
         data["lat"]=19.488365437890657;
         data["lon"]=-70.71529535723246;
     }
@@ -16,17 +18,16 @@ $(function(){
         minZoom: 7,
         maxZoom: 18
     };
-    const zoom = 16;
+    const zoom = 18;
     const lat = data.lat;
     const lng = data.lon;
     
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register(`${SERVER_IP}/service-worker.js`,{scope:"/"}).then(function() {
-            console.log('Service Worker Registered Successfully');
-        });
+        navigator.serviceWorker.register(`${SERVER_IP}/service-worker.js`,{scope:"/"});
     }
     
-    const map = L.map("map", config).setView([lat, lng], zoom);
+    if (map != undefined) map.remove();
+    map = L.map("map", config).setView([lat, lng], zoom);
 
     L.tileLayer(TILE_API_IP, {}).addTo(map);
     
@@ -48,7 +49,7 @@ $(function(){
     // add leaflet.pm controls to the map
     map.pm.addControls(options);
     
-    L.control.scale({imperial: false,}).addTo(map);
+    L.control.scale({imperial: false}).addTo(map);
     
     if(data.paradas!==null && data.paradas!==undefined){
         for (let i = 0; i < data.paradas.length; i++) {
@@ -65,19 +66,32 @@ $(function(){
               .addTo(map);
         }
         
-    }
+    }  
+    
+    if(data.ruta!==null && data.ruta!==undefined){
+        
+        var coordinates = data.ruta.map(function(point) {
+            return [point.latitud, point.longitud];
+        });
+        
+        map.setView([coordinates[0][0], coordinates[0][1]], 14);
 
-    function getPolyline() {
+        var polyline = L.polyline(coordinates).addTo(map);
+
+        //map.fitBounds(polyline.getBounds());
+    }
+    
+    $('#getPolylineData').click(function() {
         var polylines = [];
         map.eachLayer(function(layer) {
             if (layer instanceof L.Polyline && !(layer instanceof L.Polygon)) {
                 polylines.push(layer.getLatLngs());
             }
         });
-        return polylines;
-    }
-    
-    
+        window.data_poly=polylines;
+    });
     
 });
+
+
 

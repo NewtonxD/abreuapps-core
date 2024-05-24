@@ -1,22 +1,18 @@
 
 $(function(){
-    $("#form-guardar").on("submit", function(event){
-        event.preventDefault();
+    $("#form-guardar").on("submit", function(event){  
+        event.preventDefault(); 
         guardar_datos();
     });    
 });
 
 function guardar_datos(){
-    
-    var polylines=getPolyline();
-    if (polylines.length <= 0) {
-        //alert o mensaje en la pantalla.
-        console.log('No polylines found!');
-        return;
-    } 
-    
-    
-    
     let data=dataPrepare("form-guardar");
+    
+    $("#getPolylineData").click();
+    
+    data.push({name:"data_poly",value:window.data_poly});
+    delete window.data_poly;
+    
     post_plantilla("/rta/save",data);
 }
