@@ -4,6 +4,8 @@
  */
 package abreusapp.core.control.utils;
 
+import abreusapp.core.control.transporte.LocRuta;
+import abreusapp.core.control.transporte.LocRutaDTO;
 import abreusapp.core.control.transporte.Parada;
 import abreusapp.core.control.transporte.ParadaDTO;
 import abreusapp.core.control.transporte.Ruta;
@@ -96,4 +98,24 @@ public class MapperServ {
             }
             return listaDTO;
     }
+    
+    public static LocRutaDTO LocRutaToDto(LocRuta loc){
+        if(loc==null) return null;
+        else return LocRutaDTO
+                .builder()
+                .id(loc.getId())
+                .latitud(loc.getLatitud())
+                .longitud(loc.getLongitud())
+                .ruta(loc.getRuta()==null? null : loc.getRuta().getRuta())
+                .build();
+    }
+    
+    public static List<LocRutaDTO> listLocRutaToDTO(List<LocRuta> locRutas){
+            List<LocRutaDTO> listaDTO = new ArrayList<>();
+            for (LocRuta loc : locRutas) {
+                listaDTO.add(LocRutaToDto(loc));
+            }
+            return listaDTO;
+    }
+    
 }

@@ -8,6 +8,7 @@ import abreusapp.core.control.general.Dato;
 import abreusapp.core.control.general.DatoServ;
 import abreusapp.core.control.general.GrupoDato;
 import abreusapp.core.control.general.GrupoDatoServ;
+import abreusapp.core.control.transporte.LocRuta;
 import abreusapp.core.control.transporte.LocRutaServ;
 import abreusapp.core.control.transporte.LocVehiculo;
 import abreusapp.core.control.transporte.LocVehiculoServ;
@@ -99,10 +100,12 @@ public class TransporteCntr {
         Model model,
         Ruta rutaCliente,
         @RequestParam(name = "fecha_actualizacionn", 
-                        required = false) String fechaActualizacionCliente
+                        required = false) String fechaActualizacionCliente,
+        @RequestParam("data_poly") String data
     ) throws ParseException {
 
         boolean valido;
+        
         
         String plantillaRespuesta="fragments/trp_rutas_consulta :: content-default";
         
@@ -159,7 +162,14 @@ public class TransporteCntr {
 
                 Ruta d = RutaServicio.guardar(rutaCliente, u, rutaDB.isPresent());
                 model.addAttribute("msg", "Registro guardado exitosamente!");
-
+                
+                // GUARDAMOS LOC RUTA
+                if(!data.equals("")){
+                    String cadenaListaLocRuta=data.replace("LatLng(","[").replace(")", "]");
+                    List<LocRuta> listaLocRuta = LocRutaServicio.generarLista(cadenaListaLocRuta, d);
+                    LocRutaServicio.borrarPorRuta(d);
+                    LocRutaServicio.guardarTodos(listaLocRuta);
+                }
                 ModeloServicio.load("trp_rutas_consulta", model, u.getId());
             }
             
@@ -227,8 +237,10 @@ public class TransporteCntr {
             Optional<Ruta> Ruta = RutaServicio.obtener(idRuta); 
             
             if(Ruta.isPresent()){
-                respuesta.put("ruta",LocRutaServicio.consultarPorRuta(Ruta.get()));
-            }
+                respuesta.put("ruta",MapperServ.listLocRutaToDTO( 
+                    LocRutaServicio.consultarPorRuta(Ruta.get())) 
+                );
+            } 
             //hay que sacar la ubicacion de la ruta
             
             List<Parada> otrasParadas = ParadaServicio.consultarTodo( 

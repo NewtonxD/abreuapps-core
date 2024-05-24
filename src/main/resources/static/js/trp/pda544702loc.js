@@ -1,3 +1,4 @@
+var map;
 $(function(){
     var data=[];
     var tmp=window.data_loc;
@@ -21,12 +22,11 @@ $(function(){
     const lng = data.lon;
     
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register(`${SERVER_IP}/service-worker.js`,{scope:"/"}).then(function() {
-            console.log('Service Worker Registered Successfully');
-        });
+        navigator.serviceWorker.register(`${SERVER_IP}/service-worker.js`,{scope:"/"});
     }
     
-    const map = L.map("map", config).setView([lat, lng], zoom);
+    if (map != undefined) map.remove();
+    map = L.map("map", config).setView([lat, lng], zoom);
 
     L.tileLayer(TILE_API_IP, {}).addTo(map);
     
