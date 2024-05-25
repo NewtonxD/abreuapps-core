@@ -116,6 +116,18 @@
                                         </th:block> 
                                     </select>
                                 </div>
+                                
+                                <div class="mb-3 col-12 col-md-6 col-lg-4">
+                                    <label for="placa" class="form-label text-muted">Año de Fabricación:</label>
+                                    <input type="number" th:field='*{anio_fabricacion}' placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">        
+                                    
+                                </div>
+                                
+                                <div class="mb-3 col-12 col-md-6 col-lg-4">
+                                    <label for="placa" class="form-label text-muted">Capacidad Máxima (Pasajeros):</label>
+                                    <input type="number" th:field='*{capacidad_pasajeros}' placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">        
+                                    
+                                </div>
 
                                 <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" th:value="${#dates.format(vehiculo.fecha_actualizacion, 'yyyy-MM-dd HH:mm:ss')}">
 

@@ -14,9 +14,9 @@ $(function(){
         const lat = data.lat;
         const lng = data.lon;
     
-        if ('serviceWorker' in navigator) {
+        if ('serviceWorker' in navigator) 
             navigator.serviceWorker.register(`${SERVER_IP}/service-worker.js`,{scope:"/"});
-        }
+        
         
         $("#date_last_loc").html(data.fecha);
         
