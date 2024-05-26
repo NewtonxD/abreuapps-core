@@ -31,6 +31,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,9 +78,7 @@ public class TransporteCntr {
     private final ParadaServ ParadaServicio;
     
     private final LocVehiculoServ LocVehiculoServicio;
-    
-    private final TransportTokenServ TrpTokenServ;
-    
+        
     private final RutaServ RutaServicio;
     
     private final LocRutaServ LocRutaServicio;
@@ -327,7 +326,7 @@ public class TransporteCntr {
                     paradaCliente.setHecho_por(paradaDB.get().getHecho_por());
                 }
 
-                Parada d = ParadaServicio.guardar(paradaCliente, u, paradaDB.isPresent());
+                ParadaServicio.guardar(paradaCliente, u, paradaDB.isPresent());
                 model.addAttribute("msg", "Registro guardado exitosamente!");
 
                 ModeloServicio.load("trp_paradas_consulta", model, u.getId());
@@ -487,7 +486,7 @@ public class TransporteCntr {
                     vehiculoCliente.setHecho_por(vehiculoBD.get().getHecho_por());
                 }
 
-                Vehiculo d = VehiculoServicio.guardar(vehiculoCliente, u, vehiculoBD.isPresent());
+                VehiculoServicio.guardar(vehiculoCliente, u, vehiculoBD.isPresent());
                 
                 model.addAttribute("msg", "Registro guardado exitosamente!");
 
@@ -665,11 +664,17 @@ public class TransporteCntr {
         String mensaje="";
         String token="";
         String placa=req.getOrDefault("placa","");
+        String ruta=req.getOrDefault("ruta","");
         String pwd=req.getOrDefault("password","");
 
         //INICIO DE LAS VALIDACIONES
         if(placa.equals("") ){
             mensaje="Placa no pudo ser procesada...";
+            valido=false;
+        }
+        
+        if(ruta.equals("") ){
+            mensaje="Ruta invalida...";
             valido=false;
         }
 
@@ -703,10 +708,11 @@ public class TransporteCntr {
         //SI TODAS LAS ANTERIORES SON VALIDAS PROCEDEMOS
         if(valido) {
 
-            token=TrpTokenServ.generateToken();
+            token= TransportTokenServ.generateToken();
             mensaje = "Transporte en Camino! Iniciando Servicio...";
             Vehiculo h=v.get();
             h.setEstado(DatosServicio.obtener("En Camino").get());
+            h.setRuta(RutaServicio.obtener(ruta).get());
             h.setToken(token);
             VehiculoServicio.guardar(h, null, true);
             
@@ -826,6 +832,9 @@ public class TransporteCntr {
             Vehiculo h=v.get();
             h.setToken("");
             h.setEstado(DatosServicio.obtener(estado).get());
+            if(! estado.equals("En Camino") && ! estado.equals("En Parada")){
+                h.setRuta(null);
+            }
             VehiculoServicio.guardar(h, null, true);
             
         }
@@ -836,6 +845,19 @@ public class TransporteCntr {
         
         return respuesta;  
     } 
+//----------------------------------------------------------------------------//
+    @ResponseBody
+    @GetMapping(value="/API/trp/getRutas")
+    public Map<String, Object> ObtenerRutasActivas() {  
+        Map<String, Object> respuesta= new HashMap<>();
+        List<Ruta> Rutas=RutaServicio.consultarActivo();
+        List<String> NombreRutas=new ArrayList<>();
+        for(Ruta r : Rutas){
+            NombreRutas.add(r.getRuta());
+        }
+        respuesta.put("rutas", NombreRutas);                
+        return respuesta;  
+    }
     
 //----------------------------------------------------------------------------//
 //------------------ENDPOINTS TILES MAPA--------------------------------------//
