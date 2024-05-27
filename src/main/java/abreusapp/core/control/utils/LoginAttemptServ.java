@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class LoginAttemptServ {
 
-    public static final int MAX_ATTEMPT = 6;
+    public static final int MAX_ATTEMPT = 10;
     private final LoadingCache<String, Integer> attemptsCache;
     
     @Autowired
