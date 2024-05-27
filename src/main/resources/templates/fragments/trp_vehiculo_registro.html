@@ -29,7 +29,7 @@
                                 <div class="mb-3 col-12 col-md-6 col-lg-4">
                                     <label for="placa" class="form-label text-muted">Placa:</label>
                                     <input type="text" th:field='*{placa}' th:disabled="${vehiculo.placa!=null}" placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">        
-                                    <input type="text" style="display: none; width: 1px;height: 1px;" th:if="${vehiculo.placa!=null}" name="placa" th:value="${vehiculo.placa}" placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">
+                                    <input type="text" style="display: none; width: 1px;height: 1px;" th:if="${vehiculo.placa!=null}" id="Placa" name="placa" th:value="${vehiculo.placa}" placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">
                                 </div>
 
                                 <div class="mb-3 col-12 col-md-6 col-lg-4">

@@ -2,11 +2,21 @@ var map;
 
 $(function(){
     var data=[];
-    var tmp=window.data_loc;
-    if(tmp!==undefined && tmp!==null){
-        data=tmp;
-        delete window.data_loc;
+    
+    var ruta="";
+    if(! ($("#Ruta")=== undefined || $("#Ruta")===null) ){
+        ruta=$("#Ruta").val();
     }
+    
+    $.ajax({
+       url:`${SERVER_IP}/rta/getLoc`,
+       type:"POST",
+       async:false,
+       data:{idRuta:ruta},
+       success: function(res){
+           data=res;
+       }
+    });
     
     if( data["lat"] === undefined || data["lat"]===null){
     //  por defecto omsa oficina santiago o actual
@@ -74,11 +84,11 @@ $(function(){
             return [point.latitud, point.longitud];
         });
         
-        map.setView([coordinates[0][0], coordinates[0][1]], 14);
+        if(coordinates.length>0){
+            var polyline = L.polyline(coordinates).addTo(map);
 
-        var polyline = L.polyline(coordinates).addTo(map);
-
-        //map.fitBounds(polyline.getBounds());
+            map.fitBounds(polyline.getBounds());
+        }
     }
     
     $('#getPolylineData').click(function() {
