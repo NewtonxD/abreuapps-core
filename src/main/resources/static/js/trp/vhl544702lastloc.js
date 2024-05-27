@@ -1,10 +1,25 @@
 var map;
 $(function(){
     
-    var data=window.data_lastloc;
+    var data;
+    
+    var Placa="";
+    if(! ($("#Placa")=== undefined || $("#Placa")===null) ){
+        Placa=$("#Placa").val();
+    }
+    
+    $.ajax({
+        url:`${SERVER_IP}/vhl/getLastLoc`,
+        type:"POST",
+        async:false,
+        data:{placa:Placa},
+        success: function(res){
+            data=res;
+        }
+    });
+    
     if(data!==undefined && data!==null){
         
-        delete window.data_lastloc;
         
         let config = {
             minZoom: 7,

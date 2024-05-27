@@ -1,11 +1,21 @@
 var map;
 $(function(){
     var data=[];
-    var tmp=window.data_loc;
-    if(tmp!==undefined && tmp!==null){
-        data=tmp;
-        delete window.data_loc;
+    
+    var idParada=0;
+    if(! ($("#idParada")=== undefined || $("#idParada")===null) ){
+        idParada=$("#idParada").val();
     }
+            
+    $.ajax({
+       url:`${SERVER_IP}/pda/getLoc`,
+       type:"POST",
+       async:false,
+       data:{idParada:idParada},
+       success: function(res){
+           data=res;
+       }
+    });
     
     if( data["lat"] === undefined || data["lat"]===null){
 //         por defecto omsa oficina santiago o actual
