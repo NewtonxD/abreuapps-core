@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import abreusapp.core.control.usuario.UsuarioRepo;
+import abreusapp.core.control.utils.LoginAttemptServ;
 import abreusapp.core.control.utils.NotificationHandler;
 import abreusapp.core.control.utils.NotifierServ;
 import com.zaxxer.hikari.util.DriverDataSource;
@@ -21,6 +22,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
+import org.springframework.web.context.request.RequestContextListener;
 
 @Configuration
 @RequiredArgsConstructor
@@ -36,7 +38,7 @@ public class AppConf {
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
-        CustomAuthProv authProvider = new CustomAuthProv(userDetailsService(), passwordEncoder());
+        CustomAuthProv authProvider = new CustomAuthProv(userDetailsService(), passwordEncoder(), loginAttemptServ());
         return authProvider;
     }
  
@@ -49,6 +51,11 @@ public class AppConf {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+    
+    @Bean
+    public LoginAttemptServ loginAttemptServ() {
+        return new LoginAttemptServ();
+    }
 
     @Bean
     public HttpSessionEventPublisher httpSessionEventPublisher() {
@@ -58,6 +65,11 @@ public class AppConf {
     @Bean
     public SessionRegistry sessionRegistry() { 
         return new SessionRegistryImpl(); 
+    }
+    
+    @Bean
+    public RequestContextListener requestContextListener() {
+        return new RequestContextListener();
     }
     
     @Bean

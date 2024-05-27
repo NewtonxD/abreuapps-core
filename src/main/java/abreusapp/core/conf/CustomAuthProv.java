@@ -4,6 +4,7 @@
  */
 package abreusapp.core.conf;
 
+import abreusapp.core.control.utils.LoginAttemptServ;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,10 +27,16 @@ public class CustomAuthProv implements AuthenticationProvider {
     private final UserDetailsService userDetailsService;
     
     private final PasswordEncoder passwordEncoder;
+    
+    private final LoginAttemptServ loginAttemptService;
 
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        if (loginAttemptService.isBlocked()) {
+            throw new UsernameNotFoundException("Ha sido bloqueado! Demasiados intentos de sesión.");
+        }
+        
         String username = authentication.getName();
         String password = authentication.getCredentials().toString();
 
