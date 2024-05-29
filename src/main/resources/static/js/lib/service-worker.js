@@ -1,5 +1,5 @@
 const CACHE_NAME = 'tile-cache';
-const TILE_URL_PATTERN = /.*?\/API\/tiles\/\d+\/\d+\/\d+/;
+const TILE_URL_PATTERN = "/API/tiles";
 
 self.addEventListener('install', (event) => {
     event.waitUntil(
@@ -9,7 +9,7 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-    if (TILE_URL_PATTERN.test(event.request.url)) {
+    if (event.request.url.includes(TILE_URL_PATTERN)) {
         event.respondWith(
             caches.match(event.request).then((response) => {
                 if (response) {

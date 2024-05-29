@@ -23,7 +23,11 @@ if (map != undefined)
     map.remove();
 map = L.map("map", config).setView([lat, lng], zoom);
 
-L.tileLayer(TILE_API_IP, {}).addTo(map);
+L.tileLayer(TILE_API_IP, {
+  maxZoom: config.maxZoom,
+  preload: true,
+  formatData: "webp"
+}).addTo(map);
 
 L.control.scale({imperial: false, }).addTo(map);
 //------------------------------------------------------------------------------
