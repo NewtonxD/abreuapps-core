@@ -89,7 +89,7 @@ if (navigator.geolocation) {
 //------------------------------------------------------------------------------
 const mediaQueryList = window.matchMedia("(min-width: 700px)");
 
-$(mediaQueryList).on("change", (event) => onMediaQueryChange(event));
+mediaQueryList.addEventListener('change', (event) => onMediaQueryChange(event));
 
 onMediaQueryChange(mediaQueryList);
 
