@@ -1,11 +1,214 @@
-html,body{
-    width: 100% !important;
-    height: 100% !important;
-    margin: 0 !important;
+*,
+:after,
+:before {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 }
 
-#map{
-    width: 100%;
-    height: 100%;
+body,
+html,
+#map {
+  width: 100%;
+  height: 100%;
 }
+
+@media (prefers-reduced-motion: no-preference) {
+  :root {
+    scroll-behavior: smooth;
+  }
+}
+
+:root {
+  --xx-blue: #0d6efd;
+  --xx-indigo: #6610f2;
+  --xx-purple: #6f42c1;
+  --xx-pink: #d63384;
+  --xx-red: #dc3545;
+  --xx-orange: #fd7e14;
+  --xx-yellow: #ffc107;
+  --xx-green: #198754;
+  --xx-teal: #20c997;
+  --xx-cyan: #0dcaf0;
+  --xx-white: #fff;
+  --xx-gray: #6c757d;
+  --xx-gray-dark: #343a40;
+  --xx-gray-100: #f8f9fa;
+  --xx-gray-200: #e9ecef;
+  --xx-gray-300: #dee2e6;
+  --xx-gray-400: #ced4da;
+  --xx-gray-500: #adb5bd;
+  --xx-gray-600: #6c757d;
+  --xx-gray-700: #495057;
+  --xx-gray-800: #343a40;
+  --xx-gray-900: #212529;
+  --xx-primary: #0d6efd;
+  --xx-secondary: #6c757d;
+  --xx-success: #198754;
+  --xx-info: #0dcaf0;
+  --xx-warning: #ffc107;
+  --xx-danger: #dc3545;
+  --xx-light: #f8f9fa;
+  --xx-dark: #212529;
+  --xx-primary-rgb: 13, 110, 253;
+  --xx-secondary-rgb: 108, 117, 125;
+  --xx-secondary-rgba: rgba(33, 37, 41, 0.75);
+  --xx-success-rgb: 25, 135, 84;
+  --xx-info-rgb: 13, 202, 240;
+  --xx-warning-rgb: 255, 193, 7;
+  --xx-danger-rgb: 220, 53, 69;
+  --xx-light-rgb: 248, 249, 250;
+  --xx-dark-rgb: 33, 37, 41;
+  --xx-white-rgb: 255, 255, 255;
+  --xx-black-rgb: 0, 0, 0;
+  --xx-body-color-rgb: 33, 37, 41;
+  --xx-body-bg-rgb: 255, 255, 255;
+  --xx-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --xx-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --xx-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
+  --xx-body-font-family: var(--xx-font-sans-serif);
+  --xx-body-font-size: 1rem;
+  --xx-body-font-weight: 400;
+  --xx-body-line-height: 1.5;
+  --xx-body-color: #212529;
+  --xx-body-bg: #fff;
+}
+
+
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+    margin-top: 0;
+    margin-bottom: .5rem;
+    font-weight: 500;
+    line-height: 1.2;
+    color: inherit;
+}
+
+
+h1, .h1 {
+  font-size: calc(1.375rem + 1.5vw);
+}
+@media (min-width: 1200px) {
+  h1, .h1 {
+    font-size: 2.5rem;
+  }
+}
+
+h2, .h2 {
+  font-size: calc(1.325rem + 0.9vw);
+}
+@media (min-width: 1200px) {
+  h2, .h2 {
+    font-size: 2rem;
+  }
+}
+
+h3, .h3 {
+  font-size: calc(1.3rem + 0.6vw);
+}
+@media (min-width: 1200px) {
+  h3, .h3 {
+    font-size: 1.75rem;
+  }
+}
+
+h4, .h4 {
+  font-size: calc(1.275rem + 0.3vw);
+}
+@media (min-width: 1200px) {
+  h4, .h4 {
+    font-size: 1.5rem;
+  }
+}
+
+h5, .h5 {
+  font-size: 1.25rem;
+}
+
+h6, .h6 {
+  font-size: 1rem;
+}
+
+p {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+body{
+  position: relative;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #f1f1f1;
+    font-family: var(--xx-body-font-family);
+    font-size: var(--xx-body-font-size);
+    font-weight: var(--xx-body-font-weight);
+    line-height: var(--xx-body-line-height);
+    color: var(--xx-body-color);
+    text-align: var(--xx-body-text-align);
+    background-color: var(--xx-body-bg);
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.text-muted {
+    color:  var(--xx-secondary-rgba) !important;
+}
+
+label {
+    display: inline-block;
+}
+
+.popup-fixed {
+  position: fixed !important;
+  top: auto;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  transform: none !important;
+  margin: 0;
+  margin-bottom: 0 !important;
+  border-radius: 0;
+}
+
+@media (min-width: 600px) {
+  .popup-fixed {
+    /*width: 30vw !important;*/
+    height: 100% !important;
+    right: 0 !important;
+    left: auto !important;
+  }
+
+  .leaflet-popup-content-wrapper {
+    height: 100%;
+    min-height: auto !important;
+  }
+}
+
+.leaflet-popup-tip-container {
+  display: none;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 0 !important;
+  padding-top: 20px !important;
+  padding-bottom: 20px !important;
+  min-height: 30vh !important;
+  min-width: 25vw !important;
+}
+
+.back-to-home {
+  cursor: pointer !important;
+  padding: 5px;
+  background: #fff;
+}
+
+.leaflet-touch .back-to-home {
+  width: 34px;
+  height: 34px;
+}
+
+.hidden {
+  display: none;
+}
+
 
