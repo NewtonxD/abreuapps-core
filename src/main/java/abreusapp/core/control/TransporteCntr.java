@@ -5,9 +5,8 @@
 package abreusapp.core.control;
 
 import abreusapp.core.control.general.Dato;
+import abreusapp.core.control.general.DatoDTO;
 import abreusapp.core.control.general.DatoServ;
-import abreusapp.core.control.general.GrupoDato;
-import abreusapp.core.control.general.GrupoDatoServ;
 import abreusapp.core.control.transporte.LocRuta;
 import abreusapp.core.control.transporte.LocRutaServ;
 import abreusapp.core.control.transporte.LocVehiculo;
@@ -69,8 +68,6 @@ public class TransporteCntr {
     private final ModelServ ModeloServicio;
     
     private final VehiculoServ VehiculoServicio;
-    
-    private final GrupoDatoServ GrupoServicio;
     
     private final DatoServ DatosServicio;
     
@@ -520,38 +517,23 @@ public class TransporteCntr {
             model.addAttribute("vehiculo", vehiculo.get());
             model.addAttribute(
                     "marca",
-                    DatosServicio.consultarPorGrupo(
-                            GrupoServicio.obtener("Marca").get() 
-                    )
-            );
+                    DatosServicio.consultarPorGrupo("Marca") );
             model.addAttribute(
                     "last_loc", 
                     LocVehiculoServicio.tieneUltimaLoc(placa)
             );
             model.addAttribute(
                     "tipo_vehiculo",
-                    DatosServicio.consultarPorGrupo(
-                            GrupoServicio.obtener("Tipo Vehiculo").get() 
-                    )
-            );
+                    DatosServicio.consultarPorGrupo("Tipo Vehiculo") );
             model.addAttribute(
                     "estado",
-                    DatosServicio.consultarPorGrupo(
-                            GrupoServicio.obtener("Estados Vehiculo").get() 
-                    )
-            );
+                    DatosServicio.consultarPorGrupo("Estados Vehiculo") );
             model.addAttribute(
                     "color",
-                    DatosServicio.consultarPorGrupo(
-                            GrupoServicio.obtener("Colores").get() 
-                    )
-            );
+                    DatosServicio.consultarPorGrupo("Colores") );
             model.addAttribute(
                     "modelo",
-                    DatosServicio.consultarPorGrupo(
-                            GrupoServicio.obtener(vehiculo.get().getMarca().getDato() ).get() 
-                    )
-            );
+                    DatosServicio.consultarPorGrupo(vehiculo.get().getMarca().getDato() ) );
             model.addAllAttributes(
                     AccesoServicio.consultarAccesosPantallaUsuario(
                             usuarioLogueado.getId(), "trp_vehiculo_registro" )
@@ -580,10 +562,10 @@ public class TransporteCntr {
         
         valido = sinPermisoPlantilla.equals("");
         
-        List<Dato> modelos = null; 
+        List<DatoDTO> modelos = null; 
         
         if(valido){
-            Optional<GrupoDato> Marca = GrupoServicio.obtener(marca);
+            Optional<Dato> Marca = DatosServicio.obtener(marca);
 
             if(!Marca.isPresent()){
                 log.error("Error COD: 00639 al editar Vehiculo. Marca no encontrada ({})",marca);
@@ -591,7 +573,7 @@ public class TransporteCntr {
             }
             
             //SI TODAS LAS ANTERIORES SON VALIDAS PROCEDEMOS
-            if(valido) modelos = DatosServicio.consultarPorGrupo(Marca.get()); 
+            if(valido) modelos = DatosServicio.consultarPorGrupo(Marca.get().getDato() ); 
             
         }
         

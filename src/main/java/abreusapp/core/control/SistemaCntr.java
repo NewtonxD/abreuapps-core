@@ -6,8 +6,6 @@ package abreusapp.core.control;
 
 import abreusapp.core.control.general.Dato;
 import abreusapp.core.control.general.DatoServ;
-import abreusapp.core.control.general.GrupoDato;
-import abreusapp.core.control.general.GrupoDatoServ;
 import abreusapp.core.control.general.PersonaServ;
 import abreusapp.core.control.usuario.AccesoServ;
 import abreusapp.core.control.usuario.Usuario;
@@ -42,8 +40,6 @@ public class SistemaCntr {
 
     private final DateUtils FechaUtils;
 
-    private final GrupoDatoServ GrupoServicio;
-
     private final AccesoServ AccesoServicio;
 
     private final ModelServ ModeloServicio;
@@ -54,107 +50,6 @@ public class SistemaCntr {
     
     private final UsuarioServ UsuarioServicio;
     
-    
-//----------------------------------------------------------------------------//
-//-------------------ENDPOINTS GRUPO DE DATOS---------------------------------//
-//----------------------------------------------------------------------------//
-    @PostMapping("/dtgrp/save")
-    public String GuardarGrupoDato(
-        Model model,
-        GrupoDato grpdt,
-        @RequestParam(name = "fecha_actualizacionn", required = false) String fechaActualizacionCliente
-    ) throws ParseException {
-
-        boolean valido;
-        String plantillaRespuesta = "fragments/dat_gen_consulta_grupos :: content-default";
-        Usuario usuarioLogueado = ModeloServicio.getUsuarioLogueado();
-        
-        String sinPermisoPlantilla= ModeloServicio.verificarPermisos(
-                "dat_gen_registro_grupos", model, usuarioLogueado );
-        
-        valido = sinPermisoPlantilla.equals("");
-        
-        if(valido){
-
-            Optional<GrupoDato> grupoBD = GrupoServicio.obtener(grpdt.getGrupo());
-            
-            if (grupoBD.isPresent() &&
-                !FechaUtils.FechaFormato2.format(
-                grupoBD.get().getFecha_actualizacion() )
-                .equals(fechaActualizacionCliente)
-            ) {
-                valido = false;
-                model.addAttribute(
-                        "msg", 
-                         ( !(fechaActualizacionCliente == null || 
-                            fechaActualizacionCliente.equals("") )  ? 
-                            "Al parecer alguien ha realizado cambios en la información primero. Por favor, inténtalo otra vez. COD: 00535" :
-                            "No podemos realizar los cambios porque ya este Grupo se encuentra registrado."
-                         )
-                );
-            }
-
-            if (valido) {
-
-                if ( !(fechaActualizacionCliente == null || 
-                    fechaActualizacionCliente.equals("") ) 
-                ) grpdt.setFecha_actualizacion(
-                        FechaUtils.Formato2ToDate(fechaActualizacionCliente) );
-
-                if(grupoBD.isPresent()){
-                    grpdt.setFecha_registro(grupoBD.get().getFecha_registro());
-                    grpdt.setHecho_por(grupoBD.get().getHecho_por());
-                }
-
-                GrupoServicio.guardar(grpdt, usuarioLogueado, grupoBD.isPresent());
-                model.addAttribute("msg", "Registro guardado exitosamente!");
-                
-            } 
-            
-            model.addAttribute("status", valido);
-        }
-        
-        if(sinPermisoPlantilla.equals(""))
-            ModeloServicio.load(
-                    "dat_gen_consulta_grupos", model, usuarioLogueado.getId() );
-
-        return sinPermisoPlantilla.equals("") ? plantillaRespuesta : sinPermisoPlantilla;
-
-    }
-//----------------------------------------------------------------------------//
-    
-    @PostMapping("/dtgrp/update")
-    public String ActualizarGrupo(
-        Model model,
-        String idGrupo
-    ) {
-
-        boolean valido=true;
-        String plantillaRespuesta = "fragments/dat_gen_registro_grupos :: content-default";
-        
-        Usuario usuarioLogueado = ModeloServicio.getUsuarioLogueado();
-
-        Optional<GrupoDato> grupoDB = GrupoServicio.obtener(idGrupo);
-
-        if (! grupoDB.isPresent()) {
-            
-            log.error("Error COD: 00537 al editar grupos de datos, ({}) no existe.",idGrupo);
-            plantillaRespuesta = "redirect:/error";
-            valido = false;
-            
-        }
-        
-        if(valido){
-            
-            model.addAttribute("grupo", grupoDB.get());
-            model.addAttribute("update", true);
-            model.addAllAttributes(AccesoServicio.consultarAccesosPantallaUsuario(
-                    usuarioLogueado.getId(), "dat_gen_registro_grupos") );
-            
-        }
-        
-        return plantillaRespuesta;
-    }
 
 //----------------------------------------------------------------------------//
 //---------------------------ENDPOINTS DATOS----------------------------------//
@@ -216,7 +111,7 @@ public class SistemaCntr {
                         dtgnr.setHecho_por(datoBD.get().getHecho_por());
                     }
                     
-                    Dato datoNuevo = DatoServicio.guardar(dtgnr, usuarioLogueado, datoBD.isPresent());
+                    DatoServicio.guardar(dtgnr, usuarioLogueado, datoBD.isPresent());
                     model.addAttribute("msg", "Registro guardado exitosamente!");
                     
                 } 
@@ -260,7 +155,7 @@ public class SistemaCntr {
         if(valido){
             model.addAttribute("dato", datoDB.get());
             model.addAttribute("update", true);
-            model.addAttribute("grupos", GrupoServicio.consultar());
+            model.addAttribute("grupos", DatoServicio.consultarPorGrupo(null));
             model.addAllAttributes(
                     AccesoServicio.consultarAccesosPantallaUsuario(
                     usuarioLogueado.getId(), "dat_gen_registro_datos" ) 
@@ -400,12 +295,8 @@ public class SistemaCntr {
             model.addAttribute("user",usuarioBD.get());
             model.addAttribute("persona",usuarioBD.get().getPersona());
             model.addAttribute("update", true);
-            model.addAttribute("sexo",DatoServicio.consultarPorGrupo(
-                    GrupoServicio.obtener("Sexo").get() )
-            );
-            model.addAttribute("sangre",DatoServicio.consultarPorGrupo(
-                    GrupoServicio.obtener("Tipos Sanguineos").get() )
-            );
+            model.addAttribute("sexo",DatoServicio.consultarPorGrupo("Sexo") );
+            model.addAttribute("sangre",DatoServicio.consultarPorGrupo("Tipos Sanguineos") );
             model.addAllAttributes(
                     AccesoServicio.consultarAccesosPantallaUsuario(
                             usuarioLogueado.getId(), 
@@ -439,12 +330,8 @@ public class SistemaCntr {
             model.addAttribute("user",usuarioBD.get());
             model.addAttribute("persona",usuarioBD.get().getPersona());
             model.addAttribute("update", true);
-            model.addAttribute("sexo",DatoServicio.consultarPorGrupo(
-                    GrupoServicio.obtener("Sexo").get() ) 
-            );
-            model.addAttribute("sangre",DatoServicio.consultarPorGrupo(
-                    GrupoServicio.obtener("Tipos Sanguineos").get() )
-            );
+            model.addAttribute("sexo",DatoServicio.consultarPorGrupo("Sexo") );
+            model.addAttribute("sangre",DatoServicio.consultarPorGrupo("Tipos Sanguineos") );
             model.addAttribute("usr_mgr_registro",true);
             model.addAttribute("configuracion",true);
         }

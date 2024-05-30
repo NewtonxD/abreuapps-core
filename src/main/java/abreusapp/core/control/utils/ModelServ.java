@@ -6,8 +6,8 @@ package abreusapp.core.control.utils;
 
 import abreusapp.core.control.general.ConfServ;
 import abreusapp.core.control.general.Dato;
+import abreusapp.core.control.general.DatoDTO;
 import abreusapp.core.control.general.DatoServ;
-import abreusapp.core.control.general.GrupoDatoServ;
 import abreusapp.core.control.general.Persona;
 import abreusapp.core.control.transporte.Parada;
 import abreusapp.core.control.transporte.ParadaServ;
@@ -47,7 +47,6 @@ public class ModelServ {
     private final AccesoServ AccesoServicio;
     
     public ModelServ(
-            GrupoDatoServ GrupoServicio,
             DatoServ DatoServicio,
             AccesoServ AccesoServicio,
             UsuarioServ UsuarioServicio,
@@ -57,11 +56,10 @@ public class ModelServ {
             RutaServ RutaServicio
     ){
         this.AccesoServicio = AccesoServicio;
-        initActions(GrupoServicio, DatoServicio,UsuarioServicio, ConfServicio, VehiculoServicio, ParadaServicio, RutaServicio);
+        initActions( DatoServicio,UsuarioServicio, ConfServicio, VehiculoServicio, ParadaServicio, RutaServicio);
     }
 
     private void initActions(
-            GrupoDatoServ GrupoServicio,
             DatoServ DatoServicio,
             UsuarioServ UsuarioServicio,
             ConfServ ConfServicio,
@@ -69,15 +67,6 @@ public class ModelServ {
             ParadaServ ParadaServicio,
             RutaServ RutaServicio
     ) {
-        this.actions.put("dat_gen_consulta_grupos", () -> {
-            try {
-                Map<String, Object> acc = AccesoServicio.consultarAccesosPantallaUsuario(userId, "dat_gen_consulta_grupos");
-                dataModel.addAllAttributes(acc);
-                dataModel.addAttribute("grupos", GrupoServicio.consultar());
-            } catch (Exception e) {
-                log.error("Error ejecutando 'dat_gen_consulta_grupos'", e);
-            }
-        });
 
         this.actions.put("dat_gen_consulta_datos", () -> {
             try {
@@ -93,29 +82,10 @@ public class ModelServ {
             try {
                 Map<String, Object> acc = AccesoServicio.consultarAccesosPantallaUsuario(userId, "dat_gen_registro_datos");
                 dataModel.addAllAttributes(acc);
-                dataModel.addAttribute("grupos", GrupoServicio.consultar());
+                dataModel.addAttribute("grupos", DatoServicio.consultarPorGrupo(null));
                 dataModel.addAttribute("update", false);
             } catch (Exception e) {
                 log.error("Error ejecutando 'dat_gen_registro_datos'", e);
-            }
-        });
-
-        this.actions.put("dat_gen_registro_grupos", () -> {
-            try {
-                Map<String, Object> acc = AccesoServicio.consultarAccesosPantallaUsuario(userId, "dat_gen_registro_grupos");
-                dataModel.addAllAttributes(acc);
-                dataModel.addAttribute("update", false);
-            } catch (Exception e) {
-                log.error("Error ejecutando 'dat_gen_registro_grupos'", e);
-            }
-        });
-
-        this.actions.put("dat_gen_principal", () -> {
-            try {
-                Map<String, Object> acc = AccesoServicio.consultarAccesosPantallaUsuario(userId, "dat_gen_principal");
-                dataModel.addAllAttributes(acc);
-            } catch (Exception e) {
-                log.error("Error ejecutando 'dat_gen_principal'", e);
             }
         });
 
@@ -138,8 +108,8 @@ public class ModelServ {
                 u.setPersona(p);
                 dataModel.addAttribute("user", u);
                 dataModel.addAttribute("persona", p);
-                dataModel.addAttribute("sangre", DatoServicio.consultarPorGrupo(GrupoServicio.obtener("Tipos Sanguineos").get()));
-                dataModel.addAttribute("sexo", DatoServicio.consultarPorGrupo(GrupoServicio.obtener("Sexo").get()));
+                dataModel.addAttribute("sangre", DatoServicio.consultarPorGrupo("Tipos Sanguineos"));
+                dataModel.addAttribute("sexo", DatoServicio.consultarPorGrupo("Sexo"));
                 dataModel.addAllAttributes(acc);
             } catch (Exception e) {
                 log.error("Error ejecutando 'usr_mgr_registro'", e);
@@ -171,12 +141,12 @@ public class ModelServ {
                 Map<String, Object> acc = AccesoServicio.consultarAccesosPantallaUsuario(userId, "trp_vehiculo_registro");
                 Vehiculo p = new Vehiculo();
                 dataModel.addAttribute("vehiculo", p);
-                List<Dato> marcas = DatoServicio.consultarPorGrupo(GrupoServicio.obtener("Marca").get());
+                List<DatoDTO> marcas = DatoServicio.consultarPorGrupo("Marca");
                 dataModel.addAttribute("marca", marcas);
-                dataModel.addAttribute("tipo_vehiculo", DatoServicio.consultarPorGrupo(GrupoServicio.obtener("Tipo Vehiculo").get()));
-                dataModel.addAttribute("estado", DatoServicio.consultarPorGrupo(GrupoServicio.obtener("Estados Vehiculo").get()));
-                dataModel.addAttribute("color", DatoServicio.consultarPorGrupo(GrupoServicio.obtener("Colores").get()));
-                dataModel.addAttribute("modelo", DatoServicio.consultarPorGrupo(GrupoServicio.obtener(marcas.get(0).getDato()).get()));
+                dataModel.addAttribute("tipo_vehiculo", DatoServicio.consultarPorGrupo("Tipo Vehiculo"));
+                dataModel.addAttribute("estado", DatoServicio.consultarPorGrupo("Estados Vehiculo"));
+                dataModel.addAttribute("color", DatoServicio.consultarPorGrupo("Colores"));
+                dataModel.addAttribute("modelo",DatoServicio.consultarPorGrupo(marcas.get(0).dat() ));
                 dataModel.addAllAttributes(acc);
             } catch (Exception e) {
                 log.error("Error ejecutando 'trp_vehiculo_registro'", e);

@@ -63,8 +63,8 @@
                                     <tbody>
                                         <tr th:each="d: ${paradas}" th:attr="data-id=${d.id}">
                                             <th scope="row" th:text="${d.id}"></th>
-                                            <td th:text="${d.descripción}"></td>
-                                            <td th:text="${d.activo?'Activo':'Inactivo'}"></td>
+                                            <td th:text="${d.dsc}"></td>
+                                            <td th:text="${d.act?'Activo':'Inactivo'}"></td>
                                         </tr>
                                     </tbody>
                                 </table>

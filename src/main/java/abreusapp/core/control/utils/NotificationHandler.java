@@ -37,7 +37,6 @@ public class NotificationHandler implements Consumer<PGNotification> {
     
     private final Map<String,String> DBNOMBRE_VS_DOMINIO= Map.ofEntries(
             entry("public.gnr_dat","dtgnr"),
-            entry("public.dat_grp","dtgrp"),
             entry("public.usr","usrmgr"),
             entry("transport.vhl","vhl"),
             entry("transport.pda","pda"),
@@ -46,7 +45,6 @@ public class NotificationHandler implements Consumer<PGNotification> {
     
     private final Map<String,Class> DOMINIO_VS_DTO= Map.ofEntries(
             //entry("dtgnr",null),
-            //entry("dtgrp",null),
             entry("usrmgr",UsuarioDTO.class),
             entry("vhl",VehiculoDTO.class),
             entry("pda",ParadaDTO.class),

@@ -38,8 +38,8 @@
                         <br>
                         <div class="row m-4 pb-4">
                             <div th:each="c: ${conf}" class="col-auto mb-2 justify-content-start">
-                                <label class="form-label" th:text="${'- '+c.descripcion+': '}"></label>
-                                <input type="text" class="form-control" th:name="${c.codigo}" th:id="${c.codigo}" th:value="${c.valor}" />
+                                <label class="form-label" th:text="${'- '+c.dsc+': '}"></label>
+                                <input type="text" class="form-control" th:name="${c.cod}" th:id="${c.cod}" th:value="${c.val}" />
                             </div>
                         </div>
                         </form>
