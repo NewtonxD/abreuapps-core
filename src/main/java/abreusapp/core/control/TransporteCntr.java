@@ -13,16 +13,15 @@ import abreusapp.core.control.transporte.LocRutaServ;
 import abreusapp.core.control.transporte.LocVehiculo;
 import abreusapp.core.control.transporte.LocVehiculoServ;
 import abreusapp.core.control.transporte.Parada;
-import abreusapp.core.control.transporte.ParadaDTO;
 import abreusapp.core.control.transporte.ParadaServ;
 import abreusapp.core.control.transporte.Ruta;
+import abreusapp.core.control.transporte.RutaDTO;
 import abreusapp.core.control.transporte.RutaServ;
 import abreusapp.core.control.transporte.Vehiculo;
 import abreusapp.core.control.transporte.VehiculoServ;
 import abreusapp.core.control.usuario.AccesoServ;
 import abreusapp.core.control.usuario.Usuario;
 import abreusapp.core.control.utils.DateUtils;
-import abreusapp.core.control.utils.MapperServ;
 import abreusapp.core.control.utils.ModelServ;
 import abreusapp.core.control.utils.TransportTokenServ;
 import jakarta.servlet.http.HttpServletRequest;
@@ -236,20 +235,15 @@ public class TransporteCntr {
             Optional<Ruta> Ruta = RutaServicio.obtener(idRuta); 
             
             if(Ruta.isPresent()){
-                respuesta.put("ruta",MapperServ.listLocRutaToDTO( 
-                    LocRutaServicio.consultarPorRuta(Ruta.get())) 
-                );
+                respuesta.put("ruta",
+                    LocRutaServicio.consultarPorRuta(Ruta.get().getRuta())) 
+                ;
             } 
-            //hay que sacar la ubicacion de la ruta
             
-            List<Parada> otrasParadas = ParadaServicio.consultarTodo( 
+            respuesta.put("paradas",ParadaServicio.consultarTodo( 
                 null , 
-                true
+                true)
             );
-            
-            List<ParadaDTO> otrasParadasDTO = MapperServ.listParadaToDTO(otrasParadas);
-            
-            respuesta.put("paradas",otrasParadasDTO);
         
         }
         
@@ -395,14 +389,10 @@ public class TransporteCntr {
         if(valido){
             Optional<Parada> LocParada = ParadaServicio.obtener(Integer.valueOf(idParada) ); 
             
-            List<Parada> otrasParadas = ParadaServicio.consultarTodo( 
+            respuesta.put("paradas",ParadaServicio.consultarTodo( 
                 Integer.valueOf(idParada) , 
                 true
-            );
-            
-            List<ParadaDTO> otrasParadasDTO = MapperServ.listParadaToDTO(otrasParadas);
-            
-            respuesta.put("paradas",otrasParadasDTO);
+            ));
         
             //SI TODAS LAS ANTERIORES SON VALIDAS PROCEDEMOS
             if(LocParada.isPresent()){
@@ -850,10 +840,10 @@ public class TransporteCntr {
     @GetMapping(value="/API/trp/getRutas")
     public Map<String, Object> ObtenerRutasActivas() {  
         Map<String, Object> respuesta= new HashMap<>();
-        List<Ruta> Rutas=RutaServicio.consultarActivo();
+        List<RutaDTO> Rutas=RutaServicio.consultarActivo();
         List<String> NombreRutas=new ArrayList<>();
-        for(Ruta r : Rutas){
-            NombreRutas.add(r.getRuta());
+        for(RutaDTO r : Rutas){
+            NombreRutas.add(r.rta());
         }
         respuesta.put("rutas", NombreRutas);                
         return respuesta;  

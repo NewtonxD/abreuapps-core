@@ -51,11 +51,6 @@ public class AccesoServ {
         return valor;
     }
     
-    public List<AccesoUsuario> consultarAccesosUsuario(Usuario usuario){
-        
-        return repo.findAllByUsuario(usuario);
-    }
-    
     public Map<String, Object> consultarAccesosMenuUsuario(Integer id_usuario){
         List<Object[]> results=repo.ListadoMenuUsuario(id_usuario);
         Map<String, Object> convert=new HashMap<>();

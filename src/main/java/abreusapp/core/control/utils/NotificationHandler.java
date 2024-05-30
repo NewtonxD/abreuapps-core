@@ -4,7 +4,12 @@
  */
 package abreusapp.core.control.utils;
 
+import abreusapp.core.control.transporte.ParadaDTO;
+import abreusapp.core.control.transporte.RutaDTO;
+import abreusapp.core.control.transporte.VehiculoDTO;
+import abreusapp.core.control.usuario.UsuarioDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
@@ -30,7 +35,7 @@ public class NotificationHandler implements Consumer<PGNotification> {
     
     private final DateUtils FechaUtils;
     
-    private static final Map<String,String> DBNOMBRE_VS_DOMINIO= Map.ofEntries(
+    private final Map<String,String> DBNOMBRE_VS_DOMINIO= Map.ofEntries(
             entry("public.gnr_dat","dtgnr"),
             entry("public.dat_grp","dtgrp"),
             entry("public.usr","usrmgr"),
@@ -38,26 +43,43 @@ public class NotificationHandler implements Consumer<PGNotification> {
             entry("transport.pda","pda"),
             entry("transport.rta","rta")
     );
+    
+    private final Map<String,Class> DOMINIO_VS_DTO= Map.ofEntries(
+            //entry("dtgnr",null),
+            //entry("dtgrp",null),
+            entry("usrmgr",UsuarioDTO.class),
+            entry("vhl",VehiculoDTO.class),
+            entry("pda",ParadaDTO.class),
+            entry("rta",RutaDTO.class)
+    );
 
     @Override
     public void accept(PGNotification t) {
         String RawData=t.getParameter();
         
         try{
+            
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(RawData);
             
             String DBNombre=jsonNode.get("schema").asText()+"."+jsonNode.get("table").asText();
+            String Dominio=DBNOMBRE_VS_DOMINIO.getOrDefault(DBNombre,"");
             
-            if(!DBNOMBRE_VS_DOMINIO.getOrDefault(DBNombre,"").isEmpty()){
+            if(!Dominio.isEmpty()){
+                
                 char DBOperacion=jsonNode.get("operation").asText().charAt(0);
                 JsonNode DBData=jsonNode.get("data");
+                
                 String DBDate=FechaUtils.FromLocalDTToFormato1(jsonNode.get("timestamp").asText() );
 
                 HashMap<String, Object> map = new HashMap<>();
-                map.put(String.valueOf(DBOperacion), DBData);
+                
+                objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+                map.put(String.valueOf(DBOperacion), objectMapper.treeToValue(DBData, DOMINIO_VS_DTO.get(Dominio)));
+                
                 map.put("date", DBDate);
-                SSEServicio.publicar(DBNOMBRE_VS_DOMINIO.get(DBNombre), map);
+                SSEServicio.publicar(Dominio, map);
+                
             }
             
         }catch(JsonProcessingException e){

@@ -23,7 +23,7 @@ public class ParadaServ {
     
     private final ParadaRepo repo;
     
-    public List<Parada> consultarTodo(Integer excluyeParada,Boolean activo){
+    public List<ParadaDTO> consultarTodo(Integer excluyeParada,Boolean activo){
         return repo.findAllCustom(excluyeParada, activo);
     }
     

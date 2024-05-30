@@ -39,7 +39,7 @@ public class UsuarioServ {
     
     private final  SessionRegistry sessionRegistry;
     
-    private static final String LETTERS = "@#$%!AbCdEfGhIjKlMnOpQrRtUvWxYz-*[]";
+    private static final String LETTERS = "@#$%!AbCdEfGhIjKlMnOpQrRtUvWxYz-*[]~`|:ñÑ";
     private static final String NUMBERS = "0123456789";
     private static final Random RANDOM = new Random();
 
@@ -47,21 +47,15 @@ public class UsuarioServ {
         StringBuilder password = new StringBuilder();
 
         // Generate two random letters
-        for (int i = 0; i < 2; i++) {
-            char letter = LETTERS.charAt(RANDOM.nextInt(LETTERS.length()));
-            password.append(letter);
+        for (int i = 0; i < 4; i++) {
+            password.append(LETTERS.charAt(RANDOM.nextInt(LETTERS.length())));
+            password.append(NUMBERS.charAt(RANDOM.nextInt(NUMBERS.length())));
         }
-
-        // Generate six random numbers
-        for (int i = 0; i < 6; i++) {
-            char number = NUMBERS.charAt(RANDOM.nextInt(NUMBERS.length()));
-            password.append(number);
-        }
-
+        
         return password.toString();
     }
     
-    public Usuario cambiarPassword(Usuario u, String Contraseña, boolean enviaCorreo){
+    public void cambiarPassword(Usuario u, String Contraseña, boolean enviaCorreo){
         
         correoServicio.enviarMensajeSimple(
                 u.getCorreo(),
@@ -69,10 +63,10 @@ public class UsuarioServ {
                 "Su nueva contraseña es "+Contraseña+" . Al ingresar podra colocar una nueva contraseña.");
         u.setPassword(passwordEncoder.encode(Contraseña));
         u.setCambiarPassword(true);
-        return guardar(u,u,true);
+        guardar(u,u,true);
     }
     
-    public boolean coincidenContraseña(String Contraseña,int IdUsuario){
+    public boolean coincidenPassword(String Contraseña,int IdUsuario){
         
         return passwordEncoder.matches(
             Contraseña, 
@@ -80,7 +74,7 @@ public class UsuarioServ {
         );
     }
     
-    public Usuario guardar(Usuario gd, Usuario usuario,boolean existe){
+    public void guardar(Usuario gd, Usuario usuario,boolean existe){
         
         if(existe){ 
             gd.setActualizado_por(usuario.getId());
@@ -97,13 +91,11 @@ public class UsuarioServ {
             gd.setFecha_registro(new Date());
         }
         gd.setFecha_actualizacion(new Date());
-        
-        return repo.save(gd);
+        repo.save(gd);
     }
     
-    public List<Usuario> consultar(){
-        List<Usuario> ul=repo.findAll();        
-        return ul;
+    public List<UsuarioDTO> consultar(){  
+        return repo.customFindAll();
     }
     
     public Optional<Usuario> obtener(String usuario){
@@ -112,10 +104,6 @@ public class UsuarioServ {
     
     public Optional<Usuario> obtenerPorCorreo(String correo){
         return repo.findByCorreo(correo);
-    }
-    
-    public Optional<Usuario> obtenerPorPersona(Persona persona){
-        return repo.findByPersona(persona);
     }
     
     public Optional<Usuario> obtenerPorId(Integer id){

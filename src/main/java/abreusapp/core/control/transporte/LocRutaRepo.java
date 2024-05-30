@@ -1,11 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
- */
 package abreusapp.core.control.transporte;
 
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -15,8 +12,16 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LocRutaRepo  extends JpaRepository<LocRuta, Long> {
-    public List<LocRuta> findAllByRuta(Ruta ruta);
-    public void deleteAllByRuta(Ruta ruta);
+    
+    @Query(value="SELECT new abreusapp.core.control.transporte.LocRutaDTO("
+            + "r.id,"
+            + "r.ruta.ruta,"
+            + "r.longitud,"
+            + "r.latitud"
+            + ") FROM LocRuta r WHERE CASE WHEN ?1 != null THEN r.ruta.ruta=?1 ELSE true END")
+    List<LocRutaDTO> customFindAll(String ruta);
+    
+    void deleteAllByRuta(Ruta ruta);
 }
 
 
