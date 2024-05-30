@@ -33,8 +33,8 @@ public class ConfServ {
         return convert;
     }
     
-    public List<Conf> consultar(){
-        return repo.findAll();
+    public List<ConfDTO> consultar(){
+        return repo.customFindAll();
     }
     
     public void GuardarTodosMap(Map<String,String> configuracion,Usuario usuario){

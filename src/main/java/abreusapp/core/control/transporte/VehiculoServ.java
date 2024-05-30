@@ -24,11 +24,11 @@ public class VehiculoServ {
     
     private final VehiculoRepo repo;
     
-    public List<Vehiculo> consultar(){
-        return repo.findAll();
+    public List<VehiculoDTO> consultar(){
+        return repo.customFindAll();
     }
     
-    public Vehiculo guardar(Vehiculo gd, Usuario usuario,boolean existe){
+    public void guardar(Vehiculo gd, Usuario usuario,boolean existe){
         
         if(existe){ 
             if(usuario!=null)
@@ -40,7 +40,7 @@ public class VehiculoServ {
             gd.setFecha_registro(new Date());
         }
         gd.setFecha_actualizacion(new Date());
-        return repo.save(gd);
+        repo.save(gd);
     }
     
     public Optional<Vehiculo> obtener(String Placa){

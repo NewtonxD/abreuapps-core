@@ -24,12 +24,12 @@ public class RutaServ {
     
     private final RutaRepo repo;
     
-    public List<Ruta> consultar(){
-        return repo.findAll();
+    public List<RutaDTO> consultar(){
+        return repo.customFindAll(false);
     }
     
-    public List<Ruta> consultarActivo(){
-        return repo.findByActivo(true);
+    public List<RutaDTO> consultarActivo(){
+        return repo.customFindAll(true);
     }
     
     public Ruta guardar(Ruta gd, Usuario usuario,boolean existe){

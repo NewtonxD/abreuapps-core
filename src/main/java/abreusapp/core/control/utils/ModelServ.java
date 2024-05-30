@@ -18,9 +18,10 @@ import abreusapp.core.control.transporte.VehiculoServ;
 import abreusapp.core.control.usuario.AccesoServ;
 import abreusapp.core.control.usuario.Usuario;
 import abreusapp.core.control.usuario.UsuarioServ;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -34,9 +35,10 @@ import org.springframework.ui.Model;
  */
 
 @Service
+@Slf4j
 public class ModelServ {
     
-    private final Map<String,Runnable> actions=new HashMap<>();
+    private final Map<String,Runnable> actions=new ConcurrentHashMap<>();
     
     private Model dataModel=null;
     
@@ -44,7 +46,6 @@ public class ModelServ {
     
     private final AccesoServ AccesoServicio;
     
-    //  custom constructor injection
     public ModelServ(
             GrupoDatoServ GrupoServicio,
             DatoServ DatoServicio,
@@ -55,153 +56,181 @@ public class ModelServ {
             ParadaServ ParadaServicio,
             RutaServ RutaServicio
     ){
-        
-        this.AccesoServicio=AccesoServicio;
-        
-        this.actions.put("dat_gen_consulta_grupos", ()->{
-                Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "dat_gen_consulta_grupos");
+        this.AccesoServicio = AccesoServicio;
+        initActions(GrupoServicio, DatoServicio,UsuarioServicio, ConfServicio, VehiculoServicio, ParadaServicio, RutaServicio);
+    }
+
+    private void initActions(
+            GrupoDatoServ GrupoServicio,
+            DatoServ DatoServicio,
+            UsuarioServ UsuarioServicio,
+            ConfServ ConfServicio,
+            VehiculoServ VehiculoServicio,
+            ParadaServ ParadaServicio,
+            RutaServ RutaServicio
+    ) {
+        this.actions.put("dat_gen_consulta_grupos", () -> {
+            try {
+                Map<String, Object> acc = AccesoServicio.consultarAccesosPantallaUsuario(userId, "dat_gen_consulta_grupos");
                 dataModel.addAllAttributes(acc);
                 dataModel.addAttribute("grupos", GrupoServicio.consultar());
+            } catch (Exception e) {
+                log.error("Error ejecutando 'dat_gen_consulta_grupos'", e);
             }
-        );
-        
-        this.actions.put("dat_gen_consulta_datos", ()->{
-                Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "dat_gen_consulta_datos");
+        });
+
+        this.actions.put("dat_gen_consulta_datos", () -> {
+            try {
+                Map<String, Object> acc = AccesoServicio.consultarAccesosPantallaUsuario(userId, "dat_gen_consulta_datos");
                 dataModel.addAllAttributes(acc);
                 dataModel.addAttribute("datos", DatoServicio.consultar());
+            } catch (Exception e) {
+                log.error("Error ejecutando 'dat_gen_consulta_datos'", e);
             }
-        );
-        
-        this.actions.put("dat_gen_registro_datos", ()->{
-                Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "dat_gen_registro_datos");
-                dataModel.addAllAttributes(acc);                
+        });
+
+        this.actions.put("dat_gen_registro_datos", () -> {
+            try {
+                Map<String, Object> acc = AccesoServicio.consultarAccesosPantallaUsuario(userId, "dat_gen_registro_datos");
+                dataModel.addAllAttributes(acc);
                 dataModel.addAttribute("grupos", GrupoServicio.consultar());
                 dataModel.addAttribute("update", false);
+            } catch (Exception e) {
+                log.error("Error ejecutando 'dat_gen_registro_datos'", e);
             }
-        );
-        
-        this.actions.put("dat_gen_registro_grupos", ()->{
-                Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "dat_gen_registro_grupos");
+        });
+
+        this.actions.put("dat_gen_registro_grupos", () -> {
+            try {
+                Map<String, Object> acc = AccesoServicio.consultarAccesosPantallaUsuario(userId, "dat_gen_registro_grupos");
                 dataModel.addAllAttributes(acc);
                 dataModel.addAttribute("update", false);
+            } catch (Exception e) {
+                log.error("Error ejecutando 'dat_gen_registro_grupos'", e);
             }
-        );
-        
-        this.actions.put("dat_gen_principal", ()->{
-                Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "dat_gen_principal");
-                dataModel.addAllAttributes(acc);                
+        });
+
+        this.actions.put("dat_gen_principal", () -> {
+            try {
+                Map<String, Object> acc = AccesoServicio.consultarAccesosPantallaUsuario(userId, "dat_gen_principal");
+                dataModel.addAllAttributes(acc);
+            } catch (Exception e) {
+                log.error("Error ejecutando 'dat_gen_principal'", e);
             }
-        );
-        
-        this.actions.put("usr_mgr_principal", ()->{
-                Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "usr_mgr_principal");
+        });
+
+        this.actions.put("usr_mgr_principal", () -> {
+            try {
+                Map<String, Object> acc = AccesoServicio.consultarAccesosPantallaUsuario(userId, "usr_mgr_principal");
                 dataModel.addAttribute("usuarios", UsuarioServicio.consultar());
-                dataModel.addAllAttributes(acc);                
+                dataModel.addAllAttributes(acc);
+            } catch (Exception e) {
+                log.error("Error ejecutando 'usr_mgr_principal'", e);
             }
-        );
-        
-        this.actions.put("usr_mgr_registro", ()->{
-                Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "usr_mgr_registro");
-                dataModel.addAttribute("update",false);
-                Persona p=new Persona();
-                Usuario u=new Usuario();
+        });
+
+        this.actions.put("usr_mgr_registro", () -> {
+            try {
+                Map<String, Object> acc = AccesoServicio.consultarAccesosPantallaUsuario(userId, "usr_mgr_registro");
+                dataModel.addAttribute("update", false);
+                Persona p = new Persona();
+                Usuario u = new Usuario();
                 u.setPersona(p);
-                dataModel.addAttribute("user",u);
-                dataModel.addAttribute("persona",p);
-                dataModel.addAttribute("sangre",DatoServicio.consultarPorGrupo(GrupoServicio.obtener("Tipos Sanguineos").get() ));
-                dataModel.addAttribute("sexo",DatoServicio.consultarPorGrupo(GrupoServicio.obtener("Sexo").get() ));
-                dataModel.addAllAttributes(acc);                
+                dataModel.addAttribute("user", u);
+                dataModel.addAttribute("persona", p);
+                dataModel.addAttribute("sangre", DatoServicio.consultarPorGrupo(GrupoServicio.obtener("Tipos Sanguineos").get()));
+                dataModel.addAttribute("sexo", DatoServicio.consultarPorGrupo(GrupoServicio.obtener("Sexo").get()));
+                dataModel.addAllAttributes(acc);
+            } catch (Exception e) {
+                log.error("Error ejecutando 'usr_mgr_registro'", e);
             }
-        );
-        
-        this.actions.put("sys_configuracion", ()->{
-                Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "sys_configuracion");
+        });
+
+        this.actions.put("sys_configuracion", () -> {
+            try {
+                Map<String, Object> acc = AccesoServicio.consultarAccesosPantallaUsuario(userId, "sys_configuracion");
                 dataModel.addAttribute("conf", ConfServicio.consultar());
-                dataModel.addAllAttributes(acc);                
+                dataModel.addAllAttributes(acc);
+            } catch (Exception e) {
+                log.error("Error ejecutando 'sys_configuracion'", e);
             }
-        );
-        
-        this.actions.put("trp_vehiculo_consulta", ()->{
-                Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "trp_vehiculo_consulta");
+        });
+
+        this.actions.put("trp_vehiculo_consulta", () -> {
+            try {
+                Map<String, Object> acc = AccesoServicio.consultarAccesosPantallaUsuario(userId, "trp_vehiculo_consulta");
                 dataModel.addAttribute("vehiculos", VehiculoServicio.consultar());
-                dataModel.addAllAttributes(acc);                
+                dataModel.addAllAttributes(acc);
+            } catch (Exception e) {
+                log.error("Error ejecutando 'trp_vehiculo_consulta'", e);
             }
-        );
-        
-        this.actions.put("trp_vehiculo_registro", ()->{
-                Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "trp_vehiculo_registro");
-                Vehiculo p=new Vehiculo();
-                dataModel.addAttribute("vehiculo",p);
-                List<Dato> marcas=DatoServicio.consultarPorGrupo( GrupoServicio.obtener("Marca").get() );
-                dataModel.addAttribute(
-                        "marca",
-                        marcas
-                );
-                dataModel.addAttribute(
-                        "tipo_vehiculo",
-                        DatoServicio.consultarPorGrupo(
-                                GrupoServicio.obtener("Tipo Vehiculo").get() 
-                        )
-                );
-                dataModel.addAttribute(
-                        "estado",
-                        DatoServicio.consultarPorGrupo(
-                                GrupoServicio.obtener("Estados Vehiculo").get() 
-                        )
-                );
-                dataModel.addAttribute(
-                        "color",
-                        DatoServicio.consultarPorGrupo(
-                                GrupoServicio.obtener("Colores").get() 
-                        )
-                );
-                dataModel.addAttribute(
-                        "modelo",
-                        DatoServicio.consultarPorGrupo(
-                                GrupoServicio.obtener( marcas.getFirst().getDato() ).get() 
-                        )
-                );
-                dataModel.addAllAttributes(acc);                
+        });
+
+        this.actions.put("trp_vehiculo_registro", () -> {
+            try {
+                Map<String, Object> acc = AccesoServicio.consultarAccesosPantallaUsuario(userId, "trp_vehiculo_registro");
+                Vehiculo p = new Vehiculo();
+                dataModel.addAttribute("vehiculo", p);
+                List<Dato> marcas = DatoServicio.consultarPorGrupo(GrupoServicio.obtener("Marca").get());
+                dataModel.addAttribute("marca", marcas);
+                dataModel.addAttribute("tipo_vehiculo", DatoServicio.consultarPorGrupo(GrupoServicio.obtener("Tipo Vehiculo").get()));
+                dataModel.addAttribute("estado", DatoServicio.consultarPorGrupo(GrupoServicio.obtener("Estados Vehiculo").get()));
+                dataModel.addAttribute("color", DatoServicio.consultarPorGrupo(GrupoServicio.obtener("Colores").get()));
+                dataModel.addAttribute("modelo", DatoServicio.consultarPorGrupo(GrupoServicio.obtener(marcas.get(0).getDato()).get()));
+                dataModel.addAllAttributes(acc);
+            } catch (Exception e) {
+                log.error("Error ejecutando 'trp_vehiculo_registro'", e);
             }
-        );
-        
-        this.actions.put("trp_paradas_consulta", ()->{
-                Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "trp_paradas_consulta");
-                dataModel.addAttribute("paradas", ParadaServicio.consultarTodo(null,null));
-                dataModel.addAllAttributes(acc);                
+        });
+
+        this.actions.put("trp_paradas_consulta", () -> {
+            try {
+                Map<String, Object> acc = AccesoServicio.consultarAccesosPantallaUsuario(userId, "trp_paradas_consulta");
+                dataModel.addAttribute("paradas", ParadaServicio.consultarTodo(null, null));
+                dataModel.addAllAttributes(acc);
+            } catch (Exception e) {
+                log.error("Error ejecutando 'trp_paradas_consulta'", e);
             }
-        );
-        
-        this.actions.put("trp_paradas_registro", ()->{
-                Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "trp_paradas_registro");
-                Parada p=new Parada();
-                dataModel.addAttribute("parada",p);
-                dataModel.addAllAttributes(acc);                
+        });
+
+        this.actions.put("trp_paradas_registro", () -> {
+            try {
+                Map<String, Object> acc = AccesoServicio.consultarAccesosPantallaUsuario(userId, "trp_paradas_registro");
+                Parada p = new Parada();
+                dataModel.addAttribute("parada", p);
+                dataModel.addAllAttributes(acc);
+            } catch (Exception e) {
+                log.error("Error ejecutando 'trp_paradas_registro'", e);
             }
-        );
-        
-        this.actions.put("trp_rutas_consulta", ()->{
-                Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "trp_rutas_consulta");
+        });
+
+        this.actions.put("trp_rutas_consulta", () -> {
+            try {
+                Map<String, Object> acc = AccesoServicio.consultarAccesosPantallaUsuario(userId, "trp_rutas_consulta");
                 dataModel.addAttribute("rutas", RutaServicio.consultar());
-                dataModel.addAllAttributes(acc);                
+                dataModel.addAllAttributes(acc);
+            } catch (Exception e) {
+                log.error("Error ejecutando 'trp_rutas_consulta'", e);
             }
-        );
-        
-        this.actions.put("trp_rutas_registro", ()->{
-                Map<String, Object> acc=AccesoServicio.consultarAccesosPantallaUsuario(userId, "trp_rutas_registro");
-                Ruta r=new Ruta();
-                dataModel.addAttribute("ruta",r);
-                dataModel.addAllAttributes(acc);                
+        });
+
+        this.actions.put("trp_rutas_registro", () -> {
+            try {
+                Map<String, Object> acc = AccesoServicio.consultarAccesosPantallaUsuario(userId, "trp_rutas_registro");
+                Ruta r = new Ruta();
+                dataModel.addAttribute("ruta", r);
+                dataModel.addAllAttributes(acc);
+            } catch (Exception e) {
+                log.error("Error ejecutando 'trp_rutas_registro'", e);
             }
-        );
-        
+        });
     }
     
     public void load(String idPage,Model model,Integer idUser){
         this.dataModel=model;
         this.userId=idUser;
         
-        actions.getOrDefault(idPage,()->{}).run();
+        actions.getOrDefault(idPage, () -> log.warn("Acción no encontrada: " + idPage)).run();
         
     }
     

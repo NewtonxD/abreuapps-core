@@ -18,7 +18,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AccesoUsuarioRepo extends JpaRepository<AccesoUsuario, Integer>{
 
-    public List<AccesoUsuario> findAllByUsuario(Usuario usuario);
     public Optional<AccesoUsuario> findAllByUsuarioAndAcceso(Usuario usuario,Acceso idAcceso);
     
     @Query( value =

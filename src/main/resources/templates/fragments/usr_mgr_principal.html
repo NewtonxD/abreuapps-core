@@ -60,11 +60,11 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr th:each="u: ${usuarios}" th:attr="data-id=${u.username}">
-                                                <th th:text="${u.username}"></th>
-                                                <td th:text="${u.correo}"></td>
-                                                <td th:text="${u.cambiarPassword?'Si':'No'}"></td>
-                                                <td th:text="${u.activo?'Activo':'Inactivo'}"></td>
+                                            <tr th:each="u: ${usuarios}" th:attr="data-id=${u.usr}">
+                                                <th th:text="${u.usr}"></th>
+                                                <td th:text="${u.mail}"></td>
+                                                <td th:text="${u.pwd_chg?'Si':'No'}"></td>
+                                                <td th:text="${u.act?'Activo':'Inactivo'}"></td>
                                             </tr>
                                         </tbody>
                                     </table>

@@ -15,8 +15,6 @@ import abreusapp.core.control.usuario.UsuarioServ;
 import abreusapp.core.control.utils.DateUtils;
 import abreusapp.core.control.utils.ModelServ;
 import java.text.ParseException;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -481,7 +479,7 @@ public class SistemaCntr {
         @RequestParam("pwd") String password
     ){
        Usuario usuarioLogeado=ModeloServicio.getUsuarioLogueado();
-       return UsuarioServicio.coincidenContraseña(password,usuarioLogeado.getId());
+       return UsuarioServicio.coincidenPassword(password,usuarioLogeado.getId());
     }
 //----------------------------------------------------------------------------//
     
