@@ -137,7 +137,7 @@
                                             <label for="sexo" class="form-label text-muted" required>Sexo:</label>
                                             <select class="form-select custom-select" th:field="*{sexo}">
                                                 <option value="0" selected disabled>--Seleccione--</option>
-                                                <option th:value="${s.dato}" th:each="s :${sexo}" th:text="${s.dato}"></option>
+                                                <option th:value="${s.dat}" th:each="s :${sexo}" th:text="${s.dat}"></option>
                                             </select>        
                                         </div>
 
@@ -171,7 +171,7 @@
                                             <label for="tipo_sangre" class="form-label text-muted">Tipo de Sangre:</label>
                                             <select class="form-select custom-select" th:field="*{tipo_sangre}" required>
                                                 <option value="0" selected disabled>--Seleccione--</option>
-                                                <option th:value="${ts.dato}" th:each="ts :${sangre}" th:text="${ts.dato}"></option>
+                                                <option th:value="${ts.dat}" th:each="ts :${sangre}" th:text="${ts.dat}"></option>
                                             </select> 
                                         </div>                        
                                     </div>      

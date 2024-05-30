@@ -21,7 +21,7 @@ public interface LocVehiculoRepo extends JpaRepository<LocVehiculo, Long>{
             + "l.longitud,"
             + "l.fecha_registro"
             + ") FROM LocVehiculo l WHERE "
-            + " CASE WHEN ?1!=null THEN l.placa.placa=?1 ELSE true END "
+            + " CASE WHEN coalesce(?1,'')<>'' THEN l.placa.placa=?1 ELSE true END "
             + " ORDER BY l.fecha_registro DESC"
             + " LIMIT ?2")
     List<LocVehiculoDTO> customFindAll(String placa,int limit);

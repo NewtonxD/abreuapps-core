@@ -24,7 +24,7 @@ public class DatoServ {
     
     private final DatoRepo repo;
     
-    public Dato guardar(Dato gd, Usuario usuario,boolean existe){
+    public void guardar(Dato gd, Usuario usuario,boolean existe){
         
         if(existe){ 
             gd.setActualizado_por(usuario);
@@ -33,15 +33,15 @@ public class DatoServ {
             gd.setFecha_registro(new Date());
         }
         gd.setFecha_actualizacion(new Date());
-        return repo.save(gd);
+        repo.save(gd);
     }
     
-    public List<Dato> consultar(){
-        return repo.findAll();
+    public List<DatoDTO> consultar(){
+        return repo.customFindAll(null);
     }
     
-    public List<Dato> consultarPorGrupo(GrupoDato grupo){
-        return repo.findByGrupo(grupo);
+    public List<DatoDTO> consultarPorGrupo(String grupo){
+        return repo.customFindAll(grupo);
     }
     
     public Optional<Dato> obtener(String dato){

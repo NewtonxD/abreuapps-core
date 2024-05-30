@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package abreusapp.core.control.general;
 
 import abreusapp.core.control.usuario.Usuario;
@@ -42,9 +38,8 @@ public class Dato {
     @Column(name = "dat")
     private String dato;
     
-    @ManyToOne
-    @PrimaryKeyJoinColumn
-    private GrupoDato grupo;
+    @Column(name = "fat_dat")
+    private String dato_padre;
 
     @Column(name = "dsc")
     private String descripcion;

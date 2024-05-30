@@ -37,7 +37,7 @@ public class SSECntr {
     
     private final ModelServ ModeloServicio;
     
-    private static final List<String> REQUIRED_AUTH = new ArrayList<>(Arrays.asList("dtgnr" ,"dtgrp","usrmgr","vhl" ,"pda","rta"));
+    private static final List<String> REQUIRED_AUTH = new ArrayList<>(Arrays.asList("dtgnr" ,"usrmgr","vhl" ,"pda","rta"));
     
     
 //----------------------------------------------------------------------------//

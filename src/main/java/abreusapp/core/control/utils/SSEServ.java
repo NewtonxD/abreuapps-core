@@ -23,8 +23,6 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 public class SSEServ {
     
     private final Map<String,SseEmitter> dtGnrEmitters = new ConcurrentHashMap<>();
-
-    private final Map<String,SseEmitter> dtGrpEmitters = new ConcurrentHashMap<>();
     
     private final Map<String,SseEmitter> usrMgrEmitters = new ConcurrentHashMap<>();
     
@@ -37,7 +35,6 @@ public class SSEServ {
     private Map<String,SseEmitter> obtenerEmitter(String nombre){
         return switch (nombre) {
             case "dtgnr" -> dtGnrEmitters;
-            case "dtgrp" -> dtGrpEmitters;
             case "usrmgr" -> usrMgrEmitters;
             case "vhl" -> vhlEmitters;
             case "pda" -> pdaEmitters;

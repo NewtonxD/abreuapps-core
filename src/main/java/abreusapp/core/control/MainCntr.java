@@ -70,7 +70,12 @@ public class MainCntr {
     public String LeatLeaftJsMap() {        
         return "redirect:/content/js/lib/leaflet.js.map";
     }
-    
+//----------------------------------------------------------------------------//
+    @RequestMapping("/favicon.ico")
+    public String Favicon(){
+        return "redirect:/content/assets/img/favicon_io/favicon.ico";
+    }
+//----------------------------------------------------------------------------//  
     @RequestMapping("/main/leaflet-geoman.js.map")
     public String GeomanJsMap(){
         return "redirect:/content/js/lib/leaflet-geoman.js.map";

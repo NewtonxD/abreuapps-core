@@ -15,8 +15,8 @@ public interface UsuarioRepo extends JpaRepository<Usuario, Integer> {
            "u.correo, " +
            "u.activo, " +
            "u.cambiarPassword, " +
-           "u.persona.id) FROM Usuario u")
-    List<UsuarioDTO> customFindAll();
+           "u.persona.id) FROM Usuario u WHERE CASE WHEN ?1<>null THEN u.activo=?1 ELSE true END")
+    List<UsuarioDTO> customFindAll(Boolean activo);
 
     Optional<Usuario> findByCorreo(String correo);
 

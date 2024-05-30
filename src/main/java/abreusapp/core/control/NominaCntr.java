@@ -5,7 +5,6 @@
 package abreusapp.core.control;
 
 import abreusapp.core.control.general.DatoServ;
-import abreusapp.core.control.general.GrupoDatoServ;
 import abreusapp.core.control.general.Persona;
 import abreusapp.core.control.general.PersonaServ;
 import abreusapp.core.control.usuario.Usuario;
@@ -35,8 +34,6 @@ public class NominaCntr {
     private final DateUtils FechaUtils;
     
     private final DatoServ dtserv;
-    
-    private final GrupoDatoServ GrupoServicio;
     
     private final ModelServ ModeloServicio;
     
@@ -111,13 +108,9 @@ public class NominaCntr {
         Persona personaBD=PersonaServicio.obtenerPorCedula(cedula).orElse(new Persona());
         personaBD.setCedula(cedula);
         model.addAttribute("sexo",
-                dtserv.consultarPorGrupo(
-                GrupoServicio.obtener("Sexo").get() )
-        );
+                dtserv.consultarPorGrupo("Sexo") );
         model.addAttribute("sangre",
-                dtserv.consultarPorGrupo(
-                GrupoServicio.obtener("Tipos Sanguineos").get() )
-        );
+                dtserv.consultarPorGrupo("Tipos Sanguineos") );
         model.addAttribute("persona", personaBD);
         model.addAttribute("update",update);
         return "fragments/usr_mgr_registro :: info-dinamica-personal";

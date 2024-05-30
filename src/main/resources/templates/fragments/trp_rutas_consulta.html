@@ -62,11 +62,11 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr th:each="d: ${rutas}" th:attr="data-id=${d.ruta}">
-                                            <th scope="row" th:text="${d.ruta}"></th>
-                                            <td th:text="${d.localizacion_inicial}"></td>
-                                            <td th:text="${d.localizacion_final}"></td>
-                                            <td th:text="${d.activo?'Activo':'Inactivo'}"></td>
+                                        <tr th:each="d: ${rutas}" th:attr="data-id=${d.rta}">
+                                            <th scope="row" th:text="${d.rta}"></th>
+                                            <td th:text="${d.loc_ini}"></td>
+                                            <td th:text="${d.loc_fin}"></td>
+                                            <td th:text="${d.act?'Activo':'Inactivo'}"></td>
                                         </tr>
                                     </tbody>
                                 </table>

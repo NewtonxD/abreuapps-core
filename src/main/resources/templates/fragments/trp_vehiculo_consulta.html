@@ -60,12 +60,12 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr th:each="d: ${vehiculos}" th:attr="data-id=${d.placa}">
-                                            <th scope="row" th:text="${d.placa}"></th>
-                                            <td th:text="${d.marca.dato + ' ' + d.modelo.dato}"></td>
-                                            <td th:text="${d.color.dato}"></td>
-                                            <td th:text="${d.estado.dato}"></td>
-                                            <td th:text="${d.activo?'Activo':'Inactivo'}"></td>
+                                        <tr th:each="d: ${vehiculos}" th:attr="data-id=${d.pl}">
+                                            <th scope="row" th:text="${d.pl}"></th>
+                                            <td th:text="${d.marca_dat + ' ' + d.modelo_dat}"></td>
+                                            <td th:text="${d.color_dat}"></td>
+                                            <td th:text="${d.estado_dat}"></td>
+                                            <td th:text="${d.act?'Activo':'Inactivo'}"></td>
                                         </tr>
                                     </tbody>
                                 </table>

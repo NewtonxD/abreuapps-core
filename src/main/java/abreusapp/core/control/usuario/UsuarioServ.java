@@ -95,7 +95,7 @@ public class UsuarioServ {
     }
     
     public List<UsuarioDTO> consultar(){  
-        return repo.customFindAll();
+        return repo.customFindAll(null);
     }
     
     public Optional<Usuario> obtener(String usuario){
