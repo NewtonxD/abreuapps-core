@@ -46,7 +46,7 @@ $(function(){
     
     if(data.paradas!==null && data.paradas!==undefined){
         for (let i = 0; i < data.paradas.length; i++) {
-            L.marker([data.paradas[i].latitud,data.paradas[i].longitud], {
+            L.marker([data.paradas[i].lat,data.paradas[i].lon], {
               icon: L.divIcon({
                 className: "custom-icon-marker",
                 iconSize: L.point(25, 40),
@@ -55,7 +55,7 @@ $(function(){
                 popupAnchor: [1, -24],
               }),
             })
-              .bindPopup(`${data.paradas[i].descripción.toString()}`)
+              .bindPopup(`${data.paradas[i].dsc.toString()}`)
               .addTo(map);
         }
         

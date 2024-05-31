@@ -67,11 +67,11 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr th:each="d: ${datos}" th:attr="data-id=${d.dato}">
-                                                <th scope="row" th:text="${d.dato}"></th>
-                                                <td th:text="${d.descripcion}"></td>
-                                                <td th:text="${d.grupo.grupo}"></td>
-                                                <td th:text="${d.activo?'Activo':'Inactivo'}"></td>
+                                            <tr th:each="d: ${datos}" th:attr="data-id=${d.dat}">
+                                                <th scope="row" th:text="${d.dat}"></th>
+                                                <td th:text="${d.dsc}"></td>
+                                                <td th:text="${d.fat_dat}"></td>
+                                                <td th:text="${d.act?'Activo':'Inactivo'}"></td>
                                             </tr>
                                         </tbody>
                                     </table>
