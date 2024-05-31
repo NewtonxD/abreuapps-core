@@ -1,10 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package abreusapp.core.control.utils;
 
 import java.sql.Connection;
+import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import lombok.RequiredArgsConstructor;
 import org.postgresql.PGConnection;
@@ -26,25 +23,27 @@ public class NotifierServ {
     public Runnable createNotificationHandler(Consumer<PGNotification> consumer) {
         
         return () -> {
-            tpl.execute((Connection c) -> {
-                c.createStatement().execute("LISTEN " + CHANNEL_NAME);
-                
-                PGConnection pgconn = c.unwrap(PGConnection.class); 
-                
-                while(!Thread.currentThread().isInterrupted()) {
-                    PGNotification[] nts = pgconn.getNotifications(1000);
-                    if ( nts == null || nts.length == 0 ) {
-                        continue;
+            var executor = Executors.newVirtualThreadPerTaskExecutor();
+            executor.execute(()->{
+                tpl.execute((Connection c) -> {
+                    c.createStatement().execute("LISTEN " + CHANNEL_NAME);
+
+                    PGConnection pgconn = c.unwrap(PGConnection.class); 
+                    while(!Thread.currentThread().isInterrupted()) {
+                        PGNotification[] nts = pgconn.getNotifications(1000);
+                        if ( nts == null || nts.length == 0 ) {
+                            continue;
+                        }
+
+                        for( PGNotification nt : nts) {
+                            consumer.accept(nt);
+                        }
                     }
-                    
-                    for( PGNotification nt : nts) {
-                        consumer.accept(nt);
-                    }
-                }
-                
-                return 0;
+
+                    return 0;
+                });
             });
-                
+            executor.shutdown();
         };
         
     }
