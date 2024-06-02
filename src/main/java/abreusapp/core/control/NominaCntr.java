@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package abreusapp.core.control;
 
 import abreusapp.core.control.general.DatoServ;
@@ -13,7 +9,6 @@ import abreusapp.core.control.utils.ModelServ;
 import java.text.ParseException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +20,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @author cabreu
  */
 @Controller
-@Slf4j
 @RequiredArgsConstructor
 public class NominaCntr {
     

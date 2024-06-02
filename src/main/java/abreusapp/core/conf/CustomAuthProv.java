@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package abreusapp.core.conf;
 
 import abreusapp.core.control.utils.LoginAttemptServ;
@@ -34,7 +30,7 @@ public class CustomAuthProv implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         if (loginAttemptService.isBlocked()) {
-            throw new UsernameNotFoundException("Ha sido bloqueado! Demasiados intentos de sesión.");
+            throw new UsernameNotFoundException("Has sido bloqueado! Demasiados intentos de sesión.");
         }
         
         String username = authentication.getName();

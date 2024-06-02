@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package abreusapp.core.control;
 
 import abreusapp.core.control.general.ConfServ;
@@ -12,7 +8,6 @@ import abreusapp.core.control.utils.ModelServ;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,7 +25,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @author Newton
  */
 @Controller
-@Slf4j
 @RequiredArgsConstructor
 public class MainCntr {
 

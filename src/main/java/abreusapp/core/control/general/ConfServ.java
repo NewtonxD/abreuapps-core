@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package abreusapp.core.control.general;
 
 import abreusapp.core.control.usuario.Usuario;
@@ -25,10 +21,10 @@ public class ConfServ {
     private final ConfRepo repo;
     
     public Map<String,String> consultarConfMap(){
-        List<Conf> results=repo.findAll();
+        List<ConfDTO> results=repo.customFindAll();
         Map<String, String> convert=new HashMap<>();
         
-        for (Conf result : results) convert.put(result.getCodigo(), result.getValor());
+        for (ConfDTO result : results) convert.put(result.cod(), result.val());
         
         return convert;
     }

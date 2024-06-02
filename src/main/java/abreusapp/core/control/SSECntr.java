@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package abreusapp.core.control;
 
 import abreusapp.core.control.utils.ModelServ;
@@ -10,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -27,7 +22,6 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
  */
 
 @Controller
-@Slf4j
 @RequestMapping("/see")
 @CrossOrigin
 @RequiredArgsConstructor

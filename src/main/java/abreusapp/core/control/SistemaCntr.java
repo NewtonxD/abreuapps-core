@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package abreusapp.core.control;
 
 import abreusapp.core.control.general.Dato;
@@ -17,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -34,7 +29,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @author cabreu
  */
 @Controller
-@Slf4j
 @RequiredArgsConstructor
 public class SistemaCntr {
 
@@ -146,7 +140,7 @@ public class SistemaCntr {
 
         if (! datoDB.isPresent()) {
 
-            log.error("Error COD: 00535 al editar datos generales, ({}) no existe.",idDato);
+            //log.error("Error COD: 00535 al editar datos generales, ({}) no existe.",idDato);
             valido=false;
             plantillaRespuesta="redirect:/error";
 
@@ -284,7 +278,7 @@ public class SistemaCntr {
         Optional<Usuario> usuarioBD=UsuarioServicio.obtener(idUsuario); 
 
         if(!usuarioBD.isPresent()){
-            log.error("Error COD: 00537 al editar Usuario. Usuario no encontrado ({})",idUsuario);
+            //log.error("Error COD: 00537 al editar Usuario. Usuario no encontrado ({})",idUsuario);
             plantillaRespuesta= "redirect:/error";
             valido=false;
 
@@ -320,7 +314,7 @@ public class SistemaCntr {
         Optional<Usuario> usuarioBD=UsuarioServicio.obtener(usuarioLogueado.getUsername()); 
  
         if(! usuarioBD.isPresent() ){
-            log.error("Error COD: 00539 al editar mi Usuario. Mi Usuario no encontrado ({})",usuarioLogueado.getUsername());
+            //log.error("Error COD: 00539 al editar mi Usuario. Mi Usuario no encontrado ({})",usuarioLogueado.getUsername());
             plantillaRespuesta= "redirect:/error";
             valido=false;
         }
@@ -427,7 +421,7 @@ public class SistemaCntr {
             Optional<Usuario> usuarioBD=UsuarioServicio.obtener(nombreUsuario); 
 
             if( ! usuarioBD.isPresent() ){
-                log.error("Error COD: 00537 al resetear Password. Usuario no encontrado ({})",nombreUsuario);
+                //log.error("Error COD: 00537 al resetear Password. Usuario no encontrado ({})",nombreUsuario);
                 plantillaRespuesta = "redirect:/error";
                 valido=false;
             }
@@ -474,7 +468,7 @@ public class SistemaCntr {
             Optional<Usuario> usuarioBD=UsuarioServicio.obtener(idUsuario); 
 
             if( ! usuarioBD.isPresent() ){
-                log.error("Error COD: 00537 al editar Usuario. Usuario no encontrado ({})",idUsuario);
+                //log.error("Error COD: 00537 al editar Usuario. Usuario no encontrado ({})",idUsuario);
                 plantillaRespuesta = "redirect:/error";
                 valido=false;
             }
@@ -516,7 +510,7 @@ public class SistemaCntr {
             Optional<Usuario> usuarioBD=UsuarioServicio.obtener(nombreUsuario); 
 
             if(!usuarioBD.isPresent()){
-                log.error("Error COD: 00539 al editar Usuario. Usuario no encontrado ({})",nombreUsuario);
+                //log.error("Error COD: 00539 al editar Usuario. Usuario no encontrado ({})",nombreUsuario);
                 valido=false;
             }
         

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package abreusapp.core.control.utils;
 
 import abreusapp.core.control.transporte.ParadaDTO;
@@ -17,7 +13,6 @@ import java.util.Map;
 import static java.util.Map.entry;
 import java.util.function.Consumer;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.postgresql.PGNotification;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +21,6 @@ import org.springframework.stereotype.Component;
  * @author cabreu
  */
 
-@Slf4j
 @Component
 @RequiredArgsConstructor
 public class NotificationHandler implements Consumer<PGNotification> {
@@ -81,7 +75,7 @@ public class NotificationHandler implements Consumer<PGNotification> {
             }
             
         }catch(JsonProcessingException e){
-            log.error(e.getMessage());
+            //log.error(e.getMessage());
         }
     }
     

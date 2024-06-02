@@ -1,11 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package abreusapp.core.control.utils;
 
 import abreusapp.core.control.general.ConfServ;
-import abreusapp.core.control.general.Dato;
 import abreusapp.core.control.general.DatoDTO;
 import abreusapp.core.control.general.DatoServ;
 import abreusapp.core.control.general.Persona;
