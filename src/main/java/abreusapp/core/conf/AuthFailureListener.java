@@ -2,7 +2,7 @@ package abreusapp.core.conf;
 
 import abreusapp.core.control.utils.LoginAttemptServ;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;
 import org.springframework.stereotype.Component;
@@ -13,14 +13,12 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-public class AuthFailureListener implements 
-        ApplicationListener<AuthenticationFailureBadCredentialsEvent> {
+@RequiredArgsConstructor
+public class AuthFailureListener implements ApplicationListener<AuthenticationFailureBadCredentialsEvent> {
     
-    @Autowired
-    private HttpServletRequest request;
+    private final HttpServletRequest request;
     
-    @Autowired
-    private LoginAttemptServ loginAttemptService;
+    private final LoginAttemptServ loginAttemptService;
 
     @Override
     public void onApplicationEvent(AuthenticationFailureBadCredentialsEvent e) {

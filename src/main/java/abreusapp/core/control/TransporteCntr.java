@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package abreusapp.core.control;
 
 import abreusapp.core.control.general.Dato;
@@ -35,7 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -57,7 +52,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 
 @Controller
-@Slf4j
 @RequiredArgsConstructor
 public class TransporteCntr {
     
@@ -191,7 +185,7 @@ public class TransporteCntr {
 
         if (!ruta.isPresent()) {
 
-            log.error("Error COD: 00637 al editar parada. No encontrado ({})",idRuta);
+            //log.error("Error COD: 00637 al editar parada. No encontrado ({})",idRuta);
             plantillaRespuesta = "redirect:/error";
             valido=false;
 
@@ -346,7 +340,7 @@ public class TransporteCntr {
 
         if (!parada.isPresent()) {
 
-            log.error("Error COD: 00637 al editar parada. No encontrado ({})",idParada);
+            //log.error("Error COD: 00637 al editar parada. No encontrado ({})",idParada);
             plantillaRespuesta = "redirect:/error";
             valido=false;
 
@@ -506,7 +500,7 @@ public class TransporteCntr {
 
         if (!vehiculo.isPresent()) {
 
-            log.error("Error COD: 00637 al editar vehículo. No encontrado ({})",placa);
+            //log.error("Error COD: 00637 al editar vehículo. No encontrado ({})",placa);
             plantillaRespuesta = "redirect:/error";
             valido=false;
 
@@ -568,7 +562,7 @@ public class TransporteCntr {
             Optional<Dato> Marca = DatosServicio.obtener(marca);
 
             if(!Marca.isPresent()){
-                log.error("Error COD: 00639 al editar Vehiculo. Marca no encontrada ({})",marca);
+                //log.error("Error COD: 00639 al editar Vehiculo. Marca no encontrada ({})",marca);
                 valido=false;
             }
             
