@@ -44,7 +44,16 @@ if (navigator.geolocation) {
         // PERMISO ACEPTADO: MARCADOR EN LOCALIZACION USUARIO + BOTON DE CASITA PARA VOLVER
         lat = position.coords["latitude"];
         lng = position.coords["longitude"];
-        const marker = L.marker([lat, lng]).addTo(map);
+        
+        const home ='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M32 18.451L16 6.031 0 18.451v-5.064L16 .967l16 12.42zM28 18v12h-8v-8h-8v8H4V18l12-9z" /></svg>';
+
+        const marker = L.marker([lat, lng], {
+              icon: L.divIcon({
+                className: "custom-icon-marker",
+                iconSize: L.point(25, 25),
+                html: home
+              })
+        }).addTo(map);
         
         const popup = L.popup({
             pane: "fixed",
@@ -55,8 +64,7 @@ if (navigator.geolocation) {
         marker.bindPopup(popup).on("click", fitBoundsPadding);
         map.setView([lat, lng], zoom);
 
-        const home ='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M32 18.451L16 6.031 0 18.451v-5.064L16 .967l16 12.42zM28 18v12h-8v-8h-8v8H4V18l12-9z" /></svg>';
-
+        
         const customControl = L.Control.extend({
             options: {position: "topleft"},
             onAdd: function () {
@@ -88,6 +96,32 @@ if (navigator.geolocation) {
         enableHighAccuracy: true
     });
 }
+
+$.ajax({
+    url:`${SERVER_IP}/API/pda/getLoc`,
+    type:"POST",
+    async:true,
+    data:{idParada:0},
+    success: function(res){
+        
+        if(res.paradas!==null && res.paradas!==undefined){
+            for (let i = 0; i < res.paradas.length; i++) {
+                const popup = L.popup({
+                    pane: "fixed",
+                    className: "popup-fixed test",
+                    autoPan: false,
+                }).setContent(`<h5>${res.paradas[i].dsc.toString()}.</h5><label class="text-muted">( ${res.paradas[i].lat} , ${res.paradas[i].lon} ).</label>`);
+
+                L.marker([res.paradas[i].lat,res.paradas[i].lon])
+                .bindPopup(popup)
+                .addTo(map);
+        
+            }
+        }
+        
+    }
+ });
+    
 //------------------------------------------------------------------------------
 //-----------MEDIA QUERY--------------------------------------------------------
 //------------------------------------------------------------------------------
