@@ -826,6 +826,33 @@ public class TransporteCntr {
     }
     
 //----------------------------------------------------------------------------//
+@PostMapping(value="/API/pda/getLoc", produces = MediaType.APPLICATION_JSON_VALUE)
+@ResponseBody
+public ResponseEntity ObtenerLocParadasAPI(
+    @RequestParam("idParada") String idParada
+) {  
+
+    Map<String, Object> respuesta= new HashMap<>();
+    Optional<Parada> LocParada = ParadaServicio.obtener(Integer.valueOf(idParada) ); 
+
+    respuesta.put("paradas",ParadaServicio.consultarTodo( 
+        Integer.valueOf(idParada) , 
+        true
+    ));
+
+    //SI TODAS LAS ANTERIORES SON VALIDAS PROCEDEMOS
+    if(LocParada.isPresent()){
+        respuesta.put("lon",LocParada.get().getLongitud());
+        respuesta.put("lat", LocParada.get().getLatitud());
+    }
+
+    return new ResponseEntity<>(
+            respuesta.isEmpty() ? null: respuesta,
+            new HttpHeaders(),
+            HttpStatus.OK);  
+}    
+    
+//----------------------------------------------------------------------------//
 //------------------ENDPOINTS TILES MAPA--------------------------------------//
 //----------------------------------------------------------------------------//
     
