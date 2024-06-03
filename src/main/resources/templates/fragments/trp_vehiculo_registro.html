@@ -166,6 +166,7 @@
         </div>
         <script th:src="@{/content/js/trp/svd_vhl574702.js}"></script>
         <script  th:if="${vehiculo.placa!=null  && last_loc }"  th:src="@{/content/js/lib/leaflet.js}"></script>
+        <script th:src="@{/content/js/fetch_cache.js}"></script>
         <script  th:if="${vehiculo.placa!=null && last_loc }"  th:src="@{/content/js/trp/vhl544702lastloc.js}"></script>
     </th:block>
     <th:block th:unless="${trp_vehiculo_registro}" th:insert="~{error/403 :: error403}">

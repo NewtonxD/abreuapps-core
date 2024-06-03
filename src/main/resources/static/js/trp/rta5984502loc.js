@@ -32,14 +32,10 @@ $(function(){
     const lat = data.lat;
     const lng = data.lon;
     
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register(`${SERVER_IP}/service-worker.js`,{scope:"/"});
-    }
-    
     if (map != undefined) map.remove();
     map = L.map("map", config).setView([lat, lng], zoom);
 
-    L.tileLayer(TILE_API_IP, {}).addTo(map);
+    L.tileLayer.fetch(TILE_API_IP).addTo(map);
     
     L.control.zoom({ position: "topright" }).addTo(map);
     
