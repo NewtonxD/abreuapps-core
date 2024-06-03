@@ -1,11 +1,4 @@
 //------------------------------------------------------------------------------
-//-----MANEJO DE CACHE E IMAGENES DEL MAPA LOCALMENTE---------------------------
-//------------------------------------------------------------------------------
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register(`${SERVER_IP}/service-worker.js`, {scope: "/"});
-}
-
-//------------------------------------------------------------------------------
 //---------DECLARACION DEL MAPA-------------------------------------------------
 //------------------------------------------------------------------------------
 var map;
@@ -23,11 +16,7 @@ if (map != undefined)
     map.remove();
 map = L.map("map", config).setView([lat, lng], zoom);
 
-L.tileLayer(TILE_API_IP, {
-  maxZoom: config.maxZoom,
-  preload: true,
-  formatData: "webp"
-}).addTo(map);
+L.tileLayer.fetch(TILE_API_IP).addTo(map);
 
 L.control.scale({imperial: false, }).addTo(map);
 //------------------------------------------------------------------------------
