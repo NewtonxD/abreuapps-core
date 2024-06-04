@@ -18,8 +18,9 @@ public interface LocRutaRepo  extends JpaRepository<LocRuta, Long> {
             + "r.ruta.ruta,"
             + "r.longitud,"
             + "r.latitud"
-            + ") FROM LocRuta r WHERE CASE WHEN coalesce(?1,'')<>'' THEN r.ruta.ruta=?1 ELSE true END")
-    List<LocRutaDTO> customFindAll(String ruta);
+            + ") FROM LocRuta r WHERE CASE WHEN coalesce(?1,'')<>'' THEN r.ruta.ruta=?1 ELSE true END "
+            + " AND CASE WHEN ?2<>null THEN r.ruta.activo=?2 ELSE true END ")
+    List<LocRutaDTO> customFindAll(String PorRuta,Boolean ActivoRuta);
     
     void deleteAllByRuta(Ruta ruta);
 }
