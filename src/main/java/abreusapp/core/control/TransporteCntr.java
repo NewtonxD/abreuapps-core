@@ -4,6 +4,7 @@ import abreusapp.core.control.general.Dato;
 import abreusapp.core.control.general.DatoDTO;
 import abreusapp.core.control.general.DatoServ;
 import abreusapp.core.control.transporte.LocRuta;
+import abreusapp.core.control.transporte.LocRutaDTO;
 import abreusapp.core.control.transporte.LocRutaServ;
 import abreusapp.core.control.transporte.LocVehiculo;
 import abreusapp.core.control.transporte.LocVehiculoServ;
@@ -227,7 +228,7 @@ public class TransporteCntr {
             
             if(Ruta.isPresent()){
                 respuesta.put("ruta",
-                    LocRutaServicio.consultarPorRuta(Ruta.get().getRuta())) 
+                    LocRutaServicio.consultar(Ruta.get().getRuta(),null)) 
                 ;
             } 
             
@@ -826,25 +827,22 @@ public class TransporteCntr {
     }
     
 //----------------------------------------------------------------------------//
-@PostMapping(value="/API/pda/getLoc", produces = MediaType.APPLICATION_JSON_VALUE)
+@PostMapping(value="/API/trp/getStatic", produces = MediaType.APPLICATION_JSON_VALUE)
 @ResponseBody
-public ResponseEntity ObtenerLocParadasAPI(
-    @RequestParam("idParada") String idParada
+public ResponseEntity ObtenerLocStaticAPI(
 ) {  
 
     Map<String, Object> respuesta= new HashMap<>();
-    Optional<Parada> LocParada = ParadaServicio.obtener(Integer.valueOf(idParada) ); 
 
+    
+    
+    respuesta.put("rutas", RutaServicio.consultarActivo());
+    respuesta.put("rutasLoc", LocRutaServicio.consultar(
+            null,null) 
+    );
     respuesta.put("paradas",ParadaServicio.consultarTodo( 
-        Integer.valueOf(idParada) , 
-        true
-    ));
-
-    //SI TODAS LAS ANTERIORES SON VALIDAS PROCEDEMOS
-    if(LocParada.isPresent()){
-        respuesta.put("lon",LocParada.get().getLongitud());
-        respuesta.put("lat", LocParada.get().getLatitud());
-    }
+        0 , true)
+    );
 
     return new ResponseEntity<>(
             respuesta.isEmpty() ? null: respuesta,

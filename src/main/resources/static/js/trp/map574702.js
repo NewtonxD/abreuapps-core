@@ -86,12 +86,34 @@ if (navigator.geolocation) {
     });
 }
 
+const pairRtaWithLoc = (rtaArray, locArray) => {
+    return rtaArray.map(rtaItem => {
+        const matchLocRta = locArray.filter(loc => loc.rta === rtaItem.rta);
+        return {
+            ...rtaItem,
+            loc: matchLocRta
+        };
+    });
+};
+
 $.ajax({
-    url:`${SERVER_IP}/API/pda/getLoc`,
+    url:`${SERVER_IP}/API/trp/getStatic`,
     type:"POST",
     async:true,
-    data:{idParada:0},
     success: function(res){
+        
+        if(res.rutas!==null && res.rutas!==undefined){
+            for (let i = 0; i < res.rutas.length; i++) {
+                let coordinates = 
+                        res.rutasLoc
+                         .filter(loc => loc.rta === res.rutas[i].rta)
+                         .map(point => [point.lat, point.lon]);
+                // en coordenadas tenemos los locs
+                // en res.rutas[i] la info de la ruta.
+                // cambiar popup pane y obtener color random para la ruta. ex 24 polyline
+                if(coordinates.length>0) L.polyline(coordinates).addTo(map);
+            }
+        }
         
         if(res.paradas!==null && res.paradas!==undefined){
             for (let i = 0; i < res.paradas.length; i++) {

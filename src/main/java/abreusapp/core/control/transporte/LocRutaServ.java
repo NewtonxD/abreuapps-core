@@ -18,12 +18,8 @@ public class LocRutaServ {
     
     private final LocRutaRepo repo;
     
-    public List<LocRutaDTO> consultar(){
-        return repo.customFindAll(null);
-    }
-    
-    public List<LocRutaDTO> consultarPorRuta(String ruta){
-        return repo.customFindAll(ruta);
+    public List<LocRutaDTO> consultar(String PorRuta,Boolean ActivoRuta){
+        return repo.customFindAll(PorRuta,ActivoRuta);
     }
     
     public void borrarPorRuta(Ruta ruta){
