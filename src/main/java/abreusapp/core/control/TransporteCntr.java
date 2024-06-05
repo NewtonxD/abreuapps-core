@@ -827,28 +827,28 @@ public class TransporteCntr {
     }
     
 //----------------------------------------------------------------------------//
-@PostMapping(value="/API/trp/getStatic", produces = MediaType.APPLICATION_JSON_VALUE)
-@ResponseBody
-public ResponseEntity ObtenerLocStaticAPI(
-) {  
+    @ResponseBody
+    @GetMapping(value="/API/trp/getStatic", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity ObtenerLocStaticAPI(
+    ) {  
 
-    Map<String, Object> respuesta= new HashMap<>();
+        Map<String, Object> respuesta= new HashMap<>();
 
-    
-    
-    respuesta.put("rutas", RutaServicio.consultarActivo());
-    respuesta.put("rutasLoc", LocRutaServicio.consultar(
-            null,null) 
-    );
-    respuesta.put("paradas",ParadaServicio.consultarTodo( 
-        0 , true)
-    );
 
-    return new ResponseEntity<>(
-            respuesta.isEmpty() ? null: respuesta,
-            new HttpHeaders(),
-            HttpStatus.OK);  
-}    
+
+        respuesta.put("rutas", RutaServicio.consultarActivo());
+        respuesta.put("rutasLoc", LocRutaServicio.consultar(
+                null,null) 
+        );
+        respuesta.put("paradas",ParadaServicio.consultarTodo( 
+            0 , true)
+        );
+
+        return new ResponseEntity<>(
+                respuesta.isEmpty() ? null: respuesta,
+                new HttpHeaders(),
+                HttpStatus.OK);  
+    }    
     
 //----------------------------------------------------------------------------//
 //------------------ENDPOINTS TILES MAPA--------------------------------------//
