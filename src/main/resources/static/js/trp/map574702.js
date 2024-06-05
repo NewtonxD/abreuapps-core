@@ -1,11 +1,63 @@
 //------------------------------------------------------------------------------
+//------------FUNCIONES IMPORTANTES---------------------------------------------
+//------------------------------------------------------------------------------
+function onMediaQueryChange(event) {
+    if (event.matches) {
+        document.documentElement.style.setProperty("--min-width", "true");
+    } else {
+        document.documentElement.style.removeProperty("--min-width");
+    }
+}
+//------------------------------------------------------------------------------
+function fitBoundsPadding(e) {
+    const boxInfoWith = document.querySelector(".leaflet-popup-content-wrapper")
+            .offsetWidth;
+    
+    const featureGroup = L.featureGroup([e.target]).addTo(map);
+
+    const getPropertyWidth = document.documentElement.style.getPropertyValue("--min-width");
+    
+    map.fitBounds(featureGroup.getBounds(), {
+        paddingTopLeft: [getPropertyWidth ? -boxInfoWith : 0, 10]
+    });
+}
+//------------------------------------------------------------------------------
+const compareToArrays = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+//------------------------------------------------------------------------------
+function getCenterOfMap() {
+    const buttonBackToHome = document.querySelector(".back-to-home");
+    buttonBackToHome.classList.remove("hidden");
+
+    buttonBackToHome.addEventListener("click", () => {
+        map.flyTo([lat, lng], zoom);
+    });
+
+    map.addEventListener('moveend', () => {
+        const {lat: latCenter, lng: lngCenter} = map.getCenter();
+
+        const latC = latCenter.toFixed(3) * 1;
+        const lngC = lngCenter.toFixed(3) * 1;
+
+        const defaultCoordinate = [+lat.toFixed(3), +lng.toFixed(3)];
+
+        const centerCoordinate = [latC, lngC];
+
+        if (compareToArrays(centerCoordinate, defaultCoordinate)) {
+            buttonBackToHome.classList.add("hidden");
+        }
+    });
+}
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
 //---------DECLARACION DEL MAPA-------------------------------------------------
 //------------------------------------------------------------------------------
 var map;
 
 let config = {
     minZoom: 7,
-    maxZoom: 18
+    maxZoom: 18,
+    preferCanvas: true
 };
 
 let zoom = 16;
@@ -47,7 +99,7 @@ if (navigator.geolocation) {
         const popup = L.popup({
             pane: "fixed",
             className: "popup-fixed test",
-            autoPan: false,
+            autoPan: false
         }).setContent(`<h5>Mi Ubicación actual.</h5><label class="text-muted">( ${lat} , ${lng} ).</label><br>`);
 
         marker.bindPopup(popup).on("click", fitBoundsPadding);
@@ -86,52 +138,48 @@ if (navigator.geolocation) {
     });
 }
 
-const pairRtaWithLoc = (rtaArray, locArray) => {
-    return rtaArray.map(rtaItem => {
-        const matchLocRta = locArray.filter(loc => loc.rta === rtaItem.rta);
-        return {
-            ...rtaItem,
-            loc: matchLocRta
-        };
-    });
-};
+fetch(`${SERVER_IP}/API/trp/getStatic`, {
+    method: 'GET'
+}).then(response => response.json())
+.then(res => {
+    if(res.rutas!==null && res.rutas!==undefined){
+        for (let i = 0; i < res.rutas.length; i++) {
+            let coordinates = 
+                    res.rutasLoc
+                     .filter(loc => loc.rta === res.rutas[i].rta)
+                     .map(point => [point.lat, point.lon]);
+             
+            const color=getRandomColor();
+            res.rutas[i].color=color;
 
-$.ajax({
-    url:`${SERVER_IP}/API/trp/getStatic`,
-    type:"POST",
-    async:true,
-    success: function(res){
-        
-        if(res.rutas!==null && res.rutas!==undefined){
-            for (let i = 0; i < res.rutas.length; i++) {
-                let coordinates = 
-                        res.rutasLoc
-                         .filter(loc => loc.rta === res.rutas[i].rta)
-                         .map(point => [point.lat, point.lon]);
-                // en coordenadas tenemos los locs
-                // en res.rutas[i] la info de la ruta.
-                // cambiar popup pane y obtener color random para la ruta. ex 24 polyline
-                if(coordinates.length>0) L.polyline(coordinates).addTo(map);
-            }
-        }
-        
-        if(res.paradas!==null && res.paradas!==undefined){
-            for (let i = 0; i < res.paradas.length; i++) {
-                const popup = L.popup({
-                    pane: "fixed",
-                    className: "popup-fixed test",
-                    autoPan: false,
-                }).setContent(`<h5>${res.paradas[i].dsc.toString()}.</h5><label class="text-muted">( ${res.paradas[i].lat} , ${res.paradas[i].lon} ).</label>`);
+            const popup = L.popup({
+                pane: "fixed",
+                className: "popup-fixed test",
+                autoPan: false
+            }).setContent(`<h5>${res.rutas[i].rta}.</h5><p>Esta ruta inicia en <b>${res.rutas[i].loc_ini}</b>, y termina en <b>${res.rutas[i].loc_fin}</b> .</p>`);
 
-                L.marker([res.paradas[i].lat,res.paradas[i].lon])
-                .bindPopup(popup)
-                .addTo(map);
-        
-            }
+            if(coordinates.length>0) L.polyline(coordinates,{
+                color: color,
+                weight: 7
+            }).bindPopup(popup).addTo(map);
         }
-        
     }
- });
+
+    if(res.paradas!==null && res.paradas!==undefined){
+        for (let i = 0; i < res.paradas.length; i++) {
+            const popup = L.popup({
+                pane: "fixed",
+                className: "popup-fixed test",
+                autoPan: false
+            }).setContent(`<h5>${res.paradas[i].dsc}.</h5><label class="text-muted">( ${res.paradas[i].lat} , ${res.paradas[i].lon} ).</label>`);
+
+            L.marker([res.paradas[i].lat,res.paradas[i].lon])
+            .bindPopup(popup)
+            .addTo(map);
+
+        }
+    }
+}).catch(error => console.error('Error fetching data:', error));
     
 //------------------------------------------------------------------------------
 //-----------MEDIA QUERY--------------------------------------------------------
@@ -141,55 +189,3 @@ const mediaQueryList = window.matchMedia("(min-width: 700px)");
 mediaQueryList.addEventListener('change', (event) => onMediaQueryChange(event));
 
 onMediaQueryChange(mediaQueryList);
-
-
-//------------------------------------------------------------------------------
-//------------FUNCIONES IMPORTANTES---------------------------------------------
-//------------------------------------------------------------------------------
-function onMediaQueryChange(event) {
-    if (event.matches) {
-        document.documentElement.style.setProperty("--min-width", "true");
-    } else {
-        document.documentElement.style.removeProperty("--min-width");
-    }
-}
-//------------------------------------------------------------------------------
-function fitBoundsPadding(e) {
-    const boxInfoWith = document.querySelector(".leaflet-popup-content-wrapper")
-            .offsetWidth;
-    
-    const featureGroup = L.featureGroup([e.target]).addTo(map);
-
-    const getPropertyWidth = document.documentElement.style.getPropertyValue("--min-width");
-    
-    map.fitBounds(featureGroup.getBounds(), {
-        paddingTopLeft: [getPropertyWidth ? -boxInfoWith : 0, 10],
-    });
-}
-//------------------------------------------------------------------------------
-const compareToArrays = (a, b) => JSON.stringify(a) === JSON.stringify(b);
-//------------------------------------------------------------------------------
-function getCenterOfMap() {
-    const buttonBackToHome = document.querySelector(".back-to-home");
-    buttonBackToHome.classList.remove("hidden");
-
-    buttonBackToHome.addEventListener("click", () => {
-        map.flyTo([lat, lng], zoom);
-    });
-
-    map.on("moveend", () => {
-        const {lat: latCenter, lng: lngCenter} = map.getCenter();
-
-        const latC = latCenter.toFixed(3) * 1;
-        const lngC = lngCenter.toFixed(3) * 1;
-
-        const defaultCoordinate = [+lat.toFixed(3), +lng.toFixed(3)];
-
-        const centerCoordinate = [latC, lngC];
-
-        if (compareToArrays(centerCoordinate, defaultCoordinate)) {
-            buttonBackToHome.classList.add("hidden");
-        }
-    });
-}
-//------------------------------------------------------------------------------
