@@ -5,20 +5,19 @@ $(function(){
     var idParada=0;
     if(! ($("#idParada")=== undefined || $("#idParada")===null) ){
         idParada=$("#idParada").val();
-    }
+    }else idParada=0;
             
     $.ajax({
        url:`${SERVER_IP}/pda/getLoc`,
        type:"POST",
        async:false,
-       data:{idParada:idParada},
+       data:{idParada:idParada>0?idParada:0},
        success: function(res){
            data=res;
        }
     });
     
     if( data["lat"] === undefined || data["lat"]===null){
-//         por defecto omsa oficina santiago o actual
         data["lat"]=19.488365437890657;
         data["lon"]=-70.71529535723246;
     }
@@ -38,7 +37,12 @@ $(function(){
     
     L.control.scale({imperial: false,}).addTo(map);
   
-    var marker = L.marker([lat, lng]).addTo(map);
+    var crosshairIcon = L.icon({
+        iconUrl: `${SERVER_IP}/content/assets/img/crosshair.png`,
+        iconSize:     [20, 20], // size of the icon
+        iconAnchor:   [10, 10], // point of the icon which will correspond to marker's location
+    });
+    var marker = L.marker([lat, lng],{icon: crosshairIcon}).addTo(map);
     
     if(data.paradas!==null && data.paradas!==undefined){
         for (let i = 0; i < data.paradas.length; i++) {
