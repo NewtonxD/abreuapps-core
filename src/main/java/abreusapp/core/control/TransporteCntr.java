@@ -329,7 +329,7 @@ public class TransporteCntr {
     public String ActualizarParada(
         HttpServletRequest request,
         Model model,
-        @RequestParam("idParada") String idParada
+        @RequestParam("idParada") Integer idParada
     ) {
         
         boolean valido=true;
@@ -337,7 +337,7 @@ public class TransporteCntr {
         
         Usuario usuarioLogueado = ModeloServicio.getUsuarioLogueado();
 
-        Optional<Parada> parada = ParadaServicio.obtener(Integer.valueOf(idParada));
+        Optional<Parada> parada = ParadaServicio.obtener(idParada);
 
         if (!parada.isPresent()) {
 
@@ -363,7 +363,7 @@ public class TransporteCntr {
     @PostMapping(value="/pda/getLoc", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity ObtenerLocParada(
-        @RequestParam("idParada") String idParada
+        @RequestParam("idParada") Integer idParada
     ) {  
         boolean valido;
         Usuario u = ModeloServicio.getUsuarioLogueado();
@@ -379,10 +379,10 @@ public class TransporteCntr {
         Map<String, Object> respuesta= new HashMap<>();
         
         if(valido){
-            Optional<Parada> LocParada = ParadaServicio.obtener(Integer.valueOf(idParada) ); 
+            Optional<Parada> LocParada = ParadaServicio.obtener(idParada); 
             
             respuesta.put("paradas",ParadaServicio.consultarTodo( 
-                Integer.valueOf(idParada) , 
+                idParada , 
                 true
             ));
         
