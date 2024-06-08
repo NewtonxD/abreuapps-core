@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,9 +21,7 @@ import org.springframework.stereotype.Service;
  */
 
 
-@Transactional
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class UsuarioServ {
     
@@ -69,6 +68,8 @@ public class UsuarioServ {
         );
     }
     
+    @Transactional
+    @CacheEvict("Usuario")
     public void guardar(Usuario gd, Usuario usuario,boolean existe){
         
         if(existe){ 
@@ -89,18 +90,22 @@ public class UsuarioServ {
         repo.save(gd);
     }
     
+    @Cacheable("Usuarios")
     public List<UsuarioDTO> consultar(){  
         return repo.customFindAll(null);
     }
     
+    @Cacheable("Usuario")
     public Optional<Usuario> obtener(String usuario){
         return repo.findByUsername(usuario);
     }
     
+    @Cacheable("Usuario")
     public Optional<Usuario> obtenerPorCorreo(String correo){
         return repo.findByCorreo(correo);
     }
     
+    @Cacheable("Usuario")
     public Optional<Usuario> obtenerPorId(Integer id){
         if(id==null || id==0) Optional.empty();
         return repo.findById(id);

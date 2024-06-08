@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,21 +15,25 @@ import org.springframework.stereotype.Service;
  * @author cabreu
  */
 
-@Transactional
 @Service
 @RequiredArgsConstructor
 public class RutaServ {
     
     private final RutaRepo repo;
     
+    @Cacheable("Rutas")
     public List<RutaDTO> consultar(){
         return repo.customFindAll(false);
     }
     
+    @Cacheable("Rutas")
     public List<RutaDTO> consultarActivo(){
         return repo.customFindAll(true);
     }
     
+    
+    @Transactional
+    @CacheEvict("Ruta")
     public Ruta guardar(Ruta gd, Usuario usuario,boolean existe){
         
         if(existe){ 
@@ -44,6 +50,7 @@ public class RutaServ {
         return repo.save(gd);
     }
     
+    @Cacheable("Ruta")
     public Optional<Ruta> obtener(String Ruta){
         return repo.findById(Ruta);
     }

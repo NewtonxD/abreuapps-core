@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
  * @author cabreu
  */
 
-@Transactional
 @Service
 @RequiredArgsConstructor
 public class AccesoServ {
@@ -77,7 +76,8 @@ public class AccesoServ {
         return repo.ListadoAccesosUsuarioEditar(idUsuario);
     }
     
-        
+      
+    @Transactional  
     public void GuardarTodosMap(Map<String,String> accesos,Usuario usuario){
         List<AccesoUsuario> listaAccesoNuevo = new ArrayList<>();
         List<AccesoUsuario> listaAccesoEdicion = new ArrayList<>();

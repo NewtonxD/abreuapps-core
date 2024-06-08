@@ -16,13 +16,13 @@ import org.springframework.stereotype.Service;
  *  
  */
 
-@Transactional
 @Service
 @RequiredArgsConstructor
 public class PersonaServ {
     
     private final PersonaRepo repo;
     
+    @Transactional
     public Persona guardar(Persona gd, Usuario usuario,boolean existe){
         
         if(existe){ 

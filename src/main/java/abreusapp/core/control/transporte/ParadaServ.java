@@ -6,23 +6,28 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
  *
  * @author cabreu
  */
-@Transactional
+
 @Service
 @RequiredArgsConstructor
 public class ParadaServ {
     
     private final ParadaRepo repo;
     
+    @Cacheable("Paradas")
     public List<ParadaDTO> consultarTodo(Integer excluyeParada,Boolean activo){
         return repo.findAllCustom(excluyeParada, activo);
     }
     
+    @Transactional
+    @CacheEvict("Parada")
     public Parada guardar(Parada gd, Usuario usuario,boolean existe){
         
         if(existe){ 
@@ -38,6 +43,7 @@ public class ParadaServ {
         return repo.save(gd);
     }
     
+    @Cacheable("Parada")
     public Optional<Parada> obtener(Integer id){
         if(id==null){
             return Optional.empty();
