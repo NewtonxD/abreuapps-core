@@ -19,7 +19,7 @@ public class LocRutaServ {
     
     private final LocRutaRepo repo;
     
-    @Cacheable(value="Rutas")
+    @Cacheable(value="RutasLoc")
     public List<LocRutaDTO> consultar(String PorRuta,Boolean ActivoRuta){
         return repo.customFindAll(PorRuta,ActivoRuta);
     }
@@ -30,7 +30,7 @@ public class LocRutaServ {
     }
     
     @Transactional
-    @CacheEvict(value="Rutas",allEntries = true)
+    @CacheEvict(value="RutasLoc",allEntries = true)
     public void guardarTodos(List<LocRuta> gd){
         repo.saveAll(gd);
     }

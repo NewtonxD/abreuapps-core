@@ -1,5 +1,7 @@
 package abreusapp.core.control.transporte;
 
+import java.io.Serializable;
+
 /**
  *
  * @author cabreu
@@ -16,4 +18,4 @@ public record VehiculoDTO (
     String color_dat,
     boolean act,
     String tkn    
-){}
+) implements Serializable {}
