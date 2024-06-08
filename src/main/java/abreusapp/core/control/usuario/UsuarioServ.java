@@ -69,7 +69,7 @@ public class UsuarioServ {
     }
     
     @Transactional
-    @CacheEvict("Usuario")
+    @CacheEvict(value={"Usuarios","Usuario"},allEntries = true)
     public void guardar(Usuario gd, Usuario usuario,boolean existe){
         
         if(existe){ 

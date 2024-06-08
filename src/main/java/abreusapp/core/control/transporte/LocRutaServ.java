@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -20,19 +19,18 @@ public class LocRutaServ {
     
     private final LocRutaRepo repo;
     
-    @Cacheable("Rutas")
+    @Cacheable(value="Rutas")
     public List<LocRutaDTO> consultar(String PorRuta,Boolean ActivoRuta){
         return repo.customFindAll(PorRuta,ActivoRuta);
     }
     
     @Transactional
-    @CacheEvict("Rutas")
     public void borrarPorRuta(Ruta ruta){
         repo.deleteAllByRuta(ruta);
     }
     
     @Transactional
-    @CachePut("Rutas")
+    @CacheEvict(value="Rutas",allEntries = true)
     public void guardarTodos(List<LocRuta> gd){
         repo.saveAll(gd);
     }

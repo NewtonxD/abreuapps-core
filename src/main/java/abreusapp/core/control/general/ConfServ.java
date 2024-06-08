@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +38,7 @@ public class ConfServ {
     }
     
     @Transactional
-    @CachePut("Confs")
+    @CacheEvict(value="Confs",allEntries = true)
     public void GuardarTodosMap(Map<String,String> configuracion,Usuario usuario){
         List<Conf> listaConf = new ArrayList<>();
         for (Map.Entry<String,String> val : configuracion.entrySet()) {
