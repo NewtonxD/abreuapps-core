@@ -1,5 +1,7 @@
 package abreusapp.core.control.transporte;
 
+import java.io.Serializable;
+
 
 /**
  *
@@ -10,4 +12,4 @@ public record LocRutaDTO (
     String rta,
     Double lon,
     Double lat
-){}
+) implements Serializable {}

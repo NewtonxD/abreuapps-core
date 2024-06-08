@@ -4,7 +4,6 @@ import abreusapp.core.control.general.Dato;
 import abreusapp.core.control.general.DatoDTO;
 import abreusapp.core.control.general.DatoServ;
 import abreusapp.core.control.transporte.LocRuta;
-import abreusapp.core.control.transporte.LocRutaDTO;
 import abreusapp.core.control.transporte.LocRutaServ;
 import abreusapp.core.control.transporte.LocVehiculo;
 import abreusapp.core.control.transporte.LocVehiculoServ;
@@ -20,14 +19,8 @@ import abreusapp.core.control.usuario.Usuario;
 import abreusapp.core.control.utils.DateUtils;
 import abreusapp.core.control.utils.ModelServ;
 import abreusapp.core.control.utils.TransportTokenServ;
+import com.google.common.cache.Cache;
 import jakarta.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,7 +29,6 @@ import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -45,7 +37,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -81,9 +72,6 @@ public class TransporteCntr {
     private final PasswordEncoder passwordEncoder;
     
     private static final String PWD_HASH="$2a$10$FD.HVab6z8H3Tba.hw.SvukdeJDfZ5aIIzCN87AL7T2SSAJqoi8Bq";
-    
-    @Value("${abreuapps.core.map.tiles.directory}")
-    private String TILE_DIRECTORY; 
     
     
 //----------------------------------------------------------------------------//
@@ -854,30 +842,5 @@ public class TransporteCntr {
                 new HttpHeaders(),
                 HttpStatus.OK);  
     }    
-    
-//----------------------------------------------------------------------------//
-//------------------ENDPOINTS TILES MAPA--------------------------------------//
-//----------------------------------------------------------------------------//
-    
-    @GetMapping(value = "/API/tiles/{zoom}/{x}/{y}", produces = "image/webp")
-    @Cacheable("tiles")
-    public @ResponseBody ResponseEntity<byte[]> getMapTile(@PathVariable int zoom, @PathVariable int x, @PathVariable int y) {
-        String tilePath = String.format("%s/%d/%d/%d.webp", TILE_DIRECTORY, zoom, x, y);
-        Path path = Paths.get(tilePath);
-        byte[] imageBytes;
-
-        if (!Files.exists(path)) {
-            path = Paths.get(TILE_DIRECTORY+"/default_tile.webp");
-        }
-
-        try {
-            imageBytes = Files.readAllBytes(path);
-            return ResponseEntity.ok(imageBytes);
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
-    }
-
-//----------------------------------------------------------------------------//    
     
 }

@@ -27,7 +27,7 @@ public class VehiculoServ {
     }
     
     @Transactional
-    @CacheEvict("Vehiculo")
+    @CacheEvict(value="Vehiculos",allEntries = true)
     public void guardar(Vehiculo gd, Usuario usuario,boolean existe){
         
         if(existe){ 
@@ -43,7 +43,6 @@ public class VehiculoServ {
         repo.save(gd);
     }
     
-    @Cacheable("Vehiculo")
     public Optional<Vehiculo> obtener(String Placa){
         return repo.findById(Placa);
     }

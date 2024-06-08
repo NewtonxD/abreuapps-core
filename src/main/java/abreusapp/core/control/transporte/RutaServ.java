@@ -31,9 +31,8 @@ public class RutaServ {
         return repo.customFindAll(true);
     }
     
-    
     @Transactional
-    @CacheEvict("Ruta")
+    @CacheEvict(value="Rutas",allEntries = true)
     public Ruta guardar(Ruta gd, Usuario usuario,boolean existe){
         
         if(existe){ 
@@ -50,7 +49,6 @@ public class RutaServ {
         return repo.save(gd);
     }
     
-    @Cacheable("Ruta")
     public Optional<Ruta> obtener(String Ruta){
         return repo.findById(Ruta);
     }

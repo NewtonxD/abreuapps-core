@@ -27,7 +27,7 @@ public class ParadaServ {
     }
     
     @Transactional
-    @CacheEvict("Parada")
+    @CacheEvict(value="Paradas",allEntries = true)
     public Parada guardar(Parada gd, Usuario usuario,boolean existe){
         
         if(existe){ 
@@ -43,7 +43,6 @@ public class ParadaServ {
         return repo.save(gd);
     }
     
-    @Cacheable("Parada")
     public Optional<Parada> obtener(Integer id){
         if(id==null){
             return Optional.empty();
