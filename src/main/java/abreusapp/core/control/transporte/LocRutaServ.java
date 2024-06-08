@@ -4,6 +4,9 @@ import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -11,21 +14,25 @@ import org.springframework.stereotype.Service;
  * @author cabreu
  */
 
-@Transactional
 @Service
 @RequiredArgsConstructor
 public class LocRutaServ {
     
     private final LocRutaRepo repo;
     
+    @Cacheable("Rutas")
     public List<LocRutaDTO> consultar(String PorRuta,Boolean ActivoRuta){
         return repo.customFindAll(PorRuta,ActivoRuta);
     }
     
+    @Transactional
+    @CacheEvict("Rutas")
     public void borrarPorRuta(Ruta ruta){
         repo.deleteAllByRuta(ruta);
     }
     
+    @Transactional
+    @CachePut("Rutas")
     public void guardarTodos(List<LocRuta> gd){
         repo.saveAll(gd);
     }

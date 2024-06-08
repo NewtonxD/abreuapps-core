@@ -11,5 +11,6 @@ public record LocVehiculoDTO(
     String pl,
     Double lat,
     Double lon,
+    String ruta_rta,
     Date reg_dt
 ) {}

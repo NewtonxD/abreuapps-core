@@ -12,12 +12,12 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class LocVehiculoServ {
     
     private final LocVehiculoRepo repo;
     
+    @Transactional
     public LocVehiculo guardar(LocVehiculo Loc){
         Loc.setFecha_registro(new Date());
         return repo.save(Loc);

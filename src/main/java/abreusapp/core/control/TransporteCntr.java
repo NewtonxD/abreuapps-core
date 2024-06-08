@@ -25,6 +25,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,6 +36,7 @@ import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -736,6 +740,7 @@ public class TransporteCntr {
             lv.setLatitud(lat);
             lv.setLongitud(lon);
             lv.setPlaca(v.get());
+            lv.setRuta(v.get().getRuta());
             LocVehiculoServicio.guardar(lv);
         }
         
@@ -855,17 +860,21 @@ public class TransporteCntr {
 //----------------------------------------------------------------------------//
     
     @GetMapping(value = "/API/tiles/{zoom}/{x}/{y}", produces = "image/webp")
-    public @ResponseBody byte[] getMapTile(@PathVariable int zoom, @PathVariable int x, @PathVariable int y) {
+    @Cacheable("tiles")
+    public @ResponseBody ResponseEntity<byte[]> getMapTile(@PathVariable int zoom, @PathVariable int x, @PathVariable int y) {
         String tilePath = String.format("%s/%d/%d/%d.webp", TILE_DIRECTORY, zoom, x, y);
-        File file = new File(tilePath);
-        if (!file.exists()) {
-            file = new File(TILE_DIRECTORY+"/default_tile.webp"); // Provide default tile image
+        Path path = Paths.get(tilePath);
+        byte[] imageBytes;
+
+        if (!Files.exists(path)) {
+            path = Paths.get(TILE_DIRECTORY+"/default_tile.webp");
         }
-        try{
-            InputStream inputStream = new FileInputStream(file);
-            return inputStream.readAllBytes();
-        }catch(IOException e){
-            return new byte[0];
+
+        try {
+            imageBytes = Files.readAllBytes(path);
+            return ResponseEntity.ok(imageBytes);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
