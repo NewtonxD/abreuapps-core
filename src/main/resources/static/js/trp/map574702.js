@@ -100,7 +100,7 @@ if (navigator.geolocation) {
             pane: "fixed",
             className: "popup-fixed test",
             autoPan: false
-        }).setContent(`<h5>Mi Ubicación actual.</h5><label class="text-muted">( ${lat} , ${lng} ).</label><br>`);
+        }).setContent(`<div data-id='' data-lat=${lat} data-lon=${lng} data-type='myloc' ><h5>Mi Ubicación actual.</h5><label class="text-muted">( ${lat} , ${lng} ).</label><br></div>`);
 
         marker.bindPopup(popup).on("click", fitBoundsPadding);
         map.setView([lat, lng], zoom);
@@ -128,7 +128,7 @@ if (navigator.geolocation) {
             pane: "fixed",
             className: "popup-fixed test",
             autoPan: false,
-        }).setContent(`<h5>Ubicación por defecto.</h5><label class="text-muted">( ${lat} , ${lng} ).</label><br><p>Para obtener su ubicación actual acepte los permisos de localización y recargue la plataforma.</p>`);
+        }).setContent(`<div data-id='' data-type='loc_def'><h5>Ubicación por defecto.</h5><label class="text-muted">( ${lat} , ${lng} ).</label><br><p>Para obtener su ubicación actual acepte los permisos de localización y recargue la plataforma.</p></div>`);
 
         marker.bindPopup(popup).on("click", fitBoundsPadding);
         map.setView([lat, lng], zoom);
@@ -138,47 +138,76 @@ if (navigator.geolocation) {
     });
 }
 
+map.on('popupopen', function(event) {
+    const popupNode = event.popup._contentNode.querySelector('div[data-id]');
+    const id = popupNode.getAttribute('data-id');
+    const type = popupNode.getAttribute('data-type');
+
+    // You can now use the id and type to call another endpoint
+    console.log(`ID: ${id}, Type: ${type}`);
+
+    // Example of calling another endpoint
+    /*fetch(`${SERVER_IP}/API/trp/getDetails?id=${id}&type=${type}`, {
+        method: 'GET'
+    })
+    .then(response => response.json())
+    .then(details => {
+        // Handle the response with additional details here
+        console.log(details);
+    })
+    .catch(error => console.error('Error fetching details:', error));*/
+});
+
 fetch(`${SERVER_IP}/API/trp/getStatic`, {
     method: 'GET'
 }).then(response => response.json())
 .then(res => {
-    if(res.rutas!==null && res.rutas!==undefined){
-        for (let i = 0; i < res.rutas.length; i++) {
-            let coordinates = 
-                    res.rutasLoc
-                     .filter(loc => loc.rta === res.rutas[i].rta)
-                     .map(point => [point.lat, point.lon]);
+    if(res.rutasLoc!==null && res.rutasLoc!==undefined){
+        const routePointsMap = new Map();
+
+        res.rutasLoc.forEach(loc => {
+            if (!routePointsMap.has(loc.rta)) {
+                routePointsMap.set(loc.rta, []);
+            }
+            routePointsMap.get(loc.rta).push([loc.lat, loc.lon]);
+        });
+        
+        routePointsMap.forEach((coordinates, routeName) => {
              
-            const color=getRandomColor();
-            res.rutas[i].color=color;
+            const color=getRandomColor();            
+            const contentPopup = `<div data-id="${routeName}" data-type="rta"><h5>${routeName}.</h5></div>`;
 
             const popup = L.popup({
                 pane: "fixed",
                 className: "popup-fixed test",
                 autoPan: false
-            }).setContent(`<h5>${res.rutas[i].rta}.</h5><p>Esta ruta inicia en <b>${res.rutas[i].loc_ini}</b>, y termina en <b>${res.rutas[i].loc_fin}</b> .</p>`);
-
+            }).setContent(contentPopup);
+            
             if(coordinates.length>0) L.polyline(coordinates,{
                 color: color,
                 weight: 7
             }).bindPopup(popup).addTo(map);
-        }
+        });
     }
 
     if(res.paradas!==null && res.paradas!==undefined){
         for (let i = 0; i < res.paradas.length; i++) {
+            
+            const popupContent=`<div data-id="${res.paradas[i].id}" data-type="pda"><h5>${res.paradas[i].dsc}.</h5><label class="text-muted">( ${res.paradas[i].lat} , ${res.paradas[i].lon} ).</label></div>`;
+            
             const popup = L.popup({
                 pane: "fixed",
                 className: "popup-fixed test",
                 autoPan: false
-            }).setContent(`<h5>${res.paradas[i].dsc}.</h5><label class="text-muted">( ${res.paradas[i].lat} , ${res.paradas[i].lon} ).</label>`);
-
+            }).setContent(popupContent);
+            
             L.marker([res.paradas[i].lat,res.paradas[i].lon])
             .bindPopup(popup)
             .addTo(map);
 
         }
     }
+    
 }).catch(error => console.error('Error fetching data:', error));
     
 //------------------------------------------------------------------------------
