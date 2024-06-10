@@ -19,7 +19,6 @@ import abreusapp.core.control.usuario.Usuario;
 import abreusapp.core.control.utils.DateUtils;
 import abreusapp.core.control.utils.ModelServ;
 import abreusapp.core.control.utils.TransportTokenServ;
-import com.google.common.cache.Cache;
 import jakarta.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -28,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -827,12 +825,10 @@ public class TransporteCntr {
 
         Map<String, Object> respuesta= new HashMap<>();
 
-
-
-        respuesta.put("rutas", RutaServicio.consultarActivo());
         respuesta.put("rutasLoc", LocRutaServicio.consultar(
-                null,null) 
+                null,true) 
         );
+        
         respuesta.put("paradas",ParadaServicio.consultarTodo( 
             0 , true)
         );
