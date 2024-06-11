@@ -157,6 +157,13 @@ map.on('popupopen', function(event) {
         data["lat"]=popupNode.getAttribute('data-lat');
     }
     
+    if (type === "pda") {
+        const marker = markerMap.get(id);
+
+        if (marker) {
+            marker.setIcon(new L.Icon.Default({iconUrl: "marker-icon-red.png"}));
+        }
+    }
 
     // Example of calling another endpoint
     fetch(`${SERVER_IP}/API/trp/getInfoObject`, {
@@ -198,8 +205,8 @@ map.on('popupopen', function(event) {
                 map.flyTo([lat, lon], 18); // Adjust the zoom level as needed
                 //
                  // Find the marker using the stored reference and open its popup
-                const key = `${lat},${lon}`;
-                const marker = markerMap.get(key);
+                const id = this.getAttribute('data-id');
+                const marker = markerMap.get(id);
                 if (marker) {
                     marker.openPopup();
                 }
@@ -210,6 +217,21 @@ map.on('popupopen', function(event) {
     .catch(error => console.error('Error fetching details:', error));
     
 });
+
+map.on('popupclose', function(event) {
+    const popupNode = event.popup._contentNode.querySelector('div[data-id]');
+    const id = popupNode.getAttribute('data-id');
+    const type = popupNode.getAttribute('data-type');
+    
+    if (type === "pda") {
+        const marker = markerMap.get(id);
+
+        if (marker) {
+            marker.setIcon(new L.Icon.Default()); // Revert to default marker icon
+        }
+    }
+});
+
 
 fetch(`${SERVER_IP}/API/trp/getStatic`, {
     method: 'GET'
@@ -248,7 +270,7 @@ fetch(`${SERVER_IP}/API/trp/getStatic`, {
         for (let i = 0; i < res.paradas.length; i++) {
             
             const popupContent=`<div class="row d-flex justify-content-center mt-2 mb-2">
-                    <div class="col text-center" data-id="${res.paradas[i].id}" data-type="pda"><h4>${res.paradas[i].dsc}.</h4><label class="text-muted">( ${res.paradas[i].lat} , ${res.paradas[i].lon} ).</label></div></div>`;
+                    <div class="col text-center" data-id="${res.paradas[i].id}" data-type="pda" data-lat="${res.paradas[i].lat}" data-lon="${res.paradas[i].lon}"><h4>${res.paradas[i].dsc}.</h4><label class="text-muted">( ${res.paradas[i].lat} , ${res.paradas[i].lon} ).</label></div></div>`;
             
             const popup = L.popup({
                 pane: "fixed",
@@ -260,8 +282,7 @@ fetch(`${SERVER_IP}/API/trp/getStatic`, {
             .bindPopup(popup)
             .addTo(map);
     
-            const key = `${res.paradas[i].lat},${res.paradas[i].lon}`;
-            markerMap.set(key, marker);
+            markerMap.set(res.paradas[i].id, marker);
 
         }
     }

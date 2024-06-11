@@ -874,7 +874,7 @@ public class TransporteCntr {
                 //--------------------------------------------------------------
                 case "pda" -> {
                     // informacion de la parada:
-                    // 1- rutas cercanas pareadas con los vehiculos (distancia, velocidad, tiempo tiempo)
+                    // 1- rutas cercanas pareadas con los vehiculos (distancia, velocidad, tiempo ETA)
                     // 2- suscribir a los datos para refrescar automatico
                     
                     // en el cliente las rutas se graficaran como si fueran botones con el borde grueso del color de la ruta
@@ -896,8 +896,6 @@ public class TransporteCntr {
                 }
                 //--------------------------------------------------------------
                 case "myloc" -> {
-                    // informacion de la ubicacion actual:
-                    // 1- parada mas cercana (id, descripcion, distancia) (clic de la parada en el cliente) (open popup parada)
                     Double lat=Double.valueOf(req.getOrDefault("lat","0"));
                     Double lon=Double.valueOf(req.getOrDefault("lon","0"));
                     respuesta.put("locInfo",DataServicio.getParadaMasCercana(lat,lon)); 
