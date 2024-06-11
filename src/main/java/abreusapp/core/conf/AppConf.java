@@ -16,19 +16,16 @@ import abreusapp.core.control.utils.LoginAttemptServ;
 import abreusapp.core.control.utils.NotificationHandler;
 import abreusapp.core.control.utils.NotifierServ;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import com.github.benmanes.caffeine.cache.Expiry;
 import com.zaxxer.hikari.util.DriverDataSource;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.caffeine.CaffeineCache;
-import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.session.SessionRegistry;
@@ -127,7 +124,8 @@ public class AppConf {
         caches.add(buildCache("RutasLoc", Duration.ofHours(8)));
         caches.add(buildCache("Vehiculos", Duration.ofHours(4)));
         
-
+        caches.add(buildCache("PMC", Duration.ofMinutes(30)));
+        
         SimpleCacheManager cacheManager = new SimpleCacheManager();
         cacheManager.setCaches(caches);
 
