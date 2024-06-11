@@ -76,6 +76,7 @@ L.control.scale({imperial: false, }).addTo(map);
 //------------------------------------------------------------------------------
 var pane = map.createPane("fixed", document.getElementById("map"));
 
+const markerMap = new Map();
 
 //------------------------------------------------------------------------------
 //----------PERMISO DE LOCALIZACION---------------------------------------------
@@ -100,7 +101,9 @@ if (navigator.geolocation) {
             pane: "fixed",
             className: "popup-fixed test",
             autoPan: false
-        }).setContent(`<div data-id='' data-lat=${lat} data-lon=${lng} data-type='myloc' ><h5>Mi Ubicación actual.</h5><label class="text-muted">( ${lat} , ${lng} ).</label><br></div>`);
+        }).setContent(`<div class="row d-flex justify-content-center mt-2 mb-2">
+                <div class="col text-center" data-id='' data-lat=${lat} data-lon=${lng} data-type='myloc' ><h4>Mi Ubicación actual.</h4><label class="text-muted">( ${lat} , ${lng} ).</label><br>
+                </div></div>`);
 
         marker.bindPopup(popup).on("click", fitBoundsPadding);
         map.setView([lat, lng], zoom);
@@ -128,7 +131,11 @@ if (navigator.geolocation) {
             pane: "fixed",
             className: "popup-fixed test",
             autoPan: false,
-        }).setContent(`<div data-id='' data-type='loc_def'><h5>Ubicación por defecto.</h5><label class="text-muted">( ${lat} , ${lng} ).</label><br><p>Para obtener su ubicación actual acepte los permisos de localización y recargue la plataforma.</p></div>`);
+        }).setContent(`
+                <div class="row d-flex justify-content-center mt-2 mb-2">
+                <div class="col text-center" data-id='' data-type='loc_def'>
+                    <h4>Ubicación por defecto.</h4><label class="text-muted">( ${lat} , ${lng} ).</label><br><p>Para obtener su ubicación actual acepte los permisos de localización y recargue la plataforma.</p>
+                </div></div>`);
 
         marker.bindPopup(popup).on("click", fitBoundsPadding);
         map.setView([lat, lng], zoom);
@@ -142,20 +149,66 @@ map.on('popupopen', function(event) {
     const popupNode = event.popup._contentNode.querySelector('div[data-id]');
     const id = popupNode.getAttribute('data-id');
     const type = popupNode.getAttribute('data-type');
-
-    // You can now use the id and type to call another endpoint
-    console.log(`ID: ${id}, Type: ${type}`);
+    
+    let data={id:id,type:type};
+    
+    if(type==="myloc"){
+        data["lon"]=popupNode.getAttribute('data-lon');
+        data["lat"]=popupNode.getAttribute('data-lat');
+    }
+    
 
     // Example of calling another endpoint
-    /*fetch(`${SERVER_IP}/API/trp/getDetails?id=${id}&type=${type}`, {
-        method: 'GET'
+    fetch(`${SERVER_IP}/API/trp/getInfoObject`, {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    }).then(response => response.json())
+    .then(res => {
+        
+        if (res.locInfo && res.locInfo.length > 0) {
+            const locInfo = res.locInfo[0];
+            const locId = locInfo[0];
+            const locName = locInfo[1];
+            const locLat = locInfo[3];
+            const locLon = locInfo[2];
+            const locDistance = locInfo[4];
+
+            const newContent = `
+                    <div class="row d-flex justify-content-center">
+                    <div class="col text-center mt-4 mb-2">
+                    <button type="button" id="center-link-pd${locId}" class="btn btn-primary" data-lat="${locLat}" data-lon="${locLon}">
+                        <h5>La parada más cercana:</h5>
+                        <h6><b>${locName}</b> a <b>${locDistance} Mts</b>.<br></h6>
+                    </button>
+                    </div>
+                    </div>
+            `;
+
+            // Append the new content to the existing popup content
+            popupNode.innerHTML += newContent;
+            
+            // Add event listener to the link
+            document.getElementById("center-link-pd"+locId).addEventListener('click', function(e) {
+                e.preventDefault();
+                const lat = parseFloat(this.getAttribute('data-lat'));
+                const lon = parseFloat(this.getAttribute('data-lon'));
+                map.flyTo([lat, lon], 18); // Adjust the zoom level as needed
+                //
+                 // Find the marker using the stored reference and open its popup
+                const key = `${lat},${lon}`;
+                const marker = markerMap.get(key);
+                if (marker) {
+                    marker.openPopup();
+                }
+            });
+        }
+        
     })
-    .then(response => response.json())
-    .then(details => {
-        // Handle the response with additional details here
-        console.log(details);
-    })
-    .catch(error => console.error('Error fetching details:', error));*/
+    .catch(error => console.error('Error fetching details:', error));
+    
 });
 
 fetch(`${SERVER_IP}/API/trp/getStatic`, {
@@ -175,7 +228,8 @@ fetch(`${SERVER_IP}/API/trp/getStatic`, {
         routePointsMap.forEach((coordinates, routeName) => {
              
             const color=getRandomColor();            
-            const contentPopup = `<div data-id="${routeName}" data-type="rta"><h5>${routeName}.</h5></div>`;
+            const contentPopup = `<div class="row d-flex justify-content-center mt-2 mb-2">
+                    <div class="col text-center" data-id="${routeName}" data-type="rta"><h4>${routeName}.</h4></div></div>`;
 
             const popup = L.popup({
                 pane: "fixed",
@@ -193,7 +247,8 @@ fetch(`${SERVER_IP}/API/trp/getStatic`, {
     if(res.paradas!==null && res.paradas!==undefined){
         for (let i = 0; i < res.paradas.length; i++) {
             
-            const popupContent=`<div data-id="${res.paradas[i].id}" data-type="pda"><h5>${res.paradas[i].dsc}.</h5><label class="text-muted">( ${res.paradas[i].lat} , ${res.paradas[i].lon} ).</label></div>`;
+            const popupContent=`<div class="row d-flex justify-content-center mt-2 mb-2">
+                    <div class="col text-center" data-id="${res.paradas[i].id}" data-type="pda"><h4>${res.paradas[i].dsc}.</h4><label class="text-muted">( ${res.paradas[i].lat} , ${res.paradas[i].lon} ).</label></div></div>`;
             
             const popup = L.popup({
                 pane: "fixed",
@@ -201,9 +256,12 @@ fetch(`${SERVER_IP}/API/trp/getStatic`, {
                 autoPan: false
             }).setContent(popupContent);
             
-            L.marker([res.paradas[i].lat,res.paradas[i].lon])
+            const marker=L.marker([res.paradas[i].lat,res.paradas[i].lon])
             .bindPopup(popup)
             .addTo(map);
+    
+            const key = `${res.paradas[i].lat},${res.paradas[i].lon}`;
+            markerMap.set(key, marker);
 
         }
     }

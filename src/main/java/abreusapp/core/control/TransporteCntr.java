@@ -3,6 +3,7 @@ package abreusapp.core.control;
 import abreusapp.core.control.general.Dato;
 import abreusapp.core.control.general.DatoDTO;
 import abreusapp.core.control.general.DatoServ;
+import abreusapp.core.control.transporte.DataServ;
 import abreusapp.core.control.transporte.LocRuta;
 import abreusapp.core.control.transporte.LocRutaServ;
 import abreusapp.core.control.transporte.LocVehiculo;
@@ -68,6 +69,8 @@ public class TransporteCntr {
     private final LocRutaServ LocRutaServicio;
     
     private final PasswordEncoder passwordEncoder;
+    
+    private final DataServ DataServicio;
     
     private static final String PWD_HASH="$2a$10$FD.HVab6z8H3Tba.hw.SvukdeJDfZ5aIIzCN87AL7T2SSAJqoi8Bq";
     
@@ -806,7 +809,8 @@ public class TransporteCntr {
 //----------------------------------------------------------------------------//
     @ResponseBody
     @GetMapping(value="/API/trp/getRutas")
-    public Map<String, Object> ObtenerRutasActivas() {  
+    public Map<String, Object> ObtenerRutasActivas(
+    ) {  
         Map<String, Object> respuesta= new HashMap<>();
         List<RutaDTO> Rutas=RutaServicio.consultarActivo();
         List<String> NombreRutas=new ArrayList<>();
@@ -837,6 +841,80 @@ public class TransporteCntr {
                 respuesta.isEmpty() ? null: respuesta,
                 new HttpHeaders(),
                 HttpStatus.OK);  
-    }    
+    }
+    
+    @ResponseBody
+    @PostMapping(value="/API/trp/getInfoObject",
+                    produces = MediaType.APPLICATION_JSON_VALUE, 
+                    consumes=MediaType.APPLICATION_JSON_VALUE )
+    public ResponseEntity ObtenerInfoObjeto(
+        @RequestBody Map<String, String> req
+    ) {         
+        
+        String tipo  =  req.getOrDefault("type","");
+        
+        Map<String, Object> respuesta= new HashMap<>();
+        
+        if (!"".equals(tipo)){
+            switch (tipo) {
+                //--------------------------------------------------------------
+                case "rta" -> {
+                    // informacion de la ruta:
+                    // 1- vehiculos activos con esta ruta (clic desde el cliente)
+                    // 2- distancia total de la ruta 
+                    // 3- hacia donde va
+                    // 4- (si esta disponible la localizacion) parada mas cercana a tu ubicacion 
+                    // (id, descripcion, distancia) (clic de la parada en el cliente)
+                    
+                    
+                    // en el cliente hara un fitbound de la ruta y se volvera de color opacidad 1
+                    // se ocultaran todos los objetos que no esten asociados a esta ruta (otras rutas, paradas y vehiculos)
+                    // cuando pierda el foco el popup volvera a su color normal y todo aparecera nuevamente
+                }
+                //--------------------------------------------------------------
+                case "pda" -> {
+                    // informacion de la parada:
+                    // 1- rutas cercanas pareadas con los vehiculos (distancia, velocidad, tiempo tiempo)
+                    // 2- suscribir a los datos para refrescar automatico
+                    
+                    // en el cliente las rutas se graficaran como si fueran botones con el borde grueso del color de la ruta
+                    // cuando el usuario da clic a uno de esos botones la pantalla hace fitbound a la parada con respecto al vehiculo
+                    // en el cliente hara un fitbound de la ruta y se volvera de color opacidad 1
+                    // se ocultaran todos los objetos que no esten asociados a esta ruta (otras rutas, otras paradas y otros vehiculos)
+                    // cuando pierda el foco el boton del clic volvera a su color normal y todo aparecera nuevamente
+                    // estos botones funcionaran como botones que se quedan presionados 
+                    // (cuando se presionen el color del borde se hara mas intenso y el borde mas grueso)
+                }
+                //--------------------------------------------------------------
+                case "vhl" -> {
+                    // informacion del vehiculo:
+                    // 1- informaciones basicas del vehiculo incluyendo la ruta (clic de la ruta en el cliente)
+                    // 2- velocidad
+                    // 3- proxima parada (id, descripcion, distancia, tiempo ETA) (clic de la parada en el cliente)
+                    
+                    // en el cliente se perseguira la ubicacion del vehiculo y se actualizaran estos datos
+                }
+                //--------------------------------------------------------------
+                case "myloc" -> {
+                    // informacion de la ubicacion actual:
+                    // 1- parada mas cercana (id, descripcion, distancia) (clic de la parada en el cliente) (open popup parada)
+                    Double lat=Double.valueOf(req.getOrDefault("lat","0"));
+                    Double lon=Double.valueOf(req.getOrDefault("lon","0"));
+                    respuesta.put("locInfo",DataServicio.getParadaMasCercana(lat,lon)); 
+                }
+                //--------------------------------------------------------------
+                default -> {
+                    // do nothing
+                }
+                //--------------------------------------------------------------
+            }
+
+        }
+
+        return new ResponseEntity<>(
+                respuesta,
+                new HttpHeaders(),
+                HttpStatus.OK);  
+    }
     
 }
