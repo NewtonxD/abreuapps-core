@@ -158,10 +158,7 @@ map.on('popupopen', function(event) {
     }
     
     if (type === "pda") {
-        const lat = popupNode.getAttribute('data-lat');
-        const lon = popupNode.getAttribute('data-lon');
-        const key = `${lat},${lon}`;
-        const marker = markerMap.get(key);
+        const marker = markerMap.get(id);
 
         if (marker) {
             marker.setIcon(new L.Icon.Default({iconUrl: "marker-icon-red.png"}));
@@ -208,8 +205,8 @@ map.on('popupopen', function(event) {
                 map.flyTo([lat, lon], 18); // Adjust the zoom level as needed
                 //
                  // Find the marker using the stored reference and open its popup
-                const key = `${lat},${lon}`;
-                const marker = markerMap.get(key);
+                const id = this.getAttribute('data-id');
+                const marker = markerMap.get(id);
                 if (marker) {
                     marker.openPopup();
                 }
@@ -227,10 +224,7 @@ map.on('popupclose', function(event) {
     const type = popupNode.getAttribute('data-type');
     
     if (type === "pda") {
-        const lat = popupNode.getAttribute('data-lat');
-        const lon = popupNode.getAttribute('data-lon');
-        const key = `${lat},${lon}`;
-        const marker = markerMap.get(key);
+        const marker = markerMap.get(id);
 
         if (marker) {
             marker.setIcon(new L.Icon.Default()); // Revert to default marker icon
@@ -288,8 +282,7 @@ fetch(`${SERVER_IP}/API/trp/getStatic`, {
             .bindPopup(popup)
             .addTo(map);
     
-            const key = `${res.paradas[i].lat},${res.paradas[i].lon}`;
-            markerMap.set(key, marker);
+            markerMap.set(res.paradas[i].id, marker);
 
         }
     }
