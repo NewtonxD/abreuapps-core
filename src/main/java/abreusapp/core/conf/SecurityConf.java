@@ -1,6 +1,7 @@
 package abreusapp.core.conf;
 
 import java.util.Arrays;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -8,26 +9,31 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConf{
         
     @Bean
     public AuthenticationSuccessHandler myAuthSuccessHandler(){
         return new CustomAuthSuccessHandler();
     }
+    
+    private final RateLimitingFilter RateLimitingFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .addFilterBefore(RateLimitingFilter, LogoutFilter.class)
             .authorizeHttpRequests(t -> t
-                .requestMatchers("/", "/auth/**", "/content/**", "/error/**","/API/**","/service-worker.js").permitAll()
+                .requestMatchers("/", "/auth/**", "/content/**", "/error/**","/API/**").permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
