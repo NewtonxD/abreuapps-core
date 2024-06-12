@@ -12,8 +12,8 @@ var clientId="";
 var isCacheEnabled=('caches' in window);
 
 function getRandomColor(){
-    let r = Math.floor(Math.random() * 255);
-    let g = Math.floor(Math.random() * 255);
-    let b = Math.floor(Math.random() * 255);
+    const r = Math.floor(Math.random() * 156) + 100;
+    const g = Math.floor(Math.random() * 156) + 100;
+    const b = Math.floor(Math.random() * 156) + 100; 
     return `rgba(${r},${g},${b},0.7)`; 
 }

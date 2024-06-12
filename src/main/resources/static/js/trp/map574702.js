@@ -77,6 +77,8 @@ L.control.scale({imperial: false, }).addTo(map);
 var pane = map.createPane("fixed", document.getElementById("map"));
 
 const markerMap = new Map();
+const routeColorMap = new Map();
+const routePolylineMap = new Map();
 
 //------------------------------------------------------------------------------
 //----------PERMISO DE LOCALIZACION---------------------------------------------
@@ -101,8 +103,8 @@ if (navigator.geolocation) {
             pane: "fixed",
             className: "popup-fixed test",
             autoPan: false
-        }).setContent(`<div class="row d-flex justify-content-center mt-2 mb-2">
-                <div class="col text-center" data-id='' data-lat=${lat} data-lon=${lng} data-type='myloc' ><h4>Mi Ubicación actual.</h4><label class="text-muted">( ${lat} , ${lng} ).</label><br>
+        }).setContent(`<div class="row d-flex justify-content-center">
+                <div class="col text-center mt-2 mb-2" data-id='' data-lat=${lat} data-lon=${lng} data-type='myloc' ><h4>Mi Ubicación actual.</h4><label class="text-muted">( ${lat} , ${lng} ).</label><br>
                 </div></div>`);
 
         marker.bindPopup(popup).on("click", fitBoundsPadding);
@@ -132,8 +134,8 @@ if (navigator.geolocation) {
             className: "popup-fixed test",
             autoPan: false,
         }).setContent(`
-                <div class="row d-flex justify-content-center mt-2 mb-2">
-                <div class="col text-center" data-id='' data-type='loc_def'>
+                <div class="row d-flex justify-content-center">
+                <div class="col text-center  mt-2 mb-2" data-id='' data-type='loc_def'>
                     <h4>Ubicación por defecto.</h4><label class="text-muted">( ${lat} , ${lng} ).</label><br><p>Para obtener su ubicación actual acepte los permisos de localización y recargue la plataforma.</p>
                 </div></div>`);
 
@@ -149,6 +151,7 @@ map.on('popupopen', function(event) {
     const popupNode = event.popup._contentNode.querySelector('div[data-id]');
     const id = popupNode.getAttribute('data-id');
     const type = popupNode.getAttribute('data-type');
+    map.flyTo(event.popup.getLatLng(), 18);
     
     let data={id:id,type:type};
     
@@ -158,7 +161,9 @@ map.on('popupopen', function(event) {
     }
     
     if (type === "pda") {
-        const marker = markerMap.get(id);
+        const lon=popupNode.getAttribute('data-lon');
+        const lat=popupNode.getAttribute('data-lat');
+        const marker = markerMap.get(`${lat},${lon}`);
 
         if (marker) {
             marker.setIcon(new L.Icon.Default({iconUrl: "marker-icon-red.png"}));
@@ -185,10 +190,10 @@ map.on('popupopen', function(event) {
 
             const newContent = `
                     <div class="row d-flex justify-content-center">
-                    <div class="col text-center mt-4 mb-2">
+                    <div class="col text-center mt-2 mb-2">
                     <button type="button" id="center-link-pd${locId}" class="btn btn-primary" data-lat="${locLat}" data-lon="${locLon}">
-                        <h5>La parada más cercana:</h5>
-                        <h6><b>${locName}</b> a <b>${locDistance} Mts</b>.<br></h6>
+                        <h6>La parada más cercana:</h6>
+                        <h6><b>${locName} a ${locDistance} Mts</b></h6>
                     </button>
                     </div>
                     </div>
@@ -205,13 +210,64 @@ map.on('popupopen', function(event) {
                 map.flyTo([lat, lon], 18); // Adjust the zoom level as needed
                 //
                  // Find the marker using the stored reference and open its popup
-                const id = this.getAttribute('data-id');
-                const marker = markerMap.get(id);
+                const marker = markerMap.get(`${lat},${lon}`);
                 if (marker) {
                     marker.openPopup();
                 }
             });
+        }else if (res.pdaInfo && res.pdaInfo.length > 0) {
+            
+            for(let i=0;i < res.pdaInfo.length;i++){
+                const data = res.pdaInfo[i];
+                const vhl=data[1];
+                const rta=data[0];
+                const velocidad=data[2];
+                const distancia=data[3];
+                const vhlLat=data[4];
+                const vhlLon=data[5];
+                const minutos=Math.round( (distancia/velocidad) / 60);
+                const color=routeColorMap.get(rta);
+                
+                const newContent = `
+                    <div class="row d-flex justify-content-center">
+                    <div class="col text-center mt-2">
+                    <button type="button" data-vhl-lat="${vhlLat}" data-vhl-lon="${vhlLon}" id="custom-${rta}-${vhl}" class="btn ${vhl!==null?'custom-toggle-button':''} " style="background-color:${color};" ${vhl!==null?'data-bs-toggle="button"':''}>${rta}  -  ${vhl!==null? minutos + " min" :"No disponible hoy"}</button>
+                    </div></div>`;
+                  
+                popupNode.innerHTML += newContent;  
+                
+            }
+            
+            document.querySelectorAll('.custom-toggle-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    const buttonId = this.id;
+                    const [rta, vhl] = buttonId.split('-').slice(1);
+                    const isActive = this.classList.contains('active');
+                    
+                    if (isActive) {
+                        
+                        const newColor=routeColorMap.get(rta).replace(",0.7)",",1)");
+                        const polyline = routePolylineMap.get(rta);
+                       
+                        this.style.backgroundColor = newColor;
+                        if (polyline) {
+                            polyline.setStyle({ color: newColor });
+                        }
+                        const vehicleLatLng = [parseFloat(this.getAttribute('data-vhl-lat')), parseFloat(this.getAttribute('data-vhl-lon'))];
+                        map.fitBounds([event.popup.getLatLng(), vehicleLatLng]);
+                    } else {
+                        this.style.backgroundColor = routeColorMap.get(rta);
+                        const polyline = routePolylineMap.get(rta);
+                        if (polyline) {
+                            polyline.setStyle({ color: routeColorMap.get(rta) });
+                        }
+                        map.flyTo(event.popup.getLatLng(), 18);
+                    }
+                });
+            });
+            
         }
+        
         
     })
     .catch(error => console.error('Error fetching details:', error));
@@ -224,11 +280,23 @@ map.on('popupclose', function(event) {
     const type = popupNode.getAttribute('data-type');
     
     if (type === "pda") {
-        const marker = markerMap.get(id);
+        const lat = popupNode.getAttribute('data-lat');
+        const lon = popupNode.getAttribute('data-lon');
+        const marker = markerMap.get(`${lat},${lon}`);
 
         if (marker) {
             marker.setIcon(new L.Icon.Default()); // Revert to default marker icon
         }
+        document.querySelectorAll('.custom-toggle-button').forEach(button => {
+            const buttonId = button.id;
+            const [rta] = buttonId.split('-').slice(1);
+
+            // Revert polyline color
+            const polyline = routePolylineMap.get(rta);
+            if (polyline) {
+                polyline.setStyle({ color: routeColorMap.get(rta) });
+            }
+        });    
     }
 });
 
@@ -249,28 +317,37 @@ fetch(`${SERVER_IP}/API/trp/getStatic`, {
         
         routePointsMap.forEach((coordinates, routeName) => {
              
-            const color=getRandomColor();            
-            const contentPopup = `<div class="row d-flex justify-content-center mt-2 mb-2">
-                    <div class="col text-center" data-id="${routeName}" data-type="rta"><h4>${routeName}.</h4></div></div>`;
+            if(coordinates.length>0) {
+                
+                const color=getRandomColor();            
+                const contentPopup = `<div class="row d-flex justify-content-center">
+                        <div class="col text-center mt-2 mb-2" data-id="${routeName}" data-type="rta"><h4>${routeName}.</h4></div></div>`;
 
-            const popup = L.popup({
-                pane: "fixed",
-                className: "popup-fixed test",
-                autoPan: false
-            }).setContent(contentPopup);
+
+                const popup = L.popup({
+                    pane: "fixed",
+                    className: "popup-fixed test",
+                    autoPan: false
+                }).setContent(contentPopup);
+                
+                const p=L.polyline(coordinates,{
+                    color: color,
+                    weight: 7
+                }).bindPopup(popup).addTo(map);
+                
+                routePolylineMap.set(routeName,p);
+                routeColorMap.set(routeName,color);
+                
+            };
             
-            if(coordinates.length>0) L.polyline(coordinates,{
-                color: color,
-                weight: 7
-            }).bindPopup(popup).addTo(map);
         });
     }
 
     if(res.paradas!==null && res.paradas!==undefined){
         for (let i = 0; i < res.paradas.length; i++) {
             
-            const popupContent=`<div class="row d-flex justify-content-center mt-2 mb-2">
-                    <div class="col text-center" data-id="${res.paradas[i].id}" data-type="pda" data-lat="${res.paradas[i].lat}" data-lon="${res.paradas[i].lon}"><h4>${res.paradas[i].dsc}.</h4><label class="text-muted">( ${res.paradas[i].lat} , ${res.paradas[i].lon} ).</label></div></div>`;
+            const popupContent=`<div class="row d-flex justify-content-center">
+                    <div class="col text-center mt-2 mb-2" data-id="${res.paradas[i].id}" data-type="pda" data-lat="${res.paradas[i].lat}" data-lon="${res.paradas[i].lon}"><h4>${res.paradas[i].dsc}.</h4><label class="text-muted">( ${res.paradas[i].lat} , ${res.paradas[i].lon} ).</label></div></div>`;
             
             const popup = L.popup({
                 pane: "fixed",
@@ -282,7 +359,8 @@ fetch(`${SERVER_IP}/API/trp/getStatic`, {
             .bindPopup(popup)
             .addTo(map);
     
-            markerMap.set(res.paradas[i].id, marker);
+            const key = `${res.paradas[i].lat},${res.paradas[i].lon}`;
+            markerMap.set(key, marker);
 
         }
     }
