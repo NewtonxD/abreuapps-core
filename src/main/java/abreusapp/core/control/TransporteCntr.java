@@ -873,17 +873,8 @@ public class TransporteCntr {
                 }
                 //--------------------------------------------------------------
                 case "pda" -> {
-                    // informacion de la parada:
-                    // 1- rutas cercanas pareadas con los vehiculos (distancia, velocidad, tiempo ETA)
-                    // 2- suscribir a los datos para refrescar automatico
-                    
-                    // en el cliente las rutas se graficaran como si fueran botones con el borde grueso del color de la ruta
-                    // cuando el usuario da clic a uno de esos botones la pantalla hace fitbound a la parada con respecto al vehiculo
-                    // en el cliente hara un fitbound de la ruta y se volvera de color opacidad 1
-                    // se ocultaran todos los objetos que no esten asociados a esta ruta (otras rutas, otras paradas y otros vehiculos)
-                    // cuando pierda el foco el boton del clic volvera a su color normal y todo aparecera nuevamente
-                    // estos botones funcionaran como botones que se quedan presionados 
-                    // (cuando se presionen el color del borde se hara mas intenso y el borde mas grueso)
+                    Integer id = Integer.valueOf(req.getOrDefault("id",""));
+                    respuesta.put("pdaInfo",DataServicio.getParadaInfo(id));
                 }
                 //--------------------------------------------------------------
                 case "vhl" -> {

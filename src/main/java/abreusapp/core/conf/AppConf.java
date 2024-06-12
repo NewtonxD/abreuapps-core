@@ -125,6 +125,7 @@ public class AppConf {
         caches.add(buildCache("Vehiculos", Duration.ofHours(4)));
         
         caches.add(buildCache("PMC", Duration.ofMinutes(30)));
+        caches.add(buildCache("PI", Duration.ofSeconds(5)));
         
         SimpleCacheManager cacheManager = new SimpleCacheManager();
         cacheManager.setCaches(caches);
