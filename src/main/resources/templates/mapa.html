@@ -20,11 +20,16 @@
         <link rel="stylesheet" th:href="@{/content/css/leaflet.css}"/>
     </head>
     <body>
+        <div aria-live="polite" aria-atomic="true" class="position-relative">
+            <div id="toast-container" class="toast-container  top-0 end-0 p-3"></div>
+        </div>
         <div id="map">
         </div>
         
         <script th:src="@{/content/js/lib/leaflet.js}" ></script>
+        <script th:src="@{/content/js/lib/jquery-3.6.4.min.js}"></script>
         <script th:src="@{/content/js/global_vars.js}"></script>
+        <script th:src="@{/content/js/checkstatus.js}"></script>
         <script th:src="@{/content/js/fetch_cache.js}"></script>
         <script th:src="@{/content/js/trp/map574702.js}" ></script>
         <script th:src="@{/content/js/lib/bootstrap.bundle.min.js}"></script>

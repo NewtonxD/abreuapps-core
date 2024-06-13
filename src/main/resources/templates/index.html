@@ -30,13 +30,16 @@
         <div id="layoutSidenav">
             <div th:replace="~{fragments/general.html :: menu}"></div>
             <div id="layoutSidenav_content">
+                <div aria-live="polite" aria-atomic="true" class="position-relative">
+                    <div id="toast-container" class="toast-container  top-0 end-0 p-3"></div>
+                </div>
                 <main th:replace="~{fragments/general.html :: content-default}"></main>
             </div>
             <div class="overlay" onclick="hideSidebar()"></div>
         </div>
-        
         <script th:src="@{/content/js/lib/bootstrap.bundle.min.js}"></script>
         <script th:src="@{/content/js/lib/jquery-3.6.4.min.js}"></script>
+        <script th:src="@{/content/js/checkstatus.js}"></script>
         <script th:src="@{/content/js/lib/jquery.dataTables.min.js}"></script>
         <script th:src="@{/content/js/scripts.js}"></script>
         <script th:src="@{/content/js/access.js}"></script>
