@@ -35,11 +35,11 @@ public class DatoServ {
     }
     
     public List<DatoDTO> consultar(){
-        return repo.customFindAll(null);
+        return repo.customFindAll(null,true);
     }
     
     public List<DatoDTO> consultarPorGrupo(String grupo){
-        return repo.customFindAll(grupo);
+        return repo.customFindAll(grupo,false);
     }
     
     public Optional<Dato> obtener(String dato){
