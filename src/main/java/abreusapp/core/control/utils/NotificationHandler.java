@@ -1,11 +1,10 @@
-package abreusapp.core.conf;
+package abreusapp.core.control.utils;
 
+import abreusapp.core.control.general.DatoDTO;
 import abreusapp.core.control.transporte.ParadaDTO;
 import abreusapp.core.control.transporte.RutaDTO;
 import abreusapp.core.control.transporte.VehiculoDTO;
 import abreusapp.core.control.usuario.UsuarioDTO;
-import abreusapp.core.control.utils.DateUtils;
-import abreusapp.core.control.utils.SSEServ;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -40,7 +39,7 @@ public class NotificationHandler implements Consumer<PGNotification> {
     );
     
     private final Map<String,Class> DOMINIO_VS_DTO= Map.ofEntries(
-            //entry("dtgnr",null),
+            entry("dtgnr",DatoDTO.class),
             entry("usrmgr",UsuarioDTO.class),
             entry("vhl",VehiculoDTO.class),
             entry("pda",ParadaDTO.class),

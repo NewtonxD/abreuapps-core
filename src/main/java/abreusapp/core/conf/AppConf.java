@@ -1,5 +1,6 @@
 package abreusapp.core.conf;
 
+import abreusapp.core.control.utils.NotificationHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

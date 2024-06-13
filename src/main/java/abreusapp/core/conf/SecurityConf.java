@@ -24,14 +24,17 @@ public class SecurityConf{
         return new AuthSuccessHandler();
     }
     
-    private final RateLimitingFilter RateLimitingFilter;
+    private final SpecificRLFilter RL1Filter;
+    
+    private final Specific2RLFilter RL2Filter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .addFilterBefore(RateLimitingFilter, LogoutFilter.class)
+            .addFilterBefore(RL1Filter, LogoutFilter.class)
+            .addFilterAfter(RL2Filter, SpecificRLFilter.class)
             .authorizeHttpRequests(t -> t
                 .requestMatchers("/", "/auth/**", "/content/**", "/error/**","/API/**").permitAll()
                 .anyRequest().authenticated()

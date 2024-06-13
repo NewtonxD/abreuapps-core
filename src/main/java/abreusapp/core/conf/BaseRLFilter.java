@@ -7,18 +7,15 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.springframework.core.annotation.Order;
 
-@Component
-@Order(1)
-public class RateLimitingFilter implements Filter {
-
-    private static final int MAX_REQUESTS = 2500; // Increased limit
+public abstract class BaseRLFilter implements Filter {
+    
+    protected abstract int getMaxRequests();
+    
     private final Map<String, AtomicInteger> requestCountsPerIpAddress = new ConcurrentHashMap<>();
     private final Map<String, Long> requestTimesPerIpAddress = new ConcurrentHashMap<>();
 
@@ -39,9 +36,9 @@ public class RateLimitingFilter implements Filter {
             requestTimesPerIpAddress.put(clientIpAddress, currentTime);
         }
             
-        if (requestCountsPerIpAddress.get(clientIpAddress).incrementAndGet()  > MAX_REQUESTS) {
+        if (requestCountsPerIpAddress.get(clientIpAddress).incrementAndGet()  > getMaxRequests()) {
             httpResponse.setStatus(429);
-            httpResponse.getWriter().write("Too many requests - please try again later.");
+            httpResponse.getWriter().write("Demasiadas llamadas! - Intentelo mas tarde.");
             return;
         }
 
