@@ -25,8 +25,6 @@ public class SecurityConf{
     }
     
     private final SpecificRLFilter RL1Filter;
-    
-    private final Specific2RLFilter RL2Filter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -34,7 +32,6 @@ public class SecurityConf{
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .addFilterBefore(RL1Filter, LogoutFilter.class)
-            .addFilterAfter(RL2Filter, SpecificRLFilter.class)
             .authorizeHttpRequests(t -> t
                 .requestMatchers("/", "/auth/**", "/content/**", "/error/**","/API/**").permitAll()
                 .anyRequest().authenticated()

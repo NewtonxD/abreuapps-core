@@ -15,8 +15,6 @@ function generateClientId() {
     return millis + '-' + randomNum;
 } 
 
-
-
 function createEventSource() {
   if (sse === null || sse === undefined) {
     clientId=generateClientId();
@@ -44,8 +42,14 @@ function createEventSource() {
     };
     
     sse.onerror = function(event){
-        // falta implementar toast para notificar de falta de conexion
+        if (!errorToastTimeout) {
+            showToast('Conexión inestable. Verifica tu Internet y refresca la plataforma.', 'warning');
+            errorToastTimeout = setTimeout(() => {
+              errorToastTimeout = null;
+            }, ERROR_TOAST_INTERVAL);
+        }
     };
+    
   }
 }
 
