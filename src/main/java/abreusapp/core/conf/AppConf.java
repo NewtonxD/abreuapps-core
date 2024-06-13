@@ -13,7 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import abreusapp.core.control.usuario.UsuarioRepo;
 import abreusapp.core.control.utils.LoginAttemptServ;
-import abreusapp.core.control.utils.NotificationHandler;
 import abreusapp.core.control.utils.NotifierServ;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.zaxxer.hikari.util.DriverDataSource;
@@ -47,7 +46,7 @@ public class AppConf {
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
-        CustomAuthProv authProvider = new CustomAuthProv(userDetailsService(), passwordEncoder(), loginAttemptServ());
+        AuthProv authProvider = new AuthProv(userDetailsService(), passwordEncoder(), loginAttemptServ());
         return authProvider;
     }
  
@@ -107,7 +106,6 @@ public class AppConf {
     
     private CaffeineCache buildCache(String name, Duration expireAfterWriteDuration) {
         return new CaffeineCache(name, Caffeine.newBuilder()
-                .recordStats()
                 .expireAfterWrite(expireAfterWriteDuration)
                 .weakKeys()
                 .build());
@@ -126,6 +124,9 @@ public class AppConf {
         
         caches.add(buildCache("PMC", Duration.ofMinutes(30)));
         caches.add(buildCache("PI", Duration.ofSeconds(5)));
+        
+        caches.add(buildCache("Usuario", Duration.ofHours(8)));
+        caches.add(buildCache("Usuarios", Duration.ofHours(8)));
         
         SimpleCacheManager cacheManager = new SimpleCacheManager();
         cacheManager.setCaches(caches);

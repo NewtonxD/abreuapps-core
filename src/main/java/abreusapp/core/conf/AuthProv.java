@@ -17,7 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  */
 
 @RequiredArgsConstructor
-public class CustomAuthProv implements AuthenticationProvider {
+public class AuthProv implements AuthenticationProvider {
     
     
     private final UserDetailsService userDetailsService;

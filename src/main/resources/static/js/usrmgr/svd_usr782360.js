@@ -86,7 +86,7 @@ function editarPermisos(){
     let data={ "idUsuario":$("#original_usuario").val() };
     
     $.ajax({
-        url:`${SERVER_IP}/usrmgr/get-access`,
+        url:`${SERVER_IP}/acc/get-access`,
         type:"POST",
         async:false,
         data:data,
@@ -95,7 +95,7 @@ function editarPermisos(){
 
         }
     });
-    post_plantilla("/usrmgr/access",data);
+    post_plantilla("/acc/access",data);
 }
 
 function cambiarPassword(){

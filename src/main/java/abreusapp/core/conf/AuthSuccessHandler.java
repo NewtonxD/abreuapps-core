@@ -14,7 +14,7 @@ import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class CustomAuthSuccessHandler implements AuthenticationSuccessHandler {
+public class AuthSuccessHandler implements AuthenticationSuccessHandler {
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {

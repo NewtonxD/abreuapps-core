@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 @RequiredArgsConstructor
-public class NominaCntr {
+public class InfPersonalCntr {
     
     private final PersonaServ PersonaServicio;
     
