@@ -23,7 +23,7 @@ import org.springframework.web.servlet.LocaleResolver;
 
 @Component("authenticationFailureHandler")
 @RequiredArgsConstructor
-public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
+public class AuthFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
     private final MessageSource messages;
 

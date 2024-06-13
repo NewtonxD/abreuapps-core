@@ -21,7 +21,7 @@ public class SecurityConf{
         
     @Bean
     public AuthenticationSuccessHandler myAuthSuccessHandler(){
-        return new CustomAuthSuccessHandler();
+        return new AuthSuccessHandler();
     }
     
     private final RateLimitingFilter RateLimitingFilter;

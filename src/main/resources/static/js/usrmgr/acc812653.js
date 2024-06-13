@@ -7,7 +7,7 @@ function usuarioCopyAccess(){
     if($("#idUsuarioCopy").val()!==""){
         let data={ "idUsuario":$("#idUsuarioCopy").val() };
         $.ajax({
-            url:`${SERVER_IP}/usrmgr/get-access`,
+            url:`${SERVER_IP}/acc/get-access`,
             type:"POST",
             async:false,
             data:data,
@@ -40,7 +40,7 @@ function usuarioCopyAccess(){
 
 function saveUsuarioAccess(){
     var data=dataPrepare("form-guardar");
-    post_plantilla("/usrmgr/save-acc",data);
+    post_plantilla("/acc/save-acc",data);
 }
 
 $(function(){
