@@ -231,7 +231,7 @@ map.on('popupopen', function(event) {
                 const newContent = `
                     <div class="row d-flex justify-content-center">
                     <div class="col text-center mt-2">
-                    <button type="button" data-vhl-lat="${vhlLat}" data-vhl-lon="${vhlLon}" id="custom-${rta}-${vhl}" class="btn ${vhl!==null?'custom-toggle-button':''} " style="background-color:${color};" ${vhl!==null?'data-bs-toggle="button"':''}>${rta}  -  ${vhl!==null? minutos + " min" :"No disponible hoy"}</button>
+                    <button type="button" data-vhl-lat="${vhlLat}" data-vhl-lon="${vhlLon}" id="custom-${rta}-${vhl}" class="btn ${vhl!==null?'custom-toggle-button':''} btn-lg" style="background-color:${color};" ${vhl!==null?'data-bs-toggle="button"':''}>${rta} | ${vhl!==null? minutos + " min" :"No disponible hoy"}</button>
                     </div></div>`;
                   
                 popupNode.innerHTML += newContent;  
@@ -251,7 +251,7 @@ map.on('popupopen', function(event) {
                        
                         this.style.backgroundColor = newColor;
                         if (polyline) {
-                            polyline.setStyle({ color: newColor });
+                            polyline.setStyle({ color: newColor,weight: 9  });
                         }
                         const vehicleLatLng = [parseFloat(this.getAttribute('data-vhl-lat')), parseFloat(this.getAttribute('data-vhl-lon'))];
                         map.fitBounds([event.popup.getLatLng(), vehicleLatLng]);
@@ -259,7 +259,7 @@ map.on('popupopen', function(event) {
                         this.style.backgroundColor = routeColorMap.get(rta);
                         const polyline = routePolylineMap.get(rta);
                         if (polyline) {
-                            polyline.setStyle({ color: routeColorMap.get(rta) });
+                            polyline.setStyle({ color: routeColorMap.get(rta),weight: 7 });
                         }
                         map.flyTo(event.popup.getLatLng(), 18);
                     }
@@ -294,7 +294,8 @@ map.on('popupclose', function(event) {
             // Revert polyline color
             const polyline = routePolylineMap.get(rta);
             if (polyline) {
-                polyline.setStyle({ color: routeColorMap.get(rta) });
+                polyline.setStyle({ color: routeColorMap.get(rta),
+                    weight: 7 });
             }
         });    
     }
@@ -321,8 +322,7 @@ fetch(`${SERVER_IP}/API/trp/getStatic`, {
                 
                 const color=getRandomColor();            
                 const contentPopup = `<div class="row d-flex justify-content-center">
-                        <div class="col text-center mt-2 mb-2" data-id="${routeName}" data-type="rta"><h4>${routeName}.</h4></div></div>`;
-
+                        <div class="col text-center ms-0 me-0 mt-2 mb-2" data-id="${routeName}" data-type="rta"><h4>${routeName}.</h4></div></div>`;
 
                 const popup = L.popup({
                     pane: "fixed",
@@ -347,7 +347,7 @@ fetch(`${SERVER_IP}/API/trp/getStatic`, {
         for (let i = 0; i < res.paradas.length; i++) {
             
             const popupContent=`<div class="row d-flex justify-content-center">
-                    <div class="col text-center mt-2 mb-2" data-id="${res.paradas[i].id}" data-type="pda" data-lat="${res.paradas[i].lat}" data-lon="${res.paradas[i].lon}"><h4>${res.paradas[i].dsc}.</h4><label class="text-muted">( ${res.paradas[i].lat} , ${res.paradas[i].lon} ).</label></div></div>`;
+                    <div class="col text-center ms-0 me-0 mt-2 mb-2" data-id="${res.paradas[i].id}" data-type="pda" data-lat="${res.paradas[i].lat}" data-lon="${res.paradas[i].lon}"><h4>${res.paradas[i].dsc}.</h4><label class="text-muted">( ${res.paradas[i].lat} , ${res.paradas[i].lon} ).</label></div></div>`;
             
             const popup = L.popup({
                 pane: "fixed",
