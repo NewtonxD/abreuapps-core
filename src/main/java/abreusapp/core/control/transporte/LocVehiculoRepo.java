@@ -33,4 +33,10 @@ public interface LocVehiculoRepo extends JpaRepository<LocVehiculo, Long>{
         nativeQuery = true
     )
     Optional<LocVehiculo> findLastByPlaca(String placa);
+    
+    @Query(
+        value="SELECT * FROM transport.get_lastloc_vhl_data()",
+        nativeQuery=true
+    )
+    List<Object[]> findUltimoEnCamino();
 }

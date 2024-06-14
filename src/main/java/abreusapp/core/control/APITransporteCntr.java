@@ -285,6 +285,8 @@ public class APITransporteCntr {
         respuesta.put("paradas",ParadaServicio.consultarTodo( 
             0 , true)
         );
+        
+        respuesta.put("vehiculosLoc",LocVehiculoServicio.consultarEnCamino());
 
         return new ResponseEntity<>(
                 respuesta.isEmpty() ? null: respuesta,
@@ -332,7 +334,6 @@ public class APITransporteCntr {
                     // 2- velocidad
                     // 3- proxima parada (id, descripcion, distancia, tiempo ETA) (clic de la parada en el cliente)
                     
-                    // en el cliente se perseguira la ubicacion del vehiculo y se actualizaran estos datos
                 }
                 //--------------------------------------------------------------
                 case "myloc" -> {
