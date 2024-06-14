@@ -79,6 +79,120 @@ var pane = map.createPane("fixed", document.getElementById("map"));
 const markerMap = new Map();
 const routeColorMap = new Map();
 const routePolylineMap = new Map();
+const vehiculeMap = new Map();
+
+const busIcon = L.icon({
+    iconUrl: `${SERVER_IP}/content/css/images/bus-50.png`,
+    iconSize: [24, 24], // size of the icon
+});
+
+const redMarkerIcon = L.icon({
+    iconUrl: `${SERVER_IP}/content/css/images/marker-icon-2x-red.png`,
+    iconSize: [25, 41],
+    iconAnchor: [12,41] // size of the icon
+});
+
+fetch(`${SERVER_IP}/API/trp/getStatic`, {
+    method: 'GET'
+}).then(response => response.json())
+.then(res => {
+    if(res.rutasLoc!==null && res.rutasLoc!==undefined){
+        const routePointsMap = new Map();
+
+        res.rutasLoc.forEach(loc => {
+            if (!routePointsMap.has(loc.rta)) {
+                routePointsMap.set(loc.rta, []);
+            }
+            routePointsMap.get(loc.rta).push([loc.lat, loc.lon]);
+        });
+        
+        routePointsMap.forEach((coordinates, routeName) => {
+             
+            if(coordinates.length>0) {
+                
+                const color=getRandomColor();            
+                const contentPopup = `<div class="row d-flex justify-content-center">
+                        <div class="col text-center ms-0 me-0 ms-lg-2 me-lg-2 mt-2 mb-2" data-id="${routeName}" data-type="rta"><h4>Ruta: ${routeName}.</h4></div></div>`;
+
+                const popup = L.popup({
+                    pane: "fixed",
+                    className: "popup-fixed test",
+                    autoPan: false
+                }).setContent(contentPopup);
+                
+                const p=L.polyline(coordinates,{
+                    color: color,
+                    weight: 7
+                }).bindPopup(popup).addTo(map);
+                
+                routePolylineMap.set(routeName,p);
+                routeColorMap.set(routeName,color);
+                
+            };
+            
+        });
+    }
+    
+    if(res.vehiculosLoc!==null && res.vehiculosLoc!==undefined){
+        for (let i = 0; i < res.vehiculosLoc.length; i++) {
+            
+            const placa=res.vehiculosLoc[i][0];
+            const ruta=res.vehiculosLoc[i][1];
+            const lon=res.vehiculosLoc[i][2];
+            const lat=res.vehiculosLoc[i][3];
+            const orientation=res.vehiculosLoc[i][4];
+            const velocidad=res.vehiculosLoc[i][5] * 3.6;
+            
+            const color=routeColorMap.get(ruta);
+            
+            const popupContent=`<div class="row d-flex justify-content-center">
+                    <div class="col text-center ms-0 me-0 ms-lg-2 me-lg-2 mt-2 mb-2" data-id="${placa}" data-type="vhl" data-rta="${ruta}" data-lat="${lat}" data-lon="${lon}">
+                    <img src='${SERVER_IP}/content/css/images/downarrow-50.png' class='img-arrow-${placa}' style='width:50px; height:50px; transform:rotate(${orientation}deg);'/>
+                    <h4>Vehiculo: ${placa}</h4><h6>${velocidad} Km/h.</h6><label class="text-muted">( ${lat} , ${lon} ).</label></div></div>
+                    <div class="row d-flex justify-content-center">
+                    <div class="col mt-2 text-center">
+                    <button type="button" data-type="vhl" class="btn btn-lg custom-toggle-button" data-bs-toggle="button" data-vhl-lat="${lat}" data-vhl-lon="${lon}" id="custom-${ruta}-${placa}" style="background-color:${color};">Ruta : ${ruta}</button></div>
+                    </div>`;
+            
+            const popup = L.popup({
+                pane: "fixed",
+                className: "popup-fixed test",
+                autoPan: false
+            }).setContent(popupContent);
+            
+            const marker=L.marker([lat,lon],{icon:busIcon,})
+            .bindPopup(popup)
+            .addTo(map);
+    
+            const key = `${lat},${lon}`;
+            vehiculeMap.set(key, marker);
+            
+        }
+    }
+
+    if(res.paradas!==null && res.paradas!==undefined){
+        for (let i = 0; i < res.paradas.length; i++) {
+            
+            const popupContent=`<div class="row d-flex justify-content-center">
+                    <div class="col text-center ms-0 me-0 ms-lg-2 me-lg-2 mt-2 mb-2" data-id="${res.paradas[i].id}" data-type="pda" data-lat="${res.paradas[i].lat}" data-lon="${res.paradas[i].lon}"><h4>Parada: ${res.paradas[i].dsc}.</h4><label class="text-muted">( ${res.paradas[i].lat} , ${res.paradas[i].lon} ).</label></div></div>`;
+            
+            const popup = L.popup({
+                pane: "fixed",
+                className: "popup-fixed test",
+                autoPan: false
+            }).setContent(popupContent);
+            
+            const marker=L.marker([res.paradas[i].lat,res.paradas[i].lon])
+            .bindPopup(popup)
+            .addTo(map);
+    
+            const key = `${res.paradas[i].lat},${res.paradas[i].lon}`;
+            markerMap.set(key, marker);
+
+        }
+    }
+    
+}).catch(error => console.error('Error fetching data:', error));
 
 //------------------------------------------------------------------------------
 //----------PERMISO DE LOCALIZACION---------------------------------------------
@@ -104,7 +218,7 @@ if (navigator.geolocation) {
             className: "popup-fixed test",
             autoPan: false
         }).setContent(`<div class="row d-flex justify-content-center">
-                <div class="col text-center mt-2 mb-2" data-id='' data-lat=${lat} data-lon=${lng} data-type='myloc' ><h4>Mi Ubicación actual.</h4><label class="text-muted">( ${lat} , ${lng} ).</label><br>
+                <div class="col text-center mt-2 mb-2" data-id='' data-lat=${lat} data-lon=${lng} data-type='myloc' ><h4>Mi Ubicación.</h4><label class="text-muted">( ${lat} , ${lng} ).</label><br>
                 </div></div>`);
 
         marker.bindPopup(popup).on("click", fitBoundsPadding);
@@ -166,7 +280,7 @@ map.on('popupopen', function(event) {
         const marker = markerMap.get(`${lat},${lon}`);
 
         if (marker) {
-            marker.setIcon(new L.Icon.Default({iconUrl: "marker-icon-red.png"}));
+            marker.setIcon(redMarkerIcon);
         }
     }
 
@@ -231,43 +345,47 @@ map.on('popupopen', function(event) {
                 const newContent = `
                     <div class="row d-flex justify-content-center">
                     <div class="col text-center mt-2">
-                    <button type="button" data-vhl-lat="${vhlLat}" data-vhl-lon="${vhlLon}" id="custom-${rta}-${vhl}" class="btn ${vhl!==null?'custom-toggle-button':''} btn-lg" style="background-color:${color};" ${vhl!==null?'data-bs-toggle="button"':''}>${rta} | ${vhl!==null? minutos + " min" :"No disponible hoy"}</button>
+                    <button type="button" data-type="pda" data-vhl-lat="${vhlLat}" data-vhl-lon="${vhlLon}" id="custom-${rta}-${vhl}" class="btn ${vhl!==null?'custom-toggle-button':''} btn-lg" style="background-color:${color};" ${vhl!==null?'data-bs-toggle="button"':''}>Ruta: ${rta} | ${vhl!==null? minutos + " min" :"No disponible hoy"}</button>
                     </div></div>`;
                   
                 popupNode.innerHTML += newContent;  
                 
             }
             
-            document.querySelectorAll('.custom-toggle-button').forEach(button => {
-                button.addEventListener('click', function() {
-                    const buttonId = this.id;
-                    const [rta, vhl] = buttonId.split('-').slice(1);
-                    const isActive = this.classList.contains('active');
-                    
-                    if (isActive) {
-                        
-                        const newColor=routeColorMap.get(rta).replace(",0.7)",",1)");
-                        const polyline = routePolylineMap.get(rta);
-                       
-                        this.style.backgroundColor = newColor;
-                        if (polyline) {
-                            polyline.setStyle({ color: newColor,weight: 9  });
-                        }
-                        const vehicleLatLng = [parseFloat(this.getAttribute('data-vhl-lat')), parseFloat(this.getAttribute('data-vhl-lon'))];
-                        map.fitBounds([event.popup.getLatLng(), vehicleLatLng]);
-                    } else {
-                        this.style.backgroundColor = routeColorMap.get(rta);
-                        const polyline = routePolylineMap.get(rta);
-                        if (polyline) {
-                            polyline.setStyle({ color: routeColorMap.get(rta),weight: 7 });
-                        }
-                        map.flyTo(event.popup.getLatLng(), 18);
-                    }
-                });
-            });
-            
         }
         
+        document.querySelectorAll('.custom-toggle-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const buttonId = this.id;
+                const [rta, vhl] = buttonId.split('-').slice(1);
+                const isActive = this.classList.contains('active');
+                const type=this.getAttribute('data-type');
+                if (isActive) {
+
+                    const newColor=routeColorMap.get(rta).replace(",0.7)",",1)");
+                    const polyline = routePolylineMap.get(rta);
+
+                    this.style.backgroundColor = newColor;
+                    if (polyline) {
+                        polyline.setStyle({ color: newColor,weight: 9  });
+                    }
+                    const vehicleLatLng = [parseFloat(this.getAttribute('data-vhl-lat')), parseFloat(this.getAttribute('data-vhl-lon'))];
+                    if(type==="pda")
+                    map.fitBounds([event.popup.getLatLng(), vehicleLatLng]);
+                    
+                    if(type==="vhl" && polyline)
+                    map.fitBounds(polyline.getBounds());    
+                        
+                } else {
+                    this.style.backgroundColor = routeColorMap.get(rta);
+                    const polyline = routePolylineMap.get(rta);
+                    if (polyline) {
+                        polyline.setStyle({ color: routeColorMap.get(rta),weight: 7 });
+                    }
+                    map.flyTo(event.popup.getLatLng(), 18);
+                }
+            });
+        });
         
     })
     .catch(error => console.error('Error fetching details:', error));
@@ -279,14 +397,18 @@ map.on('popupclose', function(event) {
     const id = popupNode.getAttribute('data-id');
     const type = popupNode.getAttribute('data-type');
     
-    if (type === "pda") {
+    if (type === "pda" || type === "vhl") {
         const lat = popupNode.getAttribute('data-lat');
         const lon = popupNode.getAttribute('data-lon');
-        const marker = markerMap.get(`${lat},${lon}`);
+        
+        if(type === "pda"){
+            const marker = markerMap.get(`${lat},${lon}`);
 
-        if (marker) {
-            marker.setIcon(new L.Icon.Default()); // Revert to default marker icon
+            if (marker) {
+                marker.setIcon(new L.Icon.Default()); // Revert to default marker icon
+            }
         }
+        
         document.querySelectorAll('.custom-toggle-button').forEach(button => {
             const buttonId = button.id;
             const [rta] = buttonId.split('-').slice(1);
@@ -300,72 +422,6 @@ map.on('popupclose', function(event) {
         });    
     }
 });
-
-
-fetch(`${SERVER_IP}/API/trp/getStatic`, {
-    method: 'GET'
-}).then(response => response.json())
-.then(res => {
-    if(res.rutasLoc!==null && res.rutasLoc!==undefined){
-        const routePointsMap = new Map();
-
-        res.rutasLoc.forEach(loc => {
-            if (!routePointsMap.has(loc.rta)) {
-                routePointsMap.set(loc.rta, []);
-            }
-            routePointsMap.get(loc.rta).push([loc.lat, loc.lon]);
-        });
-        
-        routePointsMap.forEach((coordinates, routeName) => {
-             
-            if(coordinates.length>0) {
-                
-                const color=getRandomColor();            
-                const contentPopup = `<div class="row d-flex justify-content-center">
-                        <div class="col text-center ms-0 me-0 mt-2 mb-2" data-id="${routeName}" data-type="rta"><h4>${routeName}.</h4></div></div>`;
-
-                const popup = L.popup({
-                    pane: "fixed",
-                    className: "popup-fixed test",
-                    autoPan: false
-                }).setContent(contentPopup);
-                
-                const p=L.polyline(coordinates,{
-                    color: color,
-                    weight: 7
-                }).bindPopup(popup).addTo(map);
-                
-                routePolylineMap.set(routeName,p);
-                routeColorMap.set(routeName,color);
-                
-            };
-            
-        });
-    }
-
-    if(res.paradas!==null && res.paradas!==undefined){
-        for (let i = 0; i < res.paradas.length; i++) {
-            
-            const popupContent=`<div class="row d-flex justify-content-center">
-                    <div class="col text-center ms-0 me-0 mt-2 mb-2" data-id="${res.paradas[i].id}" data-type="pda" data-lat="${res.paradas[i].lat}" data-lon="${res.paradas[i].lon}"><h4>${res.paradas[i].dsc}.</h4><label class="text-muted">( ${res.paradas[i].lat} , ${res.paradas[i].lon} ).</label></div></div>`;
-            
-            const popup = L.popup({
-                pane: "fixed",
-                className: "popup-fixed test",
-                autoPan: false
-            }).setContent(popupContent);
-            
-            const marker=L.marker([res.paradas[i].lat,res.paradas[i].lon])
-            .bindPopup(popup)
-            .addTo(map);
-    
-            const key = `${res.paradas[i].lat},${res.paradas[i].lon}`;
-            markerMap.set(key, marker);
-
-        }
-    }
-    
-}).catch(error => console.error('Error fetching data:', error));
     
 //------------------------------------------------------------------------------
 //-----------MEDIA QUERY--------------------------------------------------------

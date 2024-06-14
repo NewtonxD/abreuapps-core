@@ -330,9 +330,11 @@ public class APITransporteCntr {
                 //--------------------------------------------------------------
                 case "vhl" -> {
                     // informacion del vehiculo:
-                    // 1- informaciones basicas del vehiculo incluyendo la ruta (clic de la ruta en el cliente)
+                    // 1- informaciones basicas del vehiculo incluyendo la ruta 
+                    // (clic de la ruta en el cliente) (cuando click en el boton de ruta mostrar ruta completa)
                     // 2- velocidad
                     // 3- proxima parada (id, descripcion, distancia, tiempo ETA) (clic de la parada en el cliente)
+                    //
                     
                 }
                 //--------------------------------------------------------------
