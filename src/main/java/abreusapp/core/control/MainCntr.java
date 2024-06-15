@@ -74,11 +74,6 @@ public class MainCntr {
     public String GeomanJsMap(){
         return "redirect:/content/js/lib/leaflet-geoman.js.map";
     }
-//----------------------------------------------------------------------------//
-    @RequestMapping("/main/leaflet.markercluster.js.map")
-    public String LeatLeaftClusterJsMap() {        
-        return "redirect:/content/js/lib/leaflet.markercluster.js.map";
-    }
 //----------------------------------------------------------------------------//  
 
     @RequestMapping(value = "/main/content-page/", method = RequestMethod.POST)
