@@ -22,6 +22,37 @@ function fitBoundsPadding(e) {
     });
 }
 //------------------------------------------------------------------------------
+function hideAllExcept(specificRouteId, specificParadeId, specificVehicleId) {
+
+    const route = routePolylineMap.get(specificRouteId);
+    const parade = markerMap.get(specificParadeId);
+    const vehicle = vehicleMap.get(specificVehicleId);
+    
+    map.eachLayer(function(layer) {
+        if (layer instanceof L.Polyline && layer!==route) {
+            map.removeLayer(layer); 
+        }else if (layer instanceof L.Marker && (layer!==vehicle && layer!==parade)) {
+            map.removeLayer(layer); 
+        }
+        
+    });
+    
+}
+//------------------------------------------------------------------------------
+function showAllExcept(specificRouteId, specificParadeId, specificVehicleId) {
+
+    const route = routePolylineMap.get(specificRouteId);
+    const vehicle = vehicleMap.get(specificVehicleId);
+    const parade = markerMap.get(specificParadeId);
+    
+    routePolylineMap.forEach((v,i)=> {if(v!==route) map.addLayer(v);});
+
+    vehicleMap.forEach((v,i)=> {if(v!==vehicle) map.addLayer(v);});
+    
+    markerMap.forEach((v,i)=> {if(v!==parade) map.addLayer(v);});
+    
+}
+//------------------------------------------------------------------------------
 const compareToArrays = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 //------------------------------------------------------------------------------
 function getCenterOfMap() {
@@ -55,7 +86,7 @@ function getCenterOfMap() {
 var map;
 
 let config = {
-    minZoom: 7,
+    minZoom: 12,
     maxZoom: 18,
     preferCanvas: true
 };
@@ -79,7 +110,8 @@ var pane = map.createPane("fixed", document.getElementById("map"));
 const markerMap = new Map();
 const routeColorMap = new Map();
 const routePolylineMap = new Map();
-const vehiculeMap = new Map();
+
+const vehicleMap = new Map();
 
 const busIcon = L.icon({
     iconUrl: `${SERVER_IP}/content/css/images/bus-50.png`,
@@ -165,8 +197,7 @@ fetch(`${SERVER_IP}/API/trp/getStatic`, {
             .addTo(map);
     
             const key = `${lat},${lon}`;
-            vehiculeMap.set(key, marker);
-            
+            vehicleMap.set(key, marker);
         }
     }
 
@@ -277,7 +308,8 @@ map.on('popupopen', function(event) {
     if (type === "pda") {
         const lon=popupNode.getAttribute('data-lon');
         const lat=popupNode.getAttribute('data-lat');
-        const marker = markerMap.get(`${lat},${lon}`);
+        let idPda=`${lat},${lon}`;
+        const marker = markerMap.get(idPda);
 
         if (marker) {
             marker.setIcon(redMarkerIcon);
@@ -285,6 +317,7 @@ map.on('popupopen', function(event) {
     }
 
     // Example of calling another endpoint
+    if(type==="myloc" || type=== "pda")
     fetch(`${SERVER_IP}/API/trp/getInfoObject`, {
         method: 'POST',
         headers: {
@@ -331,6 +364,10 @@ map.on('popupopen', function(event) {
             });
         }else if (res.pdaInfo && res.pdaInfo.length > 0) {
             
+            const lon=popupNode.getAttribute('data-lon');
+            const lat=popupNode.getAttribute('data-lat');
+            const idPda=`${lat},${lon}`;
+            
             for(let i=0;i < res.pdaInfo.length;i++){
                 const data = res.pdaInfo[i];
                 const vhl=data[1];
@@ -345,50 +382,116 @@ map.on('popupopen', function(event) {
                 const newContent = `
                     <div class="row d-flex justify-content-center">
                     <div class="col text-center mt-2">
-                    <button type="button" data-type="pda" data-vhl-lat="${vhlLat}" data-vhl-lon="${vhlLon}" id="custom-${rta}-${vhl}" class="btn ${vhl!==null?'custom-toggle-button':''} btn-lg" style="background-color:${color};" ${vhl!==null?'data-bs-toggle="button"':''}>Ruta: ${rta} | ${vhl!==null? minutos + " min" :"No disponible hoy"}</button>
+                    <button type="button" data-type="pda" data-pdaId="${idPda}" data-vhl-lat="${vhlLat}" data-vhl-lon="${vhlLon}" id="custom-${rta}-${vhl}" class="btn ${vhl!==null?'custom-toggle-button':''} btn-lg" style="background-color:${color};" ${vhl!==null?'data-bs-toggle="button"':''}>Ruta: ${rta} | ${vhl!==null? minutos + " min" :"No disponible hoy"}</button>
                     </div></div>`;
                   
                 popupNode.innerHTML += newContent;  
                 
             }
             
-        }
-        
-        document.querySelectorAll('.custom-toggle-button').forEach(button => {
-            button.addEventListener('click', function() {
-                const buttonId = this.id;
-                const [rta, vhl] = buttonId.split('-').slice(1);
-                const isActive = this.classList.contains('active');
-                const type=this.getAttribute('data-type');
-                if (isActive) {
+            document.querySelectorAll('.custom-toggle-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    const buttonId = this.id;
+                    const [rta, vhl] = buttonId.split('-').slice(1);
+                    const isActive = this.classList.contains('active');
+                    const type=this.getAttribute('data-type');
+                    if (isActive) {
 
-                    const newColor=routeColorMap.get(rta).replace(",0.7)",",1)");
-                    const polyline = routePolylineMap.get(rta);
+                        const newColor=routeColorMap.get(rta).replace(",0.7)",",1)");
+                        const polyline = routePolylineMap.get(rta);
+                        const vhlLat=parseFloat(this.getAttribute('data-vhl-lat'));
+                        const vhlLon=parseFloat(this.getAttribute('data-vhl-lon'));
+                        const vhlId=`${vhlLat},${vhlLon}`;
 
-                    this.style.backgroundColor = newColor;
-                    if (polyline) {
-                        polyline.setStyle({ color: newColor,weight: 9  });
+                        const pdaId= type==="pda" ? this.getAttribute('data-pdaId'):"0";
+
+                        hideAllExcept(rta,pdaId,vhlId);
+
+                        this.style.backgroundColor = newColor;
+                        if (polyline) {
+                            polyline.setStyle({ color: newColor,weight: 9  });
+                        }
+                        const vehicleLatLng = [vhlLat, vhlLon];
+                        if(type==="pda")
+                        map.fitBounds([event.popup.getLatLng(), vehicleLatLng]);
+
+                        if(type==="vhl" && polyline)
+                        map.fitBounds(polyline.getBounds());    
+
+                    } else {
+
+                        this.style.backgroundColor = routeColorMap.get(rta);
+                        const polyline = routePolylineMap.get(rta);
+                        if (polyline) {
+                            polyline.setStyle({ color: routeColorMap.get(rta),weight: 7 });
+                        }
+                        map.flyTo(event.popup.getLatLng(), 18);
+
+                        const vhlLat=parseFloat(this.getAttribute('data-vhl-lat'));
+                        const vhlLon=parseFloat(this.getAttribute('data-vhl-lon'));
+                        const vhlId=`${vhlLat},${vhlLon}`;
+
+                        const pdaId= type==="pda" ? this.getAttribute('data-pdaId'):"0";
+
+                        showAllExcept(rta,pdaId,vhlId);
                     }
-                    const vehicleLatLng = [parseFloat(this.getAttribute('data-vhl-lat')), parseFloat(this.getAttribute('data-vhl-lon'))];
-                    if(type==="pda")
-                    map.fitBounds([event.popup.getLatLng(), vehicleLatLng]);
-                    
-                    if(type==="vhl" && polyline)
-                    map.fitBounds(polyline.getBounds());    
-                        
-                } else {
-                    this.style.backgroundColor = routeColorMap.get(rta);
-                    const polyline = routePolylineMap.get(rta);
-                    if (polyline) {
-                        polyline.setStyle({ color: routeColorMap.get(rta),weight: 7 });
-                    }
-                    map.flyTo(event.popup.getLatLng(), 18);
-                }
+                });
             });
-        });
+            
+        }
         
     })
     .catch(error => console.error('Error fetching details:', error));
+    
+    if(type==="vhl")
+    document.querySelectorAll('.custom-toggle-button').forEach(button => {
+        button.addEventListener('click', function() {
+            const buttonId = this.id;
+            const [rta, vhl] = buttonId.split('-').slice(1);
+            const isActive = this.classList.contains('active');
+            const type=this.getAttribute('data-type');
+            if (isActive) {
+
+                const newColor=routeColorMap.get(rta).replace(",0.7)",",1)");
+                const polyline = routePolylineMap.get(rta);
+                const vhlLat=parseFloat(this.getAttribute('data-vhl-lat'));
+                const vhlLon=parseFloat(this.getAttribute('data-vhl-lon'));
+                const vhlId=`${vhlLat},${vhlLon}`;
+
+                const pdaId= type==="pda" ? this.getAttribute('data-pdaId'):"0";
+
+                hideAllExcept(rta,pdaId,vhlId);
+
+                this.style.backgroundColor = newColor;
+                if (polyline) {
+                    polyline.setStyle({ color: newColor,weight: 9  });
+                }
+                const vehicleLatLng = [vhlLat, vhlLon];
+                if(type==="pda")
+                map.fitBounds([event.popup.getLatLng(), vehicleLatLng]);
+
+                if(type==="vhl" && polyline)
+                map.fitBounds(polyline.getBounds());    
+
+            } else {
+
+                this.style.backgroundColor = routeColorMap.get(rta);
+                const polyline = routePolylineMap.get(rta);
+                if (polyline) {
+                    polyline.setStyle({ color: routeColorMap.get(rta),weight: 7 });
+                }
+                map.flyTo(event.popup.getLatLng(), 18);
+
+                const vhlLat=parseFloat(this.getAttribute('data-vhl-lat'));
+                const vhlLon=parseFloat(this.getAttribute('data-vhl-lon'));
+                const vhlId=`${vhlLat},${vhlLon}`;
+
+                const pdaId= type==="pda" ? this.getAttribute('data-pdaId'):"0";
+
+                showAllExcept(rta,pdaId,vhlId);
+            }
+        });
+    });
     
 });
 
@@ -419,6 +522,14 @@ map.on('popupclose', function(event) {
                 polyline.setStyle({ color: routeColorMap.get(rta),
                     weight: 7 });
             }
+            
+            const vhlLat=parseFloat(popupNode.getAttribute('data-vhl-lat'));
+            const vhlLon=parseFloat(popupNode.getAttribute('data-vhl-lon'));
+            const vhlId=`${vhlLat},${vhlLon}`;
+
+            const pdaId= type==="pda" ? popupNode.getAttribute('data-pdaId'):"0";
+            showAllExcept(rta,pdaId,vhlId);
+            
         });    
     }
 });
