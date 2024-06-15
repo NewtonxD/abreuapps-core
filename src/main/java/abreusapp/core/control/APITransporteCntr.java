@@ -309,33 +309,18 @@ public class APITransporteCntr {
         if (!"".equals(tipo)){
             switch (tipo) {
                 //--------------------------------------------------------------
-                case "rta" -> {
+               /* case "rta" -> {
                     // informacion de la ruta:
                     // 1- vehiculos activos con esta ruta (clic desde el cliente)
                     // 2- distancia total de la ruta 
                     // 3- hacia donde va
                     // 4- (si esta disponible la localizacion) parada mas cercana a tu ubicacion 
                     // (id, descripcion, distancia) (clic de la parada en el cliente)
-                    
-                    
-                    // en el cliente hara un fitbound de la ruta y se volvera de color opacidad 1
-                    // se ocultaran todos los objetos que no esten asociados a esta ruta (otras rutas, paradas y vehiculos)
-                    // cuando pierda el foco el popup volvera a su color normal y todo aparecera nuevamente
-                }
+                }*/
                 //--------------------------------------------------------------
                 case "pda" -> {
                     Integer id = Integer.valueOf(req.getOrDefault("id",""));
                     respuesta.put("pdaInfo",DataServicio.getParadaInfo(id));
-                }
-                //--------------------------------------------------------------
-                case "vhl" -> {
-                    // informacion del vehiculo:
-                    // 1- informaciones basicas del vehiculo incluyendo la ruta 
-                    // (clic de la ruta en el cliente) (cuando click en el boton de ruta mostrar ruta completa)
-                    // 2- velocidad
-                    // 3- proxima parada (id, descripcion, distancia, tiempo ETA) (clic de la parada en el cliente)
-                    //
-                    
                 }
                 //--------------------------------------------------------------
                 case "myloc" -> {
