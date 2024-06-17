@@ -27,7 +27,7 @@ public class VehiculoServ {
     }
     
     @Transactional
-    @CacheEvict(value="Vehiculos",allEntries = true)
+    @CacheEvict(value={"Vehiculos","RutasInfo"},allEntries = true)
     public void guardar(Vehiculo gd, Usuario usuario,boolean existe){
         
         if(existe){ 

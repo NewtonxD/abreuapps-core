@@ -20,4 +20,8 @@ public interface RutaRepo extends JpaRepository<Ruta, String> {
             + "r.activo"
             + ") FROM Ruta r WHERE CASE WHEN ?1!=null THEN r.activo=?1 ELSE true END")
     List<RutaDTO> customFindAll(Boolean activo);
+    
+    @Query(value="SELECT * FROM transport.get_rta_data()", nativeQuery = true)
+    List<Object[]> findData();
+    
 }
