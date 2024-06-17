@@ -27,7 +27,7 @@ public class ParadaServ {
     }
     
     @Transactional
-    @CacheEvict(value="Paradas",allEntries = true)
+    @CacheEvict(value={"Paradas","RutasInfo"},allEntries = true)
     public Parada guardar(Parada gd, Usuario usuario,boolean existe){
         
         if(existe){ 

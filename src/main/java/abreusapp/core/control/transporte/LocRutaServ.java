@@ -30,7 +30,7 @@ public class LocRutaServ {
     }
     
     @Transactional
-    @CacheEvict(value="RutasLoc",allEntries = true)
+    @CacheEvict(value={"RutasLoc","RutasInfo"},allEntries = true)
     public void guardarTodos(List<LocRuta> gd){
         repo.saveAll(gd);
     }

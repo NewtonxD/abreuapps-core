@@ -278,6 +278,8 @@ public class APITransporteCntr {
 
         Map<String, Object> respuesta= new HashMap<>();
 
+        respuesta.put("rutasInfo", RutaServicio.consultarInfo() );
+        
         respuesta.put("rutasLoc", LocRutaServicio.consultar(
                 null,true) 
         );
@@ -314,8 +316,6 @@ public class APITransporteCntr {
                     // 1- vehiculos activos con esta ruta (clic desde el cliente)
                     // 2- distancia total de la ruta 
                     // 3- hacia donde va
-                    // 4- (si esta disponible la localizacion) parada mas cercana a tu ubicacion 
-                    // (id, descripcion, distancia) (clic de la parada en el cliente)
                 }*/
                 //--------------------------------------------------------------
                 case "pda" -> {

@@ -31,6 +31,11 @@ public class RutaServ {
         return repo.customFindAll(true);
     }
     
+    @Cacheable("RutasInfo")
+    public List<Object[]> consultarInfo(){
+        return repo.findData();
+    }
+    
     @Transactional
     @CacheEvict(value="Rutas",allEntries = true)
     public Ruta guardar(Ruta gd, Usuario usuario,boolean existe){
