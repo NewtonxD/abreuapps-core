@@ -138,13 +138,37 @@ fetch(`${SERVER_IP}/API/trp/getStatic`, {
             routePointsMap.get(loc.rta).push([loc.lat, loc.lon]);
         });
         
+        console.log(res.rutasInfo);
+        
         routePointsMap.forEach((coordinates, routeName) => {
              
             if(coordinates.length>0) {
                 
-                const color=getRandomColor();            
+                const color=getRandomColor();
+                let rutaInfo;
+                for(let i=0;i<res.rutasInfo.length;i++){
+                    
+                    if(routeName===res.rutasInfo[i][0]){
+                        rutaInfo=res.rutasInfo[i];
+                        i+=res.rutasInfo.length;
+                    }
+                    
+                }
+                
+                const desde = rutaInfo[1];
+                const hasta = rutaInfo[2];
+                const distancia_total = rutaInfo[3];
+                const vehiculos_activos = rutaInfo[4];
+                
                 const contentPopup = `<div class="row d-flex justify-content-center">
-                        <div class="col text-center ms-0 me-0 ms-lg-2 me-lg-2 mt-2 mb-2" data-id="${routeName}" data-type="rta"><h4>Ruta: ${routeName}.</h4></div></div>`;
+                        <div class="col text-center ms-0 me-0 ms-lg-2 me-lg-2 mt-2 mb-2" data-id="${routeName}" data-type="rta"><h4>Ruta: ${routeName}.</h4></div>
+                        </div>
+                        <div class="row d-flex justify-content-center">
+                        <div class="col text-center ms-0 me-0 ms-lg-2 me-lg-2 mt-2 mb-2">
+                            <p>Inicia en: <b>${desde}</b>. <br>Termina en: <b>${hasta}</b>.</p>
+                            <p>Distancia total: <b>${distancia_total} metros</b>.</p>
+                            <p>Autobuses activos: <b>${vehiculos_activos}</b>.</p>
+                        </div></div>`;
 
                 const popup = L.popup({
                     pane: "fixed",
