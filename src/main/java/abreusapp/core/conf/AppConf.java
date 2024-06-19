@@ -120,6 +120,8 @@ public class AppConf {
         caches.add(buildCache("Tiles", Duration.ofHours(12)));
         caches.add(buildCache("Paradas", Duration.ofHours(8)));
         caches.add(buildCache("Rutas", Duration.ofHours(4)));
+        caches.add(buildCache("RutasInfo", Duration.ofHours(12)));
+        
         caches.add(buildCache("RutasLoc", Duration.ofHours(8)));
         caches.add(buildCache("Vehiculos", Duration.ofHours(4)));
         

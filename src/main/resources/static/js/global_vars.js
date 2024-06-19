@@ -1,5 +1,5 @@
 
-const SERVER_IP="https://192.168.83.41:8090";
+const SERVER_IP="https://192.168.83.103:8090";
 //const SERVER_IP="https://localhost:8090";
 const TILE_API_IP=SERVER_IP+"/API/tiles/{z}/{x}/{y}";
 const TILE_CACHE_NAME = 'tile-cache';
