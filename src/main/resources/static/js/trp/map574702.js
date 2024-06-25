@@ -138,8 +138,6 @@ fetch(`${SERVER_IP}/API/trp/getStatic`, {
             routePointsMap.get(loc.rta).push([loc.lat, loc.lon]);
         });
         
-        console.log(res.rutasInfo);
-        
         routePointsMap.forEach((coordinates, routeName) => {
              
             if(coordinates.length>0) {
@@ -207,7 +205,7 @@ fetch(`${SERVER_IP}/API/trp/getStatic`, {
                     <h4>Vehiculo: ${placa}</h4><h6>${velocidad} Km/h.</h6><label class="text-muted">( ${lat} , ${lon} ).</label></div></div>
                     <div class="row d-flex justify-content-center">
                     <div class="col mt-2 text-center">
-                    <button type="button" data-type="vhl" class="btn btn-lg custom-toggle-button" data-bs-toggle="button" data-vhl-lat="${lat}" data-vhl-lon="${lon}" id="custom-${ruta}-${placa}" style="background-color:${color};">Ruta : ${ruta}</button></div>
+                    <button type="button" data-type="vhl" class="btn btn-lg custom-toggle-button" data-bs-toggle="button" data-vhl="${placa}" id="custom-${ruta}-${placa}" style="background-color:${color};">Ruta : ${ruta}</button></div>
                     </div>`;
             
             const popup = L.popup({
@@ -220,8 +218,7 @@ fetch(`${SERVER_IP}/API/trp/getStatic`, {
             .bindPopup(popup)
             .addTo(map);
     
-            const key = `${lat},${lon}`;
-            vehicleMap.set(key, marker);
+            vehicleMap.set(placa, marker);
         }
     }
 
@@ -418,46 +415,33 @@ map.on('popupopen', function(event) {
                     const buttonId = this.id;
                     const [rta, vhl] = buttonId.split('-').slice(1);
                     const isActive = this.classList.contains('active');
-                    const type=this.getAttribute('data-type');
+                    const polyline = routePolylineMap.get(rta);
+                    const pdaId= this.getAttribute('data-pdaId');
                     if (isActive) {
 
                         const newColor=routeColorMap.get(rta).replace(",0.7)",",1)");
-                        const polyline = routePolylineMap.get(rta);
-                        const vhlLat=parseFloat(this.getAttribute('data-vhl-lat'));
-                        const vhlLon=parseFloat(this.getAttribute('data-vhl-lon'));
-                        const vhlId=`${vhlLat},${vhlLon}`;
 
-                        const pdaId= type==="pda" ? this.getAttribute('data-pdaId'):"0";
-
-                        hideAllExcept(rta,pdaId,vhlId);
+                        hideAllExcept(rta,pdaId,vhl);
 
                         this.style.backgroundColor = newColor;
                         if (polyline) {
                             polyline.setStyle({ color: newColor,weight: 9  });
                         }
+                        
+                        const vhlLat=parseFloat(this.getAttribute('data-vhl-lat'));
+                        const vhlLon=parseFloat(this.getAttribute('data-vhl-lon'));
                         const vehicleLatLng = [vhlLat, vhlLon];
-                        if(type==="pda")
                         map.fitBounds([event.popup.getLatLng(), vehicleLatLng]);
-
-                        if(type==="vhl" && polyline)
-                        map.fitBounds(polyline.getBounds());    
 
                     } else {
 
                         this.style.backgroundColor = routeColorMap.get(rta);
-                        const polyline = routePolylineMap.get(rta);
                         if (polyline) {
                             polyline.setStyle({ color: routeColorMap.get(rta),weight: 7 });
                         }
                         map.flyTo(event.popup.getLatLng(), 18);
 
-                        const vhlLat=parseFloat(this.getAttribute('data-vhl-lat'));
-                        const vhlLon=parseFloat(this.getAttribute('data-vhl-lon'));
-                        const vhlId=`${vhlLat},${vhlLon}`;
-
-                        const pdaId= type==="pda" ? this.getAttribute('data-pdaId'):"0";
-
-                        showAllExcept(rta,pdaId,vhlId);
+                        showAllExcept(rta,pdaId,vhl);
                     }
                 });
             });
@@ -474,45 +458,28 @@ map.on('popupopen', function(event) {
             const [rta, vhl] = buttonId.split('-').slice(1);
             const isActive = this.classList.contains('active');
             const type=this.getAttribute('data-type');
+            const pdaId="0";
+                const polyline = routePolylineMap.get(rta);
             if (isActive) {
 
                 const newColor=routeColorMap.get(rta).replace(",0.7)",",1)");
-                const polyline = routePolylineMap.get(rta);
-                const vhlLat=parseFloat(this.getAttribute('data-vhl-lat'));
-                const vhlLon=parseFloat(this.getAttribute('data-vhl-lon'));
-                const vhlId=`${vhlLat},${vhlLon}`;
-
-                const pdaId= type==="pda" ? this.getAttribute('data-pdaId'):"0";
-
-                hideAllExcept(rta,pdaId,vhlId);
+                hideAllExcept(rta,pdaId,vhl);
 
                 this.style.backgroundColor = newColor;
                 if (polyline) {
                     polyline.setStyle({ color: newColor,weight: 9  });
+                    map.fitBounds(polyline.getBounds());   
                 }
-                const vehicleLatLng = [vhlLat, vhlLon];
-                if(type==="pda")
-                map.fitBounds([event.popup.getLatLng(), vehicleLatLng]);
-
-                if(type==="vhl" && polyline)
-                map.fitBounds(polyline.getBounds());    
 
             } else {
 
                 this.style.backgroundColor = routeColorMap.get(rta);
-                const polyline = routePolylineMap.get(rta);
                 if (polyline) {
                     polyline.setStyle({ color: routeColorMap.get(rta),weight: 7 });
                 }
                 map.flyTo(event.popup.getLatLng(), 18);
-
-                const vhlLat=parseFloat(this.getAttribute('data-vhl-lat'));
-                const vhlLon=parseFloat(this.getAttribute('data-vhl-lon'));
-                const vhlId=`${vhlLat},${vhlLon}`;
-
-                const pdaId= type==="pda" ? this.getAttribute('data-pdaId'):"0";
-
-                showAllExcept(rta,pdaId,vhlId);
+                showAllExcept(rta,pdaId,vhl);
+                
             }
         });
     });
@@ -538,7 +505,7 @@ map.on('popupclose', function(event) {
         
         document.querySelectorAll('.custom-toggle-button').forEach(button => {
             const buttonId = button.id;
-            const [rta] = buttonId.split('-').slice(1);
+            const [rta,vhl] = buttonId.split('-').slice(1);
 
             // Revert polyline color
             const polyline = routePolylineMap.get(rta);
@@ -546,17 +513,40 @@ map.on('popupclose', function(event) {
                 polyline.setStyle({ color: routeColorMap.get(rta),
                     weight: 7 });
             }
-            
-            const vhlLat=parseFloat(popupNode.getAttribute('data-vhl-lat'));
-            const vhlLon=parseFloat(popupNode.getAttribute('data-vhl-lon'));
-            const vhlId=`${vhlLat},${vhlLon}`;
 
             const pdaId= type==="pda" ? popupNode.getAttribute('data-pdaId'):"0";
-            showAllExcept(rta,pdaId,vhlId);
+            showAllExcept(rta,pdaId,vhl);
             
         });    
     }
 });
+
+//------------------------------------------------------------------------------
+//-----------SSE ---------------------------------------------------------------
+//------------------------------------------------------------------------------
+
+var clientId="";
+var errorToastTimeout = null;
+var sse = null;
+
+sse = new EventSource(`${SERVER_IP}/p/see/trpInfo?clientId=${clientId}`,{withCredentials:false});
+
+sse.onmessage = function(event) {
+    
+    const data = JSON.parse(event.data); 
+    console.log(data);
+
+};
+
+sse.onerror = function(event){
+    if (!errorToastTimeout) {
+        showToast('Conexión inestable. Verifica tu Internet y refresca la plataforma.', 'warning');
+        errorToastTimeout = setTimeout(() => {
+          errorToastTimeout = null;
+        }, ERROR_TOAST_INTERVAL);
+    }
+};
+
     
 //------------------------------------------------------------------------------
 //-----------MEDIA QUERY--------------------------------------------------------

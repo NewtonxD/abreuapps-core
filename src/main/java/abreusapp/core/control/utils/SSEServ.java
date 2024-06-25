@@ -27,14 +27,19 @@ public class SSEServ {
     private final Map<String,SseEmitter> pdaEmitters = new ConcurrentHashMap<>();
     
     private final Map<String,SseEmitter> rtaEmitters = new ConcurrentHashMap<>();
+    
+    private final Map<String,SseEmitter> trpInfoEmitters = new ConcurrentHashMap<>();
 
     private Map<String,SseEmitter> obtenerEmitter(String nombre){
         return switch (nombre) {
+            // privado
             case "dtgnr" -> dtGnrEmitters;
             case "usrmgr" -> usrMgrEmitters;
             case "vhl" -> vhlEmitters;
             case "pda" -> pdaEmitters;
             case "rta" -> rtaEmitters;
+            // publico    
+            case "trpInfo" -> trpInfoEmitters;
             case "" -> null;
             default -> null;
         };

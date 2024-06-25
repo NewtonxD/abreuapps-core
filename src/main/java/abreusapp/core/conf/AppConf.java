@@ -13,8 +13,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import abreusapp.core.control.usuario.UsuarioRepo;
+import abreusapp.core.control.utils.LocNotifierServ;
 import abreusapp.core.control.utils.LoginAttemptServ;
 import abreusapp.core.control.utils.NotifierServ;
+import abreusapp.core.control.utils.SSEServ;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.zaxxer.hikari.util.DriverDataSource;
 import java.time.Duration;
@@ -38,6 +40,8 @@ import org.springframework.web.context.request.RequestContextListener;
 public class AppConf {
 
     private final UsuarioRepo UsuarioRepositorio;
+    
+    private final SSEServ SSEserv;
     
     @Bean
     public UserDetailsService userDetailsService() {
@@ -82,7 +86,7 @@ public class AppConf {
     }
     
     @Bean
-    NotifierServ notifier(DataSourceProperties props) {
+    public NotifierServ notifier(DataSourceProperties props) {
         
         DriverDataSource ds = new DriverDataSource(
            props.determineUrl(), 
@@ -97,10 +101,36 @@ public class AppConf {
     }
     
     @Bean
-    CommandLineRunner startListener(NotifierServ notifier, NotificationHandler handler) {
+    public LocNotifierServ LocNotifier(DataSourceProperties props) {
+        
+        DriverDataSource ds = new DriverDataSource(
+           props.determineUrl(), 
+           props.determineDriverClassName(),
+           new Properties(), 
+           props.determineUsername(),
+           props.determinePassword());
+        
+        JdbcTemplate tpl = new JdbcTemplate(ds);
+
+        return new LocNotifierServ(tpl,SSEserv);
+        
+    }
+    
+    @Bean
+    public CommandLineRunner startListener(NotifierServ notifier,NotificationHandler handler) {
         return (args) -> {         
             Runnable listener = notifier.createNotificationHandler(handler);            
             Thread t = new Thread(listener, "DBNotification-listener");
+            t.start();
+        };
+    }
+    
+    
+    @Bean
+    public CommandLineRunner startListenerLoc(LocNotifierServ locNotifier) {
+        return (args) -> {   
+            Runnable listener = locNotifier.createNotificationHandler();            
+            Thread t = new Thread(listener, "DBNotification-listener1");
             t.start();
         };
     }
