@@ -78,6 +78,118 @@ function getCenterOfMap() {
         }
     });
 }
+
+function vhlToggleClick(e){
+    const buttonEl= e.target;
+    const buttonId = buttonEl.id;
+    const [rta, vhl] = buttonId.split('-').slice(1);
+    const isActive = buttonEl.classList.contains('active');
+    const type=buttonEl.getAttribute('data-type');
+    const pdaId="0";
+    const polyline = routePolylineMap.get(rta);
+    const vehicle = vehicleMap.get(vhl);
+    if (isActive) {
+
+        const newColor=routeColorMap.get(rta).replace(",0.7)",",1)");
+        hideAllExcept(rta,pdaId,vhl);
+
+        buttonEl.style.backgroundColor = newColor;
+        if (polyline) {
+            polyline.setStyle({ color: newColor,weight: 9  });
+            map.fitBounds(polyline.getBounds());   
+        }
+
+    } else {
+
+        buttonEl.style.backgroundColor = routeColorMap.get(rta);
+        if (polyline) {
+            polyline.setStyle({ color: routeColorMap.get(rta),weight: 7 });
+        }
+        map.flyTo(vehicle.getLatLng(), 18);
+        showAllExcept(rta,pdaId,vhl);
+
+    }
+}
+
+function pdaToggleClick(e){
+    const buttonEl= e.target;
+    const buttonId = buttonEl.id;
+    const [rta, vhl] = buttonId.split('-').slice(1);
+    const isActive = buttonEl.classList.contains('active');
+    const polyline = routePolylineMap.get(rta);
+    const pdaId = buttonEl.getAttribute('data-pdaId');
+    const pda = markerMap.get(pdaId);
+    if (isActive) {
+
+        const newColor=routeColorMap.get(rta).replace(",0.7)",",1)");
+
+        hideAllExcept(rta,pdaId,vhl);
+
+        buttonEl.style.backgroundColor = newColor;
+        if (polyline) {
+            polyline.setStyle({ color: newColor,weight: 9  });
+        }
+
+        const vhlLat=parseFloat(buttonEl.getAttribute('data-vhl-lat'));
+        const vhlLon=parseFloat(buttonEl.getAttribute('data-vhl-lon'));
+        const vehicleLatLng = [vhlLat, vhlLon];
+        map.fitBounds([pda.getLatLng(), vehicleLatLng]);
+
+    } else {
+
+        buttonEl.style.backgroundColor = routeColorMap.get(rta);
+        if (polyline) {
+            polyline.setStyle({ color: routeColorMap.get(rta),weight: 7 });
+        }
+        map.flyTo(pda.getLatLng(), 18);
+
+        showAllExcept(rta,pdaId,vhl);
+    }
+}
+
+function updateTransportMap(data,first=false){
+    for (let i = 0; i < data.length; i++) {
+            
+        const placa=data[i][0];
+        const ruta=data[i][1];
+        const lon=data[i][2];
+        const lat=data[i][3];
+        const orientation=data[i][4];
+        const velocidad=data[i][5] * 3.6;
+
+        const color=routeColorMap.get(ruta);
+
+        const popupContent=`<div class="row d-flex justify-content-center">
+                <div class="col text-center ms-0 me-0 ms-lg-2 me-lg-2 mt-2 mb-2" data-id="${placa}" data-type="vhl" data-rta="${ruta}" data-lat="${lat}" data-lon="${lon}">
+                <img src='${SERVER_IP}/content/css/images/downarrow-50.png' class='img-arrow-${placa}' style='width:50px; height:50px; transform:rotate(${orientation}deg);'/>
+                <h4>Vehiculo: ${placa}</h4><h6>${velocidad} Km/h.</h6><label class="text-muted">( ${lat} , ${lon} ).</label></div></div>
+                <div class="row d-flex justify-content-center">
+                <div class="col mt-2 text-center">
+                <button type="button" data-type="vhl" onclick="vhlToggleClick(event)" class="btn btn-lg custom-vhl-toggle-button" data-bs-toggle="button" data-vhl="${placa}" id="custom-${ruta}-${placa}" style="background-color:${color};">Ruta : ${ruta}</button></div>
+                </div>`;
+
+
+        if(first){
+            const popup = L.popup({
+                pane: "fixed",
+                className: "popup-fixed test",
+                autoPan: false
+            }).setContent(popupContent);
+
+            const marker=L.marker([lat,lon],{icon:busIcon,})
+            .bindPopup(popup)
+            .addTo(map);
+
+            vehicleMap.set(placa, marker);
+        }else{
+            const vhl=vehicleMap.get(placa);
+            vhl.slideTo([lat, lon], { duration: 2000 });
+            vhl.setPopupContent(popupContent);
+
+        }
+    }
+    
+}
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
@@ -188,38 +300,9 @@ fetch(`${SERVER_IP}/API/trp/getStatic`, {
     }
     
     if(res.vehiculosLoc!==null && res.vehiculosLoc!==undefined){
-        for (let i = 0; i < res.vehiculosLoc.length; i++) {
-            
-            const placa=res.vehiculosLoc[i][0];
-            const ruta=res.vehiculosLoc[i][1];
-            const lon=res.vehiculosLoc[i][2];
-            const lat=res.vehiculosLoc[i][3];
-            const orientation=res.vehiculosLoc[i][4];
-            const velocidad=res.vehiculosLoc[i][5] * 3.6;
-            
-            const color=routeColorMap.get(ruta);
-            
-            const popupContent=`<div class="row d-flex justify-content-center">
-                    <div class="col text-center ms-0 me-0 ms-lg-2 me-lg-2 mt-2 mb-2" data-id="${placa}" data-type="vhl" data-rta="${ruta}" data-lat="${lat}" data-lon="${lon}">
-                    <img src='${SERVER_IP}/content/css/images/downarrow-50.png' class='img-arrow-${placa}' style='width:50px; height:50px; transform:rotate(${orientation}deg);'/>
-                    <h4>Vehiculo: ${placa}</h4><h6>${velocidad} Km/h.</h6><label class="text-muted">( ${lat} , ${lon} ).</label></div></div>
-                    <div class="row d-flex justify-content-center">
-                    <div class="col mt-2 text-center">
-                    <button type="button" data-type="vhl" class="btn btn-lg custom-toggle-button" data-bs-toggle="button" data-vhl="${placa}" id="custom-${ruta}-${placa}" style="background-color:${color};">Ruta : ${ruta}</button></div>
-                    </div>`;
-            
-            const popup = L.popup({
-                pane: "fixed",
-                className: "popup-fixed test",
-                autoPan: false
-            }).setContent(popupContent);
-            
-            const marker=L.marker([lat,lon],{icon:busIcon,})
-            .bindPopup(popup)
-            .addTo(map);
-    
-            vehicleMap.set(placa, marker);
-        }
+        
+        updateTransportMap(res.vehiculosLoc,true);
+        
     }
 
     if(res.paradas!==null && res.paradas!==undefined){
@@ -397,92 +480,23 @@ map.on('popupopen', function(event) {
                 const distancia=data[3];
                 const vhlLat=data[4];
                 const vhlLon=data[5];
-                const minutos=Math.round( (distancia/velocidad) / 60);
+                const minutos=Math.floor( (distancia/velocidad) / 60);
                 const color=routeColorMap.get(rta);
                 
                 const newContent = `
                     <div class="row d-flex justify-content-center">
                     <div class="col text-center mt-2">
-                    <button type="button" data-type="pda" data-pdaId="${idPda}" data-vhl-lat="${vhlLat}" data-vhl-lon="${vhlLon}" id="custom-${rta}-${vhl}" class="btn ${vhl!==null?'custom-toggle-button':''} btn-lg" style="background-color:${color};" ${vhl!==null?'data-bs-toggle="button"':''}>Ruta: ${rta} | ${vhl!==null? minutos + " min" :"No disponible hoy"}</button>
+                    <button type="button" data-type="pda" onclick="pdaToggleClick(event)" data-pdaId="${idPda}" data-vhl-lat="${vhlLat}" data-vhl-lon="${vhlLon}" id="custom-${rta}-${vhl}" class="btn ${vhl!==null?'custom-toggle-button':''} btn-lg" style="background-color:${color};" ${vhl!==null?'data-bs-toggle="button"':''}>Ruta: ${rta} | ${vhl!==null? minutos + " min" :"No disponible hoy"}</button>
                     </div></div>`;
                   
                 popupNode.innerHTML += newContent;  
                 
             }
             
-            document.querySelectorAll('.custom-toggle-button').forEach(button => {
-                button.addEventListener('click', function() {
-                    const buttonId = this.id;
-                    const [rta, vhl] = buttonId.split('-').slice(1);
-                    const isActive = this.classList.contains('active');
-                    const polyline = routePolylineMap.get(rta);
-                    const pdaId= this.getAttribute('data-pdaId');
-                    if (isActive) {
-
-                        const newColor=routeColorMap.get(rta).replace(",0.7)",",1)");
-
-                        hideAllExcept(rta,pdaId,vhl);
-
-                        this.style.backgroundColor = newColor;
-                        if (polyline) {
-                            polyline.setStyle({ color: newColor,weight: 9  });
-                        }
-                        
-                        const vhlLat=parseFloat(this.getAttribute('data-vhl-lat'));
-                        const vhlLon=parseFloat(this.getAttribute('data-vhl-lon'));
-                        const vehicleLatLng = [vhlLat, vhlLon];
-                        map.fitBounds([event.popup.getLatLng(), vehicleLatLng]);
-
-                    } else {
-
-                        this.style.backgroundColor = routeColorMap.get(rta);
-                        if (polyline) {
-                            polyline.setStyle({ color: routeColorMap.get(rta),weight: 7 });
-                        }
-                        map.flyTo(event.popup.getLatLng(), 18);
-
-                        showAllExcept(rta,pdaId,vhl);
-                    }
-                });
-            });
-            
         }
         
     })
     .catch(error => console.error('Error fetching details:', error));
-    
-    if(type==="vhl")
-    document.querySelectorAll('.custom-toggle-button').forEach(button => {
-        button.addEventListener('click', function() {
-            const buttonId = this.id;
-            const [rta, vhl] = buttonId.split('-').slice(1);
-            const isActive = this.classList.contains('active');
-            const type=this.getAttribute('data-type');
-            const pdaId="0";
-                const polyline = routePolylineMap.get(rta);
-            if (isActive) {
-
-                const newColor=routeColorMap.get(rta).replace(",0.7)",",1)");
-                hideAllExcept(rta,pdaId,vhl);
-
-                this.style.backgroundColor = newColor;
-                if (polyline) {
-                    polyline.setStyle({ color: newColor,weight: 9  });
-                    map.fitBounds(polyline.getBounds());   
-                }
-
-            } else {
-
-                this.style.backgroundColor = routeColorMap.get(rta);
-                if (polyline) {
-                    polyline.setStyle({ color: routeColorMap.get(rta),weight: 7 });
-                }
-                map.flyTo(event.popup.getLatLng(), 18);
-                showAllExcept(rta,pdaId,vhl);
-                
-            }
-        });
-    });
     
 });
 
@@ -503,7 +517,7 @@ map.on('popupclose', function(event) {
             }
         }
         
-        document.querySelectorAll('.custom-toggle-button').forEach(button => {
+        document.querySelectorAll('.custom-toggle-button,.custom-vhl-toggle-button').forEach(button => {
             const buttonId = button.id;
             const [rta,vhl] = buttonId.split('-').slice(1);
 
@@ -532,9 +546,9 @@ var sse = null;
 sse = new EventSource(`${SERVER_IP}/p/see/trpInfo?clientId=${clientId}`,{withCredentials:false});
 
 sse.onmessage = function(event) {
-    
     const data = JSON.parse(event.data); 
     console.log(data);
+    updateTransportMap(data);
 
 };
 

@@ -20,7 +20,7 @@ public class LocNotifierServ {
 
     private final JdbcTemplate tpl;
     
-    private final SSEServ SSEServ;
+    private final SSEServ SSEServicio;
 
     private static final String CHANNEL_NAME = "loc_db_event";
 
@@ -63,9 +63,7 @@ public class LocNotifierServ {
     }
 
     private void handleNotification() {
-        // Process the notification
-        
-        // sse publicar y realizar query
-        System.out.println("\nHandling notification after delay\n");
+        SSEServicio.publicarTransporteInfo();
+        SSEServicio.publicarParadaInfo();
     }
 }

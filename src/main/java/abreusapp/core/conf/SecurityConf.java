@@ -33,7 +33,7 @@ public class SecurityConf{
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .addFilterBefore(RL1Filter, LogoutFilter.class)
             .authorizeHttpRequests(t -> t
-                .requestMatchers("/", "/auth/**", "/content/**", "/error/**","/API/**").permitAll()
+                .requestMatchers("/", "/auth/**", "/content/**", "/error/**","/API/**","/p/**").permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
@@ -61,7 +61,7 @@ public class SecurityConf{
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
             CorsConfiguration configuration = new CorsConfiguration();
-            configuration.setAllowedOrigins(Arrays.asList("/see/**"));
+            configuration.setAllowedOrigins(Arrays.asList("/see/**","/p/see/**"));
             configuration.setAllowedMethods(Arrays.asList("GET","POST"));
             UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
             source.registerCorsConfiguration("/**", configuration);

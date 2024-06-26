@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import abreusapp.core.control.usuario.UsuarioRepo;
 import abreusapp.core.control.utils.LocNotifierServ;
+import abreusapp.core.control.transporte.LocVehiculoServ;
 import abreusapp.core.control.utils.LoginAttemptServ;
 import abreusapp.core.control.utils.NotifierServ;
 import abreusapp.core.control.utils.SSEServ;
@@ -42,6 +43,8 @@ public class AppConf {
     private final UsuarioRepo UsuarioRepositorio;
     
     private final SSEServ SSEserv;
+    
+    private final LocVehiculoServ LocServicio;
     
     @Bean
     public UserDetailsService userDetailsService() {

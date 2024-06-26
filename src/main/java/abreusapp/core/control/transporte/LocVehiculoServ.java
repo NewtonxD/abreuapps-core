@@ -28,7 +28,7 @@ public class LocVehiculoServ {
     }
     
     @Cacheable("LV")
-    public List<Object[]> consultarEnCamino(){
+    public List<Object[]> consultarDatosTransporteEnCamino(){
         return repo.findUltimoEnCamino();
     }
     

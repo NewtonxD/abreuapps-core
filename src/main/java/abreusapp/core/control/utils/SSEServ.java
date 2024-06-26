@@ -1,10 +1,13 @@
 package abreusapp.core.control.utils;
 
 
+import abreusapp.core.control.transporte.LocVehiculoServ;
+import abreusapp.core.control.transporte.ParadaServ;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -16,6 +19,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
  * @author Carlos Abreu Pérez
  */
 @Service
+@RequiredArgsConstructor
 public class SSEServ {
     
     private final Map<String,SseEmitter> dtGnrEmitters = new ConcurrentHashMap<>();
@@ -28,22 +32,31 @@ public class SSEServ {
     
     private final Map<String,SseEmitter> rtaEmitters = new ConcurrentHashMap<>();
     
+    //--------------------------------------------------------------------------
     private final Map<String,SseEmitter> trpInfoEmitters = new ConcurrentHashMap<>();
-
+    
+    private final Map<String,SseEmitter> pdaInfoEmitters = new ConcurrentHashMap<>();
+    
+    private final ParadaServ ParadaServicio;
+    
+    private final LocVehiculoServ LocServicio;
+    //--------------------------------------------------------------------------
+    
     private Map<String,SseEmitter> obtenerEmitter(String nombre){
         return switch (nombre) {
-            // privado
             case "dtgnr" -> dtGnrEmitters;
             case "usrmgr" -> usrMgrEmitters;
             case "vhl" -> vhlEmitters;
             case "pda" -> pdaEmitters;
             case "rta" -> rtaEmitters;
-            // publico    
+                
             case "trpInfo" -> trpInfoEmitters;
+            case "pdaInfo" -> pdaInfoEmitters;
             case "" -> null;
             default -> null;
         };
     }
+    //--------------------------------------------------------------------------
     
     @Async
     public void publicar(String nombre,HashMap<String, Object> Datos){
@@ -55,6 +68,35 @@ public class SSEServ {
                 } catch (IOException e) {
                     val.getValue().completeWithError(e);
                     emitters.remove(val.getKey());
+                }
+            }
+        }
+    }
+    
+    @Async
+    public void publicarParadaInfo(){        
+        if(pdaInfoEmitters!=null){
+            for (Map.Entry<String,SseEmitter> val : pdaInfoEmitters.entrySet()) {
+                Integer idParada=Integer.valueOf(val.getKey().split("-")[2]);
+                try {
+                    val.getValue().send(ParadaServicio.getParadaInfo(idParada));
+                } catch (IOException e) {
+                    val.getValue().completeWithError(e);
+                    pdaInfoEmitters.remove(val.getKey());
+                }
+            }
+        }
+    }
+    
+    @Async
+    public void publicarTransporteInfo(){
+        if(trpInfoEmitters!=null){
+            for (Map.Entry<String,SseEmitter> val : trpInfoEmitters.entrySet()) {
+                try {
+                    val.getValue().send(LocServicio.consultarDatosTransporteEnCamino());
+                } catch (IOException e) {
+                    val.getValue().completeWithError(e);
+                    trpInfoEmitters.remove(val.getKey());
                 }
             }
         }
