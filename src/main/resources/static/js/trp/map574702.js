@@ -8,6 +8,23 @@ function onMediaQueryChange(event) {
         document.documentElement.style.removeProperty("--min-width");
     }
 }
+
+//------------------------------------------------------------------------------
+function generateClientId() {
+    var millis = new Date().getTime();
+    var randomNum = Math.floor(Math.random() * 1000000); // Generate a random number with 6 digits
+    return millis + '-' + randomNum;
+} 
+//------------------------------------------------------------------------------
+
+function closePdaSSE(idPda){
+    
+    if(ssePda!==null && ssePda!==undefined){
+        ssePda.close();
+        ssePda=null;
+        $.get(`${SERVER_IP}/p/see/pdaInfo/close?clientId=${clientId}-${idPda}`);
+    }
+}
 //------------------------------------------------------------------------------
 function fitBoundsPadding(e) {
     const boxInfoWith = document.querySelector(".leaflet-popup-content-wrapper")
@@ -79,6 +96,7 @@ function getCenterOfMap() {
     });
 }
 
+//------------------------------------------------------------------------------
 function vhlToggleClick(e){
     const buttonEl= e.target;
     const buttonId = buttonEl.id;
@@ -111,6 +129,7 @@ function vhlToggleClick(e){
     }
 }
 
+//------------------------------------------------------------------------------
 function pdaToggleClick(e){
     const buttonEl= e.target;
     const buttonId = buttonEl.id;
@@ -147,6 +166,7 @@ function pdaToggleClick(e){
     }
 }
 
+//------------------------------------------------------------------------------
 function updateTransportMap(data,first=false){
     for (let i = 0; i < data.length; i++) {
             
@@ -480,7 +500,8 @@ map.on('popupopen', function(event) {
                 const distancia=data[3];
                 const vhlLat=data[4];
                 const vhlLon=data[5];
-                const minutos=Math.floor( (distancia/velocidad) / 60);
+                let minutos=Math.floor( ((distancia/velocidad)-3) / 60);
+                if(minutos<=0) minutos=0;
                 const color=routeColorMap.get(rta);
                 
                 const newContent = `
@@ -492,6 +513,28 @@ map.on('popupopen', function(event) {
                 popupNode.innerHTML += newContent;  
                 
             }
+            
+            ssePda = new EventSource(`${SERVER_IP}/p/see/pdaInfo?clientId=${clientId}-${id}`,{withCredentials:false});
+            
+            ssePda.onmessage = function(event) {
+                const dataa = JSON.parse(event.data); 
+                console.log(dataa);
+                for(let i=0;i <dataa.length;i++){
+                    const data = dataa[i];
+                    const vhl=data[1];
+                    const rta=data[0];
+                    const velocidad=data[2];
+                    const distancia=data[3];
+                    const vhlLat=data[4];
+                    const vhlLon=data[5];
+                    let minutos=Math.floor( ((distancia/velocidad)-3) / 60);
+                    if(minutos<=0) minutos=0;
+                    const color=routeColorMap.get(rta);
+                    $(`#custom-${rta}-${vhl}`).html(`Ruta: ${rta} | ${vhl!==null? minutos + " min" :"No disponible hoy"}`);
+                    $(`#custom-${rta}-${vhl}`).attr("data-vhl-lat",`"${vhlLat}"`);
+                    $(`#custom-${rta}-${vhl}`).attr("data-vhl-lon",`"${vhlLon}"`);
+                }
+            };
             
         }
         
@@ -510,6 +553,7 @@ map.on('popupclose', function(event) {
         const lon = popupNode.getAttribute('data-lon');
         
         if(type === "pda"){
+            closePdaSSE(id);
             const marker = markerMap.get(`${lat},${lon}`);
 
             if (marker) {
@@ -542,14 +586,14 @@ map.on('popupclose', function(event) {
 var clientId="";
 var errorToastTimeout = null;
 var sse = null;
+var ssePda=null;
 
+clientId=generateClientId();
 sse = new EventSource(`${SERVER_IP}/p/see/trpInfo?clientId=${clientId}`,{withCredentials:false});
 
 sse.onmessage = function(event) {
     const data = JSON.parse(event.data); 
-    console.log(data);
     updateTransportMap(data);
-
 };
 
 sse.onerror = function(event){

@@ -24,7 +24,7 @@ public class LocNotifierServ {
 
     private static final String CHANNEL_NAME = "loc_db_event";
 
-    private static final int DELAY = 3; // seconds
+    private static final int DELAY = 2; // seconds
 
     public Runnable createNotificationHandler(){
         return (() -> {
