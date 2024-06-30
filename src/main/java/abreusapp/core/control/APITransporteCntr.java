@@ -1,7 +1,6 @@
 package abreusapp.core.control;
 
 import abreusapp.core.control.general.DatoServ;
-import abreusapp.core.control.transporte.DataServ;
 import abreusapp.core.control.transporte.LocRutaServ;
 import abreusapp.core.control.transporte.LocVehiculo;
 import abreusapp.core.control.transporte.LocVehiculoServ;
@@ -52,8 +51,6 @@ public class APITransporteCntr {
     private final LocRutaServ LocRutaServicio;
     
     private final PasswordEncoder passwordEncoder;
-    
-    private final DataServ DataServicio;
     
     private static final String PWD_HASH="$2a$10$FD.HVab6z8H3Tba.hw.SvukdeJDfZ5aIIzCN87AL7T2SSAJqoi8Bq";
 
@@ -288,7 +285,7 @@ public class APITransporteCntr {
             0 , true)
         );
         
-        respuesta.put("vehiculosLoc",LocVehiculoServicio.consultarEnCamino());
+        respuesta.put("vehiculosLoc",LocVehiculoServicio.consultarDatosTransporteEnCamino());
 
         return new ResponseEntity<>(
                 respuesta.isEmpty() ? null: respuesta,
@@ -320,13 +317,13 @@ public class APITransporteCntr {
                 //--------------------------------------------------------------
                 case "pda" -> {
                     Integer id = Integer.valueOf(req.getOrDefault("id",""));
-                    respuesta.put("pdaInfo",DataServicio.getParadaInfo(id));
+                    respuesta.put("pdaInfo",ParadaServicio.getParadaInfo(id));
                 }
                 //--------------------------------------------------------------
                 case "myloc" -> {
                     Double lat=Double.valueOf(req.getOrDefault("lat","0"));
                     Double lon=Double.valueOf(req.getOrDefault("lon","0"));
-                    respuesta.put("locInfo",DataServicio.getParadaMasCercana(lat,lon)); 
+                    respuesta.put("locInfo",ParadaServicio.getParadaMasCercana(lat,lon)); 
                 }
                 //--------------------------------------------------------------
                 default -> {

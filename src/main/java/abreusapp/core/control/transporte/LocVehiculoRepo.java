@@ -13,18 +13,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LocVehiculoRepo extends JpaRepository<LocVehiculo, Long>{
-        
-    @Query(value="SELECT new abreusapp.core.control.transporte.LocVehiculoDTO("
-            + "l.id,"
-            + "l.placa.placa,"
-            + "l.latitud,"
-            + "l.longitud,"
-            + "l.fecha_registro"
-            + ") FROM LocVehiculo l WHERE "
-            + " CASE WHEN coalesce(?1,'')<>'' THEN l.placa.placa=?1 ELSE true END "
-            + " ORDER BY l.fecha_registro DESC"
-            + " LIMIT ?2")
-    List<LocVehiculoDTO> customFindAll(String placa,int limit);
     
     @Query(
         value = "select tl.*,vhl.* "

@@ -43,6 +43,18 @@ public class ParadaServ {
         return repo.save(gd);
     }
     
+    
+    
+    @Cacheable("PMC")
+    public Object[] getParadaMasCercana(Double Latitud,Double Longitud){
+        return repo.findParadaMasCercana(Latitud,Longitud);
+    }
+    
+    @Cacheable("PI")
+    public List<Object[]> getParadaInfo(Integer idParada){
+        return repo.findParadaInfo(idParada);
+    }
+    
     public Optional<Parada> obtener(Integer id){
         if(id==null){
             return Optional.empty();

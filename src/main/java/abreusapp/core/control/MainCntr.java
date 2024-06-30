@@ -8,12 +8,9 @@ import abreusapp.core.control.utils.ModelServ;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/main")
 public class MainCntr {
 
     private final ModelServ DataModelServicio;
@@ -42,7 +40,7 @@ public class MainCntr {
 //----------------------------------------------------------------------------//
 //------------------ENDPOINTS BASICOS SISTEMA---------------------------------//
 //----------------------------------------------------------------------------//
-    @RequestMapping({"/main/", "/main/index"})
+    @RequestMapping({"/", "/index"})
     public String MainPage(
         Model model
     ) {
@@ -60,23 +58,18 @@ public class MainCntr {
         return "index";
     }
 //----------------------------------------------------------------------------//
-    @RequestMapping("/main/leaflet.js.map")
+    @RequestMapping("/leaflet.js.map")
     public String LeatLeaftJsMap() {        
         return "redirect:/content/js/lib/leaflet.js.map";
     }
-//----------------------------------------------------------------------------//
-    @RequestMapping("/favicon.ico")
-    public String Favicon(){
-        return "redirect:/content/assets/img/favicon_io/favicon.ico";
-    }
 //----------------------------------------------------------------------------//  
-    @RequestMapping("/main/leaflet-geoman.js.map")
+    @RequestMapping("/leaflet-geoman.js.map")
     public String GeomanJsMap(){
         return "redirect:/content/js/lib/leaflet-geoman.js.map";
     }
 //----------------------------------------------------------------------------//  
 
-    @RequestMapping(value = "/main/content-page/", method = RequestMethod.POST)
+    @RequestMapping(value = "/content-page/", method = RequestMethod.POST)
     public String loadContetPage(
         Model model,
         @RequestParam("id") String idPage
@@ -89,7 +82,7 @@ public class MainCntr {
     }
 //----------------------------------------------------------------------------//
     
-    @RequestMapping("/main/changePwd")
+    @RequestMapping("/changePwd")
     public String changePasswordExpired(
         Model model
     ) {
@@ -106,7 +99,7 @@ public class MainCntr {
     }
 //----------------------------------------------------------------------------//
     
-    @PostMapping("/main/changeMyPwdNow")
+    @PostMapping("/changeMyPwdNow")
     @ResponseBody
     public Map<String,String> changePasswordExpired(
         @RequestParam(name = "actualPassword",required = false) String oldPwd,
@@ -140,7 +133,7 @@ public class MainCntr {
     }
 //----------------------------------------------------------------------------//
     
-    @PostMapping(value="/main/saveConf")
+    @PostMapping(value="/saveConf")
     public String GuardarConfiguracion(
         Model model,
         @RequestParam Map<String,String> data
@@ -161,32 +154,5 @@ public class MainCntr {
         return "fragments/sys_configuracion :: content-default";
 
     }
-//----------------------------------------------------------------------------//
-//------------------------- AUTH----------------------------------------------//
-//----------------------------------------------------------------------------//
-    @GetMapping("/auth/login")
-    public String Login(
-        @RequestParam(name = "invalidSession", required = false,defaultValue = "false") boolean invalidSession,
-        @RequestParam(name = "logout", required = false,defaultValue = "false") boolean logout,
-        Model model
-    ) {
-        
-        if((SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken))
-            return "redirect:/main/index";
-        
-        if(invalidSession)
-            model.addAttribute("error_msg","Su sesión expiró. Ingrese sus credenciales nuevamente.");
-        
-        if(logout)
-            model.addAttribute("success_msg","Sesión cerrada exitosamente!");
-        
-        return "login";
-    }
-//----------------------------------------------------------------------------//
     
-    @GetMapping("/")
-    public String redirectLogin(){
-        return "mapa";
-    }
-//----------------------------------------------------------------------------//
 }

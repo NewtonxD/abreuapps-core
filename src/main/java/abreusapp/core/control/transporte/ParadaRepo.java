@@ -24,4 +24,10 @@ public interface ParadaRepo extends JpaRepository<Parada,Integer> {
     )
     List<ParadaDTO> findAllCustom(Integer excluyeId,Boolean activo);
     
+    @Query(value="SELECT * FROM transport.get_nearest_pda(?2,?1)",nativeQuery = true)
+    Object[] findParadaMasCercana(Double Latitud,Double Longitud);
+    
+    @Query(value="SELECT * FROM transport.get_pda_data(?1)",nativeQuery = true)
+    List<Object[]> findParadaInfo(Integer idParada);
+    
 }
