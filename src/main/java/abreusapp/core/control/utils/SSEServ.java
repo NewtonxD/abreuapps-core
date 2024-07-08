@@ -58,7 +58,6 @@ public class SSEServ {
     }
     //--------------------------------------------------------------------------
     
-    @Async
     public void publicar(String nombre,HashMap<String, Object> Datos){
         Map<String,SseEmitter> emitters=obtenerEmitter(nombre);
         if(emitters!=null){
@@ -73,7 +72,6 @@ public class SSEServ {
         }
     }
     
-    @Async
     public void publicarParadaInfo(){        
         if(pdaInfoEmitters!=null){
             for (Map.Entry<String,SseEmitter> val : pdaInfoEmitters.entrySet()) {
@@ -88,7 +86,6 @@ public class SSEServ {
         }
     }
     
-    @Async
     public void publicarTransporteInfo(){
         if(trpInfoEmitters!=null){
             for (Map.Entry<String,SseEmitter> val : trpInfoEmitters.entrySet()) {
@@ -102,7 +99,6 @@ public class SSEServ {
         }
     }
     
-    @Async
     public void cerrar(String id, String nombre){
         Map<String,SseEmitter> emitter=obtenerEmitter(nombre);
         if(emitter!=null){
