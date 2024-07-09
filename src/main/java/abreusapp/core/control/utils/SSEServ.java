@@ -7,9 +7,13 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.CloseNowException;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.async.AsyncRequestNotUsableException;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 /**
@@ -58,47 +62,63 @@ public class SSEServ {
     }
     //--------------------------------------------------------------------------
     
+    @Async
     public void publicar(String nombre,HashMap<String, Object> Datos){
         Map<String,SseEmitter> emitters=obtenerEmitter(nombre);
         if(emitters!=null){
             for (Map.Entry<String,SseEmitter> val : emitters.entrySet()) {
                 try {
                     val.getValue().send(Datos);
-                } catch (IOException e) {
-                    val.getValue().completeWithError(e);
+                } catch (CloseNowException | AsyncRequestNotUsableException ex) {
+                    val.getValue().complete();
                     emitters.remove(val.getKey());
+                } catch (IOException ex) {
+                    val.getValue().complete();
+                    emitters.remove(val.getKey());
+                    Logger.getLogger(SSEServ.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
     }
     
+    @Async
     public void publicarParadaInfo(){        
         if(pdaInfoEmitters!=null){
             for (Map.Entry<String,SseEmitter> val : pdaInfoEmitters.entrySet()) {
                 Integer idParada=Integer.valueOf(val.getKey().split("-")[2]);
                 try {
                     val.getValue().send(ParadaServicio.getParadaInfo(idParada));
-                } catch (IOException e) {
-                    val.getValue().completeWithError(e);
+                } catch (CloseNowException | AsyncRequestNotUsableException ex) {
+                    val.getValue().complete();
                     pdaInfoEmitters.remove(val.getKey());
+                } catch (IOException ex) {
+                    val.getValue().complete();
+                    pdaInfoEmitters.remove(val.getKey());
+                    Logger.getLogger(SSEServ.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
     }
     
+    @Async
     public void publicarTransporteInfo(){
         if(trpInfoEmitters!=null){
             for (Map.Entry<String,SseEmitter> val : trpInfoEmitters.entrySet()) {
                 try {
                     val.getValue().send(LocServicio.consultarDatosTransporteEnCamino());
-                } catch (IOException e) {
-                    val.getValue().completeWithError(e);
+                } catch (CloseNowException | AsyncRequestNotUsableException ex) {
+                    val.getValue().complete();
                     trpInfoEmitters.remove(val.getKey());
+                } catch (IOException ex) {
+                    val.getValue().complete();
+                    trpInfoEmitters.remove(val.getKey());
+                    Logger.getLogger(SSEServ.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
     }
     
+    @Async
     public void cerrar(String id, String nombre){
         Map<String,SseEmitter> emitter=obtenerEmitter(nombre);
         if(emitter!=null){

@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -50,7 +51,6 @@ public class RutaServ {
             gd.setFecha_registro(new Date());
         }
         gd.setFecha_actualizacion(new Date());
-        
         return repo.save(gd);
     }
     
