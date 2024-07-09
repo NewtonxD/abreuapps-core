@@ -43,10 +43,12 @@ public class LocNotifierServ {
                             
                             if (nts == null || nts.length == 0) {
                                 continue;
-                            }
+                            } 
 
-                            Thread.sleep(Duration.ofSeconds(DELAY));
-                            handleNotification();
+                            Thread.currentThread().sleep(Duration.ofSeconds(DELAY));
+                            
+                            SSEServicio.publicarTransporteInfo();
+                            SSEServicio.publicarParadaInfo();
                             
                         } catch (InterruptedException ex) {
                             Logger.getLogger(LocNotifierServ.class.getName()).log(Level.SEVERE, null, ex);
@@ -60,10 +62,5 @@ public class LocNotifierServ {
             executor.shutdown();
         });
 
-    }
-
-    private void handleNotification() {
-        SSEServicio.publicarTransporteInfo();
-        SSEServicio.publicarParadaInfo();
     }
 }

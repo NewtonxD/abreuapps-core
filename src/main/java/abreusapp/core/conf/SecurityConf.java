@@ -60,11 +60,11 @@ public class SecurityConf{
     
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
-            CorsConfiguration configuration = new CorsConfiguration();
-            configuration.setAllowedOrigins(Arrays.asList("/see/**","/p/see/**"));
-            configuration.setAllowedMethods(Arrays.asList("GET","POST"));
+            //CorsConfiguration configuration = new CorsConfiguration();
+            //configuration.setAllowedOrigins(Arrays.asList("/**"));
+            //configuration.setAllowedMethods(Arrays.asList("GET","POST"));
             UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-            source.registerCorsConfiguration("/**", configuration);
+            source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
             return source;
     }
     

@@ -21,7 +21,6 @@ function closePdaSSE(idPda){
     
     if(ssePda!==null && ssePda!==undefined){
         ssePda.close();
-        ssePda=null;
         $.get(`${SERVER_IP}/p/see/pdaInfo/close?clientId=${clientId}-${idPda}`);
     }
 }
@@ -132,7 +131,7 @@ function vhlToggleClick(e){
 //------------------------------------------------------------------------------
 function pdaToggleClick(e){
     const buttonEl= e.target;
-    const buttonId = buttonEl.id;
+    const buttonId = buttonEl.getAttribute('data-customId');
     const [rta, vhl] = buttonId.split('-').slice(1);
     const isActive = buttonEl.classList.contains('active');
     const polyline = routePolylineMap.get(rta);
@@ -203,9 +202,24 @@ function updateTransportMap(data,first=false){
             vehicleMap.set(placa, marker);
         }else{
             const vhl=vehicleMap.get(placa);
-            vhl.slideTo([lat, lon], { duration: 2000 });
-            vhl.setPopupContent(popupContent);
+            
+            if(vhl===null || vhl===undefined) {
+                const popup = L.popup({
+                    pane: "fixed",
+                    className: "popup-fixed test",
+                    autoPan: false
+                }).setContent(popupContent);
 
+                const marker=L.marker([lat,lon],{icon:busIcon,})
+                .bindPopup(popup)
+                .addTo(map);
+
+                vehicleMap.set(placa, marker);
+                
+            }else{
+                vhl.slideTo([lat, lon], { duration: 2000 });
+                vhl.setPopupContent(popupContent);
+            }
         }
     }
     
@@ -503,11 +517,12 @@ map.on('popupopen', function(event) {
                 let minutos=Math.floor( ((distancia/velocidad)-3) / 60);
                 if(minutos<=0) minutos=0;
                 const color=routeColorMap.get(rta);
+                const idElement=`custom-${rta}-${vhl}`.replace(' ','').replace(/[`~!@#$%^&*()_|+\=?;:'",.<>\{\}\[\]\\\/]/gi, '');
                 
                 const newContent = `
                     <div class="row d-flex justify-content-center">
                     <div class="col text-center mt-2">
-                    <button type="button" data-type="pda" onclick="pdaToggleClick(event)" data-pdaId="${idPda}" data-vhl-lat="${vhlLat}" data-vhl-lon="${vhlLon}" id="custom-${rta}-${vhl}" class="btn ${vhl!==null?'custom-toggle-button':''} btn-lg" style="background-color:${color};" ${vhl!==null?'data-bs-toggle="button"':''}>Ruta: ${rta} | ${vhl!==null? minutos + " min" :"No disponible hoy"}</button>
+                    <button type="button" data-type="pda" onclick="pdaToggleClick(event)" data-pdaId="${idPda}" data-customId="custom-${rta}-${vhl}" data-vhl-lat="${vhlLat}" data-vhl-lon="${vhlLon}" id="${idElement}" class="btn ${vhl!==null?'custom-toggle-button':''} btn-lg" style="background-color:${color};" ${vhl!==null?'data-bs-toggle="button"':''}>Ruta: ${rta} | ${vhl!==null? minutos + " min" :"No disponible hoy"}</button>
                     </div></div>`;
                   
                 popupNode.innerHTML += newContent;  
@@ -519,7 +534,7 @@ map.on('popupopen', function(event) {
             ssePda.onmessage = function(event) {
                 const dataa = JSON.parse(event.data); 
                 console.log(dataa);
-                for(let i=0;i <dataa.length;i++){
+                for(let i=0;i<dataa.length;i++){
                     const data = dataa[i];
                     const vhl=data[1];
                     const rta=data[0];
@@ -530,9 +545,10 @@ map.on('popupopen', function(event) {
                     let minutos=Math.floor( ((distancia/velocidad)-3) / 60);
                     if(minutos<=0) minutos=0;
                     const color=routeColorMap.get(rta);
-                    $(`#custom-${rta}-${vhl}`).html(`Ruta: ${rta} | ${vhl!==null? minutos + " min" :"No disponible hoy"}`);
-                    $(`#custom-${rta}-${vhl}`).attr("data-vhl-lat",`"${vhlLat}"`);
-                    $(`#custom-${rta}-${vhl}`).attr("data-vhl-lon",`"${vhlLon}"`);
+                    const idElement=`custom-${rta}-${vhl}`.replace(' ','').replace(/[`~!@#$%^&*()_|+\=?;:'",.<>\{\}\[\]\\\/]/gi, '');
+                    $('#'+idElement).html(`Ruta: ${rta} | ${vhl!==null? minutos + " min" :"No disponible hoy"}`);
+                    $('#'+idElement).attr("data-vhl-lat",`"${vhlLat}"`);
+                    $('#'+idElement).attr("data-vhl-lon",`"${vhlLon}"`);
                 }
             };
             
@@ -562,7 +578,7 @@ map.on('popupclose', function(event) {
         }
         
         document.querySelectorAll('.custom-toggle-button,.custom-vhl-toggle-button').forEach(button => {
-            const buttonId = button.id;
+            const buttonId = button.getAttribute('data-customId');
             const [rta,vhl] = buttonId.split('-').slice(1);
 
             // Revert polyline color

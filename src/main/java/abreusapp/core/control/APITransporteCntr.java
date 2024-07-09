@@ -147,10 +147,9 @@ public class APITransporteCntr {
         Double lat     = Double.valueOf(req.get("lat"));
         Double lon     = Double.valueOf(req.get("lon"));
         String token   = req.getOrDefault("token","");
-       
         
         //INICIO DE VALIDACIONES
-        if(!(placa.isBlank() || lat.isNaN() || lon.isNaN() )){
+        if((placa.isBlank() || lat.isNaN() || lon.isNaN() )){
             mensaje = "Datos invalidos! intentelo de nuevo.";
             valido=false;
         }
