@@ -97,8 +97,14 @@ function getCenterOfMap() {
 
 //------------------------------------------------------------------------------
 function vhlToggleClick(e){
-    const buttonEl= e.target;
-    const buttonId = buttonEl.id;
+    let buttonEl= e.target;
+    let buttonId = buttonEl.id;
+    if(buttonId===null || buttonId===undefined){
+        setTimeout(() => {
+            buttonEl= e.target;
+            buttonId = buttonEl.id;
+        }, 50);
+    }
     const [rta, vhl] = buttonId.split('-').slice(1);
     const isActive = buttonEl.classList.contains('active');
     const type=buttonEl.getAttribute('data-type');
@@ -130,8 +136,14 @@ function vhlToggleClick(e){
 
 //------------------------------------------------------------------------------
 function pdaToggleClick(e){
-    const buttonEl= e.target;
-    const buttonId = buttonEl.getAttribute('data-customId');
+    let buttonEl= e.target;
+    let buttonId = buttonEl.getAttribute('data-customId');
+    if(buttonId===null || buttonId===undefined){
+        setTimeout(() => {
+            buttonEl= e.target;
+            buttonId = buttonEl.getAttribute('data-customId');
+        }, 50);
+    }
     const [rta, vhl] = buttonId.split('-').slice(1);
     const isActive = buttonEl.classList.contains('active');
     const polyline = routePolylineMap.get(rta);
@@ -180,8 +192,9 @@ function updateTransportMap(data,first=false){
 
         const popupContent=`<div class="row d-flex justify-content-center">
                 <div class="col text-center ms-0 me-0 ms-lg-2 me-lg-2 mt-2 mb-2" data-id="${placa}" data-type="vhl" data-rta="${ruta}" data-lat="${lat}" data-lon="${lon}">
-                <img src='${SERVER_IP}/content/css/images/downarrow-50.png' class='img-arrow-${placa}' style='width:50px; height:50px; transform:rotate(${orientation}deg);'/>
-                <h4>Vehiculo: ${placa}</h4><h6>${velocidad} Km/h.</h6><label class="text-muted">( ${lat} , ${lon} ).</label></div></div>
+                <h4><b>Vehiculo</b><br>${placa}</h4>
+                <h6>${velocidad} Km/h.<img src='${SERVER_IP}/content/css/images/downarrow-50.png' class='img-arrow-${placa}' style='width:20px; height:20px; transform:rotate(${orientation}deg);'/></h6>
+                </div></div>
                 <div class="row d-flex justify-content-center">
                 <div class="col mt-2 text-center">
                 <button type="button" data-type="vhl" onclick="vhlToggleClick(event)" class="btn btn-lg custom-vhl-toggle-button" data-bs-toggle="button" data-vhl="${placa}" id="custom-${ruta}-${placa}" style="background-color:${color};">Ruta : ${ruta}</button></div>
@@ -234,7 +247,8 @@ var map;
 let config = {
     minZoom: 12,
     maxZoom: 18,
-    preferCanvas: true
+    preferCanvas: true,
+    attributionControl: false
 };
 
 let zoom = 16;
@@ -261,7 +275,7 @@ const vehicleMap = new Map();
 
 const busIcon = L.icon({
     iconUrl: `${SERVER_IP}/content/css/images/bus-50.png`,
-    iconSize: [24, 24], // size of the icon
+    iconSize: [20, 20], // size of the icon
 });
 
 const redMarkerIcon = L.icon({
@@ -305,13 +319,15 @@ fetch(`${SERVER_IP}/API/trp/getStatic`, {
                 const vehiculos_activos = rutaInfo[4];
                 
                 const contentPopup = `<div class="row d-flex justify-content-center">
-                        <div class="col text-center ms-0 me-0 ms-lg-2 me-lg-2 mt-2 mb-2" data-id="${routeName}" data-type="rta"><h4>Ruta: ${routeName}.</h4></div>
+                        <div class="col text-center ms-0 me-0 ms-lg-2 me-lg-2 mt-2" data-id="${routeName}" data-type="rta"><h4><b>Ruta</b><br>${routeName}</h4></div>
                         </div>
                         <div class="row d-flex justify-content-center">
-                        <div class="col text-center ms-0 me-0 ms-lg-2 me-lg-2 mt-2 mb-2">
-                            <p>Inicia en: <b>${desde}</b>. <br>Termina en: <b>${hasta}</b>.</p>
-                            <p>Distancia total: <b>${distancia_total} metros</b>.</p>
-                            <p>Autobuses activos: <b>${vehiculos_activos}</b>.</p>
+                        <div class="col text-center ms-0 me-0 ms-lg-2 me-lg-2">
+                            <p class="h6">
+                            <small class="text-muted">Inicia en:</small> ${desde}. <br>
+                            <small class="text-muted">Termina en:</small> ${hasta}.<br>
+                            <small class="text-muted">Distancia total:</small> ${distancia_total} metros.<br>
+                            <small class="text-muted">Autobuses activos:</small> ${vehiculos_activos}.</p>
                         </div></div>`;
 
                 const popup = L.popup({
@@ -343,7 +359,7 @@ fetch(`${SERVER_IP}/API/trp/getStatic`, {
         for (let i = 0; i < res.paradas.length; i++) {
             
             const popupContent=`<div class="row d-flex justify-content-center">
-                    <div class="col text-center ms-0 me-0 ms-lg-2 me-lg-2 mt-2 mb-2" data-id="${res.paradas[i].id}" data-type="pda" data-lat="${res.paradas[i].lat}" data-lon="${res.paradas[i].lon}"><h4>Parada: ${res.paradas[i].dsc}.</h4><label class="text-muted">( ${res.paradas[i].lat} , ${res.paradas[i].lon} ).</label></div></div>`;
+                    <div class="col text-center ms-0 me-0 ms-lg-2 me-lg-2 mt-2 mb-2" data-id="${res.paradas[i].id}" data-type="pda" data-lat="${res.paradas[i].lat}" data-lon="${res.paradas[i].lon}"><h4><b>Parada</b><br>${res.paradas[i].dsc}</h4><label class="text-muted">( ${res.paradas[i].lat} , ${res.paradas[i].lon} ).</label></div></div>`;
             
             const popup = L.popup({
                 pane: "fixed",
@@ -387,7 +403,7 @@ if (navigator.geolocation) {
             className: "popup-fixed test",
             autoPan: false
         }).setContent(`<div class="row d-flex justify-content-center">
-                <div class="col text-center mt-2 mb-2" data-id='' data-lat=${lat} data-lon=${lng} data-type='myloc' ><h4>Mi Ubicación.</h4><label class="text-muted">( ${lat} , ${lng} ).</label><br>
+                <div class="col text-center mt-2" data-id='' data-lat=${lat} data-lon=${lng} data-type='myloc' ><h4>Mi Ubicación.</h4>
                 </div></div>`);
 
         marker.bindPopup(popup).on("click", fitBoundsPadding);
@@ -418,8 +434,9 @@ if (navigator.geolocation) {
             autoPan: false,
         }).setContent(`
                 <div class="row d-flex justify-content-center">
-                <div class="col text-center  mt-2 mb-2" data-id='' data-type='loc_def'>
-                    <h4>Ubicación por defecto.</h4><label class="text-muted">( ${lat} , ${lng} ).</label><br><p>Para obtener su ubicación actual acepte los permisos de localización y recargue la plataforma.</p>
+                <div class="col text-center  mt-2" data-id='' data-type='loc_def'>
+                    <h4>Ubicación por defecto.</h4>
+                    <p>Para obtener su ubicación actual acepte los permisos de localización y recargue la plataforma.</p>
                 </div></div>`);
 
         marker.bindPopup(popup).on("click", fitBoundsPadding);
@@ -475,9 +492,9 @@ map.on('popupopen', function(event) {
 
             const newContent = `
                     <div class="row d-flex justify-content-center">
-                    <div class="col text-center mt-2 mb-2">
+                    <div class="col text-center mt-2">
+                    <h6>La parada más cercana:</h6>
                     <button type="button" id="center-link-pd${locId}" class="btn btn-primary" data-lat="${locLat}" data-lon="${locLon}">
-                        <h6>La parada más cercana:</h6>
                         <h6><b>${locName} a ${locDistance} Mts</b></h6>
                     </button>
                     </div>
@@ -522,7 +539,7 @@ map.on('popupopen', function(event) {
                 const newContent = `
                     <div class="row d-flex justify-content-center">
                     <div class="col text-center mt-2">
-                    <button type="button" data-type="pda" onclick="pdaToggleClick(event)" data-pdaId="${idPda}" data-customId="custom-${rta}-${vhl}" data-vhl-lat="${vhlLat}" data-vhl-lon="${vhlLon}" id="${idElement}" class="btn ${vhl!==null?'custom-toggle-button':''} btn-lg" style="background-color:${color};" ${vhl!==null?'data-bs-toggle="button"':''}>Ruta: ${rta} | ${vhl!==null? minutos + " min" :"No disponible hoy"}</button>
+                    <button type="button" data-type="pda" onclick="pdaToggleClick(event)" data-pdaId="${idPda}" data-customId="custom-${rta}-${vhl}" data-vhl-lat="${vhlLat}" data-vhl-lon="${vhlLon}" id="${idElement}" class="btn ${vhl!==null?'custom-toggle-button':''} btn-lg" style="background-color:${color};" ${vhl!==null?'data-bs-toggle="button"':''}>Ruta: ${rta}&nbsp....&nbsp<b>${vhl!==null? minutos + " min" :"n/a"}</b></button>
                     </div></div>`;
                   
                 popupNode.innerHTML += newContent;  
@@ -546,7 +563,7 @@ map.on('popupopen', function(event) {
                     if(minutos<=0) minutos=0;
                     const color=routeColorMap.get(rta);
                     const idElement=`custom-${rta}-${vhl}`.replace(' ','').replace(/[`~!@#$%^&*()_|+\=?;:'",.<>\{\}\[\]\\\/]/gi, '');
-                    $('#'+idElement).html(`Ruta: ${rta} | ${vhl!==null? minutos + " min" :"No disponible hoy"}`);
+                    $('#'+idElement).html(`Ruta: ${rta}&nbsp....&nbsp<b>${vhl!==null? minutos + " min" :"n/a"}</b>`);
                     $('#'+idElement).attr("data-vhl-lat",`"${vhlLat}"`);
                     $('#'+idElement).attr("data-vhl-lon",`"${vhlLon}"`);
                 }
