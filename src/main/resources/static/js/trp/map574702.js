@@ -98,13 +98,7 @@ function getCenterOfMap() {
 //------------------------------------------------------------------------------
 function vhlToggleClick(e){
     let buttonEl= e.target;
-    let buttonId = buttonEl.id;
-    if(buttonId===null || buttonId===undefined){
-        setTimeout(() => {
-            buttonEl= e.target;
-            buttonId = buttonEl.id;
-        }, 50);
-    }
+    let buttonId = buttonEl.getAttribute('data-customId');
     const [rta, vhl] = buttonId.split('-').slice(1);
     const isActive = buttonEl.classList.contains('active');
     const type=buttonEl.getAttribute('data-type');
@@ -138,12 +132,6 @@ function vhlToggleClick(e){
 function pdaToggleClick(e){
     let buttonEl= e.target;
     let buttonId = buttonEl.getAttribute('data-customId');
-    if(buttonId===null || buttonId===undefined){
-        setTimeout(() => {
-            buttonEl= e.target;
-            buttonId = buttonEl.getAttribute('data-customId');
-        }, 50);
-    }
     const [rta, vhl] = buttonId.split('-').slice(1);
     const isActive = buttonEl.classList.contains('active');
     const polyline = routePolylineMap.get(rta);
@@ -179,6 +167,10 @@ function pdaToggleClick(e){
 
 //------------------------------------------------------------------------------
 function updateTransportMap(data,first=false){
+    
+    if(!first) removeVehicle(data);
+    
+    
     for (let i = 0; i < data.length; i++) {
             
         const placa=data[i][0];
@@ -197,7 +189,7 @@ function updateTransportMap(data,first=false){
                 </div></div>
                 <div class="row d-flex justify-content-center">
                 <div class="col mt-2 text-center">
-                <button type="button" data-type="vhl" onclick="vhlToggleClick(event)" class="btn btn-lg custom-vhl-toggle-button" data-bs-toggle="button" data-vhl="${placa}" id="custom-${ruta}-${placa}" style="background-color:${color};">Ruta : ${ruta}</button></div>
+                <button type="button" data-type="vhl" onclick="vhlToggleClick(event)" class="btn btn-lg custom-vhl-toggle-button" data-bs-toggle="button" data-vhl="${placa}" data-customId="custom-${ruta}-${placa}" id="custom-${ruta}-${placa}" style="background-color:${color};">Ruta : ${ruta}</button></div>
                 </div>`;
 
 
@@ -239,6 +231,17 @@ function updateTransportMap(data,first=false){
 }
 //------------------------------------------------------------------------------
 
+function removeVehicle(data){    
+    const transformedData = data.map(item => item[0]);
+    for (let key of vehicleMap.keys()) {
+        if (!transformedData.includes(key)) {
+            map.removeLayer(vehicleMap.get(key)); 
+            vehicleMap.delete(key);
+        }
+    }
+}
+
+//------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 //---------DECLARACION DEL MAPA-------------------------------------------------
 //------------------------------------------------------------------------------
