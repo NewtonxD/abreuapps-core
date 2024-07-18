@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 public interface LocVehiculoRepo extends JpaRepository<LocVehiculo, Long>{
     
     @Query(
-        value = "select tl.*,vhl.* "
+        value = "select tl.* "
                 + " from transport.trp_loc tl inner join transport.vhl vhl on tl.placa_pl=vhl.pl "
                 + " where tl.placa_pl = :placa order by tl.id desc limit 1 ",
         nativeQuery = true

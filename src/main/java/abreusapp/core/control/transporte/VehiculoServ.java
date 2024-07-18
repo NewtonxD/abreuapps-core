@@ -27,6 +27,11 @@ public class VehiculoServ {
     }
     
     @Transactional
+    public void procesarVehiculoSinActividad(){
+        repo.stopAllWithoutActivity();
+    }
+    
+    @Transactional
     @CacheEvict(value={"Vehiculos","RutasInfo"},allEntries = true)
     public void guardar(Vehiculo gd, Usuario usuario,boolean existe){
         
