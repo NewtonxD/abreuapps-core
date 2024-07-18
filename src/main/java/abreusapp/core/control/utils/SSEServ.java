@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.CloseNowException;
 import org.springframework.scheduling.annotation.Async;
@@ -75,7 +73,7 @@ public class SSEServ {
                 } catch (IOException ex) {
                     val.getValue().complete();
                     emitters.remove(val.getKey());
-                    Logger.getLogger(SSEServ.class.getName()).log(Level.SEVERE, null, ex);
+                    //Logger.getLogger(SSEServ.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
@@ -94,7 +92,7 @@ public class SSEServ {
                 } catch (IOException ex) {
                     val.getValue().complete();
                     pdaInfoEmitters.remove(val.getKey());
-                    Logger.getLogger(SSEServ.class.getName()).log(Level.SEVERE, null, ex);
+                    //Logger.getLogger(SSEServ.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
@@ -112,7 +110,7 @@ public class SSEServ {
                 } catch (IOException ex) {
                     val.getValue().complete();
                     trpInfoEmitters.remove(val.getKey());
-                    Logger.getLogger(SSEServ.class.getName()).log(Level.SEVERE, null, ex);
+                    //Logger.getLogger(SSEServ.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
