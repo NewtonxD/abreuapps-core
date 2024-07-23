@@ -1,4 +1,8 @@
 
+        
+var notificacion=new Audio(`${SERVER_IP}/content/audio/n44.mp3`);
+notificacion.volume=1;
+
 function dataPrepare(idForm){
     let d=$("#"+idForm).serializeArray();
     $("#"+idForm+" input[type=checkbox]").each(function() {
@@ -27,16 +31,13 @@ function createEventSource() {
         if (data['U']!==undefined && data['U']!==null) {
           // Buscar y actualizar la fila correspondiente en la tabla
           $(`#table tbody tr[data-id="${ data['U'][SSE_PK]}"]`).replaceWith(createTableRow(data['U']));
-        } else {  
-            if($(`#table tbody tr[data-id="${ data['I'][SSE_PK] }"]`)===undefined){
+        } else { 
+            if($(`#table tbody tr[data-id="${ data['I'][SSE_PK] }"]`).length===0){
                 let t=$('#table').DataTable();
                 t.row.add($(createTableRow(data["I"])));
                 t.draw();
             }
         }
-        
-        let notificacion=new Audio(`${SERVER_IP}/content/audio/n44.mp3`);
-        notificacion.volume=1;
         notificacion.play();
         
     };

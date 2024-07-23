@@ -1,6 +1,7 @@
 package abreusapp.core.control;
 
 import abreusapp.core.control.general.ConfServ;
+import abreusapp.core.control.transporte.LogVehiculoServ;
 import abreusapp.core.control.usuario.Usuario;
 import abreusapp.core.control.usuario.AccesoServ;
 import abreusapp.core.control.usuario.UsuarioServ;
@@ -34,6 +35,8 @@ public class MainCntr {
     
     private final PasswordEncoder passwordEncoder;
     
+    private final LogVehiculoServ LogVehiculoServicio;
+    
     private final ConfServ confServ;
     
     
@@ -51,6 +54,7 @@ public class MainCntr {
             ).get().isCredentialsNonExpired()
         ) return "redirect:/main/changePwd";
         
+        model.addAttribute("vhl_log",LogVehiculoServicio.consultar(100));
         model.addAttribute("datos_personales",u.getPersona());
         model.addAllAttributes(confServ.consultarConfMap());
         model.addAllAttributes(AccesosServicio.consultarAccesosMenuUsuario(u.getId()));
