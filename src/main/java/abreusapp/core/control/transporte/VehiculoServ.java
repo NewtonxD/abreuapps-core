@@ -32,7 +32,7 @@ public class VehiculoServ {
     }
     
     @Transactional
-    @CacheEvict(value={"Vehiculos","RutasInfo"},allEntries = true)
+    @CacheEvict(value={"Vehiculos","RutasInfo","LogVehiculo"},allEntries = true)
     public void guardar(Vehiculo gd, Usuario usuario,boolean existe){
         
         if(existe){ 

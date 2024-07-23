@@ -1,6 +1,7 @@
 package abreusapp.core.control.utils;
 
 import abreusapp.core.control.general.DatoDTO;
+import abreusapp.core.control.transporte.LogVehiculoDTO;
 import abreusapp.core.control.transporte.ParadaDTO;
 import abreusapp.core.control.transporte.RutaDTO;
 import abreusapp.core.control.transporte.VehiculoDTO;
@@ -34,7 +35,8 @@ public class NotificationHandler implements Consumer<PGNotification> {
             entry("public.usr", "usrmgr"),
             entry("transport.vhl", "vhl"),
             entry("transport.pda", "pda"),
-            entry("transport.rta", "rta")
+            entry("transport.rta", "rta"),
+            entry("transport.vhl_log", "vhl_log")
     );
 
     private final Map<String, Class> DOMINIO_VS_DTO = Map.ofEntries(
@@ -42,7 +44,8 @@ public class NotificationHandler implements Consumer<PGNotification> {
             entry("usrmgr", UsuarioDTO.class),
             entry("vhl", VehiculoDTO.class),
             entry("pda", ParadaDTO.class),
-            entry("rta", RutaDTO.class)
+            entry("rta", RutaDTO.class),
+            entry("vhl_log", LogVehiculoDTO.class)
     );
 
     @Override
