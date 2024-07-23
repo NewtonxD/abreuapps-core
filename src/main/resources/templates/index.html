@@ -25,6 +25,9 @@
     </head>
 
     <body class="fondo-bonito-paginas">
+        <script th:src="@{/content/js/lib/jquery-3.6.4.min.js}"></script>
+        <script th:src="@{/content/js/lib/jquery.dataTables.min.js}"></script>
+        <script th:src="@{/content/js/lib/bootstrap.bundle.min.js}"></script>
         <script th:src="@{/content/js/global_vars.js}"></script>
         <div th:replace="~{fragments/general.html :: header}"></div>
         <div id="layoutSidenav">
@@ -37,10 +40,7 @@
             </div>
             <div class="overlay" onclick="hideSidebar()"></div>
         </div>
-        <script th:src="@{/content/js/lib/bootstrap.bundle.min.js}"></script>
-        <script th:src="@{/content/js/lib/jquery-3.6.4.min.js}"></script>
         <script th:src="@{/content/js/checkstatus.js}"></script>
-        <script th:src="@{/content/js/lib/jquery.dataTables.min.js}"></script>
         <script th:src="@{/content/js/scripts.js}"></script>
         <script th:src="@{/content/js/access.js}"></script>
         <script th:src="@{/content/js/context-loading.js}"></script>
