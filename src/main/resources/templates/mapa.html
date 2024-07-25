@@ -20,12 +20,18 @@
         <link rel="stylesheet" th:href="@{/content/css/leaflet.css}"/>
     </head>
     <body>
+        <div id="loading">
+        </div>
         <div aria-live="polite" aria-atomic="true" class="position-relative">
             <div id="toast-container" class="toast-container top-0 end-0 p-3"></div>
         </div>
         <div id="map">
         </div>
-        
+        <script>
+            $(window).on('load', function () {
+              $('#loading').hide();
+            }) 
+        </script>
         <script th:src="@{/content/js/global_vars.js}"></script>
         <script async th:src="@{/content/js/checkstatus.js}"></script>
         <script th:src="@{/content/js/lib/leaflet.js}" ></script>
