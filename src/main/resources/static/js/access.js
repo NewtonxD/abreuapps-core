@@ -80,7 +80,7 @@ function post_plantilla(LINK,DATA){
                 window.location.href=`${SERVER_IP}/auth/login?logout=true`;
             
             fadeout.then(function(){
-                var fadein=$("#content-page").html(response).fadeIn(100).promise();
+                var fadein=$("#content-page").replaceWith(response).fadeIn(100).promise();
 
                 fadein.then(function(){
                     $("#content-page").css("overflow-y","hidden");
@@ -123,7 +123,7 @@ function get_plantilla(LINK){
 
             fadeout.then(function(){
 
-                var fadein=$("#content-page").html(xhr).fadeIn(100).promise();
+                var fadein=$("#content-page").replaceWith(xhr).fadeIn(100).promise();
 
                 fadein.then(function(){
                     $("#content-page").css("overflow-y","hidden");

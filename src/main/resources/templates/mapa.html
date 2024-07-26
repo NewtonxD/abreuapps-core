@@ -13,7 +13,7 @@
             />
         <meta name="description" content="Dashboard - Inicio" />
         <meta name="author" content="Carlos Isaac Abreu Pérez" />
-        <title>Mapa</title>
+        <title>OMSA - Mapa</title>
         <link rel="icon" type="image/x-icon" th:href="@{/content/favicon.ico}"/>
         <link rel="stylesheet" th:href="@{/content/css/bootstrap.min.css}"  media="none" onload="if(media!='all')media='all'" />
         <link th:href="@{/content/css/mapa_estilos.css}" rel="stylesheet" />
@@ -21,6 +21,8 @@
     </head>
     <body>
         <div id="loading">
+            <img  width="64px" height="64px" th:src="@{/content/assets/img/Omsafooter.webp}" alt="OMSA"/>
+            <span id="loader" style="margin-top: 4px;"></span>
         </div>
         <div aria-live="polite" aria-atomic="true" class="position-relative">
             <div id="toast-container" class="toast-container top-0 end-0 p-3"></div>
@@ -28,9 +30,11 @@
         <div id="map">
         </div>
         <script>
-            $(window).on('load', function () {
-              $('#loading').hide();
-            }) 
+            window.addEventListener('load', function () {
+                setTimeout(function () {
+                    document.getElementById('loading').style.display = 'none';
+                }, 1500);
+            });
         </script>
         <script th:src="@{/content/js/global_vars.js}"></script>
         <script async th:src="@{/content/js/checkstatus.js}"></script>
