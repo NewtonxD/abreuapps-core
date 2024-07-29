@@ -106,9 +106,49 @@ html,
 }
 
 .leaflet-touch .back-to-home {
-  width: 34px;
-  height: 34px;
+  width: 30px;
+  height: 30px;
+  text-align: center;
 }
+
+.leaflet-touch .back-to-home:hover,
+.leaflet-touch .back-to-home:focus{
+  background-color: #f4f4f4;
+}
+
+a > svg.icon,
+a > svg.icon{
+  fill: gray;
+}
+
+a > svg.icon:hover,
+a > svg.icon:focus{
+  fill: black;
+}
+
+a.icon-google-maps{
+    box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+    border-radius: 8px !important; 
+    border: 0.5px solid #d3d3d3; 
+    width:34px;
+    height:34px; 
+    padding:0;
+    text-align: center;
+    margin-right: 20px;
+}
+
+a.icon-google-maps > img{
+    width:32px;
+    height:32px; 
+}
+
+.custom-fixed{
+    position: sticky;
+    right: 10px;
+    bottom: 30px;
+    left: 0;
+}
+
 
 .hidden {
   display: none;
