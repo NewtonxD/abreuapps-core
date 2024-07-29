@@ -190,7 +190,7 @@ function updateTransportMap(data,first=false){
                 <div class="row d-flex justify-content-center">
                 <div class="col mt-2 text-center">
                 <button type="button" data-type="vhl" onclick="vhlToggleClick(event)" class="btn btn-lg custom-vhl-toggle-button" data-bs-toggle="button" data-vhl="${placa}" data-customId="custom-${ruta}-${placa}" id="custom-${ruta}-${placa}" style="background-color:${color};">Ruta : ${ruta}</button></div>
-                </div>`;
+                </div>${getButtonGM(lat,lon)}`;
 
 
         if(first){
@@ -392,11 +392,15 @@ if (navigator.geolocation) {
         lng = position.coords["longitude"];
         
         const home ='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M32 18.451L16 6.031 0 18.451v-5.064L16 .967l16 12.42zM28 18v12h-8v-8h-8v8H4V18l12-9z" /></svg>';
-
+        
+        const homeBtn = `<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="16" height="16" viewBox="0 0 32 32">
+                            <path d="M32 18.451L16 6.031 0 18.451v-5.064L16 .967l16 12.42zM28 18v12h-8v-8h-8v8H4V18l12-9z" />
+                        </svg>`;
+        
         const marker = L.marker([lat, lng], {
               icon: L.divIcon({
                 className: "custom-icon-marker",
-                iconSize: L.point(25, 25),
+                iconSize: L.point(20, 20),
                 html: home
               })
         }).addTo(map);
@@ -407,7 +411,7 @@ if (navigator.geolocation) {
             autoPan: false
         }).setContent(`<div class="row d-flex justify-content-center">
                 <div class="col text-center mt-2" data-id='' data-lat=${lat} data-lon=${lng} data-type='myloc' ><h4>Mi Ubicación.</h4>
-                </div></div>`);
+                </div></div>${getButtonGM(lat,lng)}`);
 
         marker.bindPopup(popup).on("click", fitBoundsPadding);
         map.setView([lat, lng], zoom);
@@ -416,9 +420,9 @@ if (navigator.geolocation) {
         const customControl = L.Control.extend({
             options: {position: "topleft"},
             onAdd: function () {
-                const btn = L.DomUtil.create("button");
+                const btn = L.DomUtil.create("a");
                 btn.title = "Inicio";
-                btn.innerHTML = home;
+                btn.innerHTML = homeBtn;
                 btn.className += "leaflet-bar back-to-home hidden";
                 return btn;
             },
@@ -440,7 +444,8 @@ if (navigator.geolocation) {
                 <div class="col text-center  mt-2" data-id='' data-type='loc_def'>
                     <h4>Ubicación por defecto.</h4>
                     <p>Para obtener su ubicación actual acepte los permisos de localización y recargue la plataforma.</p>
-                </div></div>`);
+                </div></div>${getButtonGM(lat,lng)}
+                `);
 
         marker.bindPopup(popup).on("click", fitBoundsPadding);
         map.setView([lat, lng], zoom);
@@ -501,7 +506,7 @@ map.on('popupopen', function(event) {
                         <h6><b>${locName} a ${locDistance} Mts</b></h6>
                     </button>
                     </div>
-                    </div>
+                    </div>${getButtonGM(parseFloat(this.getAttribute('data-lat')),parseFloat(this.getAttribute('data-lon')))}
             `;
 
             // Append the new content to the existing popup content
@@ -549,11 +554,11 @@ map.on('popupopen', function(event) {
                 
             }
             
+            popupNode.innerHTML +=`${getButtonGM(lat,lon)}`;
+            
             ssePda = new EventSource(`${SERVER_IP}/p/see/pdaInfo?clientId=${clientId}-${id}`,{withCredentials:false});
             
             ssePda.onmessage = function(event) {
-                const dataa = JSON.parse(event.data); 
-                console.log(dataa);
                 for(let i=0;i<dataa.length;i++){
                     const data = dataa[i];
                     const vhl=data[1];
