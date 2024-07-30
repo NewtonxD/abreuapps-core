@@ -1,6 +1,6 @@
-//const SERVER_IP="https://3c53e981ee43d3.lhr.life";
+const SERVER_IP="https://102ca866c9be22.lhr.life";
 //const SERVER_IP="https://192.168.100.76:8090";
-const SERVER_IP="http://localhost:8090";
+//const SERVER_IP="http://localhost:8090";
 const TILE_API_IP=SERVER_IP+"/API/tiles/{z}/{x}/{y}";
 const GOOGLE_MAPS_LINK='https://maps.google.com/maps?q=';// -36.623758386860175, 174.5020302019307;
 const TILE_CACHE_NAME = 'tile-cache';
@@ -19,9 +19,7 @@ function getLinkGM(lat, lon){
 }
 
 function getButtonGM(lat,lon){
-    return `<div class="row d-flex justify-content-end custom-fixed"><div class="col text-end">
-            <a href="#" class="btn icon-google-maps" onclick="getLinkGM('${lat}','${lon}')"><img src="${SERVER_IP}/content/assets/img/google-maps1.webp"/></a>
-            </div></div>`;
+    return `<a href="#" class="btn icon-google-maps" onclick="getLinkGM('${lat}','${lon}')"><img src="${SERVER_IP}/content/assets/img/google-maps1.webp"/></a>`;
 }
 
 function showToast(message, type) {
