@@ -105,8 +105,8 @@ public class APITransporteCntr {
                 valido=false;
             }
 
-            if (! v.get().getEstado().getDato().equals("Estacionado") ) {
-                mensaje = "Debe Detener el vehiculo para poder Iniciar!";
+            if (! (v.get().getEstado().getDato().equals("Estacionado") || v.get().getEstado().getDato().equals("Averiado")) ) {
+                mensaje = "Presione Detener primero, y luego Iniciar.";
                 valido=false;
             }
         }

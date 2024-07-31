@@ -184,13 +184,13 @@ function updateTransportMap(data,first=false){
 
         const popupContent=`<div class="row d-flex justify-content-center">
                 <div class="col text-center ms-0 me-0 ms-lg-2 me-lg-2 mt-2 mb-2" data-id="${placa}" data-type="vhl" data-rta="${ruta}" data-lat="${lat}" data-lon="${lon}">
-                <h4><b>Vehiculo</b><br>${placa}</h4>
+                <h4><b>Vehiculo</b><br>${placa}</h4>${getButtonGM(lat,lon)}
                 <h6>${velocidad} Km/h.<img src='${SERVER_IP}/content/css/images/downarrow-50.png' class='img-arrow-${placa}' style='width:20px; height:20px; transform:rotate(${orientation}deg);'/></h6>
                 </div></div>
                 <div class="row d-flex justify-content-center">
                 <div class="col mt-2 text-center">
                 <button type="button" data-type="vhl" onclick="vhlToggleClick(event)" class="btn btn-lg custom-vhl-toggle-button" data-bs-toggle="button" data-vhl="${placa}" data-customId="custom-${ruta}-${placa}" id="custom-${ruta}-${placa}" style="background-color:${color};">Ruta : ${ruta}</button></div>
-                </div>${getButtonGM(lat,lon)}`;
+                </div>`;
 
 
         if(first){
@@ -362,7 +362,7 @@ fetch(`${SERVER_IP}/API/trp/getStatic`, {
         for (let i = 0; i < res.paradas.length; i++) {
             
             const popupContent=`<div class="row d-flex justify-content-center">
-                    <div class="col text-center ms-0 me-0 ms-lg-2 me-lg-2 mt-2 mb-2" data-id="${res.paradas[i].id}" data-type="pda" data-lat="${res.paradas[i].lat}" data-lon="${res.paradas[i].lon}"><h4><b>Parada</b><br>${res.paradas[i].dsc}</h4><label class="text-muted">( ${res.paradas[i].lat} , ${res.paradas[i].lon} ).</label></div></div>`;
+                    <div class="col text-center ms-0 me-0 ms-lg-2 me-lg-2 mt-2 mb-2" data-id="${res.paradas[i].id}" data-type="pda" data-lat="${res.paradas[i].lat}" data-lon="${res.paradas[i].lon}"><h4><b>Parada</b><br>${res.paradas[i].dsc}</h4>${getButtonGM(res.paradas[i].lat,res.paradas[i].lon)}</div></div>`;
             
             const popup = L.popup({
                 pane: "fixed",
@@ -410,8 +410,8 @@ if (navigator.geolocation) {
             className: "popup-fixed test",
             autoPan: false
         }).setContent(`<div class="row d-flex justify-content-center">
-                <div class="col text-center mt-2" data-id='' data-lat=${lat} data-lon=${lng} data-type='myloc' ><h4>Mi Ubicación.</h4>
-                </div></div>${getButtonGM(lat,lng)}`);
+                <div class="col text-center mt-2" data-id='' data-lat=${lat} data-lon=${lng} data-type='myloc' ><h4>Mi ubicación</h4>${getButtonGM(lat,lng)}
+                </div></div>`);
 
         marker.bindPopup(popup).on("click", fitBoundsPadding);
         map.setView([lat, lng], zoom);
@@ -442,9 +442,9 @@ if (navigator.geolocation) {
         }).setContent(`
                 <div class="row d-flex justify-content-center">
                 <div class="col text-center  mt-2" data-id='' data-type='loc_def'>
-                    <h4>Ubicación por defecto.</h4>
+                    <h4>Ubicación por defecto</h4>${getButtonGM(lat,lng)}
                     <p>Para obtener su ubicación actual acepte los permisos de localización y recargue la plataforma.</p>
-                </div></div>${getButtonGM(lat,lng)}
+                </div></div>
                 `);
 
         marker.bindPopup(popup).on("click", fitBoundsPadding);
@@ -503,10 +503,10 @@ map.on('popupopen', function(event) {
                     <div class="col text-center mt-2">
                     <h6>La parada más cercana:</h6>
                     <button type="button" id="center-link-pd${locId}" class="btn btn-primary" data-lat="${locLat}" data-lon="${locLon}">
-                        <h6><b>${locName} a ${locDistance} Mts</b></h6>
+                        <b>${locName} a ${locDistance} Mts</b>
                     </button>
                     </div>
-                    </div>${getButtonGM(parseFloat(this.getAttribute('data-lat')),parseFloat(this.getAttribute('data-lon')))}
+                    </div>
             `;
 
             // Append the new content to the existing popup content
@@ -553,8 +553,6 @@ map.on('popupopen', function(event) {
                 popupNode.innerHTML += newContent;  
                 
             }
-            
-            popupNode.innerHTML +=`${getButtonGM(lat,lon)}`;
             
             ssePda = new EventSource(`${SERVER_IP}/p/see/pdaInfo?clientId=${clientId}-${id}`,{withCredentials:false});
             
