@@ -1,4 +1,4 @@
-const SERVER_IP="https://102ca866c9be22.lhr.life";
+const SERVER_IP="https://5b0b421922a80c.lhr.life";
 //const SERVER_IP="https://192.168.100.76:8090";
 //const SERVER_IP="http://localhost:8090";
 const TILE_API_IP=SERVER_IP+"/API/tiles/{z}/{x}/{y}";
