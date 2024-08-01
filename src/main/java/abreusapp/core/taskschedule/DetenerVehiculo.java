@@ -13,15 +13,13 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class DetenerVehiculo {
         
-        private final VehiculoServ VehiculoServicio;
+    private final VehiculoServ VehiculoServicio;
 
-	@Scheduled(
-            timeUnit = TimeUnit.MINUTES, 
-            fixedRate = 1
-        ) public void detenerVehiculosSinActividad() {
-            VehiculoServicio.procesarVehiculoSinActividad();
-	}
+    @Scheduled(timeUnit = TimeUnit.MINUTES, fixedRate = 1) 
+    public void detenerVehiculosSinActividad() {
+        VehiculoServicio.procesarVehiculoSinActividad();
+    }
+    
 }
