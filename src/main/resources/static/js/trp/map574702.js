@@ -86,7 +86,7 @@ function getCenterOfMap() {
 
     map.addEventListener('moveend', () => {
         const {lat: latCenter, lng: lngCenter} = map.getCenter();
-
+        
         const latC = latCenter.toFixed(3) * 1;
         const lngC = lngCenter.toFixed(3) * 1;
 
@@ -284,6 +284,48 @@ const redMarkerIcon = L.icon({
     iconAnchor: [12, 41] // size of the icon
 });
 
+const popupInfo = L.popup({
+    pane: "fixed",
+    className: "popup-fixed test",
+    autoPan: false
+}).setContent(getInformationPopup());
+
+const markerInfo=L.marker([1,1]).bindPopup(popupInfo).addTo(map);
+
+const infoButton = L.Control.extend({
+    options: {
+        position: 'topleft'
+    },
+    onAdd: function() {
+        
+        let container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
+        
+        let button = L.DomUtil.create('a', 'button-information', container);
+        button.innerHTML = 'i';
+        button.href = '#';
+        button.title = 'Información';                
+        L.DomEvent.on(button, 'click', function(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            if(markerInfo.isPopupOpen()){
+                markerInfo.closePopup();
+            }else{
+                var layerPoint = map.latLngToLayerPoint(map.getBounds().getNorthEast());
+                layerPoint.x -= 60; 
+                layerPoint.y += 60; 
+                var newLatLng = map.layerPointToLatLng(layerPoint);
+                markerInfo.setLatLng(newLatLng).openPopup();
+            }
+        });
+
+        return container;
+    }
+});
+
+// Add the custom button to the map
+map.addControl(new infoButton());
+
+
 fetch(`${SERVER_IP}/API/trp/getStatic`, { method: 'GET'}).then(response => response.json()).then(res => {
     if (res.rutasLoc !== null && res.rutasLoc !== undefined) {
         const routePointsMap = new Map();
@@ -399,7 +441,7 @@ if (navigator.geolocation) {
                 const btn = L.DomUtil.create("a");
                 btn.title = "Inicio";
                 btn.innerHTML = homeBtnSvg;
-                btn.className += "leaflet-bar back-to-home hidden";
+                btn.className += "leaflet-bar leaflet-control back-to-home hidden";
                 return btn;
             },
         });
@@ -429,7 +471,9 @@ map.on('popupopen', function (event) {
     const popupNode = event.popup._contentNode.querySelector('div[data-id]');
     const id = popupNode.getAttribute('data-id');
     const type = popupNode.getAttribute('data-type');
-    map.flyTo(event.popup.getLatLng(), 18);
+    
+    if(type!=='info')
+        map.flyTo(event.popup.getLatLng(), 18);
 
     let data = {id: id, type: type};
 

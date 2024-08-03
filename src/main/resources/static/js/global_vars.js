@@ -45,6 +45,10 @@ function getRoutePopup(routeName,desde,hasta,distancia_total,vehiculos_activos){
      <div class="col text-center ms-0 me-0 ms-lg-2 me-lg-2"><p class="h6"><small class="text-muted">Inicia en:</small> ${desde}. <br><small class="text-muted">Termina en:</small> ${hasta}.<br><small class="text-muted">Distancia total:</small> ${distancia_total} metros.<br><small class="text-muted">Autobuses activos:</small> ${vehiculos_activos}.</p></div></div>`;
 }
 
+function getInformationPopup(){
+    return `<div class="row d-flex justify-content-center"><div class="col text-center  mt-2" data-id='' data-type='info'><h4>Información</h4><p>Este es un nuevo popup para las informaciones dle sistema.</p></div></div>`;
+}
+
 function getNearestParadePopup(locId,locLat,locLon,locName,locDistance){
     return `<div class="row d-flex justify-content-center"><div class="col text-center mt-2"><h6>La parada más cercana:</h6><button type="button" id="center-link-pd${locId}" class="btn btn-primary" data-lat="${locLat}" data-lon="${locLon}"><b>${locName} a ${locDistance} Mts</b></button></div></div>`;
 }
