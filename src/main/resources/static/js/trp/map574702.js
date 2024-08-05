@@ -271,8 +271,8 @@ const routePolylineMap = new Map();
 const vehicleMap = new Map();
 
 const homeSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M32 18.451L16 6.031 0 18.451v-5.064L16 .967l16 12.42zM28 18v12h-8v-8h-8v8H4V18l12-9z" /></svg>';
-const homeBtnSvg = `<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="16" height="16" viewBox="0 0 32 32"><path d="M32 18.451L16 6.031 0 18.451v-5.064L16 .967l16 12.42zM28 18v12h-8v-8h-8v8H4V18l12-9z" /></svg>`;
-
+const homeBtnSvg = '<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="16" height="16" viewBox="0 0 32 32"><path d="M32 18.451L16 6.031 0 18.451v-5.064L16 .967l16 12.42zM28 18v12h-8v-8h-8v8H4V18l12-9z" /></svg>';
+const infoBtnSvg ='<svg xmlns="http://www.w3.org/2000/svg" class="icon" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,256,256" width="16" height="16"><g fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><g transform="scale(5.12,5.12)"><path d="M25,2c-12.6907,0 -23,10.3093 -23,23c0,12.69071 10.3093,23 23,23c12.69071,0 23,-10.30929 23,-23c0,-12.6907 -10.30929,-23 -23,-23zM25,4c11.60982,0 21,9.39018 21,21c0,11.60982 -9.39018,21 -21,21c-11.60982,0 -21,-9.39018 -21,-21c0,-11.60982 9.39018,-21 21,-21zM25,11c-1.65685,0 -3,1.34315 -3,3c0,1.65685 1.34315,3 3,3c1.65685,0 3,-1.34315 3,-3c0,-1.65685 -1.34315,-3 -3,-3zM21,21v2h1h1v13h-1h-1v2h1h1h4h1h1v-2h-1h-1v-15h-1h-4z"></path></g></g></svg>';
 const busIcon = L.icon({
     iconUrl: `${SERVER_IP}/content/css/images/bus-50.png`,
     iconSize: [20, 20], // size of the icon
@@ -284,13 +284,19 @@ const redMarkerIcon = L.icon({
     iconAnchor: [12, 41] // size of the icon
 });
 
+const invisibleMarkerIcon = L.icon({
+    iconUrl: `${SERVER_IP}/content/css/images/invisible.webp`,
+    iconSize: [1, 1],
+    iconAnchor: [1, 1] // size of the icon
+});
+
 const popupInfo = L.popup({
     pane: "fixed",
     className: "popup-fixed test",
     autoPan: false
 }).setContent(getInformationPopup());
 
-const markerInfo=L.marker([1,1]).bindPopup(popupInfo).addTo(map);
+const markerInfo=L.marker([1,1],{icon:invisibleMarkerIcon}).bindPopup(popupInfo).addTo(map);
 
 const infoButton = L.Control.extend({
     options: {
@@ -301,7 +307,7 @@ const infoButton = L.Control.extend({
         let container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
         
         let button = L.DomUtil.create('a', 'button-information', container);
-        button.innerHTML = 'i';
+        button.innerHTML = infoBtnSvg;
         button.href = '#';
         button.title = 'Información';                
         L.DomEvent.on(button, 'click', function(e) {
@@ -612,6 +618,7 @@ map.on('popupclose', function (event) {
 
         });
     }
+    if(type==='info') markerInfo.setLatLng([1,1]);
 });
 
 //------------------------------------------------------------------------------
