@@ -1,6 +1,11 @@
 package abreusapp.core.control;
 
+import abreusapp.core.control.general.PublicidadDTO;
+import abreusapp.core.control.general.PublicidadServ;
 import abreusapp.core.control.utils.SSEServ;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,13 +29,44 @@ public class PublicCntr {
     
     private final SSEServ SSEServicio;
     
-   
+    private final PublicidadServ PublicidadServicio;
+
+//----------------------------------------------------------------------------//
+//--------------ENDPOINTS PUBLICIDAD PUBLICO----------------------------------//
+//----------------------------------------------------------------------------//
+    @GetMapping(value="/p/pub/{tipo}")
+    public Map<String, Object> consultarPublicidad(@PathVariable String tipo){
+        PublicidadDTO publicidad = PublicidadServicio.obtenerUltimo();
+        PublicidadServicio.IncrementarVistas(publicidad.id());
+        Map<String,Object> respuesta=new HashMap();
+        try {
+            Map<String,Object> archivo=PublicidadServicio.obtenerArchivoPublicidad(publicidad, tipo);
+            if(archivo!=null){
+                respuesta.put("datos", archivo);
+            }
+        } catch (IOException ex) {
+            return null;
+        }
+        respuesta.put("id",publicidad.id());
+        respuesta.put("titulo",publicidad.tit());
+        respuesta.put("descripcion",publicidad.dsc());
+        respuesta.put("link_destino",publicidad.lnk_dst());
+        return respuesta;
+    }
+    
+//----------------------------------------------------------------------------//
+    @GetMapping(value="/p/pub/click/{id}")
+    public void aumentarClicksPublicidad(@PathVariable Long id){
+        PublicidadServicio.IncrementarClics(id);;
+    }
+    
+    
 //----------------------------------------------------------------------------//
 //--------------ENDPOINTS SERVER SIDE EVENTS----------------------------------//
 //----------------------------------------------------------------------------//
     
     @GetMapping(value = "/p/see/{nombre}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public SseEmitter consultarSSE(
+    public SseEmitter solicitarSSE(
         @RequestParam String clientId,
         @PathVariable String nombre
     ) {        

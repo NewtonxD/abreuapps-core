@@ -163,6 +163,9 @@ public class AppConf {
         caches.add(buildCache("Usuarios", Duration.ofHours(8)));
         caches.add(buildCache("LogVehiculo", Duration.ofHours(8)));
         
+        caches.add(buildCache("Publicidad", Duration.ofMinutes(6)));
+        caches.add(buildCache("PublicidadArchivo", Duration.ofMinutes(6)));
+        
         SimpleCacheManager cacheManager = new SimpleCacheManager();
         cacheManager.setCaches(caches);
 
