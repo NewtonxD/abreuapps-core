@@ -3,7 +3,6 @@ package abreusapp.core.taskschedule;
 import abreusapp.core.control.transporte.VehiculoServ;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 

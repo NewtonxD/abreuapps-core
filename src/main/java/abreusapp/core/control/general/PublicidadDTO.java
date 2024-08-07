@@ -5,7 +5,6 @@
 package abreusapp.core.control.general;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  *
@@ -17,10 +16,5 @@ public record PublicidadDTO(
     String dsc,
     String lg_img_vid,
     String sm_img_vid,
-    String lnk_dst,
-    Date dt_str,
-    Date dt_fin,
-    Integer cnt_clk,
-    Integer cnt_view,
-    Boolean act
+    String lnk_dst
 ) implements Serializable {}

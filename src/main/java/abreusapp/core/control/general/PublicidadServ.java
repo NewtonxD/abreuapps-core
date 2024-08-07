@@ -2,13 +2,20 @@ package abreusapp.core.control.general;
 
 import abreusapp.core.control.usuario.Usuario;
 import jakarta.transaction.Transactional;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 /**
@@ -22,10 +29,8 @@ public class PublicidadServ {
     
     private final PublicidadRepo repo;
     
-    private Long PUBLICIDAD_ACTUAL;
-    
     @Transactional
-    @CacheEvict(value={"Publicidad"}, allEntries = true)
+    @CacheEvict(value={"Publicidad","PublicidadArchivos"}, allEntries = true)
     public void guardar(Publicidad gd, Usuario usuario,boolean existe){
         
         if(existe){ 
@@ -42,14 +47,45 @@ public class PublicidadServ {
         return repo.findById(id);
     }
     
-    public void IncrementarActual(){
-        repo.customIncreaseById(PUBLICIDAD_ACTUAL);
+    @Async
+    @Transactional
+    public void IncrementarVistas(Long id){
+        repo.customIncreaseViewsById(id);
+    }
+    
+    @Async
+    @Transactional
+    public void IncrementarClics(Long id){
+        repo.customIncreaseClickById(id);
+    }
+    
+    public void procesarPublicidadFinalizada(){
+        repo.stopAllOutDated();
     }
     
     @Cacheable(value="Publicidad")
     public PublicidadDTO obtenerUltimo(){
-        PublicidadDTO d=repo.customFindAll();
-        PUBLICIDAD_ACTUAL=d.id();
-        return d;
+        return repo.customFindAll();
+    }
+    
+    @Cacheable(value="PublicidadArchivos")
+    public Map<String,Object> obtenerArchivoPublicidad(PublicidadDTO publicidad,String tipo) throws IOException{
+        String archivo = tipo.equals("sm") ? publicidad.sm_img_vid() : publicidad.lg_img_vid();
+        
+        if( archivo.equals("") ) 
+            archivo = tipo.equals("lg") ? publicidad.sm_img_vid() : publicidad.lg_img_vid();
+        
+        Path path = Paths.get(archivo);
+        if (! Files.exists(path)) {
+            return null;
+        }
+        String contentType=Files.probeContentType(path);
+        if (contentType == null) {
+            contentType = "application/octet-stream";
+        }
+        Map<String, Object> m = new HashMap<>();
+        m.put("archivo", new FileSystemResource(path).getContentAsByteArray());
+        m.put("media-type",MediaType.parseMediaType(contentType));
+        return m;
     }
 }

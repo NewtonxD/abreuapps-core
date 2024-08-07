@@ -18,16 +18,19 @@ public interface PublicidadRepo extends JpaRepository<Publicidad, Long> {
             + "p.descripcion,"
             + "p.lg_imagen_video_direccion,"
             + "p.sm_imagen_video_direccion,"
-            + "p.link_destino,"
-            + "p.fecha_inicio,"
-            + "p.fecha_fin,"
-            + "p.conteo_clic,"
-            + "p.conteo_view,"
-            + "p.activo"
-            + ") FROM Publicidad p order by p.conteo_view asc limit 1")
+            + "p.link_destino"
+            + ") FROM Publicidad p WHERE p.activo ORDER BY p.conteo_view ASC LIMIT 1")
     PublicidadDTO customFindAll();
     
     @Modifying
-    @Query(value=" update public.pub set cnt_clic=cnt_clic+1 where id=?1 ",nativeQuery = true)
-    void customIncreaseById(Long id);
+    @Query(value=" UPDATE public.pub SET cnt_view=cnt_view+1 WHERE id=?1 ",nativeQuery = true)
+    void customIncreaseViewsById(Long id);
+    
+    @Modifying
+    @Query(value=" UPDATE public.pub SET cnt_clk=cnt_clk+1 WHERE id=?1 ",nativeQuery = true)
+    void customIncreaseClickById(Long id);
+    
+    @Modifying
+    @Query(value=" UPDATE public.pub SET act=false WHERE CURRENT_DATE>dt_fin AND act ",nativeQuery = true)
+    void stopAllOutDated();
 }

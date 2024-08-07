@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.FileSystemResource;
@@ -40,15 +39,10 @@ public class TilesCntr {
         if (!Files.exists(path)) {
             path = Paths.get(TILE_DIRECTORY+"/default_tile.webp");
         }
-        
-        FileSystemResource file = new FileSystemResource(path);
 
-        byte [] content = new byte[(int)file.contentLength()];
-        IOUtils.readFully(file.getInputStream(), content);
-        
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(new MediaType("image","webp"));
-        return new ResponseEntity<>(content, headers, HttpStatus.OK);
+        return new ResponseEntity<>(new FileSystemResource(path).getContentAsByteArray(), headers, HttpStatus.OK);
     }
 
 //----------------------------------------------------------------------------//    
