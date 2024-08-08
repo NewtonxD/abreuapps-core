@@ -51,7 +51,7 @@
                 <span class="fs-4 fw-semibold" th:text="${appnombre}"></span>
             </a>
             <ul class="nav list-unstyled ps-0">
-                <li class="mb-1" th:if="${trp_principal}">                       
+                <li class="mt-1" th:if="${trp_principal}">                       
                     <button
                         class="nav-link btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed "
                         type="button"
@@ -208,6 +208,37 @@
                             </li>
                         </ul>
                     </div> 
+                </li>
+                <li th:if="${pub_principal}" class="me-1">                       
+                    <button
+                        class="nav-link btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed "
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapseLayouts5"
+                        aria-expanded="false"
+                        aria-controls="collapseLayouts5"
+                        >
+                        <i class="fa fa-solid fa-bullhorn"></i>&MediumSpace; Publicidad
+                    </button>
+                    <div
+                        class="collapse"
+                        id="collapseLayouts5"
+                        aria-labelledby="headingFifth"
+                        data-bs-parent="#sidenavAccordion"
+                        >
+                        <ul class="nav btn-toggle-nav list-unstyled fw-normal pb-1 d-block">
+                            <li th:if="${pub_publicidad_consulta}">
+                                <a class="nav-link acceso link-body-emphasis text-decoration-none rounded " href="#" id="pub_publicidad_consulta">
+                                    &MediumSpace; Publicidad
+                                </a>
+                            </li>
+                            <li th:if="${pub_publicidad_reportes}">
+                                <a class="nav-link acceso link-body-emphasis text-decoration-none rounded " href="#" id="pub_publicidad_reportes">
+                                    &MediumSpace; Reportes
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </li>
                 <li class="mb-1" th:if="${sys_principal}">                       
                     <button

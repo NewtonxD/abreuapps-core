@@ -34,7 +34,7 @@
 
                                     <div class="mb-3 col-12 col-md-6">
                                         <label for="grupo" class="form-label text-muted">Grupo:</label>
-                                        <select class="form-select custom-select" id="grupo" name="grupo.grupo" required>
+                                        <select class="form-select custom-select" id="dato_padre" name="dato_padre" required>
                                             <option value="0" selected disabled>--Seleccione--</option>
                                             <option th:value="${g.dat}" th:each="g :${grupos}" th:if="${g.act}" th:text="${g.dat}"></option>
                                         </select>
@@ -43,7 +43,7 @@
 
                                 <th:block th:if="${update}">
                                     <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" th:value="${#dates.format(dato.fecha_actualizacion, 'yyyy-MM-dd HH:mm:ss')}">
-                                    <input  type="text" name="grupo.grupo" style="display: none; width: 1px;height: 1px;" th:value="${dato.dato_padre}" required>
+                                    <input  type="text" name="dato_padre" style="display: none; width: 1px;height: 1px;" th:value="${dato.dato_padre}" required>
                                     <input type="text" style="display: none; width: 1px;height: 1px;" th:value="${dato.dato}" name="dato" required>
 
                                 <div class="mb-3 col-12 col-md-6">
@@ -54,7 +54,12 @@
                                 <div class="mb-3 col-12 col-md-6">
                                     <label for="grupo" class="form-label text-muted">Grupo:</label>
                                     <select class="form-select custom-select" disabled >
-                                        <option th:value="${g.dat}" th:selected="${g.dat.equals(dato.dato_padre)}" th:each="g :${grupos}" th:text="${g.dat}"></option>
+                                        <th:block th:if="${dato.dato_padre==null}">
+                                            <option value="0" selected disabled>--Seleccione--</option>
+                                        </th:block>
+                                        <th:block th:if="${dato.dato_padre!=null}">
+                                            <option th:value="${dato.dato_padre}" th:text="${dato.dato_padre}"></option>
+                                        </th:block>
                                     </select>        
                                 </div>
                                 </th:block>

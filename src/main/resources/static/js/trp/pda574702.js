@@ -7,7 +7,7 @@ $(document).on("click","tbody tr",function(){
 
     closeEventSource();
     
-    var data={idParada:IdParada};
+    let data={idParada:IdParada};
     
     post_plantilla("/pda/update",data);
 
