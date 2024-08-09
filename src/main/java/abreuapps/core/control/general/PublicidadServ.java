@@ -31,7 +31,7 @@ public class PublicidadServ {
     private final PublicidadRepo repo;
     
     @Cacheable(value="Publicidades")
-    public List<PublicidadDTO> obtenerTodo(){
+    public List<PublicidadDTO> consultar(){
         return repo.customFindAll();
     }
     

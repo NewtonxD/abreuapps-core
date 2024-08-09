@@ -4,6 +4,8 @@ import abreuapps.core.control.general.ConfServ;
 import abreuapps.core.control.general.DatoDTO;
 import abreuapps.core.control.general.DatoServ;
 import abreuapps.core.control.general.Persona;
+import abreuapps.core.control.general.Publicidad;
+import abreuapps.core.control.general.PublicidadServ;
 import abreuapps.core.control.transporte.Parada;
 import abreuapps.core.control.transporte.ParadaServ;
 import abreuapps.core.control.transporte.Ruta;
@@ -48,10 +50,11 @@ public class ModelServ {
             ConfServ ConfServicio,
             VehiculoServ VehiculoServicio,
             ParadaServ ParadaServicio,
-            RutaServ RutaServicio
+            RutaServ RutaServicio,
+            PublicidadServ PublicidadServicio
     ){
         this.AccesoServicio = AccesoServicio;
-        initActions( DatoServicio,UsuarioServicio, ConfServicio, VehiculoServicio, ParadaServicio, RutaServicio);
+        initActions( DatoServicio,UsuarioServicio, ConfServicio, VehiculoServicio, ParadaServicio, RutaServicio,PublicidadServicio);
     }
 
     private void initActions(
@@ -60,7 +63,8 @@ public class ModelServ {
             ConfServ ConfServicio,
             VehiculoServ VehiculoServicio,
             ParadaServ ParadaServicio,
-            RutaServ RutaServicio
+            RutaServ RutaServicio,
+            PublicidadServ PublicidadServicio
     ) {
 
         this.actions.put("dat_gen_consulta_datos", () -> {
@@ -187,6 +191,27 @@ public class ModelServ {
                 dataModel.addAllAttributes(acc);
             } catch (Exception e) {
                 log.error("Error ejecutando 'trp_rutas_registro'", e);
+            }
+        });
+        
+        this.actions.put("pub_publicidad_consulta", () -> {
+            try {
+                Map<String, Object> acc = AccesoServicio.consultarAccesosPantallaUsuario(userId, "pub_publicidad_consulta");
+                dataModel.addAttribute("publicidades", PublicidadServicio.consultar());
+                dataModel.addAllAttributes(acc);
+            } catch (Exception e) {
+                log.error("Error ejecutando 'pub_publicidad_consulta'", e);
+            }
+        });
+
+        this.actions.put("pub_publicidad_registro", () -> {
+            try {
+                Map<String, Object> acc = AccesoServicio.consultarAccesosPantallaUsuario(userId, "pub_publicidad_registro");
+                Publicidad r = new Publicidad();
+                dataModel.addAttribute("publicidad", r);
+                dataModel.addAllAttributes(acc);
+            } catch (Exception e) {
+                log.error("Error ejecutando 'pub_publicidad_registro'", e);
             }
         });
     }
