@@ -29,9 +29,10 @@
                         <form class="form-group" id="form-guardar" th:object="${publicidad}">
                             <div class="row">
                                 <!-- cambiar esta parte -->
-                                <input type="text" style="display: none; width: 1px;height: 1px;" th:if="${parada.id!=null}" id="idParada" name="id" th:value="${parada.id}" placeholder=" ... " class="form-control" aria-describedby="basic-addon4">
-
-                                <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" th:value="${#dates.format(parada.fecha_actualizacion, 'yyyy-MM-dd HH:mm:ss')}">
+                                <input type="text" style="display: none; width: 1px;height: 1px;" th:if="${publicidad.id!=null}" id="idPublicidad" name="id" th:value="${publicidad.id}" placeholder=" ... " class="form-control" aria-describedby="basic-addon4">
+                                <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" th:value="${#dates.format(publicidad.fecha_actualizacion, 'yyyy-MM-dd HH:mm:ss')}">
+                                
+                                
 
                                 <div class="col-6 d-flex justify-content-start">
                                     <div class="form-check">
