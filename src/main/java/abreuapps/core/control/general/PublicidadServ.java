@@ -76,13 +76,8 @@ public class PublicidadServ {
     }
     
     @Cacheable(value="PublicidadArchivos")
-    public Map<String,Object> obtenerArchivoPublicidad(PublicidadDTO publicidad,String tipo) throws IOException{
-        String archivo = tipo.equals("sm") ? publicidad.sm_img_vid() : publicidad.lg_img_vid();
-        
-        if( archivo.equals("") ) 
-            archivo = tipo.equals("lg") ? publicidad.sm_img_vid() : publicidad.lg_img_vid();
-        
-        Path path = Paths.get(archivo);
+    public Map<String,Object> obtenerArchivoPublicidad(String ruta) throws IOException{
+        Path path = Paths.get(ruta);
         if (! Files.exists(path)) {
             return null;
         }

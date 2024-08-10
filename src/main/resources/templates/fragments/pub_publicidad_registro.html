@@ -33,6 +33,50 @@
                                 <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" th:value="${#dates.format(publicidad.fecha_actualizacion, 'yyyy-MM-dd HH:mm:ss')}">
                                 
                                 
+                                <div class="mb-3 col-12 col-md-6">
+                                    <label for="nom-dato" class="form-label text-muted">Título:</label>
+                                    <input type="text" required class="form-control" placeholder="..."/>
+                                </div>
+                                <div class="mb-3 col-12 col-md-6">
+                                    <label for="nom-dato" class="form-label text-muted">Empresa:</label>
+                                    <select required class="form-select custom-select" >
+                                        <!--<th:block th:if="${dato.dato_padre==null}">
+                                            <option value="0" selected disabled>--Seleccione--</option>
+                                        </th:block>
+                                        <th:block th:if="${dato.dato_padre!=null}">
+                                            <option th:value="${dato.dato_padre}" th:text="${dato.dato_padre}"></option>
+                                        </th:block> -->
+                                    </select> 
+                                </div>
+                                
+                                <div class="mb-3 col-12 col-md-5">
+                                    <label for="descripcion" class="form-label text-muted">Fecha Inicial:</label>
+                                    <input required class="form-control" id="startDate" type="date"/>
+                                    <div class="alert alert-warning" role="alert" id="dateDifference" style="display: none;" ></div>
+                                </div>
+                                <div class="mb-3 mt-3 col-12 col-md-2 text-center">
+                                    <p class="text-wrap m-0">Total de Dias <br>de Vigencia: <span id="dias">0</span></p>
+                                </div>
+                                <div class="mb-3 col-12 col-md-5">
+                                    <label for="descripcion" class="form-label text-muted">Fecha Final:</label>
+                                    <input required class="form-control" id="endDate" type="date"/>
+                                </div>
+                                
+                                <div class="mb-3 col-12">
+                                    <label for="nom-dato" class="form-label text-muted">Link de Acceso:</label>
+                                    <input type="text" placeholder="https://www.ejemplo.com" class="form-control"/>
+                                </div>
+                                
+                                <div class="mb-3 col-12 upload-container">
+                                    <label for="nom-dato" class="form-label text-muted">Video o Imagen:</label>
+                                    <div class="alert alert-warning" role="alert" id="fileInfo" style="display: none;" ></div>
+                                    <input type="file" class="form-control" id="fileInput" required accept="video/mp4,image/jpeg,image/webp,image/png">
+                                </div>
+                                
+                                <div class="mb-3 col-12">
+                                    <label for="descripcion" class="form-label text-muted">Descripción:</label>
+                                    <textarea class="form-control" th:field="*{descripcion}" rows="2" maxlength="255"></textarea>
+                                </div>
 
                                 <div class="col-6 d-flex justify-content-start">
                                     <div class="form-check">
@@ -42,7 +86,6 @@
                                 </div>
 
                                 <div class="col-6 d-flex justify-content-end">
-
                                     <button type="submit" class="btn btn-primary"> 
                                         <th:block th:if="${id==null}"><b> <i class="fa fa-save"></i>
                                                 Guardar</b>
@@ -58,6 +101,7 @@
                 </div>
             </div>
         </div>
+        <script th:src="@{/content/js/pub/pub804952.js}"></script>
         <script th:src="@{/content/js/pub/svd_pub794851.js}"></script>
     </th:block>
     <th:block th:unless="${pub_publicidad_registro}" th:insert="~{error/403 :: error403}">

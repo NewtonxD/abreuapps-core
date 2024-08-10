@@ -43,11 +43,8 @@ public class Publicidad {
     @Column(name = "dsc")
     private String descripcion;
     
-    @Column(name = "lg_img_vid")
-    private String lg_imagen_video_direccion;
-    
-    @Column(name = "sm_img_vid")
-    private String sm_imagen_video_direccion;
+    @Column(name = "img_vid")
+    private String imagen_video_direccion;
     
     @Column(name = "lnk_dst")
     private String link_destino;
