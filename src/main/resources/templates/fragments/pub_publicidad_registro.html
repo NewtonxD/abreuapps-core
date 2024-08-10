@@ -40,12 +40,10 @@
                                 <div class="mb-3 col-12 col-md-6">
                                     <label for="nom-dato" class="form-label text-muted">Empresa:</label>
                                     <select required class="form-select custom-select" >
-                                        <!--<th:block th:if="${dato.dato_padre==null}">
-                                            <option value="0" selected disabled>--Seleccione--</option>
+                                        <option value="0" selected disabled>--Seleccione--</option>
+                                        <th:block  th:each="c :${empresas}">
+                                            <option th:value="${c.dat}" th:selected="${publicidad.id!=null && publicidad.empresa.dato==c.dat}" th:if="${c.act}" th:text="${c.dat}"></option>
                                         </th:block>
-                                        <th:block th:if="${dato.dato_padre!=null}">
-                                            <option th:value="${dato.dato_padre}" th:text="${dato.dato_padre}"></option>
-                                        </th:block> -->
                                     </select> 
                                 </div>
                                 
@@ -70,7 +68,7 @@
                                 <div class="mb-3 col-12 upload-container">
                                     <label for="nom-dato" class="form-label text-muted">Video o Imagen:</label>
                                     <div class="alert alert-warning" role="alert" id="fileInfo" style="display: none;" ></div>
-                                    <input type="file" class="form-control" id="fileInput" required accept="video/mp4,image/jpeg,image/webp,image/png">
+                                    <input type="file" class="form-control" id="fileInput" name="archivo" required accept="video/mp4,image/jpeg,image/webp,image/png">
                                 </div>
                                 
                                 <div class="mb-3 col-12">
