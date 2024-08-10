@@ -10,8 +10,7 @@ public record PublicidadDTO(
     Long id,
     String tit,
     String dsc,
-    String lg_img_vid,
-    String sm_img_vid,
+    String img_vid,
     String lnk_dst,
     String empresa_dat
 ) implements Serializable {}

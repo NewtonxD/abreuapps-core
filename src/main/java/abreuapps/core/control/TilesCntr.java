@@ -1,12 +1,8 @@
 package abreuapps.core.control;
 
+import abreuapps.core.control.utils.FileServ;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.core.io.FileSystemResource;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,28 +17,26 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
+@RequiredArgsConstructor
 public class TilesCntr {
     
-    @Value("${abreuapps.core.map.tiles.directory}")
-    private String TILE_DIRECTORY; 
+    private final FileServ FileServicio;
 
 //----------------------------------------------------------------------------//
 //------------------ENDPOINTS TILES MAPA--------------------------------------//
 //----------------------------------------------------------------------------//
 
-    @Cacheable("Tiles")
     @GetMapping(value = "/API/tiles/{zoom}/{x}/{y}", produces = "image/webp")
-    public ResponseEntity<byte[]> getMapTile(@PathVariable int zoom, @PathVariable int x, @PathVariable int y) throws IOException {
-        String tileKey = String.format("%d/%d/%d", zoom, x, y);
-        String tilePath = String.format("%s/%s.webp", TILE_DIRECTORY, tileKey);
-        Path path = Paths.get(tilePath);
-        if (!Files.exists(path)) {
-            path = Paths.get(TILE_DIRECTORY+"/default_tile.webp");
-        }
+    public ResponseEntity<byte[]> getMapTile(@PathVariable int zoom, @PathVariable int x, @PathVariable int y)  {
+        
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(new MediaType("image","webp"));
-        return new ResponseEntity<>(new FileSystemResource(path).getContentAsByteArray(), headers, HttpStatus.OK);
+        try {
+            return new ResponseEntity<>(FileServicio.getTilesBytes(zoom, x, y), headers, HttpStatus.OK);
+        } catch (IOException ex) {
+            return new ResponseEntity<>(null, headers, HttpStatus.BAD_REQUEST);
+        }
     }
 
 //----------------------------------------------------------------------------//    

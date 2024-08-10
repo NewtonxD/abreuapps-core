@@ -40,7 +40,7 @@ public class PublicCntr {
         PublicidadServicio.IncrementarVistas(publicidad.id());
         Map<String,Object> respuesta=new HashMap();
         try {
-            Map<String,Object> archivo=PublicidadServicio.obtenerArchivoPublicidad(publicidad, tipo);
+            Map<String,Object> archivo=PublicidadServicio.obtenerArchivoPublicidad(publicidad.img_vid());
             if(archivo!=null){
                 respuesta.put("datos", archivo);
             }
