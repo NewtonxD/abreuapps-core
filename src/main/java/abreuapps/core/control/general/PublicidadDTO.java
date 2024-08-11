@@ -12,5 +12,6 @@ public record PublicidadDTO(
     String dsc,
     String img_vid,
     String lnk_dst,
-    String empresa_dat
+    String empresa_dat,
+    boolean act
 ) implements Serializable {}

@@ -6,7 +6,13 @@ import abreuapps.core.control.usuario.AccesoServ;
 import abreuapps.core.control.usuario.Usuario;
 import abreuapps.core.control.utils.DateUtils;
 import abreuapps.core.control.utils.ModelServ;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +21,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -38,15 +45,13 @@ public class PublicidadCntr {
     @Value("${abreuapps.core.files.directory}")
     private String FILE_DIRECTORY; 
     
-    //----------------------------------------------------------------------------//
-//------------------ENDPOINTS PARADAS-----------------------------------------//
-//----------------------------------------------------------------------------//
+//--------------------------------------------------------------------------------//
+//------------------ENDPOINTS PUBLICIDAD------------------------------------------//
+//--------------------------------------------------------------------------------//
     @PostMapping("/save")
-    public String GuardarParada(
+    public String GuardarPublicidad(
         Model model,
         Publicidad publicidad,
-        @RequestParam(name="archivo", 
-                        required = false) MultipartFile archivo,
         @RequestParam(name = "fecha_actualizacionn", 
                         required = false) String fechaActualizacionCliente
     ) throws ParseException {
@@ -64,40 +69,9 @@ public class PublicidadCntr {
         //USUARIO NO TIENE PERMISOS PARA EJECUTAR ESTA ACCION
         valido = sinPermisoPlantilla.equals("");
         
-        /*
-        
-            if (file.isEmpty()) {
-                return "File is empty";
-            }
-
-            try {
-                // Generate a new file name with timestamp to avoid duplication
-                String originalFilename = file.getOriginalFilename();
-                String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-                String newFilename = originalFilename.substring(0, originalFilename.lastIndexOf(".")) 
-                        + "_" + timestamp + originalFilename.substring(originalFilename.lastIndexOf("."));
-
-                // Create path for the new file
-                Path path = Paths.get(UPLOAD_DIR, newFilename);
-
-                // Move file to the specific folder
-                Files.copy(file.getInputStream(), path);
-
-                // Save the file path in a variable
-                String savedFilePath = path.toString();
-
-                return "File uploaded successfully: " + savedFilePath;
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                return "Failed to upload file";
-            }
-        
-        */
-        
         if(valido){
             
-            Optional<Publicidad> publicidadDB = PublicidadServicio.obtener(publicidad.getId());
+            Optional<Publicidad> publicidadDB = PublicidadServicio.obtener(publicidad.getId()!=null ? publicidad.getId() : 0 );
 
             if (publicidadDB.isPresent()) {
 
@@ -147,10 +121,35 @@ public class PublicidadCntr {
 
         return sinPermisoPlantilla.equals("") ? plantillaRespuesta : sinPermisoPlantilla;
 
+    }
+    
+    //----------------------------------------------------------------------------//
+    @PostMapping("/upload")
+    @ResponseBody
+    public String handleFileUpload(@RequestParam("archivo") MultipartFile file) {
+        
+        if (file.isEmpty()) {
+            return "";
+        }
+
+        try {
+            String originalFilename = file.getOriginalFilename();
+            String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+            String newFilename = originalFilename.substring(0, originalFilename.lastIndexOf(".")) 
+                    + "_" + timestamp + originalFilename.substring(originalFilename.lastIndexOf("."));
+
+            Path path = Paths.get(FILE_DIRECTORY, newFilename);
+            Files.copy(file.getInputStream(), path);
+
+            return newFilename;
+
+        } catch (IOException e) {
+            return "";
+        }
     }    
 //----------------------------------------------------------------------------//
     @PostMapping("/update")
-    public String ActualizarParada(
+    public String ActualizarPublicidad(
         Model model,
         @RequestParam("idPublicidad") Long idPublicidad
     ) {
@@ -164,7 +163,7 @@ public class PublicidadCntr {
 
         if (!publicidadDB.isPresent()) {
 
-            //log.error("Error COD: 00637 al editar parada. No encontrado ({})",idParada);
+            //log.error("Error COD: 00637 al editar Publicidad. No encontrado ({})",Publicidad);
             plantillaRespuesta = "redirect:/error";
             valido=false;
 

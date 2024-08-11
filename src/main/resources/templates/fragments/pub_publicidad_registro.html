@@ -28,18 +28,17 @@
 
                         <form class="form-group" id="form-guardar" th:object="${publicidad}">
                             <div class="row">
-                                <!-- cambiar esta parte -->
                                 <input type="text" style="display: none; width: 1px;height: 1px;" th:if="${publicidad.id!=null}" id="idPublicidad" name="id" th:value="${publicidad.id}" placeholder=" ... " class="form-control" aria-describedby="basic-addon4">
                                 <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" th:value="${#dates.format(publicidad.fecha_actualizacion, 'yyyy-MM-dd HH:mm:ss')}">
                                 
                                 
                                 <div class="mb-3 col-12 col-md-6">
                                     <label for="nom-dato" class="form-label text-muted">Título:</label>
-                                    <input type="text" required class="form-control" placeholder="..."/>
+                                    <input type="text" th:field="*{titulo}" required class="form-control" placeholder="..."/>
                                 </div>
                                 <div class="mb-3 col-12 col-md-6">
                                     <label for="nom-dato" class="form-label text-muted">Empresa:</label>
-                                    <select required class="form-select custom-select" >
+                                    <select required class="form-select custom-select" th:field="*{empresa}" >
                                         <option value="0" selected disabled>--Seleccione--</option>
                                         <th:block  th:each="c :${empresas}">
                                             <option th:value="${c.dat}" th:selected="${publicidad.id!=null && publicidad.empresa.dato==c.dat}" th:if="${c.act}" th:text="${c.dat}"></option>
@@ -49,7 +48,7 @@
                                 
                                 <div class="mb-3 col-12 col-md-5">
                                     <label for="descripcion" class="form-label text-muted">Fecha Inicial:</label>
-                                    <input required class="form-control" id="startDate" type="date"/>
+                                    <input required class="form-control" th:field="*{fecha_inicio}" id="startDate" type="date"/>
                                     <div class="alert alert-warning" role="alert" id="dateDifference" style="display: none;" ></div>
                                 </div>
                                 <div class="mb-3 mt-3 col-12 col-md-2 text-center">
@@ -57,18 +56,22 @@
                                 </div>
                                 <div class="mb-3 col-12 col-md-5">
                                     <label for="descripcion" class="form-label text-muted">Fecha Final:</label>
-                                    <input required class="form-control" id="endDate" type="date"/>
+                                    <input required th:field="*{fecha_fin}" class="form-control" id="endDate" type="date"/>
                                 </div>
                                 
                                 <div class="mb-3 col-12">
                                     <label for="nom-dato" class="form-label text-muted">Link de Acceso:</label>
-                                    <input type="text" placeholder="https://www.ejemplo.com" class="form-control"/>
+                                    <input type="text" required  th:field="*{link_destino}" placeholder="https://www.ejemplo.com" class="form-control"/>
                                 </div>
                                 
-                                <div class="mb-3 col-12 upload-container">
+                                <div class="mb-3 col-12">
                                     <label for="nom-dato" class="form-label text-muted">Video o Imagen:</label>
                                     <div class="alert alert-warning" role="alert" id="fileInfo" style="display: none;" ></div>
-                                    <input type="file" class="form-control" id="fileInput" name="archivo" required accept="video/mp4,image/jpeg,image/webp,image/png">
+                                    <input type="file" class="form-control" id="fileInput" required accept="video/mp4,image/jpeg,image/webp,image/png">
+                                    <input type="text" style="display: none;" th:field="*{imagen_video_direccion}" id="archivo" class="form-control"/>
+                                    <div id="previewContainer" class="d-flex justify-content-center" style="display: none;">
+                                        <div id="preview" class="mt-2"></div>
+                                    </div>
                                 </div>
                                 
                                 <div class="mb-3 col-12">
