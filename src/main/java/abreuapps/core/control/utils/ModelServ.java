@@ -209,6 +209,7 @@ public class ModelServ {
                 Map<String, Object> acc = AccesoServicio.consultarAccesosPantallaUsuario(userId, "pub_publicidad_registro");
                 Publicidad r = new Publicidad();
                 dataModel.addAttribute("publicidad", r);
+                dataModel.addAttribute("empresas", DatoServicio.consultarPorGrupo("Empresas"));
                 dataModel.addAllAttributes(acc);
             } catch (Exception e) {
                 log.error("Error ejecutando 'pub_publicidad_registro'", e);

@@ -7,7 +7,7 @@ $(document).on("click","tbody tr",function(){
 
     closeEventSource();
     
-    let data={IdPublicidad:IdPublicidad};
+    let data={idPublicidad:IdPublicidad};
     
     post_plantilla("/pub/update",data);
 

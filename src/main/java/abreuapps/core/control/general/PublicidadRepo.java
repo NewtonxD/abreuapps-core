@@ -19,7 +19,8 @@ public interface PublicidadRepo extends JpaRepository<Publicidad, Long> {
             + "p.descripcion,"
             + "p.imagen_video_direccion,"
             + "p.link_destino,"
-            + "p.empresa.dato"
+            + "p.empresa.dato,"
+            + "p.activo"
             + ") FROM Publicidad p WHERE p.activo ORDER BY p.conteo_view ASC LIMIT 1")
     PublicidadDTO customFindCurrent();
     
@@ -29,7 +30,8 @@ public interface PublicidadRepo extends JpaRepository<Publicidad, Long> {
             + "p.descripcion,"
             + "p.imagen_video_direccion,"
             + "p.link_destino,"
-            + "p.empresa.dato"
+            + "p.empresa.dato,"
+            + "p.activo"
             + ") FROM Publicidad p")
     List<PublicidadDTO> customFindAll();
     

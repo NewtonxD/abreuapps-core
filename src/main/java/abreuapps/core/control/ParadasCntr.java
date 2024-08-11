@@ -122,7 +122,6 @@ public class ParadasCntr {
 //----------------------------------------------------------------------------//
     @PostMapping("/update")
     public String ActualizarParada(
-        HttpServletRequest request,
         Model model,
         @RequestParam("idParada") Integer idParada
     ) {
