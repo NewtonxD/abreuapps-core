@@ -51,6 +51,8 @@ public class PublicidadServ {
         }else{
             gd.setHecho_por(usuario);
             gd.setFecha_registro(new Date());
+            gd.setConteo_clic(0);
+            gd.setConteo_view(0);
         }
         gd.setFecha_actualizacion(new Date());
         repo.save(gd);
@@ -85,6 +87,7 @@ public class PublicidadServ {
     @Cacheable(value="PublicidadArchivos")
     public Map<String, Object> obtenerArchivoPublicidad(String ruta){
         try {
+            ruta=ruta.replaceAll("[^a-zA-Z0-9.]", "");
             Path filePath = Paths.get(FILE_DIRECTORY).toAbsolutePath().normalize().resolve(ruta).normalize();
             Resource resource = new UrlResource(filePath.toUri());
             if (!resource.exists()) {

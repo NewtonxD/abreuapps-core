@@ -15,6 +15,10 @@ html,
   background-color: #F5F3F3;
 }
 
+body{
+    overflow: hidden;
+}
+
 @keyframes rotation {
     0% {
         transform: rotate(0deg);
@@ -147,3 +151,44 @@ a.icon-google-maps > img{
 .hidden {
   display: none;
 }
+
+.ad-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Asegura que esté por encima de otros elementos */
+}
+.ad-content{
+    display: inherit;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.ad-content img,
+.ad-content video {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: #F5F3F3;
+    color: lightslategray;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 50%;
+}
+

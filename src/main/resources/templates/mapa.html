@@ -27,6 +27,10 @@
         <div aria-live="polite" aria-atomic="true" class="position-relative">
             <div id="toast-container" class="toast-container top-0 end-0 p-3"></div>
         </div>
+        <div id="adContainer" class="ad-container">
+            <div id="adContent" class="ad-content"></div>
+            <button id="closeAd" class="close-btn" style="display: none;"><b>x</b></button>
+        </div>
         <div id="map">
         </div>
         <script>
@@ -40,6 +44,7 @@
         <script th:src="@{/content/js/lib/bootstrap.bundle.min.js}"></script>
         <script th:src="@{/content/js/global_vars.js}"></script>
         <script async th:src="@{/content/js/checkstatus.js}"></script>
+        <script async th:src="@{/content/js/ads.js}"></script>
         <script th:src="@{/content/js/lib/leaflet.js}" ></script>
         <script th:src="@{/content/js/lib/leaflet.Marker.SlideTo.js}" ></script>
         <script th:src="@{/content/js/fetch_cache.js}"></script>

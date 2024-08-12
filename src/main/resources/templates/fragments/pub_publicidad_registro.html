@@ -83,13 +83,13 @@
 
                                 <div class="col-6 d-flex justify-content-start">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox"  th:attr="checked=${id!=null?activo:'true'}" name="activo" id="activo">
+                                        <input class="form-check-input" type="checkbox"  th:attr="checked=${publicidad.id!=null?publicidad.activo:'true'}" name="activo" id="activo">
                                             <label class="form-check-label text-muted" for="activo">Activo</label>
                                     </div>
                                 </div>
 
                                 <div class="col-6 d-flex justify-content-end">
-                                    <button type="submit" class="btn btn-primary"> 
+                                    <button type="submit" class="btn btn-primary" id="guardarBtn"> 
                                         <th:block th:if="${publicidad.id==null}"><b> <i class="fa fa-save"></i>
                                                 Guardar</b>
                                         </th:block>

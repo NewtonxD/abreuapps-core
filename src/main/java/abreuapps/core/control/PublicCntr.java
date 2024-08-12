@@ -3,6 +3,8 @@ package abreuapps.core.control;
 import abreuapps.core.control.general.PublicidadDTO;
 import abreuapps.core.control.general.PublicidadServ;
 import abreuapps.core.control.utils.SSEServ;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -37,14 +39,17 @@ public class PublicCntr {
 //--------------ENDPOINTS PUBLICIDAD PUBLICO----------------------------------//
 //----------------------------------------------------------------------------//
     @GetMapping(value="/p/pub/datos")
+    @ResponseBody
     public PublicidadDTO consultarDatosActualPublicidad(){
-        return PublicidadServicio.obtenerUltimo();
+        PublicidadDTO p=PublicidadServicio.obtenerUltimo();
+        PublicidadServicio.IncrementarVistas(p.id());
+        return p;
     }
     
 //-----------------------------------------------------------------------------//
     @GetMapping(value="/p/pub/archivo/{nombre}")
     public ResponseEntity<Resource> consultarArchivoActualPublicidad(@PathVariable("nombre") String nombre ){
-        Map<String,Object> archivo=PublicidadServicio.obtenerArchivoPublicidad(nombre);
+        Map<String,Object> archivo=PublicidadServicio.obtenerArchivoPublicidad(URLDecoder.decode(nombre, StandardCharsets.UTF_8) );
         if(archivo!=null)
             return ResponseEntity.ok()
                         .contentType( (MediaType) archivo.get("media-type") )
