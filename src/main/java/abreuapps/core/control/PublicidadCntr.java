@@ -1,5 +1,6 @@
 package abreuapps.core.control;
 
+import abreuapps.core.control.general.DatoServ;
 import abreuapps.core.control.general.Publicidad;
 import abreuapps.core.control.general.PublicidadServ;
 import abreuapps.core.control.usuario.AccesoServ;
@@ -41,6 +42,8 @@ public class PublicidadCntr {
     private final ModelServ ModeloServicio;
     
     private final PublicidadServ PublicidadServicio;
+    
+    private final DatoServ DatoServicio;
     
     @Value("${abreuapps.core.files.directory}")
     private String FILE_DIRECTORY; 
@@ -177,6 +180,8 @@ public class PublicidadCntr {
                     AccesoServicio.consultarAccesosPantallaUsuario(
                             usuarioLogueado.getId(), "pub_publicidad_registro" )
             );
+            
+            model.addAttribute("empresas", DatoServicio.consultarPorGrupo("Empresas"));
         }
 
         return plantillaRespuesta;

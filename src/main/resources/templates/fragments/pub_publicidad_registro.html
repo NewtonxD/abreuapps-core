@@ -66,8 +66,10 @@
                                 
                                 <div class="mb-3 col-12">
                                     <label for="nom-dato" class="form-label text-muted">Video o Imagen:</label>
-                                    <div class="alert alert-warning" role="alert" id="fileInfo" style="display: none;" ></div>
-                                    <input type="file" class="form-control" id="fileInput" required accept="video/mp4,image/jpeg,image/webp,image/png">
+                                    <th:block th:if="${publicidad.id==null}">
+                                        <div class="alert alert-warning" role="alert" id="fileInfo" style="display: none;" ></div>
+                                        <input type="file" class="form-control" id="fileInput" required accept="video/mp4,image/jpeg,image/webp,image/png">
+                                    </th:block>
                                     <input type="text" style="display: none;" th:field="*{imagen_video_direccion}" id="archivo" class="form-control"/>
                                     <div id="previewContainer" class="d-flex justify-content-center" style="display: none;">
                                         <div id="preview" class="mt-2"></div>
@@ -88,10 +90,10 @@
 
                                 <div class="col-6 d-flex justify-content-end">
                                     <button type="submit" class="btn btn-primary"> 
-                                        <th:block th:if="${id==null}"><b> <i class="fa fa-save"></i>
+                                        <th:block th:if="${publicidad.id==null}"><b> <i class="fa fa-save"></i>
                                                 Guardar</b>
                                         </th:block>
-                                        <th:block th:if="${id!=null}"><b> <i class="fa fa-pencil"></i>
+                                        <th:block th:if="${publicidad.id!=null}"><b> <i class="fa fa-pencil"></i>
                                                 Editar</b>
                                         </th:block>
                                     </button>
@@ -104,6 +106,9 @@
         </div>
         <script th:src="@{/content/js/pub/pub804952.js}"></script>
         <script th:src="@{/content/js/pub/svd_pub794851.js}"></script>
+        <th:block th:if="${publicidad.id!=null}">
+            <script th:src="@{/content/js/pub/pub825153.js}"></script>
+        </th:block>
     </th:block>
     <th:block th:unless="${pub_publicidad_registro}" th:insert="~{error/403 :: error403}">
     </th:block>

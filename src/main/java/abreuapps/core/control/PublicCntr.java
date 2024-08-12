@@ -3,11 +3,13 @@ package abreuapps.core.control;
 import abreuapps.core.control.general.PublicidadDTO;
 import abreuapps.core.control.general.PublicidadServ;
 import abreuapps.core.control.utils.SSEServ;
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -34,24 +36,22 @@ public class PublicCntr {
 //----------------------------------------------------------------------------//
 //--------------ENDPOINTS PUBLICIDAD PUBLICO----------------------------------//
 //----------------------------------------------------------------------------//
-    @GetMapping(value="/p/pub/{tipo}")
-    public Map<String, Object> consultarPublicidad(@PathVariable String tipo){
-        PublicidadDTO publicidad = PublicidadServicio.obtenerUltimo();
-        PublicidadServicio.IncrementarVistas(publicidad.id());
-        Map<String,Object> respuesta=new HashMap();
-        try {
-            Map<String,Object> archivo=PublicidadServicio.obtenerArchivoPublicidad(publicidad.img_vid());
-            if(archivo!=null){
-                respuesta.put("datos", archivo);
-            }
-        } catch (IOException ex) {
-            return null;
-        }
-        respuesta.put("id",publicidad.id());
-        respuesta.put("titulo",publicidad.tit());
-        respuesta.put("descripcion",publicidad.dsc());
-        respuesta.put("link_destino",publicidad.lnk_dst());
-        return respuesta;
+    @GetMapping(value="/p/pub/datos")
+    public PublicidadDTO consultarDatosActualPublicidad(){
+        return PublicidadServicio.obtenerUltimo();
+    }
+    
+//-----------------------------------------------------------------------------//
+    @GetMapping(value="/p/pub/archivo/{nombre}")
+    public ResponseEntity<Resource> consultarArchivoActualPublicidad(@PathVariable("nombre") String nombre ){
+        Map<String,Object> archivo=PublicidadServicio.obtenerArchivoPublicidad(nombre);
+        if(archivo!=null)
+            return ResponseEntity.ok()
+                        .contentType( (MediaType) archivo.get("media-type") )
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + ((Resource)archivo.get("body")).getFilename() + "\"")
+                        .body((Resource)archivo.get("body"));
+        else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        
     }
     
 //----------------------------------------------------------------------------//
