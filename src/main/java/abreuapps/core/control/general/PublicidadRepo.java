@@ -21,7 +21,7 @@ public interface PublicidadRepo extends JpaRepository<Publicidad, Long> {
             + "p.link_destino,"
             + "p.empresa.dato,"
             + "p.activo"
-            + ") FROM Publicidad p WHERE p.activo ORDER BY p.conteo_view ASC LIMIT 1")
+            + ") FROM Publicidad p WHERE p.activo ORDER BY coalesce(p.conteo_view,0) ASC LIMIT 1")
     PublicidadDTO customFindCurrent();
     
     @Query(value="SELECT new abreuapps.core.control.general.PublicidadDTO("
@@ -36,11 +36,11 @@ public interface PublicidadRepo extends JpaRepository<Publicidad, Long> {
     List<PublicidadDTO> customFindAll();
     
     @Modifying
-    @Query(value=" UPDATE public.pub SET cnt_view=cnt_view+1 WHERE id=?1 ",nativeQuery = true)
+    @Query(value=" UPDATE public.pub SET cnt_view=coalesce(cnt_view,0)+1 WHERE id=?1 ",nativeQuery = true)
     void customIncreaseViewsById(Long id);
     
     @Modifying
-    @Query(value=" UPDATE public.pub SET cnt_clk=cnt_clk+1 WHERE id=?1 ",nativeQuery = true)
+    @Query(value=" UPDATE public.pub SET cnt_clk=coalesce(cnt_clk,0)+1 WHERE id=?1 ",nativeQuery = true)
     void customIncreaseClickById(Long id);
     
     @Modifying

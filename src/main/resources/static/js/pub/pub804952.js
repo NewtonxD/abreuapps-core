@@ -2,6 +2,7 @@
 var startDateInput = document.getElementById('startDate');
 var endDateInput = document.getElementById('endDate');
 var dateDifference = document.getElementById('dateDifference');
+var fileReader;
 
 // Configurar fechas iniciales
 var today = new Date();
@@ -84,11 +85,7 @@ document.getElementById('fileInput').addEventListener('change', function() {
         }else{
             
             const videoElement = document.createElement('video');
-            videoElement.src = URL.createObjectURL(file);
-            videoElement.controls = true;
-            
             videoElement.onloadedmetadata = function() {
-                URL.revokeObjectURL(this.src); // Clean up object URL
                 if (videoElement.duration > maxVideoDurationSec) {
                     fileInfo.textContent = 'El video no puede durar más de 30 segundos.';
                     document.getElementById('fileInput').value = '';
@@ -97,10 +94,19 @@ document.getElementById('fileInput').addEventListener('change', function() {
                     document.getElementById('fileInput').value = '';
                 }else{
                     fileInfo.textContent='';
-                    preview.appendChild(videoElement); // Mostrar el video
                     previewContainer.style.display = 'block';
                 }
             };
+            
+            videoElement.controls = true;
+            
+            fileReader = new FileReader();
+            
+            fileReader.onload = function(e) {
+                videoElement.src = e.target.result;
+            }.bind(this);
+
+            fileReader.readAsDataURL(file);
             
         }
     } else if (fileType.startsWith('image/')) {

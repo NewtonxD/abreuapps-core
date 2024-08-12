@@ -7,7 +7,7 @@ const TILE_CACHE_NAME = 'tile-cache';
 const ERROR_TOAST_INTERVAL = 6000;
 
 const BASE_LAT = 19.488365437890657;
-const BASE_LNG = -70.71529535723246;
+const BASE_LNG = -70.71529535723246;     
 
 var MY_LAT=0;
 var MY_LON=0;

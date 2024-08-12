@@ -77,6 +77,9 @@ public class PublicidadCntr {
             Optional<Publicidad> publicidadDB = PublicidadServicio.obtener(publicidad.getId()!=null ? publicidad.getId() : 0 );
 
             if (publicidadDB.isPresent()) {
+                
+                publicidad.setConteo_clic(publicidadDB.get().getConteo_clic());
+                publicidad.setConteo_view(publicidadDB.get().getConteo_view());
 
                 if (! FechaUtils.FechaFormato2.format(
                         publicidadDB.get().getFecha_actualizacion()
@@ -139,8 +142,8 @@ public class PublicidadCntr {
             String originalFilename = file.getOriginalFilename();
             String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
             String newFilename = originalFilename.substring(0, originalFilename.lastIndexOf(".")) 
-                    + "_" + timestamp + originalFilename.substring(originalFilename.lastIndexOf("."));
-
+                    + timestamp + originalFilename.substring(originalFilename.lastIndexOf("."));
+            newFilename =newFilename.replaceAll("[^a-zA-Z0-9.]", "");
             Path path = Paths.get(FILE_DIRECTORY, newFilename);
             Files.copy(file.getInputStream(), path);
 
