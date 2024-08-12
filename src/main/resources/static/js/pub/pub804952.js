@@ -58,6 +58,7 @@ endDateInput.addEventListener('change', function() {
 
 updateDateDifference();
 
+if(document.getElementById('fileInput'))
 document.getElementById('fileInput').addEventListener('change', function() {
     const file = this.files[0];
     const fileInfo = document.getElementById('fileInfo');
