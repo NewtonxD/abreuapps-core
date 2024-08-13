@@ -135,6 +135,11 @@ public class SSEServ {
     
     public SseEmitter agregar(String id,String nombre){
         Map<String,SseEmitter> emitters=obtenerEmitter(nombre);
+        
+        if(nombre.equals("trpInfo")){
+            ParadaServicio.aumentarVisitas();
+        }
+        
         if(emitters!=null){
             long timeout = 7200000;
             SseEmitter emitter = new SseEmitter(timeout);

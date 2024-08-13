@@ -8,6 +8,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 /**
@@ -41,6 +42,12 @@ public class ParadaServ {
         }
         gd.setFecha_actualizacion(new Date());
         return repo.save(gd);
+    }
+    
+    @Async
+    @Transactional
+    public void aumentarVisitas(){
+        repo.addClientVisit();
     }
     
     

@@ -26,19 +26,25 @@ function createEventSource() {
     sse.onmessage = function(event) {
   
         var data = JSON.parse(event.data); 
-
-        // Determinar si es una actualización o inserción basado en los datos recibidos
+            // Determinar si es una actualización o inserción basado en los datos recibidos
         if (data['U']!==undefined && data['U']!==null) {
-          // Buscar y actualizar la fila correspondiente en la tabla
-          $(`#table tbody tr[data-id="${ data['U'][SSE_PK]}"]`).replaceWith(createTableRow(data['U']));
+            
+            if(SSE_FK==null || data['U']["fat_dat"]==SSE_FK){
+                // Buscar y actualizar la fila correspondiente en la tabla
+                $(`#table tbody tr[data-id="${ data['U'][SSE_PK]}"]`).replaceWith(createTableRow(data['U']));
+                notificacion.play();
+            }
+            
         } else { 
-            if($(`#table tbody tr[data-id="${ data['I'][SSE_PK] }"]`).length===0){
-                let t=$('#table').DataTable();
-                t.row.add($(createTableRow(data["I"])));
-                t.draw();
+            if($(`#table tbody tr[data-id="${ data['I'][SSE_PK] }"]`).length===undefined){
+                if(SSE_FK==null || data['I']["fat_dat"]==SSE_FK){
+                    let t=$('#table').DataTable();
+                    t.row.add($(createTableRow(data["I"])));
+                    t.draw();
+                    notificacion.play();
+                }
             }
         }
-        notificacion.play();
         
     };
     

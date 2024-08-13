@@ -61,8 +61,9 @@ public class PublicCntr {
     
 //----------------------------------------------------------------------------//
     @GetMapping(value="/p/pub/click/{id}")
+    @ResponseBody
     public void aumentarClicksPublicidad(@PathVariable Long id){
-        PublicidadServicio.IncrementarClics(id);;
+        PublicidadServicio.IncrementarClics(id);
     }
     
     
