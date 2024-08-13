@@ -14,6 +14,7 @@ var MY_LON=0;
 
 var SSE_LINK=null;
 var SSE_PK=null;
+var SSE_FK=null;
 var sse = null;
 var clientId="";
 var errorToastTimeout = null;

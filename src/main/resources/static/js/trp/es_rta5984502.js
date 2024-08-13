@@ -4,6 +4,7 @@ clientId="";
 
 SSE_LINK="/see/rta";
 SSE_PK="rta";
+SSE_FK=null;
 
 function createTableRow(d) {
     return `<tr data-id="${d.rta}"><th>${d.rta}</th><td>${d.loc_ini}</td><td>${d.loc_fin}</td><td>${d.act?'Activo':'Inactivo'}</td></tr>`;

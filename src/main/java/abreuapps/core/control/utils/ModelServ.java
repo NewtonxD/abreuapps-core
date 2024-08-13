@@ -87,6 +87,26 @@ public class ModelServ {
                 log.error("Error ejecutando 'dat_gen_registro_datos'", e);
             }
         });
+        
+        this.actions.put("dat_gen_consulta_empresa", () -> {
+            try {
+                Map<String, Object> acc = AccesoServicio.consultarAccesosPantallaUsuario(userId, "dat_gen_consulta_empresa");
+                dataModel.addAllAttributes(acc);
+                dataModel.addAttribute("datos", DatoServicio.consultarPorGrupo("Empresas"));
+            } catch (Exception e) {
+                log.error("Error ejecutando 'dat_gen_consulta_empresa'", e);
+            }
+        });
+
+        this.actions.put("dat_gen_registro_empresa", () -> {
+            try {
+                Map<String, Object> acc = AccesoServicio.consultarAccesosPantallaUsuario(userId, "dat_gen_registro_empresa");
+                dataModel.addAllAttributes(acc);
+                dataModel.addAttribute("update", false);
+            } catch (Exception e) {
+                log.error("Error ejecutando 'dat_gen_registro_empresa'", e);
+            }
+        });
 
         this.actions.put("usr_mgr_principal", () -> {
             try {

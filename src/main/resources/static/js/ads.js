@@ -27,6 +27,10 @@ function displayAd() {
         videoElement.src = url;
         videoElement.controls = false;
         videoElement.autoplay = true;
+        videoElement.onclick = function() {
+            fetch(`${SERVER_IP}/p/pub/click/${adData.id}`);
+            window.open(adData.lnk_dst, '_blank');
+        };
         adContent.appendChild(videoElement);
 
         videoElement.onended = waitAndCloseAd;
@@ -34,6 +38,10 @@ function displayAd() {
         
         const imgElement = document.createElement('img');
         imgElement.src = url;
+        imgElement.onclick = function() {
+            fetch(`${SERVER_IP}/p/pub/click/${adData.id}`);
+            window.open(adData.lnk_dst, '_blank');
+        };
         adContent.appendChild(imgElement);
 
         adTimeout = setTimeout(closeAd, 60000);

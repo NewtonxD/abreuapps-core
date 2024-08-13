@@ -2,6 +2,7 @@ package abreuapps.core.control.transporte;
 
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -29,5 +30,9 @@ public interface ParadaRepo extends JpaRepository<Parada,Integer> {
     
     @Query(value="SELECT * FROM transport.get_pda_data(?1)",nativeQuery = true)
     List<Object[]> findParadaInfo(Integer idParada);
+    
+    @Modifying
+    @Query(value="insert into vis_log (dt) values (now())", nativeQuery = true)
+    void addClientVisit();
     
 }
