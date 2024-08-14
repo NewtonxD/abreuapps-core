@@ -19,5 +19,6 @@ public class FinalizarPublicidad {
     @Scheduled(timeUnit = TimeUnit.DAYS, fixedRate = 1) 
     public void FinalizarPublicidadFecha() {
         PublicidadServicio.procesarPublicidadFinalizada();
+        PublicidadServicio.procesarEstadisticas();
     }
 }
