@@ -38,6 +38,7 @@ public class NotificationHandler implements Consumer<PGNotification> {
             entry("transport.pda", "pda"),
             entry("transport.rta", "rta"),
             entry("transport.vhl_log", "vhl_log"),
+            entry("public.vis_log", "vis_log"),
             entry("public.pub", "pub")
     );
 
@@ -48,7 +49,8 @@ public class NotificationHandler implements Consumer<PGNotification> {
             entry("pda", ParadaDTO.class),
             entry("rta", RutaDTO.class),
             entry("vhl_log", LogVehiculoDTO.class),
-            entry("pub", PublicidadDTO.class)
+            entry("pub", PublicidadDTO.class),
+            entry("vis_log", DateUtils.class) //No va a hacer nada porque solo trabaja con records
     );
 
     @Override
@@ -72,10 +74,10 @@ public class NotificationHandler implements Consumer<PGNotification> {
 
                 String DBDate = FechaUtils.FromLocalDTToFormato1(jsonNode.get("timestamp").asText());
                 map.put("date", DBDate);
-
-                objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-                map.put(String.valueOf(DBOperacion), objectMapper.treeToValue(DBData, DOMINIO_VS_DTO.get(Dominio)));
-
+                if(DOMINIO_VS_DTO.get(Dominio).isRecord()){
+                    objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+                    map.put(String.valueOf(DBOperacion), objectMapper.treeToValue(DBData, DOMINIO_VS_DTO.get(Dominio)));
+                }
 
                 SSEServicio.publicar(Dominio, map);
 

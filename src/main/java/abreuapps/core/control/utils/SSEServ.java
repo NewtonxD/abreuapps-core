@@ -1,6 +1,6 @@
 package abreuapps.core.control.utils;
 
-
+import abreuapps.core.control.general.PublicidadServ;
 import abreuapps.core.control.transporte.LocVehiculoServ;
 import abreuapps.core.control.transporte.ParadaServ;
 import java.io.IOException;
@@ -41,11 +41,13 @@ public class SSEServ {
     
     private final Map<String,SseEmitter> vhlLogEmitters = new ConcurrentHashMap<>();
     
-    private final Map<String,SseEmitter> pubLogEmitters = new ConcurrentHashMap<>();
+    private final Map<String,SseEmitter> pubEmitters = new ConcurrentHashMap<>();
     
     private final ParadaServ ParadaServicio;
     
     private final LocVehiculoServ LocServicio;
+    
+    private final PublicidadServ PublicidadServicio;
     //--------------------------------------------------------------------------
     
     private Map<String,SseEmitter> obtenerEmitter(String nombre){
@@ -55,8 +57,8 @@ public class SSEServ {
             case "vhl" -> vhlEmitters;
             case "pda" -> pdaEmitters;
             case "rta" -> rtaEmitters;
-            case "vhl_log"-> vhlLogEmitters;
-            case "pub" -> pubLogEmitters;
+            case "vhl_log","vis_log" -> vhlLogEmitters;
+            case "pub" -> pubEmitters;
                 
             case "trpInfo" -> trpInfoEmitters;
             case "pdaInfo" -> pdaInfoEmitters;
@@ -68,7 +70,14 @@ public class SSEServ {
     
     @Async
     public void publicar(String nombre,HashMap<String, Object> Datos){
+        
         Map<String,SseEmitter> emitters=obtenerEmitter(nombre);
+        
+        if(nombre.equals("vis_log")){
+            Datos.put("total_views_today", PublicidadServicio.getTotalViewsHoy());
+            Datos.put("total_active_views", trpInfoEmitters.size());
+        }
+        
         if(emitters!=null){
             for (Map.Entry<String,SseEmitter> val : emitters.entrySet()) {
                 try {
@@ -137,7 +146,7 @@ public class SSEServ {
         Map<String,SseEmitter> emitters=obtenerEmitter(nombre);
         
         if(nombre.equals("trpInfo")){
-            ParadaServicio.aumentarVisitas();
+            PublicidadServicio.aumentarVisitas();
         }
         
         if(emitters!=null){
@@ -148,5 +157,9 @@ public class SSEServ {
             emitters.put(id,emitter);
             return emitter ;
         }else return null;
+    }
+    
+    public int obtenerTotalClientesActivos(){
+        return trpInfoEmitters.size();
     }
 }

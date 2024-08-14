@@ -46,7 +46,7 @@
 <div id="layoutSidenav_nav" th:fragment="menu">
     <nav id="sidenavAccordion" class="bg-dark sidebar flex-shrink-0 p-3" data-bs-theme="dark">
         <div class="sb-sidenav-menu">
-            <a class="d-flex align-items-center pb-3 mb-3 text-decoration-none text-white">
+            <a class="d-flex align-items-center pb-3 mb-3 text-decoration-none text-white" th:href="@{/main/index}">
                 <img class="me-3" width="32px" height="32px" th:src="@{/content/assets/img/Omsafooter.webp}"/>
                 <span class="fs-4 fw-semibold" th:text="${appnombre}"></span>
             </a>
@@ -299,15 +299,33 @@
 
 <main th:fragment="content-default" class="main-content" id="content-page">
     <div class="container-fluid px-4">
-        <h1 class="mt-4">Dashboard</h1>
+        <!--<h1 class="mt-4">Dashboard</h1>-->
         <div class="row d-flex justify-content-center mt-2">
-            <div class="col-12 col-sm-6 col-xl-4 mt-1 mb-1">
+            <div class="col-12 col-sm-6 col-lg-4 mt-1 mb-1">
+                <div class="card">
+                    <div class="card-body text-center row align-items-center">
+                        <div class="col-12 col-lg-6"><h3 class="pt-2 pb-2">Clientes Activos</h3></div>
+                        <div class="col-12 col-lg-6"><h1 id="clientes_activos" th:text="${total_active_views}">0</h1></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-4 mt-1 mb-1">
+                <div class="card">
+                    <div class="card-body text-center row align-items-center">
+                        <div class="col-12 col-lg-6"><h3 class="pt-2 pb-2">Visitas Hoy</h3></div>
+                        <div class="col-12 col-lg-6"><h1 id="views_hoy" th:text="${total_views_today}">0</h1></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row d-flex justify-content-center mt-2">
+            <div class="col-12  col-lg-8 mt-1 mb-1">
                 <div class="card">
                     <div class="card-body text-center">
-                        <h4 class="m-1">Eventos del Transporte</h4>
+                        <h4 class="pt-2 pb-1">Eventos del Transporte</h4>
                         <div class="table-responsive table-responsive-md">
                             <table
-                                class="table table-hover table-borderless mt-2"
+                                class="table table-hover mt-2"
                                 id="table"
                                 >
                                 <thead class="bg-secondary text-white">
@@ -326,15 +344,11 @@
                                         <th scope="row" th:text="${d.id}"></th>
                                         <td>
                                         <th:block th:if='${d.estado_new=="Averiado"}'>
-                                            <div class="spinner-grow text-danger" role="status">
-                                                <span class="visually-hidden">...</span>
-                                            </div>
+                                            <img th:src="@{/content/assets/img/car-crash-icon.webp}" alt="alt" height="32" width="32"/>
                                         </th:block>
 
                                         <th:block th:if='${d.system_change}'>
-                                            <div class="spinner-grow text-warning" role="status">
-                                                <span class="visually-hidden">...</span>
-                                            </div>
+                                            <img th:src="@{/content/assets/img/bot-icon.webp}" alt="alt" height="32" width="32"/>
                                         </th:block>
                                         </td>
                                         <td th:text="${d.placa}"></td>
@@ -347,21 +361,7 @@
                             </table>
                         </div>
                         <script th:src="@{/content/js/es_dash6085603.js}"></script>
-                        <script th:src="@{/content/js/tb_init.js}"></script>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-sm-6 col-xl-4 mt-1 mb-1">
-                <div class="card">
-                    <div class="card-body">
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-sm-6 col-xl-4 mt-1 mb-1">
-                <div class="card">
-                    <div class="card-body">
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <script th:src="@{/content/js/tb_init_dashboard.js}"></script>
                     </div>
                 </div>
             </div>

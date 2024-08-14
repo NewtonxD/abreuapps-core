@@ -2,9 +2,7 @@ package abreuapps.core.control.general;
 
 import abreuapps.core.control.usuario.Usuario;
 import jakarta.transaction.Transactional;
-import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
@@ -16,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.MediaType;
@@ -77,6 +74,21 @@ public class PublicidadServ {
     @Transactional
     public void procesarPublicidadFinalizada(){
         repo.stopAllOutDated();
+    }
+    
+    @Transactional
+    public void procesarEstadisticas(){
+        repo.saveStatictics();
+    }
+    
+    @Async
+    @Transactional
+    public void aumentarVisitas(){
+        repo.addClientVisit();
+    }
+    
+    public Integer getTotalViewsHoy(){
+        return repo.consultarTotalViewsHoy();
     }
     
     @Cacheable(value="Publicidad")

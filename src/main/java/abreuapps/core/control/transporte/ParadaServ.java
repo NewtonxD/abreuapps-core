@@ -44,14 +44,6 @@ public class ParadaServ {
         return repo.save(gd);
     }
     
-    @Async
-    @Transactional
-    public void aumentarVisitas(){
-        repo.addClientVisit();
-    }
-    
-    
-    
     @Cacheable("PMC")
     public Object[] getParadaMasCercana(Double Latitud,Double Longitud){
         return repo.findParadaMasCercana(Latitud,Longitud);

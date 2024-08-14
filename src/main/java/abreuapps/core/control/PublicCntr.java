@@ -42,7 +42,7 @@ public class PublicCntr {
     @ResponseBody
     public PublicidadDTO consultarDatosActualPublicidad(){
         PublicidadDTO p=PublicidadServicio.obtenerUltimo();
-        PublicidadServicio.IncrementarVistas(p.id());
+        if(p!=null) PublicidadServicio.IncrementarVistas(p.id());
         return p;
     }
     

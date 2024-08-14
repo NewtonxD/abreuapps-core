@@ -26,7 +26,7 @@ function createEventSource() {
     sse.onmessage = function(event) {
   
         var data = JSON.parse(event.data); 
-            // Determinar si es una actualización o inserción basado en los datos recibidos
+        // Determinar si es una actualización o inserción basado en los datos recibidos
         if (data['U']!==undefined && data['U']!==null) {
             
             if(SSE_FK==null || data['U']["fat_dat"]==SSE_FK){
@@ -35,8 +35,8 @@ function createEventSource() {
                 notificacion.play();
             }
             
-        } else { 
-            if($(`#table tbody tr[data-id="${ data['I'][SSE_PK] }"]`).length===undefined){
+        } else if(data['I']!==undefined) { 
+            if(! $(`#table tbody tr[data-id="${ data['I'][SSE_PK] }"]`).length){
                 if(SSE_FK==null || data['I']["fat_dat"]==SSE_FK){
                     let t=$('#table').DataTable();
                     t.row.add($(createTableRow(data["I"])));
@@ -45,6 +45,15 @@ function createEventSource() {
                 }
             }
         }
+        
+        if(data['total_views_today']!==undefined){
+            $("#views_hoy").html(data['total_views_today']);
+        }
+        
+        if(data['total_active_views']!==undefined){
+            $("#clientes_activos").html(data['total_active_views']);
+        }
+        
         
     };
     

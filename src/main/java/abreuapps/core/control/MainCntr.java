@@ -1,11 +1,13 @@
 package abreuapps.core.control;
 
 import abreuapps.core.control.general.ConfServ;
+import abreuapps.core.control.general.PublicidadServ;
 import abreuapps.core.control.transporte.LogVehiculoServ;
 import abreuapps.core.control.usuario.Usuario;
 import abreuapps.core.control.usuario.AccesoServ;
 import abreuapps.core.control.usuario.UsuarioServ;
 import abreuapps.core.control.utils.ModelServ;
+import abreuapps.core.control.utils.SSEServ;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +39,10 @@ public class MainCntr {
     
     private final LogVehiculoServ LogVehiculoServicio;
     
+    private final PublicidadServ PublicidadServicio;
+    
+    private final SSEServ SSEServicio;
+    
     private final ConfServ confServ;
     
     
@@ -55,6 +61,8 @@ public class MainCntr {
         ) return "redirect:/main/changePwd";
         
         model.addAttribute("vhl_log",LogVehiculoServicio.consultar(100));
+        model.addAttribute("total_views_today",PublicidadServicio.getTotalViewsHoy());
+        model.addAttribute("total_active_views",SSEServicio.obtenerTotalClientesActivos());
         model.addAttribute("datos_personales",u.getPersona());
         model.addAllAttributes(confServ.consultarConfMap());
         model.addAllAttributes(AccesosServicio.consultarAccesosMenuUsuario(u.getId()));

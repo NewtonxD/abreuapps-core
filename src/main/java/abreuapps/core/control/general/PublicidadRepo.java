@@ -46,4 +46,21 @@ public interface PublicidadRepo extends JpaRepository<Publicidad, Long> {
     @Modifying
     @Query(value=" UPDATE public.pub SET act=false WHERE CURRENT_DATE>dt_fin AND act ",nativeQuery = true)
     void stopAllOutDated();
+    
+    @Modifying
+    @Query(value="""
+        DELETE FROM public.sta WHERE DATE(dt)<CURRENT_DATE and DATE(dt)>=CURRENT_DATE - interval '8 days';
+        INSERT into public.sta(dt,cnt_viw) SELECT DATE(dt) AS date, COUNT(*) AS record_count FROM public.vis_log WHERE DATE(dt)<CURRENT_DATE and DATE(dt)>=CURRENT_DATE - interval '8 days' GROUP BY DATE(dt) ORDER BY  date;
+        DELETE FROM  public.vis_log WHERE dt < CURRENT_DATE - INTERVAL '31 days';
+    """,nativeQuery = true)
+    void saveStatictics();
+    
+    @Modifying
+    @Query(value="insert into vis_log (dt) values (now())", nativeQuery = true)
+    void addClientVisit();
+    
+    @Query(value="select count(vl.id) from public.vis_log vl where vl.dt>=current_date", nativeQuery = true)
+    Integer consultarTotalViewsHoy();
+                                                                             
+
 }

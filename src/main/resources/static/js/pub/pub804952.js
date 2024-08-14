@@ -9,9 +9,6 @@ var today = new Date();
 var tomorrow = new Date();
 tomorrow.setDate(today.getDate() + 1);
 
-startDateInput.valueAsDate = today;
-endDateInput.valueAsDate = tomorrow;
-
 startDateInput.min = today.toISOString().split('T')[0];
 
 // Actualizar diferencia de fechas
@@ -56,6 +53,11 @@ endDateInput.addEventListener('change', function() {
     }
     updateDateDifference();
 });
+
+if(startDateInput.value===""){
+    startDateInput.valueAsDate = today;
+    endDateInput.valueAsDate = tomorrow;
+}
 
 updateDateDifference();
 
