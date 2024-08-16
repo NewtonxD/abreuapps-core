@@ -72,6 +72,7 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
+                
                 <dependency>
                  <groupId>org.eclipse.persistence</groupId>
                  <artifactId>jakarta.persistence</artifactId>
@@ -89,7 +90,12 @@
                     <artifactId>geoip2</artifactId>
                     <version>2.15.0</version>
                 </dependency>
-
+                
+                <dependency>
+                   <groupId>net.sf.jasperreports</groupId>
+                   <artifactId>jasperreports</artifactId>
+                   <version>6.21.2</version>
+                </dependency>
          
 	</dependencies>
         <build>

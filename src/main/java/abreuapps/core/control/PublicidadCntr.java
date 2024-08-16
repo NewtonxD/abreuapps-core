@@ -7,18 +7,22 @@ import abreuapps.core.control.usuario.AccesoServ;
 import abreuapps.core.control.usuario.Usuario;
 import abreuapps.core.control.utils.DateUtils;
 import abreuapps.core.control.utils.ModelServ;
+import abreuapps.core.control.utils.RecursoServ;
+import abreuapps.core.control.utils.ReporteServ;
+import abreuapps.core.control.utils.TipoReporte;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.ParseException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,8 +49,9 @@ public class PublicidadCntr {
     
     private final DatoServ DatoServicio;
     
-    @Value("${abreuapps.core.files.directory}")
-    private String FILE_DIRECTORY; 
+    private final RecursoServ ResourcesServicio;
+    
+    private final ReporteServ ReporteServicio;
     
 //--------------------------------------------------------------------------------//
 //------------------ENDPOINTS PUBLICIDAD------------------------------------------//
@@ -133,25 +138,7 @@ public class PublicidadCntr {
     @PostMapping("/upload")
     @ResponseBody
     public String handleFileUpload(@RequestParam("archivo") MultipartFile file) {
-        
-        if (file.isEmpty()) {
-            return "";
-        }
-
-        try {
-            String originalFilename = file.getOriginalFilename();
-            String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-            String newFilename = originalFilename.substring(0, originalFilename.lastIndexOf(".")) 
-                    + timestamp + originalFilename.substring(originalFilename.lastIndexOf("."));
-            newFilename =newFilename.replaceAll("[^a-zA-Z0-9.]", "");
-            Path path = Paths.get(FILE_DIRECTORY, newFilename);
-            Files.copy(file.getInputStream(), path);
-
-            return newFilename;
-
-        } catch (IOException e) {
-            return "";
-        }
+        return ResourcesServicio.uploadFile(file);
     }    
 //----------------------------------------------------------------------------//
     @PostMapping("/update")
@@ -190,4 +177,18 @@ public class PublicidadCntr {
         return plantillaRespuesta;
     }
 //----------------------------------------------------------------------------//
+    
+    /*@GetMapping("/report/pub_gen")
+    public ResponseEntity<Resource> employeeJasperReport24(@RequestParam("fileType") String fileType){
+
+        TipoReporte report = new TipoReporte(fileType);
+        ByteArrayResource resource = new ByteArrayResource(ReporteServicio.employeeJasperReportInBytes(fileType)); 
+        String fileName = "Reporte_General_Publicidad_" + LocalDateTime.now() + report.getExtension();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                .contentLength(resource.contentLength())
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(resource);
+        
+    }*/
 }
