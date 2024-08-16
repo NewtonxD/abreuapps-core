@@ -1,7 +1,6 @@
 package abreuapps.core.control;
 
-import abreuapps.core.control.utils.FileServ;
-import java.io.IOException;
+import abreuapps.core.control.utils.RecursoServ;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -20,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class TilesCntr {
     
-    private final FileServ FileServicio;
+    private final RecursoServ ResourcesServicio;
 
 //----------------------------------------------------------------------------//
 //------------------ENDPOINTS TILES MAPA--------------------------------------//
@@ -28,15 +27,9 @@ public class TilesCntr {
 
     @GetMapping(value = "/API/tiles/{zoom}/{x}/{y}", produces = "image/webp")
     public ResponseEntity<byte[]> getMapTile(@PathVariable int zoom, @PathVariable int x, @PathVariable int y)  {
-        
-
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(new MediaType("image","webp"));
-        try {
-            return new ResponseEntity<>(FileServicio.getTilesBytes(zoom, x, y), headers, HttpStatus.OK);
-        } catch (IOException ex) {
-            return new ResponseEntity<>(null, headers, HttpStatus.BAD_REQUEST);
-        }
+        return new ResponseEntity<>(ResourcesServicio.getTilesBytes(zoom, x, y), headers, HttpStatus.OK);
     }
 
 //----------------------------------------------------------------------------//    
