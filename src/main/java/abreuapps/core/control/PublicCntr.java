@@ -1,5 +1,6 @@
 package abreuapps.core.control;
 
+import abreuapps.core.control.general.ConfServ;
 import abreuapps.core.control.general.PublicidadDTO;
 import abreuapps.core.control.general.PublicidadServ;
 import abreuapps.core.control.utils.SSEServ;
@@ -34,6 +35,8 @@ public class PublicCntr {
     private final SSEServ SSEServicio;
     
     private final PublicidadServ PublicidadServicio;
+    
+    private final ConfServ ConfiguracionServicio;
 
 //----------------------------------------------------------------------------//
 //--------------ENDPOINTS PUBLICIDAD PUBLICO----------------------------------//
@@ -115,7 +118,8 @@ public class PublicCntr {
 //----------------------------------------------------------------------------//
     
     @GetMapping("/")
-    public String redirectLogin(){
+    public String redirectLogin(Model model){
+        model.addAttribute("server_ip",ConfiguracionServicio.consultar("serverip"));
         return "mapa";
     }    
 //----------------------------------------------------------------------------//

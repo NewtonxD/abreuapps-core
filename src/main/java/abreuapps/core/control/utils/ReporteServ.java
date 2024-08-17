@@ -25,7 +25,6 @@ import org.springframework.stereotype.Service;
 public class ReporteServ {
     
     
-    
     private byte[] exportJasperReportBytes(JasperPrint jasperPrint, TipoReporte reportType) throws JRException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         switch (reportType.getTipo()) {
