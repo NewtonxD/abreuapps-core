@@ -11,9 +11,9 @@
             name="viewport"
             content="width=device-width, initial-scale=1, shrink-to-fit=no"
             />
-        <meta name="description" content="Dashboard - Inicio" />
+        <meta name="description" content="OMSA [[${app_provincia}]] - Plataforma" />
         <meta name="author" content="Carlos Isaac Abreu Pérez" />
-        <title>Dashboard - <th:block th:text="${appnombre}"></th:block></title>
+        <title>OMSA [[${app_provincia}]] - Plataforma</title>
         <link rel="icon" type="image/x-icon" th:href="@{/content/favicon.ico}">
         <link th:href="@{/content/css/jquery.dataTables.min.css}" rel="stylesheet"/>
         <link th:href="@{/content/css/styles.css}" rel="stylesheet" />
@@ -28,6 +28,9 @@
         <script th:src="@{/content/js/lib/jquery-3.6.4.min.js}"></script>
         <script th:src="@{/content/js/lib/jquery.dataTables.min.js}"></script>
         <script th:src="@{/content/js/lib/bootstrap.bundle.min.js}"></script>
+        <script type="text/javascript">
+            const SERVER_IP = '[[${server_ip}]]';
+        </script>
         <script th:src="@{/content/js/global_vars.js}"></script>
         <div th:replace="~{fragments/general.html :: header}"></div>
         <div id="layoutSidenav">

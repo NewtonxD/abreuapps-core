@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.Resource;
@@ -31,8 +30,7 @@ public class PublicidadServ {
     
     private final PublicidadRepo repo;
     
-    @Value("${abreuapps.core.files.directory}")
-    private String FILE_DIRECTORY; 
+    private final ConfServ ConfiguracionServicio;
     
     @Cacheable(value="Publicidades")
     public List<PublicidadDTO> consultar(){
@@ -100,7 +98,7 @@ public class PublicidadServ {
     public Map<String, Object> obtenerArchivoPublicidad(String ruta){
         try {
             ruta=ruta.replaceAll("[^a-zA-Z0-9.]", "");
-            Path filePath = Paths.get(FILE_DIRECTORY).toAbsolutePath().normalize().resolve(ruta).normalize();
+            Path filePath = Paths.get(ConfiguracionServicio.consultar("serverip")).toAbsolutePath().normalize().resolve(ruta).normalize();
             Resource resource = new UrlResource(filePath.toUri());
             if (!resource.exists()) {
                 return null;

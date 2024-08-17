@@ -45,6 +45,8 @@ public class MainCntr {
     
     private final ConfServ confServ;
     
+    private final ConfServ ConfiguracionServicio;
+    
     
 //----------------------------------------------------------------------------//
 //------------------ENDPOINTS BASICOS SISTEMA---------------------------------//
@@ -66,7 +68,7 @@ public class MainCntr {
         model.addAttribute("datos_personales",u.getPersona());
         model.addAllAttributes(confServ.consultarConfMap());
         model.addAllAttributes(AccesosServicio.consultarAccesosMenuUsuario(u.getId()));
-        
+        model.addAttribute("server_ip",ConfiguracionServicio.consultar("serverip"));
         return "index";
     }
 //----------------------------------------------------------------------------//
