@@ -103,7 +103,7 @@ public class PublicCntr {
         @RequestParam(name = "logout", required = false,defaultValue = "false") boolean logout,
         Model model
     ) {
-        
+        model.addAttribute("app_provincia",ConfiguracionServicio.consultar("appprovincia"));
         if((SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken))
             return "redirect:/main/index";
         
@@ -120,6 +120,11 @@ public class PublicCntr {
     @GetMapping("/")
     public String redirectLogin(Model model){
         model.addAttribute("server_ip",ConfiguracionServicio.consultar("serverip"));
+        model.addAttribute("app_provincia",ConfiguracionServicio.consultar("appprovincia"));
+        model.addAttribute("base_dir",ConfiguracionServicio.consultar("centraldir"));
+        String baseLatLng = ConfiguracionServicio.consultar("centrallatlng");
+        model.addAttribute("base_lat",baseLatLng.split(",")[0]);
+        model.addAttribute("base_lng",baseLatLng.split(",")[1]);
         return "mapa";
     }    
 //----------------------------------------------------------------------------//

@@ -12,28 +12,27 @@
             content="width=device-width, initial-scale=1, shrink-to-fit=no"
             />
         <link rel="icon" type="image/x-icon" th:href="@{/content/favicon.ico}">
-        <meta name="description" content="Login" />
+        <meta name="description" content="Login OMSA" />
         <meta name="author" content="Carlos Isaac Abreu Pérez" />
-        <title>Login</title>
+        <title>OMSA [[${app_provincia}]] Login</title>
         <link th:href="@{/content/css/styles.css}" rel="stylesheet" />
         <link th:href="@{/content/css/bootstrap.min.css}" rel="stylesheet" />
     </head>
     <body class="secondary-color fondo-bonito">
-        <script th:src="@{/content/js/global_vars.js}"></script>
         <div id="layoutAuthentication" class="h-100">
             <div id="layoutAuthentication_content" class="h-100">
                 <main class="h-100 d-flex align-items-center justify-content-center">
-                    <div class="container">
-                        <div
+                    <div class="container"> 
+                       <div
                             class="row h-100 d-flex align-items-center justify-content-center"
                             >
                             <div class="col-10 col-lg-5">
                                 <div class="card shadow-lg border-0 rounded-lg mt-5">
                                     <form method="post">
                                         <div class="card-body">
-                                            <div class="d-flex justify-content-around py-3 mb-3">
-                                                <img  width="64px" height="64px" th:src="@{/content/assets/img/Omsafooter.webp}" alt="OMSA"/>
-                                                <h2 class="my-4">Login</h2>
+                                            <div class="d-flex justify-content-between align-middle py-3 mb-3">
+                                                <h2 class="ms-2">Login<br/><span th:text="${app_provincia}"></span></h2>
+                                                <img  width="64px" height="64px" class="me-4" th:src="@{/content/assets/img/Omsafooter.webp}" alt="OMSA"/>
                                             </div>
                                             <div class="form-floating mb-3">
                                                 <input
