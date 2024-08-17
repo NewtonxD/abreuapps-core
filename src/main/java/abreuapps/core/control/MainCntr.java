@@ -62,6 +62,7 @@ public class MainCntr {
             ).get().isCredentialsNonExpired()
         ) return "redirect:/main/changePwd";
         
+        model.addAttribute("app_provincia",ConfiguracionServicio.consultar("appprovincia"));
         model.addAttribute("vhl_log",LogVehiculoServicio.consultar(100));
         model.addAttribute("total_views_today",PublicidadServicio.getTotalViewsHoy());
         model.addAttribute("total_active_views",SSEServicio.obtenerTotalClientesActivos());

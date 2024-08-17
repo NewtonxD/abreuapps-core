@@ -1,13 +1,8 @@
-//const SERVER_IP="https://5b0b421922a80c.lhr.life";
-//const SERVER_IP="https://192.168.100.76:8090";
-//const SERVER_IP="http://localhost:8090";
+
 const TILE_API_IP=SERVER_IP+"/API/tiles/{z}/{x}/{y}";
 const GOOGLE_MAPS_LINK='https://maps.google.com/maps?q=';// -36.623758386860175, 174.5020302019307;
 const TILE_CACHE_NAME = 'tile-cache';
-const ERROR_TOAST_INTERVAL = 6000;
-
-const BASE_LAT = 19.488365437890657;
-const BASE_LNG = -70.71529535723246;     
+const ERROR_TOAST_INTERVAL = 6000;  
 
 var MY_LAT=0;
 var MY_LON=0;
@@ -33,7 +28,7 @@ function getMyLocationPopup(permitted){
     if(permitted) 
         return `<div class="row d-flex justify-content-center"><div class="col text-center mt-2" data-id='' data-lat=${MY_LAT} data-lon=${MY_LON} data-type='myloc' ><h4>Mi ubicación</h4>${getButtonGM(MY_LAT, MY_LON)}</div></div>`
     else 
-        return `<div class="row d-flex justify-content-center"><div class="col text-center  mt-2" data-id='' data-type='loc_def'><h4>Ubicación por defecto</h4>${getButtonGM(BASE_LAT, BASE_LNG)}<p>Para obtener su ubicación actual acepte los permisos de localización y recargue la plataforma.</p></div></div>`;
+        return `<div class="row d-flex justify-content-center"><div class="col text-center  mt-2" data-id='' data-type='loc_def'><h4>Ubicación por defecto</h4>${getButtonGM(BASE_LAT, BASE_LNG)}<p>Para obtener su ubicación actual acepte los permisos de localización y recargue la plataforma.</p><p>Esta es la localización de la base de la OMSA: <b>${BASE_DIR}</b></p></div></div>`;
 }
 
 function getVehiclePopup(placa,ruta,lat,lon,orientation,color){

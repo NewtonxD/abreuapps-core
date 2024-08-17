@@ -11,7 +11,7 @@
             name="viewport"
             content="width=device-width, initial-scale=1, shrink-to-fit=no"
             />
-        <meta name="description" content="OMSA [[${app_provincia}]] - Mapa" />
+        <meta name="description" content="OMSA - Mapa" />
         <meta name="author" content="Carlos Isaac Abreu Pérez" />
         <title>OMSA [[${app_provincia}]] - Mapa</title>
         <link rel="icon" type="image/x-icon" th:href="@{/content/favicon.ico}"/>
@@ -45,6 +45,9 @@
         <script th:src="@{/content/js/lib/bootstrap.bundle.min.js}"></script>
         <script type="text/javascript">
             const SERVER_IP = '[[${server_ip}]]';
+            const BASE_LAT = [[${base_lat}]];
+            const BASE_LNG = [[${base_lng}]];
+            const BASE_DIR = '[[${base_dir}]]';
         </script>
         <script th:src="@{/content/js/global_vars.js}"></script>
         <script async th:src="@{/content/js/checkstatus.js}"></script>
