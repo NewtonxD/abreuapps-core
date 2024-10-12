@@ -210,6 +210,32 @@
                         </ul>
                     </div> 
                 </li>
+                <li class="me-1" th:if="${inv_principal}">                       
+                    <button
+                        class="nav-link btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed "
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapseLayouts6"
+                        aria-expanded="false"
+                        aria-controls="collapseLayouts6"
+                        >
+                        <i class="fa fa-solid fa-archive"></i>&MediumSpace; Inventario
+                    </button>
+                    <div
+                        class="collapse"
+                        id="collapseLayouts6"
+                        aria-labelledby="headingSix"
+                        data-bs-parent="#sidenavAccordion"
+                        >
+                        <ul class="nav btn-toggle-nav list-unstyled fw-normal pb-1 d-block">
+                            <li th:if="${inv_producto_consulta}">
+                                <a class="nav-link acceso link-body-emphasis text-decoration-none rounded " href="#" id="inv_producto_consulta">
+                                    &MediumSpace; Productos
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
                 <li th:if="${pub_principal}" class="me-1">                       
                     <button
                         class="nav-link btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed "
@@ -246,6 +272,7 @@
                         </ul>
                     </div>
                 </li>
+                
                 <li class="mb-1" th:if="${sys_principal}">                       
                     <button
                         class="nav-link btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed "

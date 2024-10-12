@@ -2,6 +2,7 @@ package abreuapps.core.control.utils;
 
 import abreuapps.core.control.general.DatoDTO;
 import abreuapps.core.control.general.PublicidadDTO;
+import abreuapps.core.control.inventario.ProductoDTO;
 import abreuapps.core.control.transporte.LogVehiculoDTO;
 import abreuapps.core.control.transporte.ParadaDTO;
 import abreuapps.core.control.transporte.RutaDTO;
@@ -39,7 +40,8 @@ public class NotificationHandler implements Consumer<PGNotification> {
             entry("transport.rta", "rta"),
             entry("transport.vhl_log", "vhl_log"),
             entry("public.vis_log", "vis_log"),
-            entry("public.pub", "pub")
+            entry("public.pub", "pub"),
+            entry("inventory.prd","prd")
     );
 
     private final Map<String, Class> DOMINIO_VS_DTO = Map.ofEntries(
@@ -50,7 +52,8 @@ public class NotificationHandler implements Consumer<PGNotification> {
             entry("rta", RutaDTO.class),
             entry("vhl_log", LogVehiculoDTO.class),
             entry("pub", PublicidadDTO.class),
-            entry("vis_log", DateUtils.class) //No va a hacer nada porque solo trabaja con records
+            entry("vis_log", DateUtils.class), //No va a hacer nada porque solo trabaja con records
+            entry("prd",ProductoDTO.class)
     );
 
     @Override

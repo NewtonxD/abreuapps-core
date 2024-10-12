@@ -6,7 +6,6 @@ import abreuapps.core.control.usuario.AccesoServ;
 import abreuapps.core.control.usuario.Usuario;
 import abreuapps.core.control.usuario.UsuarioServ;
 import abreuapps.core.control.utils.DateUtils;
-import abreuapps.core.control.utils.ModelServ;
 import java.text.ParseException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -31,8 +30,6 @@ public class UsuariosCntr {
 
     private final AccesoServ AccesoServicio;
 
-    private final ModelServ ModeloServicio;
-
     private final DatoServ DatoServicio;
     
     private final PersonaServ PersonaServicio;
@@ -56,9 +53,9 @@ public class UsuariosCntr {
         String plantillaRespuesta="fragments/usr_mgr_principal :: content-default";
         boolean valido;
         
-        Usuario usuarioLogueado= ModeloServicio.getUsuarioLogueado();
+        Usuario usuarioLogueado= AccesoServicio.getUsuarioLogueado();
         
-        String sinPermisoPlantilla= ModeloServicio.verificarPermisos(
+        String sinPermisoPlantilla= AccesoServicio.verificarPermisos(
                 "usr_mgr_registro", model, usuarioLogueado );
         
         valido =  sinPermisoPlantilla.equals("");
@@ -139,7 +136,7 @@ public class UsuariosCntr {
         }
         
         if( sinPermisoPlantilla.equals("") )
-            ModeloServicio.load("usr_mgr_principal", model, usuarioLogueado.getId());
+            AccesoServicio.cargarPagina("usr_mgr_principal", model, usuarioLogueado.getId());
         
         return sinPermisoPlantilla.equals("") ? plantillaRespuesta : sinPermisoPlantilla;
     }
@@ -155,7 +152,7 @@ public class UsuariosCntr {
         String plantillaRespuesta="fragments/usr_mgr_registro :: content-default";
         boolean valido=true;
         
-        Usuario usuarioLogueado =ModeloServicio.getUsuarioLogueado();
+        Usuario usuarioLogueado =AccesoServicio.getUsuarioLogueado();
         Optional<Usuario> usuarioBD=UsuarioServicio.obtener(idUsuario); 
 
         if(!usuarioBD.isPresent()){
@@ -191,7 +188,7 @@ public class UsuariosCntr {
         boolean valido=true;
         String plantillaRespuesta="fragments/usr_mgr_registro :: content-default";
         
-        Usuario usuarioLogueado =ModeloServicio.getUsuarioLogueado();
+        Usuario usuarioLogueado =AccesoServicio.getUsuarioLogueado();
         Optional<Usuario> usuarioBD=UsuarioServicio.obtener(usuarioLogueado.getUsername()); 
  
         if(! usuarioBD.isPresent() ){
@@ -240,7 +237,7 @@ public class UsuariosCntr {
     public boolean VerificarPassword(
         @RequestParam("pwd") String password
     ){
-       Usuario usuarioLogeado=ModeloServicio.getUsuarioLogueado();
+       Usuario usuarioLogeado=AccesoServicio.getUsuarioLogueado();
        return UsuarioServicio.coincidenPassword(password,usuarioLogeado.getId());
     }
 //----------------------------------------------------------------------------//
@@ -255,11 +252,11 @@ public class UsuariosCntr {
         boolean valido;
         String plantillaRespuesta="fragments/usr_mgr_principal :: content-default";
         
-        Usuario usuarioLogeado=ModeloServicio.getUsuarioLogueado();
+        Usuario usuarioLogeado=AccesoServicio.getUsuarioLogueado();
         
         
         //VERIFICAMOS PERMISOS PARA ESTA ACCION
-        String sinPermisoPlantilla= ModeloServicio.verificarPermisos(
+        String sinPermisoPlantilla= AccesoServicio.verificarPermisos(
                 "usr_mgr_registro", model, usuarioLogeado );
         
         valido = sinPermisoPlantilla.equals("");
@@ -272,7 +269,7 @@ public class UsuariosCntr {
             model.addAttribute("status", valido);
             model.addAttribute("msg", "Sesión Cerrada Exitosamente!");
 
-            ModeloServicio.load("usr_mgr_principal", model, usuarioLogeado.getId());
+            AccesoServicio.cargarPagina("usr_mgr_principal", model, usuarioLogeado.getId());
             
         }
         return sinPermisoPlantilla.equals("") ? plantillaRespuesta : sinPermisoPlantilla;
@@ -289,10 +286,10 @@ public class UsuariosCntr {
         boolean valido;
         String plantillaRespuesta="fragments/usr_mgr_principal :: content-default";
         
-        Usuario usuarioLogeado = ModeloServicio.getUsuarioLogueado();
+        Usuario usuarioLogeado = AccesoServicio.getUsuarioLogueado();
         
         //VERIFICAMOS PERMISOS PARA ESTA ACCION
-        String sinPermisoPlantilla= ModeloServicio.verificarPermisos(
+        String sinPermisoPlantilla= AccesoServicio.verificarPermisos(
                 "usr_mgr_registro", model, usuarioLogeado );
         
         valido = sinPermisoPlantilla.equals("");
@@ -318,7 +315,7 @@ public class UsuariosCntr {
                         "Contraseña Reseteada Exitosamente! Comuniquese con el usuario para que revise su correo."
                 );
 
-                ModeloServicio.load("usr_mgr_principal", model, usuarioLogeado.getId());
+                AccesoServicio.cargarPagina("usr_mgr_principal", model, usuarioLogeado.getId());
             }
         }
         

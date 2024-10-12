@@ -6,7 +6,6 @@ import abreuapps.core.control.transporte.LogVehiculoServ;
 import abreuapps.core.control.usuario.Usuario;
 import abreuapps.core.control.usuario.AccesoServ;
 import abreuapps.core.control.usuario.UsuarioServ;
-import abreuapps.core.control.utils.ModelServ;
 import abreuapps.core.control.utils.SSEServ;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,8 +27,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequiredArgsConstructor
 @RequestMapping("/main")
 public class MainCntr {
-
-    private final ModelServ DataModelServicio;
 
     private final AccesoServ AccesosServicio;
     
@@ -55,7 +52,7 @@ public class MainCntr {
     public String MainPage(
         Model model
     ) {
-        Usuario u = DataModelServicio.getUsuarioLogueado();
+        Usuario u = AccesosServicio.getUsuarioLogueado();
         
         if (!UsuarioServicio.obtener(
                 u.getUsername()
@@ -90,8 +87,8 @@ public class MainCntr {
         @RequestParam("id") String idPage
     ) {
 
-        Usuario u = DataModelServicio.getUsuarioLogueado();
-        DataModelServicio.load(idPage, model, u.getId());
+        Usuario u = AccesosServicio.getUsuarioLogueado();
+        AccesosServicio.cargarPagina(idPage, model, u.getId());
 
         return "fragments/" + idPage + " :: content-default";
     }
@@ -101,7 +98,7 @@ public class MainCntr {
     public String changePasswordExpired(
         Model model
     ) {
-        Usuario userSession = DataModelServicio.getUsuarioLogueado();
+        Usuario userSession = AccesosServicio.getUsuarioLogueado();
         Usuario userBd = UsuarioServicio.obtener(userSession.getUsername()).get();
         userBd.setPassword("");
         model.addAttribute("usuario", userBd);
@@ -121,7 +118,7 @@ public class MainCntr {
         @RequestParam("newPassword") String newPwd
     ) {
         oldPwd = oldPwd==null ? "" : oldPwd ;
-        Usuario userSession = DataModelServicio.getUsuarioLogueado();
+        Usuario userSession = AccesosServicio.getUsuarioLogueado();
         Usuario userBd = UsuarioServicio.obtener(userSession.getUsername()).get();
         Map<String, String> respuesta= new HashMap<>();
         
@@ -154,9 +151,9 @@ public class MainCntr {
         @RequestParam Map<String,String> data
     ) {
         
-        Usuario u= DataModelServicio.getUsuarioLogueado();
+        Usuario u= AccesosServicio.getUsuarioLogueado();
         
-        String verificarPermisos= DataModelServicio.verificarPermisos("sys_configuracion", model, u);
+        String verificarPermisos= AccesosServicio.verificarPermisos("sys_configuracion", model, u);
         if (! verificarPermisos.equals("")) return verificarPermisos;
         
         confServ.GuardarTodosMap(data, u);
@@ -164,7 +161,7 @@ public class MainCntr {
         model.addAttribute("msg", "Configuración guardada exitosamente!");
            
         
-        DataModelServicio.load("sys_configuracion", model, u.getId());
+        AccesosServicio.cargarPagina("sys_configuracion", model, u.getId());
         
         return "fragments/sys_configuracion :: content-default";
 

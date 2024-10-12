@@ -5,7 +5,6 @@ import abreuapps.core.control.transporte.ParadaServ;
 import abreuapps.core.control.usuario.AccesoServ;
 import abreuapps.core.control.usuario.Usuario;
 import abreuapps.core.control.utils.DateUtils;
-import abreuapps.core.control.utils.ModelServ;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,8 +34,6 @@ public class ParadasCntr {
     private final DateUtils FechaUtils;
 
     private final AccesoServ AccesoServicio;
-
-    private final ModelServ ModeloServicio;
     
     private final ParadaServ ParadaServicio;
         
@@ -55,10 +52,10 @@ public class ParadasCntr {
         
         String plantillaRespuesta="fragments/trp_paradas_consulta :: content-default";
         
-        Usuario u = ModeloServicio.getUsuarioLogueado();
+        Usuario u = AccesoServicio.getUsuarioLogueado();
         
         //INICIO DE VALIDACIONES
-        String sinPermisoPlantilla = ModeloServicio.verificarPermisos(
+        String sinPermisoPlantilla = AccesoServicio.verificarPermisos(
             "trp_paradas_consulta", model, u );
         
         //USUARIO NO TIENE PERMISOS PARA EJECUTAR ESTA ACCION
@@ -109,7 +106,7 @@ public class ParadasCntr {
                 ParadaServicio.guardar(paradaCliente, u, paradaDB.isPresent());
                 model.addAttribute("msg", "Registro guardado exitosamente!");
 
-                ModeloServicio.load("trp_paradas_consulta", model, u.getId());
+                AccesoServicio.cargarPagina("trp_paradas_consulta", model, u.getId());
             }
             
             model.addAttribute("status", valido);
@@ -128,7 +125,7 @@ public class ParadasCntr {
         boolean valido=true;
         String plantillaRespuesta="fragments/trp_paradas_registro :: content-default";
         
-        Usuario usuarioLogueado = ModeloServicio.getUsuarioLogueado();
+        Usuario usuarioLogueado = AccesoServicio.getUsuarioLogueado();
 
         Optional<Parada> parada = ParadaServicio.obtener(idParada);
 
@@ -159,11 +156,11 @@ public class ParadasCntr {
         @RequestParam("idParada") Integer idParada
     ) {  
         boolean valido;
-        Usuario u = ModeloServicio.getUsuarioLogueado();
+        Usuario u = AccesoServicio.getUsuarioLogueado();
         
         //VERIFICAMOS PERMISOS PARA ESTA ACCION
         String sinPermisoPlantilla = 
-            ModeloServicio.verificarPermisos(
+            AccesoServicio.verificarPermisos(
             "trp_paradas_registro", null, u 
             );
         

@@ -1,11 +1,14 @@
 package abreuapps.core.control.nomina;
 
+import abreuapps.core.control.general.Dato;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -44,12 +47,15 @@ public class Empleado {
     
     @Column(name = "ap")
     private String apellido;
+    
+    @ManyToOne
+    @PrimaryKeyJoinColumn 
+    private Dato sexo;
 
-    @Column(name = "sex")
-    private String sexo;
-
-    @Column(name = "pst")
-    private String puesto;
+    
+    @ManyToOne
+    @PrimaryKeyJoinColumn 
+    private Dato puesto;
     
     @Column(name = "dt_ini")
     @Temporal(value = TemporalType.DATE)

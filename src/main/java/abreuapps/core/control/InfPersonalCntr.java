@@ -3,9 +3,9 @@ package abreuapps.core.control;
 import abreuapps.core.control.general.DatoServ;
 import abreuapps.core.control.general.Persona;
 import abreuapps.core.control.general.PersonaServ;
+import abreuapps.core.control.usuario.AccesoServ;
 import abreuapps.core.control.usuario.Usuario;
 import abreuapps.core.control.utils.DateUtils;
-import abreuapps.core.control.utils.ModelServ;
 import java.text.ParseException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,7 @@ public class InfPersonalCntr {
     
     private final DatoServ dtserv;
     
-    private final ModelServ ModeloServicio;
+    private final AccesoServ AccesoServicio;
     
 
 //----------------------------------------------------------------------------//
@@ -45,9 +45,9 @@ public class InfPersonalCntr {
         
         boolean valido;
         int idPersona=0;
-        Usuario usuarioLogueado=ModeloServicio.getUsuarioLogueado();
+        Usuario usuarioLogueado=AccesoServicio.getUsuarioLogueado();
         
-        String verificarPermisos= ModeloServicio.verificarPermisos(
+        String verificarPermisos= AccesoServicio.verificarPermisos(
                 "usr_mgr_registro", model, usuarioLogueado );
         
         valido = verificarPermisos.equals("");

@@ -10,7 +10,6 @@ import abreuapps.core.control.transporte.VehiculoServ;
 import abreuapps.core.control.usuario.AccesoServ;
 import abreuapps.core.control.usuario.Usuario;
 import abreuapps.core.control.utils.DateUtils;
-import abreuapps.core.control.utils.ModelServ;
 import jakarta.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.util.HashMap;
@@ -42,15 +41,12 @@ public class VehiculosCntr {
     private final DateUtils FechaUtils;
 
     private final AccesoServ AccesoServicio;
-
-    private final ModelServ ModeloServicio;
     
     private final VehiculoServ VehiculoServicio;
     
     private final DatoServ DatosServicio;
     
     private final LocVehiculoServ LocVehiculoServicio;
-    
 //----------------------------------------------------------------------------//
 //------------------ENDPOINTS VEHICULOS---------------------------------------//
 //----------------------------------------------------------------------------//
@@ -67,10 +63,10 @@ public class VehiculosCntr {
         
         String plantillaRespuesta="fragments/trp_vehiculo_consulta :: content-default";
         
-        Usuario u = ModeloServicio.getUsuarioLogueado();
+        Usuario u = AccesoServicio.getUsuarioLogueado();
         
         //INICIO DE VALIDACIONES
-        String sinPermisoPlantilla = ModeloServicio.verificarPermisos(
+        String sinPermisoPlantilla = AccesoServicio.verificarPermisos(
             "trp_vehiculo_registro", model, u );
         
         //USUARIO NO TIENE PERMISOS PARA EJECUTAR ESTA ACCION
@@ -123,7 +119,7 @@ public class VehiculosCntr {
                 
                 model.addAttribute("msg", "Registro guardado exitosamente!");
 
-                ModeloServicio.load("trp_vehiculo_consulta", model, u.getId());
+                AccesoServicio.cargarPagina("trp_vehiculo_consulta", model, u.getId());
             }
             
             model.addAttribute("status", valido);
@@ -146,7 +142,7 @@ public class VehiculosCntr {
         boolean valido=true;
         String plantillaRespuesta="fragments/trp_vehiculo_registro :: content-default";
         
-        Usuario usuarioLogueado = ModeloServicio.getUsuarioLogueado();
+        Usuario usuarioLogueado = AccesoServicio.getUsuarioLogueado();
 
         Optional<Vehiculo> vehiculo = VehiculoServicio.obtener(placa);
 
@@ -198,11 +194,11 @@ public class VehiculosCntr {
         @RequestParam("Marca") String marca
     ) {  
         boolean valido;
-        Usuario u = ModeloServicio.getUsuarioLogueado();
+        Usuario u = AccesoServicio.getUsuarioLogueado();
         
         //VERIFICAMOS PERMISOS PARA ESTA ACCION
         String sinPermisoPlantilla = 
-            ModeloServicio.verificarPermisos(
+            AccesoServicio.verificarPermisos(
             "trp_vehiculo_registro", null, u 
             );
         
@@ -237,11 +233,11 @@ public class VehiculosCntr {
         @RequestParam("placa") String placa
     ) {  
         boolean valido;
-        Usuario u = ModeloServicio.getUsuarioLogueado();
+        Usuario u = AccesoServicio.getUsuarioLogueado();
         
         //VERIFICAMOS PERMISOS PARA ESTA ACCION
         String sinPermisoPlantilla = 
-            ModeloServicio.verificarPermisos(
+            AccesoServicio.verificarPermisos(
             "trp_vehiculo_registro", null, u 
             );
         
