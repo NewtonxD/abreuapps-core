@@ -371,7 +371,7 @@ public class AccesoServ {
                 Map<String, Object> acc = consultarAccesosPantallaUsuario(userId, "inv_producto_registro");
                 Producto r = new Producto();
                 dataModel.addAttribute("producto", r);
-                dataModel.addAttribute("categoria", dataRepo.customFindAll("Categoria Producto",false));
+                dataModel.addAttribute("categorias", dataRepo.customFindAll("Categoria Producto",false));
                 dataModel.addAllAttributes(acc);
             } catch (Exception e) {
                 log.error("Error ejecutando 'inv_producto_registro'", e);

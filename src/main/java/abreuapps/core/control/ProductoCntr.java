@@ -7,11 +7,21 @@ import abreuapps.core.control.usuario.AccesoServ;
 import abreuapps.core.control.usuario.Usuario;
 import abreuapps.core.control.utils.DateUtils;
 import abreuapps.core.control.utils.RecursoServ;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
+import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -121,8 +131,20 @@ public class ProductoCntr {
     @PostMapping("/upload")
     @ResponseBody
     public String handleFileUpload(@RequestParam("archivo") MultipartFile file) {
-        return ResourcesServicio.uploadFile(file);
+        return ResourcesServicio.subirArchivo(file);
     }    
+    
+    //--------------------------------------------------------------------------
+    @GetMapping(value="/archivo/{nombre}")
+    public ResponseEntity<Resource> consultarArchivoActualPublicidad(@PathVariable("nombre") String nombre ){
+        Map<String,Object> archivo=ProductoServicio.obtenerArchivoProducto(URLDecoder.decode(nombre, StandardCharsets.UTF_8) );
+        if(archivo!=null)
+            return ResponseEntity.ok()
+                        .contentType( (MediaType) archivo.get("media-type") )
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + ((Resource)archivo.get("body")).getFilename() + "\"")
+                        .body((Resource)archivo.get("body"));
+        else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 //----------------------------------------------------------------------------//
     @PostMapping("/update")
     public String ActualizarPublicidad(
@@ -147,14 +169,14 @@ public class ProductoCntr {
         
         //SI TODAS LAS ANTERIORES SON VALIDAS PROCEDEMOS
         if(valido){
-            model.addAttribute("publicidad", ProductoDB.get());
+            model.addAttribute("producto", ProductoDB.get());
             
             model.addAllAttributes(
                     AccesoServicio.consultarAccesosPantallaUsuario(
                             usuarioLogueado.getId(), "inv_producto_registro" )
             );
             
-            model.addAttribute("empresas", DatoServicio.consultarPorGrupo("Empresas"));
+            model.addAttribute("categorias", DatoServicio.consultarPorGrupo("Categoria Producto"));
         }
 
         return plantillaRespuesta;

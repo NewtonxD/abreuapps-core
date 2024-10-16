@@ -135,7 +135,7 @@ public class PublicidadCntr {
     @PostMapping("/upload")
     @ResponseBody
     public String handleFileUpload(@RequestParam("archivo") MultipartFile file) {
-        return ResourcesServicio.uploadFile(file);
+        return ResourcesServicio.subirArchivo(file);
     }    
 //----------------------------------------------------------------------------//
     @PostMapping("/update")
