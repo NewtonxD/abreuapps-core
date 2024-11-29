@@ -3,7 +3,6 @@ package abreuapps.core.control;
 import abreuapps.core.control.usuario.AccesoServ;
 import abreuapps.core.control.usuario.Usuario;
 import abreuapps.core.control.usuario.UsuarioServ;
-import abreuapps.core.control.utils.ModelServ;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -30,8 +29,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class PermisosCntr {
 
     private final AccesoServ AccesoServicio;
-
-    private final ModelServ ModeloServicio;
     
     private final UsuarioServ UsuarioServicio;
 
@@ -45,10 +42,10 @@ public class PermisosCntr {
         boolean valido;
         String plantillaRespuesta="fragments/usr_mgr_permisos :: content-default";
         
-        Usuario usuarioLogeado = ModeloServicio.getUsuarioLogueado();
+        Usuario usuarioLogeado = AccesoServicio.getUsuarioLogueado();
         
         //VERIFICAMOS PERMISOS PARA ESTA ACCION
-        String sinPermisoPlantilla= ModeloServicio.verificarPermisos(
+        String sinPermisoPlantilla= AccesoServicio.verificarPermisos(
                 "usr_mgr_registro", model, usuarioLogeado );
         
         valido = sinPermisoPlantilla.equals("");
@@ -85,10 +82,10 @@ public class PermisosCntr {
     ) {  
         boolean valido;
         
-        Usuario usuarioLogeado = ModeloServicio.getUsuarioLogueado();
+        Usuario usuarioLogeado = AccesoServicio.getUsuarioLogueado();
         
         //VERIFICAMOS PERMISOS PARA ESTA ACCION
-        String sinPermisoPlantilla= ModeloServicio.verificarPermisos(
+        String sinPermisoPlantilla= AccesoServicio.verificarPermisos(
                 "usr_mgr_registro", null, usuarioLogeado );
         
         valido = sinPermisoPlantilla.equals("");
@@ -128,10 +125,10 @@ public class PermisosCntr {
         boolean valido;
         String plantillaRespuesta="fragments/usr_mgr_principal :: content-default";
         
-        Usuario usuarioLogeado= ModeloServicio.getUsuarioLogueado();
+        Usuario usuarioLogeado= AccesoServicio.getUsuarioLogueado();
         
         //VERIFICAMOS PERMISOS PARA ESTA ACCION
-        String sinPermisoPlantilla= ModeloServicio.verificarPermisos(
+        String sinPermisoPlantilla= AccesoServicio.verificarPermisos(
                 "usr_mgr_registro", model, usuarioLogeado );
         
         valido = sinPermisoPlantilla.equals("");
@@ -152,7 +149,7 @@ public class PermisosCntr {
                 AccesoServicio.GuardarTodosMap(data, usuarioBD.get());
                 model.addAttribute("msg", "Permisos guardados exitosamente!");
 
-                ModeloServicio.load("usr_mgr_principal", model, usuarioLogeado.getId());
+                AccesoServicio.cargarPagina("usr_mgr_principal", model, usuarioLogeado.getId());
 
             }
             

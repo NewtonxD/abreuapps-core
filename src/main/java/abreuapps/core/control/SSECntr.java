@@ -1,6 +1,6 @@
 package abreuapps.core.control;
 
-import abreuapps.core.control.utils.ModelServ;
+import abreuapps.core.control.usuario.AccesoServ;
 import abreuapps.core.control.utils.SSEServ;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,9 +29,9 @@ public class SSECntr {
     
     private final SSEServ SSEServicio;
     
-    private final ModelServ ModeloServicio;
+    private final AccesoServ AccesoServicio;
     
-    private static final List<String> REQUIRED_AUTH = new ArrayList<>(Arrays.asList("dtgnr" ,"usrmgr","vhl" ,"pda","rta","pub","vhl_log"));
+    private static final List<String> REQUIRED_AUTH = new ArrayList<>(Arrays.asList("dtgnr" ,"usrmgr","vhl" ,"pda","rta","pub","vhl_log","prd"));
     
     
 //----------------------------------------------------------------------------//
@@ -44,7 +44,7 @@ public class SSECntr {
         @PathVariable String nombre
     ) {
         if(REQUIRED_AUTH.contains(nombre) && 
-            ModeloServicio.getUsuarioLogueado()==null
+            AccesoServicio.getUsuarioLogueado()==null
         ) return null;
         
         return SSEServicio.agregar(clientId,nombre);
@@ -58,7 +58,7 @@ public class SSECntr {
         @PathVariable String nombre
     ) {
         if(
-            (REQUIRED_AUTH.contains(nombre) && ModeloServicio.getUsuarioLogueado()!=null)||
+            (REQUIRED_AUTH.contains(nombre) && AccesoServicio.getUsuarioLogueado()!=null)||
             (!REQUIRED_AUTH.contains(nombre))
         ) SSEServicio.cerrar(clientId,nombre);
     }

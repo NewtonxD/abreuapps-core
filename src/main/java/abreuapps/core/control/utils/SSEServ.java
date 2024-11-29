@@ -45,6 +45,8 @@ public class SSEServ {
     
     private final Map<String,SseEmitter> pubEmitters = new ConcurrentHashMap<>();
     
+    private final Map<String,SseEmitter> prdEmitters = new ConcurrentHashMap<>();
+    
     private final ParadaServ ParadaServicio;
     
     private final LocVehiculoServ LocServicio;
@@ -61,7 +63,7 @@ public class SSEServ {
             case "rta" -> rtaEmitters;
             case "vhl_log","vis_log" -> vhlLogEmitters;
             case "pub" -> pubEmitters;
-                
+            case "prd" -> prdEmitters;    
             case "trpInfo" -> trpInfoEmitters;
             case "pdaInfo" -> pdaInfoEmitters;
             case "" -> null;

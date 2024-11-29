@@ -5,7 +5,6 @@ import abreuapps.core.control.general.DatoServ;
 import abreuapps.core.control.usuario.AccesoServ;
 import abreuapps.core.control.usuario.Usuario;
 import abreuapps.core.control.utils.DateUtils;
-import abreuapps.core.control.utils.ModelServ;
 import java.text.ParseException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -27,11 +26,9 @@ public class DatosCntr {
     
     private final DateUtils FechaUtils;
     
-    private final ModelServ ModeloServicio;
+    private final AccesoServ AccesoServicio;
     
     private final DatoServ DatoServicio;
-    
-    private final AccesoServ AccesoServicio;
     
 //----------------------------------------------------------------------------//
 //---------------------------ENDPOINTS DATOS----------------------------------//
@@ -45,9 +42,9 @@ public class DatosCntr {
 
         boolean valido;
         String plantillaRespuesta = "fragments/dat_gen_consulta_datos :: content-default";
-        Usuario usuarioLogueado = ModeloServicio.getUsuarioLogueado();
+        Usuario usuarioLogueado = AccesoServicio.getUsuarioLogueado();
         
-        String sinPermisoPlantilla = ModeloServicio.verificarPermisos(
+        String sinPermisoPlantilla = AccesoServicio.verificarPermisos(
                 "dat_gen_registro_datos", model, usuarioLogueado );
         
         valido = sinPermisoPlantilla.equals("");
@@ -105,7 +102,7 @@ public class DatosCntr {
         }
         
         if(sinPermisoPlantilla.equals(""))
-            ModeloServicio.load(
+            AccesoServicio.cargarPagina(
                     "dat_gen_consulta_datos", model, usuarioLogueado.getId() );
 
         
@@ -122,7 +119,7 @@ public class DatosCntr {
         String plantillaRespuesta="fragments/dat_gen_registro_datos :: content-default";
         boolean valido = true;
         
-        Usuario usuarioLogueado = ModeloServicio.getUsuarioLogueado();
+        Usuario usuarioLogueado = AccesoServicio.getUsuarioLogueado();
 
         Optional<Dato> datoDB = DatoServicio.obtener(idDato);
 
@@ -156,9 +153,9 @@ public class DatosCntr {
 
         boolean valido;
         String plantillaRespuesta = "fragments/dat_gen_consulta_empresa :: content-default";
-        Usuario usuarioLogueado = ModeloServicio.getUsuarioLogueado();
+        Usuario usuarioLogueado = AccesoServicio.getUsuarioLogueado();
         
-        String sinPermisoPlantilla = ModeloServicio.verificarPermisos(
+        String sinPermisoPlantilla = AccesoServicio.verificarPermisos(
                 "dat_gen_registro_empresa", model, usuarioLogueado );
         
         valido = sinPermisoPlantilla.equals("");
@@ -216,7 +213,7 @@ public class DatosCntr {
         }
         
         if(sinPermisoPlantilla.equals(""))
-            ModeloServicio.load(
+            AccesoServicio.cargarPagina(
                     "dat_gen_consulta_empresa", model, usuarioLogueado.getId() );
 
         
@@ -233,7 +230,7 @@ public class DatosCntr {
         String plantillaRespuesta="fragments/dat_gen_registro_empresa :: content-default";
         boolean valido = true;
         
-        Usuario usuarioLogueado = ModeloServicio.getUsuarioLogueado();
+        Usuario usuarioLogueado = AccesoServicio.getUsuarioLogueado();
 
         Optional<Dato> datoDB = DatoServicio.obtener(idDato);
 

@@ -167,6 +167,11 @@ public class AppConf {
         caches.add(buildCache("PublicidadArchivos", Duration.ofMinutes(6)));
         caches.add(buildCache("Publicidades", Duration.ofHours(8)));
         
+        
+        caches.add(buildCache("PermisosPantalla",Duration.ofDays(7)));
+        caches.add(buildCache("PermisosMenu",Duration.ofDays(7)));
+        caches.add(buildCache("PermisosUsuario",Duration.ofDays(7)));
+        
         caches.add(buildCache("Conf", Duration.ofDays(7)));
         
         SimpleCacheManager cacheManager = new SimpleCacheManager();

@@ -1,6 +1,7 @@
 package abreuapps.core.control.general;
 
 import abreuapps.core.control.usuario.Usuario;
+import abreuapps.core.control.utils.RecursoServ;
 import jakarta.transaction.Transactional;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
@@ -29,6 +30,8 @@ import org.springframework.stereotype.Service;
 public class PublicidadServ {
     
     private final PublicidadRepo repo;
+    
+    private final RecursoServ ResourcesServicio;
     
     private final ConfServ ConfiguracionServicio;
     
@@ -96,22 +99,6 @@ public class PublicidadServ {
     
     @Cacheable(value="PublicidadArchivos")
     public Map<String, Object> obtenerArchivoPublicidad(String ruta){
-        try {
-            ruta=ruta.replaceAll("[^a-zA-Z0-9.]", "");
-            Path filePath = Paths.get(ConfiguracionServicio.consultar("serverip")).toAbsolutePath().normalize().resolve(ruta).normalize();
-            Resource resource = new UrlResource(filePath.toUri());
-            if (!resource.exists()) {
-                return null;
-            }
-            String contentType = ruta.endsWith(".mp4") ? "video/mp4" : "image/"+ruta.substring(ruta.lastIndexOf("."));
-            if(contentType.equals("image/jpg"))contentType="image/jpeg";
-            
-            Map<String, Object> m = new HashMap<>();
-            m.put("body", resource);
-            m.put("media-type",MediaType.parseMediaType(contentType));
-            return m;
-        }catch(MalformedURLException ex){
-                return null;
-        }
+        return ResourcesServicio.obtenerArchivo(ruta);
     }
 }
