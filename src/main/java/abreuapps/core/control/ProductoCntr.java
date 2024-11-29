@@ -74,7 +74,7 @@ public class ProductoCntr {
         
         if(valido){
             
-            Optional<Producto> ProductoDB = ProductoServicio.obtener(producto.getId()!=null ? producto.getId() : 0 );
+            Optional<Producto> ProductoDB = ProductoServicio.obtener(producto!=null ? producto.getId() : 0 );
 
             if (ProductoDB.isPresent()) {
                 
@@ -137,7 +137,7 @@ public class ProductoCntr {
     //--------------------------------------------------------------------------
     @GetMapping(value="/archivo/{nombre}")
     public ResponseEntity<Resource> consultarArchivoActualPublicidad(@PathVariable("nombre") String nombre ){
-        Map<String,Object> archivo=ProductoServicio.obtenerArchivoProducto(URLDecoder.decode(nombre, StandardCharsets.UTF_8) );
+        Map<String,Object> archivo=ResourcesServicio.obtenerArchivo(URLDecoder.decode(nombre, StandardCharsets.UTF_8) );
         if(archivo!=null)
             return ResponseEntity.ok()
                         .contentType( (MediaType) archivo.get("media-type") )

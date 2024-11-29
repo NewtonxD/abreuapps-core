@@ -30,13 +30,13 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Table(name = "prd",schema = "inventory")
-@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@EmpleadoId")
+@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@ProductoId")
 public class Producto {
     
     @Id
     @GeneratedValue
     @Column(name = "id")
-    private Integer id;
+    private int id;
     
     @Column(name = "nom")
     private String nombre;
@@ -48,7 +48,7 @@ public class Producto {
     private String foto;
     
     @Column(name = "prc_sel")
-    private Float precio_venta;
+    private float precio_venta;
     
     @ManyToOne
     @PrimaryKeyJoinColumn 

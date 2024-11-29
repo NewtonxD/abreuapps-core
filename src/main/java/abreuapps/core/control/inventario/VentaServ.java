@@ -13,36 +13,28 @@ import org.springframework.stereotype.Service;
  * @author cabreu
  */
 
+
 @Service
 @RequiredArgsConstructor
-public class ProductoServ {
+public class VentaServ {
     
-    private final ProductoRepo repo;
-            
+    private final VentaRepo repo;
+    
     @Transactional
-    public Producto guardar(Producto gd, Usuario usuario,boolean existe){
-        
-        if(existe){ 
-            if(usuario!=null)
-                gd.setActualizado_por(usuario);
-        }else{
-            if(usuario!=null)
-                gd.setHecho_por(usuario);
-            
-            gd.setFecha_registro(new Date());
-        }
-        gd.setFecha_actualizacion(new Date());
+    public Venta guardar(Venta gd, Usuario usuario){
+        gd.setHecho_por(usuario);
+        gd.setFecha_registro(new Date());
         return repo.save(gd);
     }
     
-    public Optional<Producto> obtener(Integer id){
+    public Optional<Venta> obtener(Long id){
         if(id==null){
             return Optional.empty();
         }
         return repo.findById(id);
     }
     
-    public List<ProductoDTO> consultar(){
+    public List<VentaDTO> consultar(){
         return repo.customFindAll();
     }    
     
