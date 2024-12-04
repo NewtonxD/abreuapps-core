@@ -8,7 +8,7 @@ import java.util.Date;
  * @author cabreu
  */
 public record VentaDTO(
-    int id,
+    long id,
     int cnt_art,
     float amo_tot,
     float amo_imp,
