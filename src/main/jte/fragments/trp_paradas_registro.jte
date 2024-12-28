@@ -1,5 +1,6 @@
 
-<main th:fragment="content-default" id="content-page">
+@template.content()
+<main  id="content-page">
     <th:block th:if="${trp_paradas_registro}">
         <div class="container-fluid px-4">
             <div class="row d-flex align-items-center justify-content-center mt-5 mb-5">

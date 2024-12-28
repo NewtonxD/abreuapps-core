@@ -1,6 +1,7 @@
 
-<main th:fragment="content-default" id="content-page">
-    <th:block th:if="${dat_gen_registro_datos}">
+@template.content()
+<main id="content-page">
+    @if(@dat_gen_registro_datos)
         <div class="container-fluid px-4">
             <div class="row d-flex align-items-center justify-content-center mt-5 mb-5">
                 <div class="card col-12 col-md-10 col-lg-8">
@@ -93,8 +94,9 @@
                 </div>
             </div>
         </div>
-        <script th:src="@{/content/js/dtgnr/svd_dt742520.js}"></script>
-    </th:block>
-    <th:block th:unless="${dat_gen_registro_datos}" th:insert="~{error/403 :: error403}">
-    </th:block>
+        <script src="/content/js/dtgnr/svd_dt742520.js"></script>
+
+    @else
+        @template("error/403.jte", "error403")
+    @endif
 </main>

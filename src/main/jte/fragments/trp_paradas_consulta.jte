@@ -1,6 +1,7 @@
 
-<main th:fragment="content-default" id="content-page">
-    <th:block th:if="${trp_rutas_consulta}">
+@template.content()
+<main  id="content-page">
+    <th:block th:if="${trp_paradas_consulta}">
         <div class="container-fluid px-4">
             <div class="row d-flex align-items-center justify-content-center mt-5 mb-5">
                 <div class="card col-12 col-md-10 col-lg-8"> 
@@ -10,19 +11,19 @@
                             class="col-8 d-flex align-items-start justify-content-start"
                             >
                             <h4>
-                                Rutas&nbsp;
+                                Paradas&nbsp;
                             </h4>
                         </div>
                         <div
                             class="col-4 d-flex align-items-end justify-content-end"
                             >
-                            <button th:if="${trp_rutas_registro}"
+                            <button th:if="${trp_paradas_registro}"
                                 type="button"
                                 class="btn btn-success"
                                 onclick="
                                     event.preventDefault();
                                     closeEventSource();
-                                    cargar_contenido('trp_rutas_registro');"
+                                    cargar_contenido('trp_paradas_registro');"
                                 >
                                 <b><i class="fa fa-plus"></i></b>
                             </button>
@@ -55,17 +56,15 @@
                                     >
                                     <thead class="bg-secondary text-white">
                                         <tr>
-                                            <th scope="col">Ruta</th>
-                                            <th scope="col">Sale desde: </th>
-                                            <th scope="col">Se dirige a: </th>
+                                            <th scope="col">ID</th>
+                                            <th scope="col">Descripción</th>
                                             <th scope="col">Activo</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr th:each="d: ${rutas}" th:attr="data-id=${d.rta}">
-                                            <th scope="row" th:text="${d.rta}"></th>
-                                            <td th:text="${d.loc_ini}"></td>
-                                            <td th:text="${d.loc_fin}"></td>
+                                        <tr th:each="d: ${paradas}" th:attr="data-id=${d.id}">
+                                            <th scope="row" th:text="${d.id}"></th>
+                                            <td th:text="${d.dsc}"></td>
                                             <td th:text="${d.act?'Activo':'Inactivo'}"></td>
                                         </tr>
                                     </tbody>
@@ -77,9 +76,9 @@
             </div>
         </div>
         <script th:src="@{/content/js/tb_init.js}"></script>
-        <script th:if="${trp_rutas_registro}"  th:src="@{/content/js/trp/rta5984502.js}"></script>
-        <script th:src="@{/content/js/trp/es_rta5984502.js}"></script>
+        <script th:if="${trp_paradas_registro}"  th:src="@{/content/js/trp/pda574702.js}"></script>
+        <script th:src="@{/content/js/trp/es_pda574702.js}"></script>
 </th:block>
-<th:block th:unless="${trp_rutas_consulta}" th:insert="~{error/403 :: error403}">
+<th:block th:unless="${trp_paradas_consulta}" th:insert="~{error/403 :: error403}">
 </th:block>
 </main>

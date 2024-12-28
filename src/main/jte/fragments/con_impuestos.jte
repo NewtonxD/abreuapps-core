@@ -1,58 +1,47 @@
 
-<main th:fragment="content-default" id="content-page">
+@template.content()
+<main  id="content-page">
     <div class="container-fluid px-4">
-
         <div class="row d-flex align-items-center justify-content-center mt-5 mb-5">
             <div class="card col-12 col-md-10 col-lg-8">
                 <div class="card-header blanco-obligao row">
                     <div class="col-10">
-                        <h3 class="mt-3">(CNT) Cuentas Bancarías</h3>
+                        <h3 class="mt-3">(CNT) Gestión de Impuestos</h3>
                     </div>
                     <div class="col-2 mb-2 d-flex align-items-end justify-content-end">
                         <button type="button" class="btn btn-secondary"><b><i class="fa-regular fa-rectangle-list"></i> Consulta</b></button>
                     </div>
                 </div>
-                <div class="card-body">
+                <div class="card-body mt-3 mb-3">
                     <form class="form-group">
                         <div class="row d-flex align-items-end justify-content-end">
                             <div class="mb-3 col-12 col-sm-6 col-lg-4">
-                                <label for="fecha" class="form-label text-muted">Fecha:</label>
+                                <label for="fecha" class="form-label text-muted">Fecha de Pago:</label>
                                 <input type="date" class="form-control" id="fecha">
                             </div>
                         </div>
                         <div class="row">    
                             <div class="mb-3 col-12 col-sm-6">
-                                <label for="inputBanco" class="form-label text-muted">Banco:</label>
-                                <select id="inputBanco" class="form-select">
+                                <label for="inputCategoria" class="form-label text-muted">Tipo de Impuesto:</label>
+                                <select id="inputCategoria" class="form-select">
                                     <option value="0" selected disable>--Seleccione--</option>
                                 </select>
                             </div>
 
                             <div class="mb-3 col-12 col-sm-6">
-                                <label for="inputCuenta" class="form-label text-muted"># Cuenta:</label>
-                                <input type="text" class="form-control" required placeholder="" aria-label="Cuenta Contable" aria-describedby="basic-addon2">   
+                                <label for="inputCuenta" class="form-label text-muted">Cuenta:</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" required disabled placeholder="" aria-label="Cuenta Contable" aria-describedby="basic-addon2">
+                                    <button type="button" class="input-group-text" id="basic-addon2"><i class="fa-regular fa-credit-card"></i></button>
+                                </div>
                             </div>
 
                             <div class="mb-3 col-12 col-sm-6">
-                                <label for="inputCuenta" class="form-label text-muted"># Regional Cuenta:</label>
-                                <input type="text" class="form-control" placeholder="" aria-label="Cuenta Contable" aria-describedby="basic-addon2">   
+                                <label for="inputPresupuesto" class="form-label text-muted" >Monto a Pagar:</label>
+                                <input type="number" step="0.01" value="0.00" class="form-control" id="inputSaldoBanco">
                             </div>
 
                             <div class="mb-3 col-12 col-sm-6">
-                                <label for="inputDescCuenta" class="form-label text-muted">Descripción Cuenta:</label>
-                                <input type="text" class="form-control" required placeholder="" aria-label="Descripcion Cuenta" aria-describedby="basic-addon2">   
-                            </div>
-
-                            <div class="mb-3 col-12 col-md-4">
-                                <label for="tipo-cuenta" class="form-label text-muted">Tipo de Cuenta:</label>
-                                <select class="form-select" id="tipo-cuenta" name="tipo-cuenta">
-                                  <option value="0" selected disable>--Seleccione--</option>
-                                  <option value="corriente">Corriente</option>
-                                  <option value="ahorro">Ahorro</option>
-                                </select>
-                              </div>
-
-                            <div class="mb-3 col-12 col-md-4">
                                 <label for="tipo-cuenta" class="form-label text-muted">Moneda:</label>
                                 <select class="form-select" id="tipo-cuenta" name="tipo-cuenta">
                                   <option value="0" selected disable>--Seleccione--</option>
@@ -62,11 +51,10 @@
                                 </select>
                               </div>
 
-                            <div class="mb-3 col-12 col-md-4">
-                                <label for="monto" class="form-label text-muted">Monto Inicial:</label>
-                                <input type="number" class="form-control" id="monto" name="monto" step="0.01" min="0" value="0.00" required/>
+                            <div class="mb-3 col-12">
+                                <label for="inputObservaciones" class="form-label text-muted">Observaciones:</label>
+                                <textarea class="form-control" id="inputObservaciones" rows="3"></textarea>
                             </div>
-
 
                         <div class="col-12 d-flex justify-content-end">
                             <button type="submit" class="btn btn-outline-success"><b><i class="fas fa-save"></i> Guardar</b></button>
@@ -91,4 +79,3 @@
         $("#fecha").attr("value", today);
     });</script>
 </main>
-

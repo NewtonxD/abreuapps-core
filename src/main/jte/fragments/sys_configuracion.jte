@@ -1,5 +1,6 @@
 
-<main th:fragment="content-default" id="content-page">
+@template.content()
+<main  id="content-page">
 
     <th:block th:if="${sys_configuracion}">
         <div class="container-fluid px-4">

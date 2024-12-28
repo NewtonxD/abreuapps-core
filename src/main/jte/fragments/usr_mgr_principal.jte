@@ -1,30 +1,32 @@
 
-<main th:fragment="content-default" id="content-page">
-    <th:block th:if="${dat_gen_consulta_empresa}">
+@template.content()
+<main  id="content-page">
+
+    <th:block th:if="${usr_mgr_principal}">
         <div class="container-fluid px-4">
             <div class="row d-flex align-items-center justify-content-center mt-5 mb-5">
-                <div class="card col-12 col-md-10 col-lg-8"> 
+                <div class="card col-12 col-md-10 col-lg-8">
                     <div class="card-body mt-3 mb-3">
                         <div class="row">
-                            <div
-                                class="col-8 d-flex align-items-start justify-content-start"
-                                >
+                            <div class="col-10 d-flex align-items-start justify-content-start">
                                 <h4>
-                                    Empresas
+                                    Usuarios&nbsp;
                                 </h4>
                             </div>
                             <div
-                                class="col-4 d-flex align-items-end justify-content-end"
+                                class="col-2 d-flex align-items-end justify-content-end"
                                 >
-                                <button th:if="${dat_gen_registro_empresa}"
-                                    type="button"
-                                    class="btn btn-success"
-                                    onclick="event.preventDefault();closeEventSource();cargar_contenido('dat_gen_registro_empresa');"
-                                    >
+                                <button th:if="${usr_mgr_registro}"
+                                        type="button"
+                                        class="btn btn-success"
+                                        onclick="event.preventDefault();closeEventSource();cargar_contenido('usr_mgr_registro');"
+                                        >
                                     <b><i class="fa fa-plus"></i></b>
                                 </button>
                             </div>
+
                         </div>
+
                         <div class="row">
                             <div class="col mt-2 mb-2">
                                 <th:block th:if="${msg!=null}">
@@ -52,16 +54,18 @@
                                         >
                                         <thead class="bg-secondary text-white">
                                             <tr>
-                                                <th scope="col">Empresa</th>
-                                                <th scope="col">Descripción</th>
+                                                <th scope="col">Usuario</th>
+                                                <th scope="col">Correo</th>
+                                                <th scope="col">Clave Vencida</th>
                                                 <th scope="col">Estado</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr th:each="d: ${datos}" th:attr="data-id=${d.dat}">
-                                                <th scope="row" th:text="${d.dat}"></th>
-                                                <td th:text="${d.dsc}"></td>
-                                                <td th:text="${d.act?'Activo':'Inactivo'}"></td>
+                                            <tr th:each="u: ${usuarios}" th:attr="data-id=${u.usr}">
+                                                <th th:text="${u.usr}"></th>
+                                                <td th:text="${u.mail}"></td>
+                                                <td th:text="${u.pwd_chg?'Si':'No'}"></td>
+                                                <td th:text="${u.act?'Activo':'Inactivo'}"></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -72,9 +76,10 @@
             </div>
         </div>
         <script th:src="@{/content/js/tb_init.js}"></script>
-        <script th:if="${dat_gen_registro_empresa}"  th:src="@{/content/js/dtgnr/emp742520.js}"></script>
-        <script th:src="@{/content/js/dtgnr/es_emp742520.js}"></script>
+        <script th:if="${usr_mgr_registro}"  th:src="@{/content/js/usrmgr/usr782360.js}"></script>
+        <script th:src="@{/content/js/usrmgr/es_usr782360.js}"></script>
     </th:block>
-<th:block th:unless="${dat_gen_consulta_empresa}" th:insert="~{error/403 :: error403}">
-</th:block>
+
+    <th:block th:unless="${usr_mgr_principal}" th:insert="~{error/403 :: error403}">
+    </th:block>
 </main>

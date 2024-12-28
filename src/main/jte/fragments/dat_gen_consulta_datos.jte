@@ -1,39 +1,41 @@
 
-<main th:fragment="content-default" id="content-page">
-
-    <th:block th:if="${usr_mgr_principal}">
+@template.content()
+<main id="content-page">
+    @if(dat_gen_consulta_datos)
         <div class="container-fluid px-4">
             <div class="row d-flex align-items-center justify-content-center mt-5 mb-5">
-                <div class="card col-12 col-md-10 col-lg-8">
+                <div class="card col-12 col-md-10 col-lg-8"> 
                     <div class="card-body mt-3 mb-3">
                         <div class="row">
-                            <div class="col-10 d-flex align-items-start justify-content-start">
+                            <div
+                                class="col-8 d-flex align-items-start justify-content-start"
+                                >
                                 <h4>
-                                    Usuarios&nbsp;
+                                    Datos Generales
                                 </h4>
                             </div>
                             <div
-                                class="col-2 d-flex align-items-end justify-content-end"
+                                class="col-4 d-flex align-items-end justify-content-end"
                                 >
-                                <button th:if="${usr_mgr_registro}"
+                                @if(dat_gen_registro_datos)
+                                    <button
                                         type="button"
                                         class="btn btn-success"
-                                        onclick="event.preventDefault();closeEventSource();cargar_contenido('usr_mgr_registro');"
+                                        onclick="event.preventDefault();closeEventSource();cargar_contenido('dat_gen_registro_datos');"
                                         >
-                                    <b><i class="fa fa-plus"></i></b>
-                                </button>
+                                        <b><i class="fa fa-plus"></i></b>
+                                    </button>
+                                @endif
                             </div>
-
                         </div>
-
                         <div class="row">
                             <div class="col mt-2 mb-2">
-                                <th:block th:if="${msg!=null}">
+                                @if(msg!=null)
                                     <div
-                                        th:class="'alert '+${status ? 'alert-success' : 'alert-warning'}+' alert-dismissible fade show'"
+                                        class="'alert '+${status ? 'alert-success' : 'alert-warning'}+' alert-dismissible fade show'"
                                         role="alert"
                                         >
-                                        <b><span th:text="${msg}"></span></b>
+                                        <b><span>@msg</span></b>
                                         <button
                                             type="button"
                                             class="btn-close"
@@ -41,7 +43,7 @@
                                             aria-label="Close"
                                             ></button>
                                     </div>
-                                </th:block>
+                                @endif
                             </div>
                         </div>
                         <br>
@@ -53,19 +55,21 @@
                                         >
                                         <thead class="bg-secondary text-white">
                                             <tr>
-                                                <th scope="col">Usuario</th>
-                                                <th scope="col">Correo</th>
-                                                <th scope="col">Clave Vencida</th>
+                                                <th scope="col">Dato</th>
+                                                <th scope="col">Descripción</th>
+                                                <th scope="col">Grupo</th>
                                                 <th scope="col">Estado</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr th:each="u: ${usuarios}" th:attr="data-id=${u.usr}">
-                                                <th th:text="${u.usr}"></th>
-                                                <td th:text="${u.mail}"></td>
-                                                <td th:text="${u.pwd_chg?'Si':'No'}"></td>
-                                                <td th:text="${u.act?'Activo':'Inactivo'}"></td>
-                                            </tr>
+                                            @for(var d : datos)
+                                                <tr data-id="${d.dat}">
+                                                    <th scope="row">${d.dat}</th>
+                                                    <td>${d.dsc}</td>
+                                                    <td>${d.fat_dat}</td>
+                                                    <td>${d.act?'Activo':'Inactivo'}</td>
+                                                </tr>
+                                            @endfor
                                         </tbody>
                                     </table>
                                 </div>
@@ -74,11 +78,11 @@
                 </div>
             </div>
         </div>
-        <script th:src="@{/content/js/tb_init.js}"></script>
-        <script th:if="${usr_mgr_registro}"  th:src="@{/content/js/usrmgr/usr782360.js}"></script>
-        <script th:src="@{/content/js/usrmgr/es_usr782360.js}"></script>
-    </th:block>
-
-    <th:block th:unless="${usr_mgr_principal}" th:insert="~{error/403 :: error403}">
-    </th:block>
+        <script src="/content/js/tb_init.js"></script>
+        <script src="/content/js/dtgnr/es_dt742520.js"></script>
+        @if(dat_gen_registro_datos) 
+            <script src="/content/js/dtgnr/dt742520.js"></script>
+        @endif
+        
+    @endif
 </main>

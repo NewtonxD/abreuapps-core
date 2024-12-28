@@ -36,7 +36,7 @@
                     <div id="toast-container" class="toast-container top-0 end-0 p-3"></div>
                 </div>
                 <main>
-                    @template("fragments/general.jte", "content-default")
+                    @template("fragments/general.jte", "content")
                 </main>
             </div>
             <div class="overlay" onclick="hideSidebar()"></div>

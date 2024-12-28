@@ -90,7 +90,7 @@ public class MainCntr {
         Usuario u = AccesosServicio.getUsuarioLogueado();
         AccesosServicio.cargarPagina(idPage, model, u.getId());
 
-        return "fragments/" + idPage + " :: content-default";
+        return "fragments/" + idPage + " :: content";
     }
 //----------------------------------------------------------------------------//
     
@@ -104,7 +104,7 @@ public class MainCntr {
         model.addAttribute("usuario", userBd);
         
         if(userBd.isCredentialsNonExpired())
-            return "password  :: content-default";
+            return "password  :: content";
         else 
             return "password";
            
@@ -163,7 +163,7 @@ public class MainCntr {
         
         AccesosServicio.cargarPagina("sys_configuracion", model, u.getId());
         
-        return "fragments/sys_configuracion :: content-default";
+        return "fragments/sys_configuracion :: content";
 
     }
     

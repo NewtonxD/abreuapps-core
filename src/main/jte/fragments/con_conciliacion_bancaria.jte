@@ -1,10 +1,6 @@
-
-<main th:fragment="content-default" id="content-page">
+@template.content()
+<main id="content-page">
     <div class="container-fluid px-4 h-100"> 
-
-        <!--<ol class="breadcrumb mb-4">
-            <li class="breadcrumb-item active text-black"> Conciliación Bancaria se utiliza para detectar discrepancias entre los registros de la cuenta bancaria del sistema financiero y los registros del estado de cuenta del banco, como errores en el registro de transacciones, transacciones pendientes, cheques sin cobrar, cargos no autorizados, etc. Al reconciliar estas discrepancias, se puede garantizar la precisión de los registros financieros y prevenir posibles errores o fraudes.</li>
-        </ol>-->
 
         <div class="row d-flex align-items-center justify-content-center mt-5 mb-5">
             <div class="card col-12 col-md-10 col-lg-8">
@@ -63,17 +59,19 @@
             </div>
         </div>
     </div>
-    <script>$(document).ready(function() {
-var date = new Date();
+    <script>
+        $(document).ready(function() {
+            var date = new Date();
 
-var day = date.getDate();
-var month = date.getMonth() + 1;
-var year = date.getFullYear();
+            var day = date.getDate();
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
 
-if (month < 10) month = "0" + month;
-if (day < 10) day = "0" + day;
+            if (month < 10) month = "0" + month;
+            if (day < 10) day = "0" + day;
 
-var today = year + "-" + month + "-" + day ;       
-$("#fecha").attr("value", today);
-});</script>
+            var today = year + "-" + month + "-" + day ;       
+            $("#fecha").attr("value", today);
+        });
+    </script>
 </main>
