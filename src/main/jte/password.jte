@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Cambia tu contraseña</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="/content/css/styles.css" rel="stylesheet" />
+        <link href="/content/css/bootstrap.min.css" rel="stylesheet" />
+    </head>
+    <body class="fondo-bonito-paginas">
+        <script src="/content/js/global_vars.js"></script>
+        <div class="h-100 d-flex align-items-center justify-content-center" id="content-page">
+            <div class="container">
+                <div class="row d-flex justify-content-center align-items-center h-100">
+                    <div class="col-10 col-lg-5">
+                        <div class="card shadow-lg border-0 rounded-lg mt-5">
+                            <form method="post" id="form-guardar">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-center py-3 mb-3">
+                                        <h4 class="text-center font-weight-light my-4">Cambiar contraseña</h4>
+                                    </div>
+                                    <div id="msg"></div>
+                                    <input type="hidden" id="idUsuario" value="@usuario.id" />
+                                    @if(usuario.isCredentialsNonExpired()){
+                                        <div class="form-floating mb-3">
+                                            <input
+                                                class="form-control"
+                                                id="actualPassword"
+                                                name="actualPassword"
+                                                type="password"
+                                                placeholder="Contraseña Actual"
+                                                required="required"
+                                            />
+                                            <label for="password" class="text-muted">Contraseña Actual</label>
+                                        </div>
+                                    }
+                                    <div id="passwordMessage" class="mt-2"></div>
+                                    <div class="progress mt-3">
+                                        <div id="passwordStrength" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <input
+                                            class="form-control"
+                                            id="newPassword"
+                                            name="newPassword"
+                                            type="password"
+                                            placeholder="Nueva Contraseña"
+                                            required="required"
+                                        />
+                                        <label for="password" class="text-muted">Nueva Contraseña</label>
+                                    </div>
+                                    <div class="alert alert-warning" id="alert-diferent" role="alert" style="display: none;">
+                                        <span>Las nuevas contraseñas no coinciden</span>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <input
+                                            class="form-control"
+                                            id="confirmNewPassword"
+                                            name="confirmNewPassword"
+                                            type="password"
+                                            placeholder="Nueva Contraseña otra vez..."
+                                            required="required"
+                                        />
+                                        <label for="password" class="text-muted">Repite la Nueva Contraseña</label>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6 d-flex py-3 justify-content-start mb-0">
+                                            <button type="button" id="btnSalir" class="${usuario.isCredentialsNonExpired() ? 'btn btn-secondary' : 'btn btn-danger'}">
+                                                <b>${usuario.isCredentialsNonExpired() ? 'Atras' : 'Salir'}</b>
+                                            </button>
+                                        </div>
+                                        <div class="col-6 d-flex py-3 justify-content-end mb-0">
+                                            <button type="submit" id="btnGuardar" class="btn btn-primary" disabled>
+                                                <b>Guardar</b>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        @if(!usuario.isCredentialsNonExpired()){
+                            <script src="/content/js/lib/jquery-3.6.4.min.js"></script>
+                            <script src="/content/js/access.js"></script>
+                        }
+                        <script src="/content/js/usrmgr/usr792461.js"></script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

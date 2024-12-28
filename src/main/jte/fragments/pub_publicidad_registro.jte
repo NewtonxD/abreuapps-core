@@ -1,0 +1,116 @@
+
+@template.content()
+<main  id="content-page">
+    <th:block th:if="${pub_publicidad_registro}">
+        <div class="container-fluid px-4">
+            <div class="row d-flex align-items-center justify-content-center mt-5 mb-5">
+                <div class="card col-12 col-md-10 col-lg-8">
+                    <div class="card-body mt-3 mb-3">
+                        <div class="row mb-3">
+                            <div class="col-12 d-flex align-items-start justify-content-start">
+                                <button type="submit" class="btn btn-sm btn-secondary"
+                                        onclick="$(function () {
+                                                event.preventDefault();
+                                                cargar_contenido('pub_publicidad_consulta');
+                                            });">
+                                    <b><i class="fa fa-chevron-left"></i></b>
+                                </button>
+                                &nbsp;&nbsp;<h4>Publicidad&nbsp;
+                                    <th:block th:if="${id==null}">
+                                        <i class="fa fa-plus"></i>
+                                    </th:block>
+                                    <th:block th:if="${id!=null}">
+                                        <i class="fa fa-pencil"></i>
+                                    </th:block>
+                                </h4>
+                            </div>
+                        </div>
+
+
+                        <form class="form-group" id="form-guardar" th:object="${publicidad}">
+                            <div class="row">
+                                <input type="text" style="display: none; width: 1px;height: 1px;" th:if="${publicidad.id!=null}" id="idPublicidad" name="id" th:value="${publicidad.id}" placeholder=" ... " class="form-control" aria-describedby="basic-addon4">
+                                <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" th:value="${#dates.format(publicidad.fecha_actualizacion, 'yyyy-MM-dd HH:mm:ss')}">
+                                
+                                
+                                <div class="mb-3 col-12 col-md-6">
+                                    <label for="nom-dato" class="form-label text-muted">Título:</label>
+                                    <input type="text" th:field="*{titulo}" required class="form-control" placeholder="..."/>
+                                </div>
+                                <div class="mb-3 col-12 col-md-6">
+                                    <label for="nom-dato" class="form-label text-muted">Empresa:</label>
+                                    <select required class="form-select custom-select" th:field="*{empresa}" >
+                                        <option value="0" selected disabled>--Seleccione--</option>
+                                        <th:block  th:each="c :${empresas}">
+                                            <option th:value="${c.dat}" th:selected="${publicidad.id!=null && publicidad.empresa.dato==c.dat}" th:if="${c.act}" th:text="${c.dat}"></option>
+                                        </th:block>
+                                    </select> 
+                                </div>
+                                
+                                <div class="mb-3 col-12 col-md-5">
+                                    <label for="descripcion" class="form-label text-muted">Fecha Inicial:</label>
+                                    <input required class="form-control" th:field="*{fecha_inicio}" id="startDate" type="date"/>
+                                    <div class="alert alert-warning" role="alert" id="dateDifference" style="display: none;" ></div>
+                                </div>
+                                <div class="mb-3 mt-3 col-12 col-md-2 text-center">
+                                    <p class="text-wrap m-0">Total de Dias <br>de Vigencia: <span id="dias">0</span></p>
+                                </div>
+                                <div class="mb-3 col-12 col-md-5">
+                                    <label for="descripcion" class="form-label text-muted">Fecha Final:</label>
+                                    <input required th:field="*{fecha_fin}" class="form-control" id="endDate" type="date"/>
+                                </div>
+                                
+                                <div class="mb-3 col-12">
+                                    <label for="nom-dato" class="form-label text-muted">Link de Acceso:</label>
+                                    <input type="text" required  th:field="*{link_destino}" placeholder="https://www.ejemplo.com" class="form-control"/>
+                                </div>
+                                
+                                <div class="mb-3 col-12">
+                                    <label for="nom-dato" class="form-label text-muted">Video o Imagen:</label>
+                                    <th:block th:if="${publicidad.id==null}">
+                                        <div class="alert alert-warning" role="alert" id="fileInfo" style="display: none;" ></div>
+                                        <input type="file" class="form-control" id="fileInput" required accept="video/mp4,image/jpeg,image/webp,image/png">
+                                    </th:block>
+                                    <input type="text" style="display: none;" th:field="*{imagen_video_direccion}" id="archivo" class="form-control"/>
+                                    <div id="previewContainer" class="d-flex justify-content-center" style="display: none;">
+                                        <div id="preview" class="mt-2"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3 col-12">
+                                    <label for="descripcion" class="form-label text-muted">Descripción:</label>
+                                    <textarea class="form-control" th:field="*{descripcion}" rows="2" maxlength="255"></textarea>
+                                </div>
+
+                                <div class="col-6 d-flex justify-content-start">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox"  th:attr="checked=${publicidad.id!=null?publicidad.activo:'true'}" name="activo" id="activo">
+                                            <label class="form-check-label text-muted" for="activo">Activo</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-6 d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-primary" id="guardarBtn"> 
+                                        <th:block th:if="${publicidad.id==null}"><b> <i class="fa fa-save"></i>
+                                                Guardar</b>
+                                        </th:block>
+                                        <th:block th:if="${publicidad.id!=null}"><b> <i class="fa fa-pencil"></i>
+                                                Editar</b>
+                                        </th:block>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script th:src="@{/content/js/pub/pub804952.js}"></script>
+        <script th:src="@{/content/js/pub/svd_pub794851.js}"></script>
+        <th:block th:if="${publicidad.id!=null}">
+            <script th:src="@{/content/js/pub/pub825153.js}"></script>
+        </th:block>
+    </th:block>
+    <th:block th:unless="${pub_publicidad_registro}" th:insert="~{error/403 :: error403}">
+    </th:block>
+</main>
