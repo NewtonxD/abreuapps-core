@@ -36,10 +36,10 @@
         <script src="/content/js/lib/jquery-3.6.4.min.js"></script>
         <script src="/content/js/lib/bootstrap.bundle.min.js"></script>
         <script type="text/javascript">
-            const SERVER_IP = '@server_ip';
-            const BASE_LAT = @base_lat;
-            const BASE_LNG = @base_lng;
-            const BASE_DIR = '@base_dir';
+            const SERVER_IP = '${server_ip}';
+            const BASE_LAT = ${base_lat};
+            const BASE_LNG = ${base_lng};
+            const BASE_DIR = '${base_dir}';
         </script>
         <script src="/content/js/global_vars.js"></script>
         <script async src="/content/js/checkstatus.js"></script>

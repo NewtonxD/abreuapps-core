@@ -1,3 +1,6 @@
+@param String error_msg
+@param String success_msg
+@param String app_nombre
 
 <!DOCTYPE html>
 <html lang="es">
@@ -9,9 +12,9 @@
         content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
     <link rel="icon" type="image/x-icon" href="/content/favicon.ico">
-    <meta name="description" content="Login OMSA" />
+    <meta name="description" content="Login Sistema ERP ${app_nombre}" />
     <meta name="author" content="Carlos Isaac Abreu Pérez" />
-    <title>OMSA @app_provincia Login</title>
+    <title>Login ERP - ${app_nombre}</title>
     <link href="/content/css/styles.css" rel="stylesheet" />
     <link href="/content/css/bootstrap.min.css" rel="stylesheet" />
 </head>
@@ -31,7 +34,7 @@
                                 <form method="post">
                                     <div class="card-body">
                                         <div class="d-flex justify-content-between align-middle py-3 mb-3">
-                                            <h2 class="ms-2">Login<br/><span>@app_provincia</span></h2>
+                                            <h2 class="ms-2">Login<br/><span>${app_nombre}</span></h2>
                                             <img  width="64px" height="64px" class="me-4" src="/content/assets/img/Omsafooter.webp" alt="OMSA"/>
                                         </div>
                                         <div class="form-floating mb-3">
@@ -62,17 +65,13 @@
                                         </div>
                                         @if(error_msg != null) 
                                             <div class="alert alert-danger">
-                                                <span>@error_msg</span>
+                                                <span>${error_msg}</span>
                                             </div>
-                                        @endif
-                                        
-                                        @if(param.error) 
-                                            <div class="alert alert-danger">@session?.SPRING_SECURITY_LAST_EXCEPTION?.message</div>
                                         @endif
 
                                         @if(success_msg != null) 
                                             <div class="alert alert-success">
-                                                <span>@success_msg</span>
+                                                <span>${success_msg}</span>
                                             </div>
                                         @endif
 

@@ -71,13 +71,13 @@ public class AccesoServ {
     }
     
     @Cacheable("PermisosMenu")
-    public Map<String, Object> consultarAccesosMenuUsuario(Integer id_usuario){
+    public Map<String, Boolean> consultarAccesosMenuUsuario(Integer id_usuario){
         List<Object[]> results=repo.ListadoMenuUsuario(id_usuario);
-        Map<String, Object> convert=new HashMap<>();
+        Map<String, Boolean> convert=new HashMap<>();
         
         for (Object[] result : results) {
             String nombre = (String) result[0];
-            Object valor = convertirValor(result[1]);
+            Boolean valor = (Boolean) convertirValor(result[1]);
             convert.put(nombre, valor);
         }
         
