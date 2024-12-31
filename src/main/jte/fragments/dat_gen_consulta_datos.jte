@@ -1,5 +1,12 @@
+@import abreuapps.core.control.general.DatoDTO
+@import java.util.List
 
-@template.content()
+@param boolean dat_gen_consulta_datos
+@param boolean dat_gen_registro_datos
+@param String msg
+@param Boolean status
+@param List<DatoDTO> datos
+
 <main id="content-page">
     @if(dat_gen_consulta_datos)
         <div class="container-fluid px-4">
@@ -32,10 +39,10 @@
                             <div class="col mt-2 mb-2">
                                 @if(msg!=null)
                                     <div
-                                        class="'alert '+${status ? 'alert-success' : 'alert-warning'}+' alert-dismissible fade show'"
+                                        class="alert ${status ? "alert-success" : "alert-warning"} alert-dismissible fade show"
                                         role="alert"
                                         >
-                                        <b><span>@msg</span></b>
+                                        <b><span>${msg}</span></b>
                                         <button
                                             type="button"
                                             class="btn-close"
@@ -63,11 +70,11 @@
                                         </thead>
                                         <tbody>
                                             @for(var d : datos)
-                                                <tr data-id="${d.dat}">
-                                                    <th scope="row">${d.dat}</th>
-                                                    <td>${d.dsc}</td>
-                                                    <td>${d.fat_dat}</td>
-                                                    <td>${d.act?'Activo':'Inactivo'}</td>
+                                                <tr data-id="${d.dat()}">
+                                                    <th scope="row">${d.dat()}</th>
+                                                    <td>${d.dsc()}</td>
+                                                    <td>${d.fat_dat()}</td>
+                                                    <td>${d.act()?"Activo":"Inactivo"}</td>
                                                 </tr>
                                             @endfor
                                         </tbody>
@@ -83,6 +90,8 @@
         @if(dat_gen_registro_datos) 
             <script src="/content/js/dtgnr/dt742520.js"></script>
         @endif
-        
+
+    @else
+        @template.error.403()
     @endif
 </main>

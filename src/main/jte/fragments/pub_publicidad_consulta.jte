@@ -1,53 +1,63 @@
+@import abreuapps.core.control.general.PublicidadDTO
+@import java.util.List
 
-@template.content()
-<main  id="content-page">
-    <th:block th:if="${pub_publicidad_consulta}">
+@param boolean pub_publicidad_consulta
+@param boolean pub_publicidad_registro
+@param String msg
+@param Boolean status
+@param List<PublicidadDTO> publicidades
+
+
+<main id="content-page">
+    @if(pub_publicidad_consulta)
         <div class="container-fluid px-4">
             <div class="row d-flex align-items-center justify-content-center mt-5 mb-5">
                 <div class="card col-12 col-md-10 col-lg-8"> 
                     <div class="card-body mt-3 mb-3">
                         <div class="row">
                             <div
-                            class="col-8 d-flex align-items-start justify-content-start"
+                                class="col-8 d-flex align-items-start justify-content-start"
                             >
-                            <h4>
-                                Publicidad&nbsp;
-                            </h4>
-                        </div>
-                        <div
-                            class="col-4 d-flex align-items-end justify-content-end"
-                            >
-                            <button th:if="${pub_publicidad_registro}"
-                                type="button"
-                                class="btn btn-success"
-                                onclick="
-                                    event.preventDefault();
-                                    closeEventSource();
-                                    cargar_contenido('pub_publicidad_registro');"
+                                <h4>
+                                    Publicidad&nbsp;
+                                </h4>
+                            </div>
+                            <div
+                                class="col-4 d-flex align-items-end justify-content-end"
                                 >
-                                <b><i class="fa fa-plus"></i></b>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col mt-2 mb-2">
-                            <th:block th:if="${msg!=null}">
-                                <div
-                                    th:class="'alert '+${status ? 'alert-success' : 'alert-warning'}+' alert-dismissible fade show'"
-                                    role="alert"
-                                    >
-                                    <b><span th:text="${msg}"></span></b>
+                                @if(pub_publicidad_registro)
                                     <button
                                         type="button"
-                                        class="btn-close"
-                                        data-bs-dismiss="alert"
-                                        aria-label="Close"
-                                        ></button>
-                                </div>
-                            </th:block>
+                                        class="btn btn-success"
+                                        onclick="
+                                            event.preventDefault();
+                                            closeEventSource();
+                                            cargar_contenido('pub_publicidad_registro');"
+                                        >
+                                        <b><i class="fa fa-plus"></i></b>
+                                    </button>
+                                @endif
+                            </div>
                         </div>
-                    </div>
-                    <br>
+                        <div class="row">
+                            <div class="col mt-2 mb-2">
+                                @if(msg!=null)
+                                    <div
+                                            class="alert ${status ? "alert-success" : "alert-warning"} alert-dismissible fade show"
+                                            role="alert"
+                                    >
+                                        <b><span>${msg}</span></b>
+                                        <button
+                                                type="button"
+                                                class="btn-close"
+                                                data-bs-dismiss="alert"
+                                                aria-label="Close"
+                                        ></button>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                        <br>
                         <div class="row">
                             <div class="table-responsive table-responsive-md">
                                 <table
@@ -63,12 +73,14 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr th:each="d: ${publicidades}" th:attr="data-id=${d.id}">
-                                            <th scope="row" th:text="${d.id}"></th>
-                                            <td th:text="${d.tit}"></td>
-                                            <td th:text="${d.empresa_dat}"></td>
-                                            <td th:text="${d.act?'Activo':'Inactivo'}"></td>
-                                        </tr>
+                                        @for(var d:publicidades)
+                                            <tr data-id="${d.id()}">
+                                                <th scope="row">${d.id()}</th>
+                                                <td>${d.tit()}</td>
+                                                <td>${d.empresa_dat()}</td>
+                                                <td>${d.act()?"Activo":"Inactivo"}</td>
+                                            </tr>
+                                        @endfor
                                     </tbody>
                                 </table>
                             </div>
@@ -77,10 +89,10 @@
                 </div>
             </div>
         </div>
-        <script th:src="@{/content/js/tb_init.js}"></script>
-        <script th:if="${pub_publicidad_registro}"  th:src="@{/content/js/pub/pub794851.js}"></script>
-        <script th:src="@{/content/js/pub/es_pub794851.js}"></script>
-</th:block>
-<th:block th:unless="${pub_publicidad_consulta}" th:insert="~{error/403 :: error403}">
-</th:block>
+        <script src="/content/js/tb_init.js"></script>
+        @if(pub_publicidad_registro) <script src="/content/js/pub/pub794851.js"></script> @endif
+        <script src="/content/js/pub/es_pub794851.js"></script>
+    @else
+        @template.error.403()
+    @endif
 </main>

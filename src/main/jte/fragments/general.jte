@@ -1,4 +1,10 @@
-@template.content()
+@import abreuapps.core.control.transporte.LogVehiculo
+@import java.util.List
+
+@param int active_views
+@param int today_views
+@param List<LogVehiculo> vhl_log
+
 <main class="main-content" id="content-page">
     <div class="container-fluid px-4">
         <div class="row d-flex justify-content-center mt-2">
@@ -6,7 +12,7 @@
                 <div class="card">
                     <div class="card-body text-center row align-items-center">
                         <div class="col-12 col-lg-6"><h3 class="pt-2 pb-2">Clientes Activos</h3></div>
-                        <div class="col-12 col-lg-6"><h1 id="clientes_activos" >@total_active_views</h1></div>
+                        <div class="col-12 col-lg-6"><h1 id="clientes_activos" >${active_views}</h1></div>
                     </div>
                 </div>
             </div>
@@ -14,7 +20,7 @@
                 <div class="card">
                     <div class="card-body text-center row align-items-center">
                         <div class="col-12 col-lg-6"><h3 class="pt-2 pb-2">Visitas Hoy</h3></div>
-                        <div class="col-12 col-lg-6"><h1 id="views_hoy">@total_views_today</h1></div>
+                        <div class="col-12 col-lg-6"><h1 id="views_hoy">${today_views}</h1></div>
                     </div>
                 </div>
             </div>
@@ -42,22 +48,22 @@
                                 <tbody>
                                     @for(var d : vhl_log)
 
-                                        <tr data-id="${d.id}">
-                                            <th scope="row">${d.id}</th>
+                                        <tr data-id="${d.getId()}">
+                                            <th scope="row">${d.getId()}</th>
                                             <td>
-                                                @if(d.estado_new=="Averiado")
+                                                @if(d.getEstado_new()=="Averiado")
                                                     <img src="/content/assets/img/car-crash-icon.webp" alt="alt" height="32" width="32"/>
                                                 @endif
         
-                                                @if(d.system_change)
+                                                @if(d.isSystem_change())
                                                     <img src="/content/assets/img/bot-icon.webp" alt="alt" height="32" width="32"/>
                                                 @endif
                                             </td>
 
-                                            <td>${d.placa}</td>
-                                            <td>${d.ruta_new}</td>
-                                            <td>${(d.system_change?'Sistema - ':'')+d.estado_new}</td>
-                                            <td>${d.fecha_registro}</td>
+                                            <td>${d.getPlaca()}</td>
+                                            <td>${d.getRuta_new()}</td>
+                                            <td>${(d.isSystem_change() ? "Sistema - ":"" ) + d.getEstado_new()}</td>
+                                            <td>${String.valueOf(d.getFecha_registro())}</td>
                                         </tr>
 
                                     @endfor
@@ -73,18 +79,4 @@
         </div>
     </div>
 </main>
-
-
-@template.footer()
-<footer class="py-4 bg-light mt-auto">
-    <div class="container-fluid px-4">
-        <div class="d-flex align-items-center justify-content-between small">
-            <div class="text-muted">Copyright &copy; Abreu Apps 2024</div>
-            <div>
-                <a href="#" class="text-muted">Políticas de Privacidad</a>
-                &middot;
-                <a href="#" class="text-muted">Terminos &amp; Condiciones</a>
-            </div>
-        </div>
-    </div>
-</footer>
+>

@@ -1,5 +1,3 @@
-
-@template.content()
 <main  id="content-page">
     <div class="container-fluid px-4">
 

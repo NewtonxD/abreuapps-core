@@ -1,7 +1,16 @@
+@import abreuapps.core.control.general.DatoDTO
+@import abreuapps.core.control.general.Dato
+@import abreuapps.core.control.utils.DateUtils
+@import java.util.List
 
-@template.content()
+@param boolean dat_gen_registro_datos
+@param Boolean update
+@param DateUtils dateUtils
+@param List<DatoDTO> grupos
+@param Dato dato
+
 <main id="content-page">
-    @if(@dat_gen_registro_datos)
+    @if(dat_gen_registro_datos)
         <div class="container-fluid px-4">
             <div class="row d-flex align-items-center justify-content-center mt-5 mb-5">
                 <div class="card col-12 col-md-10 col-lg-8">
@@ -14,20 +23,17 @@
                                                 cargar_contenido('dat_gen_consulta_datos');
                                             });">
                                     <b><i class="fa fa-chevron-left"></i></b>
-                                </button>
-                                &nbsp;&nbsp;<h4>Datos Generales&nbsp;
-                                    <th:block th:if="${!update}">
-                                        <i class="fa fa-plus"></i>
-                                    </th:block>
-                                    <th:block th:if="${update}">
-                                        <i class="fa fa-pencil"></i>
-                                    </th:block>
+                                </button>&nbsp;&nbsp;
+                                <h4>
+                                    Datos Generales
+                                    <i class="fa fa-${!update?"plus":"pencil"}"></i>
                                 </h4>
                             </div>
                         </div>
                         <form class="form-group" id="form-guardar">
                             <div class="row">
-                                <th:block th:if="${!update}">
+                                @if(!update)
+
                                     <div class="mb-3 col-12 col-md-6">
                                         <label for="nom-dato" class="form-label text-muted">Nombre del Dato:</label>
                                         <input type="text" id="nom-dato" name="dato" placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">        
@@ -37,55 +43,58 @@
                                         <label for="grupo" class="form-label text-muted">Grupo:</label>
                                         <select class="form-select custom-select" id="dato_padre" name="dato_padre" required>
                                             <option value="0" selected disabled>--Seleccione--</option>
-                                            <option th:value="${g.dat}" th:each="g :${grupos}" th:if="${g.act}" th:text="${g.dat}"></option>
+                                            @for(var g : grupos)
+                                                @if(g.act())
+                                                    <option value="${g.dat()}" >${g.dat()}</option>
+                                                @endif
+                                            @endfor
                                         </select>
                                     </div>
-                                </th:block>
 
-                                <th:block th:if="${update}">
-                                    <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" th:value="${#dates.format(dato.fecha_actualizacion, 'yyyy-MM-dd HH:mm:ss')}">
-                                    <input  type="text" name="dato_padre" style="display: none; width: 1px;height: 1px;" th:value="${dato.dato_padre}" required>
-                                    <input type="text" style="display: none; width: 1px;height: 1px;" th:value="${dato.dato}" name="dato" required>
+                                @else
 
-                                <div class="mb-3 col-12 col-md-6">
-                                    <label for="nom-dato" class="form-label text-muted">Nombre del Dato:</label>
-                                    <input type="text" id="nom-dato" disabled th:value="${dato.dato}" placeholder=" ... " class="form-control" aria-describedby="basic-addon4">
-                                </div>
+                                    <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" value="${dateUtils.DateToFormato2(dato.getFecha_actualizacion())}">
+                                    <input  type="text" name="dato_padre" style="display: none; width: 1px;height: 1px;" value="${dato.getDato_padre()}" required>
+                                    <input type="text" style="display: none; width: 1px;height: 1px;" value="${dato.getDato()}" name="dato" required>
 
-                                <div class="mb-3 col-12 col-md-6">
-                                    <label for="grupo" class="form-label text-muted">Grupo:</label>
-                                    <select class="form-select custom-select" disabled >
-                                        <th:block th:if="${dato.dato_padre==null}">
-                                            <option value="0" selected disabled>--Seleccione--</option>
-                                        </th:block>
-                                        <th:block th:if="${dato.dato_padre!=null}">
-                                            <option th:value="${dato.dato_padre}" th:text="${dato.dato_padre}"></option>
-                                        </th:block>
-                                    </select>        
-                                </div>
-                                </th:block>
+                                    <div class="mb-3 col-12 col-md-6">
+                                        <label for="nom-dato" class="form-label text-muted">Nombre del Dato:</label>
+                                        <input type="text" id="nom-dato" disabled value="${dato.getDato()}" placeholder=" ... " class="form-control" aria-describedby="basic-addon4">
+                                    </div>
+
+                                    <div class="mb-3 col-12 col-md-6">
+                                        <label for="grupo" class="form-label text-muted">Grupo:</label>
+                                        <select class="form-select custom-select" disabled >
+                                            @if(dato.getDato_padre().equals(null))
+                                                <option value="0" selected disabled>--Seleccione--</option>
+                                            @else
+                                                <option value="${dato.getDato_padre()}">${dato.getDato_padre()}</option>
+                                            @endif
+                                        </select>
+                                    </div>
+
+                                @endif
 
                                 <div class="mb-3 col-12">
                                     <label for="descripcion" class="form-label text-muted">Descripción:</label>
-                                    <textarea class="form-control" id="descripcion" name="descripcion" rows="3" th:text="${update?dato.descripcion:''}" required maxlength="255"></textarea>
+                                    <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required maxlength="255">
+                                        ${update?dato.getDescripcion():""}
+                                    </textarea>
                                 </div>
                                 <div class="col-6 d-flex justify-content-start">
                                     <div class="form-check">
-
-                                        <input class="form-check-input" type="checkbox"  th:attr="checked=${update?dato.activo:true}" name="activo" id="activo">
-
-                                            <label class="form-check-label text-muted" for="activo">Activo</label>
+                                        <input class="form-check-input" type="checkbox"  checked="${!update || dato.isActivo()}" name="activo" id="activo">
+                                        <label class="form-check-label text-muted" for="activo">Activo</label>
                                     </div>
                                 </div>
                                 <div class="col-6 d-flex justify-content-end">
 
                                     <button type="submit" class="btn btn-primary"> 
-                                        <th:block th:if="${!update}"><b> <i class="fa fa-save"></i>
-                                            Guardar</b>
-                                        </th:block>
-                                        <th:block th:if="${update}"><b> <i class="fa fa-pencil"></i>
-                                                Editar</b>
-                                        </th:block>
+                                        @if(!update)
+                                            <b><i class="fa fa-save"></i>Guardar</b>
+                                        @else
+                                            <b><i class="fa fa-pencil"></i>Editar</b>
+                                        @endif
                                     </button>
                                 </div>
                             </div>
@@ -97,6 +106,6 @@
         <script src="/content/js/dtgnr/svd_dt742520.js"></script>
 
     @else
-        @template("error/403.jte", "error403")
+        @template.error.403()
     @endif
 </main>

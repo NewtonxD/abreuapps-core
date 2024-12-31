@@ -7,7 +7,7 @@ import java.io.Serializable;
  * @author cabreu
  */
 public record ProductoDTO(
-    Integer id,
+    Long id,
     String nom,
     String dsc,
     Float prc_sel,

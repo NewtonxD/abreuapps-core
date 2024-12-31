@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface ProductoRepo extends JpaRepository<Producto, Integer> {
+public interface ProductoRepo extends JpaRepository<Producto, Long> {
     
     @Query("SELECT new abreuapps.core.control.inventario.ProductoDTO(" +
            "p.id, " +

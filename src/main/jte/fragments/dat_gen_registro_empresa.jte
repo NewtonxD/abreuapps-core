@@ -1,7 +1,13 @@
+@import abreuapps.core.control.general.Dato
+@import abreuapps.core.control.utils.DateUtils
 
-@template.content()
+@param boolean dat_gen_registro_empresa
+@param boolean update
+@param DateUtils dateUtils
+@param Dato dato
+
 <main  id="content-page">
-    <th:block th:if="${dat_gen_registro_empresa}">
+    @if(dat_gen_registro_empresa)
         <div class="container-fluid px-4">
             <div class="row d-flex align-items-center justify-content-center mt-5 mb-5">
                 <div class="card col-12 col-md-10 col-lg-8">
@@ -16,18 +22,13 @@
                                     <b><i class="fa fa-chevron-left"></i></b>
                                 </button>
                                 &nbsp;&nbsp;<h4>Empresa&nbsp;
-                                    <th:block th:if="${!update}">
-                                        <i class="fa fa-plus"></i>
-                                    </th:block>
-                                    <th:block th:if="${update}">
-                                        <i class="fa fa-pencil"></i>
-                                    </th:block>
+                                    <i class="fa fa-${!update?"plus":"pencil"}"></i>
                                 </h4>
                             </div>
                         </div>
                         <form class="form-group" id="form-guardar">
                             <div class="row">
-                                <th:block th:if="${!update}">
+                                @if(!update)
                                     <div class="mb-3 col-12 col-md-6">
                                         <label for="nom-dato" class="form-label text-muted">Nombre del Dato:</label>
                                         <input type="text" id="nom-dato" name="dato" placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">        
@@ -39,50 +40,48 @@
                                             <option value="Empresas" selected>Empresas</option>
                                         </select>
                                     </div>
-                                </th:block>
+                                @else
+                                    <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" value="${dateUtils.DateToFormato2(dato.getFecha_actualizacion())}">
+                                    <input  type="text" name="dato_padre" style="display: none; width: 1px;height: 1px;" value="${dato.getDato_padre()}" required>
+                                    <input type="text" style="display: none; width: 1px;height: 1px;" value="${dato.getDato()}" name="dato" required>
 
-                                <th:block th:if="${update}">
-                                    <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" th:value="${#dates.format(dato.fecha_actualizacion, 'yyyy-MM-dd HH:mm:ss')}">
-                                    <input  type="text" name="dato_padre" style="display: none; width: 1px;height: 1px;" th:value="${dato.dato_padre}" required>
-                                    <input type="text" style="display: none; width: 1px;height: 1px;" th:value="${dato.dato}" name="dato" required>
-
-                                <div class="mb-3 col-12 col-md-6">
-                                    <label for="nom-dato" class="form-label text-muted">Nombre del Dato:</label>
-                                    <input type="text" id="nom-dato" disabled th:value="${dato.dato}" placeholder=" ... " class="form-control" aria-describedby="basic-addon4">
-                                </div>
-                                </th:block>
+                                    <div class="mb-3 col-12 col-md-6">
+                                        <label for="nom-dato" class="form-label text-muted">Nombre de la empresa:</label>
+                                        <input type="text" id="nom-dato" disabled value="${dato.getDato()}" placeholder=" ... " class="form-control" aria-describedby="basic-addon4">
+                                    </div>
+                                @endif
 
                                 <div class="mb-3 col-12">
                                     <label for="descripcion" class="form-label text-muted">Descripción:</label>
-                                    <textarea class="form-control" id="descripcion" name="descripcion" rows="3" th:text="${update?dato.descripcion:''}" required maxlength="255"></textarea>
+                                    <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required maxlength="255">
+                                        ${update?dato.getDescripcion():""}
+                                    </textarea>
                                 </div>
                                 <div class="col-6 d-flex justify-content-start">
                                     <div class="form-check">
-
-                                        <input class="form-check-input" type="checkbox"  th:attr="checked=${update?dato.activo:true}" name="activo" id="activo">
-
-                                            <label class="form-check-label text-muted" for="activo">Activo</label>
+                                        <input class="form-check-input" type="checkbox"  checked="${!update || dato.isActivo()}" name="activo" id="activo">
+                                        <label class="form-check-label text-muted" for="activo">Activo</label>
                                     </div>
                                 </div>
                                 <div class="col-6 d-flex justify-content-end">
-
-                                    <button type="submit" class="btn btn-primary"> 
-                                        <th:block th:if="${!update}"><b> <i class="fa fa-save"></i>
-                                            Guardar</b>
-                                        </th:block>
-                                        <th:block th:if="${update}"><b> <i class="fa fa-pencil"></i>
-                                                Editar</b>
-                                        </th:block>
+                                    <button type="submit" class="btn btn-primary">
+                                        @if(!update)
+                                            <b><i class="fa fa-save"></i>Guardar</b>
+                                        @else
+                                            <b><i class="fa fa-pencil"></i>Editar</b>
+                                        @endif
                                     </button>
                                 </div>
+
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-        <script th:src="@{/content/js/dtgnr/svd_emp742520.js}"></script>
-    </th:block>
-    <th:block th:unless="${dat_gen_registro_empresa}" th:insert="~{error/403 :: error403}">
-    </th:block>
+        <script src="/content/js/dtgnr/svd_emp742520.js"></script>
+
+    @else
+        @template.error.403()
+    @endif
 </main>

@@ -149,7 +149,7 @@ public class ProductoCntr {
     @PostMapping("/update")
     public String ActualizarPublicidad(
         Model model,
-        @RequestParam("idProducto") Integer idProducto
+        @RequestParam("idProducto") Long idProducto
     ) {
         
         boolean valido=true;

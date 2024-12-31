@@ -1,5 +1,4 @@
 
-@template.content()
 <main  id="content-page">
     <th:block th:if="${pub_publicidad_registro}">
         <div class="container-fluid px-4">

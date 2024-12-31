@@ -1,7 +1,14 @@
+@import abreuapps.core.control.inventario.ProductoDTO
+@import java.util.List
 
-@template.content()
+@param boolean inv_producto_consulta
+@param boolean inv_producto_registro
+@param String msg
+@param Boolean status
+@param List<ProductoDTO> productos
+
 <main  id="content-page">
-    <th:block th:if="${inv_producto_consulta}">
+    @if(inv_producto_consulta)
         <div class="container-fluid px-4">
             <div class="row d-flex align-items-center justify-content-center mt-5 mb-5">
                 <div class="card col-12 col-md-10 col-lg-8"> 
@@ -17,34 +24,36 @@
                         <div
                             class="col-4 d-flex align-items-end justify-content-end"
                             >
-                            <button th:if="${inv_producto_registro}"
-                                type="button"
-                                class="btn btn-success"
-                                onclick="
-                                    event.preventDefault();
-                                    closeEventSource();
-                                    cargar_contenido('inv_producto_registro');"
-                                >
-                                <b><i class="fa fa-plus"></i></b>
-                            </button>
+                            @if(inv_producto_registro)
+                                <button
+                                    type="button"
+                                    class="btn btn-success"
+                                    onclick="
+                                        event.preventDefault();
+                                        closeEventSource();
+                                        cargar_contenido('inv_producto_registro');"
+                                    >
+                                    <b><i class="fa fa-plus"></i></b>
+                                </button>
+                            @endif
                         </div>
                     </div>
                     <div class="row">
                         <div class="col mt-2 mb-2">
-                            <th:block th:if="${msg!=null}">
+                            @if(msg!=null)
                                 <div
-                                    th:class="'alert '+${status ? 'alert-success' : 'alert-warning'}+' alert-dismissible fade show'"
-                                    role="alert"
-                                    >
-                                    <b><span th:text="${msg}"></span></b>
+                                        class="alert ${status ? "alert-success" : "alert-warning"} alert-dismissible fade show"
+                                        role="alert"
+                                >
+                                    <b><span>${msg}</span></b>
                                     <button
-                                        type="button"
-                                        class="btn-close"
-                                        data-bs-dismiss="alert"
-                                        aria-label="Close"
-                                        ></button>
+                                            type="button"
+                                            class="btn-close"
+                                            data-bs-dismiss="alert"
+                                            aria-label="Close"
+                                    ></button>
                                 </div>
-                            </th:block>
+                            @endif
                         </div>
                     </div>
                     <br>
@@ -63,12 +72,14 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr th:each="d: ${productos}" th:attr="data-id=${d.id}">
-                                            <th scope="row" th:text="${d.id}"></th>
-                                            <td th:text="${d.nom}"></td>
-                                            <td th:text="${d.dsc}"></td>
-                                            <td th:text="${d.act?'Activo':'Inactivo'}"></td>
-                                        </tr>
+                                        @for(var d : productos)
+                                            <tr data-id=${d.id()}>
+                                                <th scope="row">${d.id()}</th>
+                                                <td>${d.nom()}</td>
+                                                <td>${d.dsc()}</td>
+                                                <td>${d.act()?"Activo":"Inactivo"}</td>
+                                            </tr>
+                                        @endfor
                                     </tbody>
                                 </table>
                             </div>
@@ -77,10 +88,15 @@
                 </div>
             </div>
         </div>
-        <script th:src="@{/content/js/tb_init.js}"></script>
-        <script th:if="${inv_producto_registro}"  th:src="@{/content/js/prd/prd754250.js}"></script>
-        <script th:src="@{/content/js/prd/es_prd754250.js}"></script>
-</th:block>
-<th:block th:unless="${inv_producto_consulta}" th:insert="~{error/403 :: error403}">
-</th:block>
+
+        @if(inv_producto_registro)
+            <script src="/content/js/prd/prd754250.js"></script>
+        @endif
+
+        <script src="/content/js/prd/es_prd754250.js"></script>
+        <script src="/content/js/tb_init.js"></script>
+
+    @else
+        @template.error.403()
+    @endif
 </main>
