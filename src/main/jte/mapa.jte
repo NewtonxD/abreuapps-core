@@ -1,3 +1,8 @@
+@param String server_ip
+@param String base_dir
+@param Double base_lat
+@param Double base_lng
+
 <!DOCTYPE html>
 <html lang="es">
     <head>

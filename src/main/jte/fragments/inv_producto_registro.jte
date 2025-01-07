@@ -1,104 +1,87 @@
+@import abreuapps.core.control.inventario.Producto
+@import abreuapps.core.control.utils.DateUtils
+@import java.util.List
+@import abreuapps.core.control.general.DatoDTO
 
-@template.content()
-<main  id="content-page">
-    <th:block th:if="${inv_producto_registro}">
-        <div class="container-fluid px-4">
-            <div class="row d-flex align-items-center justify-content-center mt-5 mb-5">
-                <div class="card col-12 col-md-10 col-lg-8">
-                    <div class="card-body mt-3 mb-3">
-                        <div class="row mb-3">
-                            <div class="col-12 d-flex align-items-start justify-content-start">
-                                <button type="submit" class="btn btn-sm btn-secondary"
-                                        onclick="$(function () {
-                                                event.preventDefault();
-                                                cargar_contenido('inv_producto_consulta');
-                                            });">
-                                    <b><i class="fa fa-chevron-left"></i></b>
-                                </button>
-                                &nbsp;&nbsp;<h4>Producto&nbsp;
-                                    <th:block th:if="${id==null}">
-                                        <i class="fa fa-plus"></i>
-                                    </th:block>
-                                    <th:block th:if="${id!=null}">
-                                        <i class="fa fa-pencil"></i>
-                                    </th:block>
-                                </h4>
-                            </div>
-                        </div>
+@param boolean inv_producto_registro
+@param DateUtils dateUtils
+@param Producto producto
+@param List<DatoDTO> categorias
 
+!{boolean update = producto.getId()!=null;}
 
-                        <form class="form-group" id="form-guardar" th:object="${producto}">
-                            <div class="row">
-                                <input type="text" style="display: none; width: 1px;height: 1px;" th:if="${producto.id!=null}" id="idPublicidad" name="id" th:value="${producto.id}" placeholder=" ... " class="form-control" aria-describedby="basic-addon4">
-                                <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" th:value="${#dates.format(producto.fecha_actualizacion, 'yyyy-MM-dd HH:mm:ss')}">
-                                
-                                
-                                <div class="mb-3 col-12">
-                                    <label for="nom-dato" class="form-label text-muted">Nombre:</label>
-                                    <input type="text" th:field="*{nombre}" required class="form-control" placeholder="..."/>
-                                </div>
-                                
-                                <div class="mb-3 col-12 col-md-6">
-                                    <label for="nom-dato" class="form-label text-muted">Precio de Venta:</label>
-                                    <input type="number" th:field="*{precio_venta}" required class="form-control" placeholder="..."/>
-                                </div>
-                                
-                                <div class="mb-3 col-12 col-md-6">
-                                    <label for="nom-dato" class="form-label text-muted">Categoria:</label>
-                                    <select required class="form-select custom-select" th:field="*{categoria}" >
-                                        <option value="0" selected disabled>--Seleccione--</option>
-                                        <th:block  th:each="c :${categorias}">
-                                            <option th:value="${c.dat}" th:selected="${producto.id!=null && producto.categoria.dato==c.dat}" th:if="${c.act}" th:text="${c.dat}"></option>
-                                        </th:block>
-                                    </select> 
-                                </div>
-                                
-                                <div class="mb-3 col-12">
-                                    <label for="descripcion" class="form-label text-muted">Descripción:</label>
-                                    <textarea class="form-control" th:field="*{descripcion}" rows="2" maxlength="255"></textarea>
-                                </div>
-                                
-                                <div class="mb-3 col-12">
-                                    <label for="nom-dato" class="form-label text-muted">Imagen:</label>
-                                    <th:block th:if="${producto.id==null}">
-                                        <div class="alert alert-warning" role="alert" id="fileInfo" style="display: none;" ></div>
-                                        <input type="file" class="form-control" id="fileInput" required accept="video/mp4,image/jpeg,image/webp,image/png">
-                                    </th:block>
-                                    <input type="text" style="display: none;" th:field="*{foto}" id="archivo" class="form-control"/>
-                                    <div id="previewContainer" class="d-flex justify-content-center" style="display: none;">
-                                        <div id="preview" class="mt-2"></div>
-                                    </div>
-                                </div>
+@template.shared.registro(
+    titulo = "Producto",
+    id_consulta = "inv_producto_consulta",
+    permiso_registro = inv_producto_registro,
+    update = update,
+    content = @`
+        @if(update)
+            <input type="text" style="display: none; width: 1px;height: 1px;" id="idPublicidad" name="id" value="${producto.getId()}" placeholder=" ... " class="form-control" aria-describedby="basic-addon4">
+        @endif
 
-                                <div class="col-6 d-flex justify-content-start">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox"  th:attr="checked=${producto.id!=null?producto.activo:'true'}" name="activo" id="activo">
-                                            <label class="form-check-label text-muted" for="activo">Activo</label>
-                                    </div>
-                                </div>
+        <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" value="${dateUtils.DateToFormato2(producto.getFecha_actualizacion())}">
 
-                                <div class="col-6 d-flex justify-content-end">
-                                    <button type="submit" class="btn btn-primary" id="guardarBtn"> 
-                                        <th:block th:if="${producto.id==null}"><b> <i class="fa fa-save"></i>
-                                                Guardar</b>
-                                        </th:block>
-                                        <th:block th:if="${producto.id!=null}"><b> <i class="fa fa-pencil"></i>
-                                                Editar</b>
-                                        </th:block>
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+        <div class="mb-3 col-12">
+            <label for="nom-dato" class="form-label text-muted">Nombre:</label>
+            <input type="text" name="nombre" value="${producto.getNombre()}" required class="form-control" placeholder="..."/>
+        </div>
+
+        <div class="mb-3 col-12 col-md-6">
+            <label for="nom-dato" class="form-label text-muted">Precio de Venta:</label>
+            <input type="number" name="precio_venta" value="${producto.getPrecio_venta()}" required class="form-control" placeholder="..."/>
+        </div>
+
+        <div class="mb-3 col-12 col-md-6">
+            <label for="nom-dato" class="form-label text-muted">Categoria:</label>
+            <select required class="form-select custom-select" name="categoria" >
+                <option value="0" selected disabled>--Seleccione--</option>
+                @for(var c:categorias)
+                    @if(c.act())
+                        <option
+                                value="${c.dat()}"
+                                @if(update)
+                                    selected="${( producto.getCategoria().getDato().equals(c.dat()) ) ? "selected" : "" }"
+                                @endif
+                        >
+                            ${c.dat()}
+                        </option>
+                    @endif
+
+                @endfor
+            </select>
+        </div>
+
+        <div class="mb-3 col-12">
+            <label for="descripcion" class="form-label text-muted">Descripción:</label>
+            <textarea class="form-control" name="descripcion" rows="2" maxlength="255">${producto.getDescripcion()}</textarea>
+        </div>
+
+        <div class="mb-3 col-12">
+            <label for="nom-dato" class="form-label text-muted">Imagen:</label>
+            @if(!update)
+                <div class="alert alert-warning" role="alert" id="fileInfo" style="display: none;" ></div>
+                <input type="file" class="form-control" id="fileInput" required accept="video/mp4,image/jpeg,image/webp,image/png">
+            @endif
+            <input type="text" style="display: none;" name="foto" id="archivo" value="${producto.getFoto()}" class="form-control"/>
+            <div id="previewContainer" class="d-flex justify-content-center" style="display: none;">
+                <div id="preview" class="mt-2"></div>
             </div>
         </div>
-        <script th:src="@{/content/js/prd/prd804952.js}"></script>
-        <script th:src="@{/content/js/prd/svd_prd754250.js}"></script>
-        <th:block th:if="${producto.id!=null}">
-            <script th:src="@{/content/js/prd/prd825153.js}"></script>
-        </th:block>
-    </th:block>
-    <th:block th:unless="${inv_producto_registro}" th:insert="~{error/403 :: error403}">
-    </th:block>
-</main>
+
+        <div class="col-6 d-flex justify-content-start">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox"  checked="${!update || producto.isActivo()}" name="activo" id="activo">
+                <label class="form-check-label text-muted" for="activo">Activo</label>
+            </div>
+        </div>
+    `,
+    scripts_content = @`
+        <script src="/content/js/prd/prd804952.js"></script>
+        <script src="/content/js/prd/svd_prd754250.js"></script>
+
+        @if(update)
+            <script src="/content/js/prd/prd825153.js"></script>
+        @endif
+    `
+)

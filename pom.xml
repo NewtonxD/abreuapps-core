@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>abreuapps.core</groupId>
-	<artifactId>stp</artifactId>
+	<artifactId>erp</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>stp</name>
-	<description>Sistema orientado a Transporte Publico</description>
+	<name>erp</name>
+	<description>Sistema ERP - El Mago</description>
 	<properties>
 		<java.version>21</java.version>
 		<guava.version>33.2.0-jre</guava.version>
@@ -110,8 +110,6 @@
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <configuration>
-                        <source>21</source>
-                        <target>21</target>
                         <mainClass>com.dom.stp.omsa.ProjectApplication</mainClass>
                         <layout>JAR</layout>
                     </configuration>

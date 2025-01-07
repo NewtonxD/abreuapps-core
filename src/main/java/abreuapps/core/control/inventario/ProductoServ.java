@@ -35,7 +35,7 @@ public class ProductoServ {
         return repo.save(gd);
     }
     
-    public Optional<Producto> obtener(Integer id){
+    public Optional<Producto> obtener(Long id){
         if(id==null){
             return Optional.empty();
         }

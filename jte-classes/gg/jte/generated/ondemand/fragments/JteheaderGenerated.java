@@ -1,7 +1,7 @@
 package gg.jte.generated.ondemand.fragments;
 @SuppressWarnings("unchecked")
 public final class JteheaderGenerated {
-	public static final String JTE_NAME = "fragments/header.jte";
+	public static final String JTE_NAME = "shared/header.jte";
 	public static final int[] JTE_LINE_INFO = {1,1,1,1,1,4,4,7,7,7,9,18,39,39,39,1,1,1,1};
 	public static void render(gg.jte.html.HtmlTemplateOutput jteOutput, gg.jte.html.HtmlInterceptor jteHtmlInterceptor, String app_nombre) {
 		jteOutput.writeContent("\n<nav class=\"sb-topnav navbar navbar-expand navbar-dark bg-dark align-center\">\n    ");

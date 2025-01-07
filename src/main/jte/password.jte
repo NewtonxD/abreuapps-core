@@ -1,3 +1,8 @@
+
+@import abreuapps.core.control.usuario.Usuario
+
+@param Usuario usuario
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -20,8 +25,8 @@
                                         <h4 class="text-center font-weight-light my-4">Cambiar contraseña</h4>
                                     </div>
                                     <div id="msg"></div>
-                                    <input type="hidden" id="idUsuario" value="@usuario.id" />
-                                    @if(usuario.isCredentialsNonExpired()){
+                                    <input type="hidden" id="idUsuario" value="${usuario.getId()}" />
+                                    @if(usuario.isCredentialsNonExpired())
                                         <div class="form-floating mb-3">
                                             <input
                                                 class="form-control"
@@ -33,7 +38,7 @@
                                             />
                                             <label for="password" class="text-muted">Contraseña Actual</label>
                                         </div>
-                                    }
+                                    @endif
                                     <div id="passwordMessage" class="mt-2"></div>
                                     <div class="progress mt-3">
                                         <div id="passwordStrength" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
@@ -65,8 +70,8 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-6 d-flex py-3 justify-content-start mb-0">
-                                            <button type="button" id="btnSalir" class="${usuario.isCredentialsNonExpired() ? 'btn btn-secondary' : 'btn btn-danger'}">
-                                                <b>${usuario.isCredentialsNonExpired() ? 'Atras' : 'Salir'}</b>
+                                            <button type="button" id="btnSalir" class=${usuario.isCredentialsNonExpired() ? "btn btn-secondary" : "btn btn-danger"}>
+                                                <b>${usuario.isCredentialsNonExpired() ? "Atras" : "Salir"}</b>
                                             </button>
                                         </div>
                                         <div class="col-6 d-flex py-3 justify-content-end mb-0">
@@ -78,10 +83,10 @@
                                 </div>
                             </form>
                         </div>
-                        @if(!usuario.isCredentialsNonExpired()){
+                        @if(!usuario.isCredentialsNonExpired())
                             <script src="/content/js/lib/jquery-3.6.4.min.js"></script>
                             <script src="/content/js/access.js"></script>
-                        }
+                        @endif
                         <script src="/content/js/usrmgr/usr792461.js"></script>
                     </div>
                 </div>

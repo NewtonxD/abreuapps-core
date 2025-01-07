@@ -49,7 +49,6 @@ public class AppConf {
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no existe!"));
     }
 
-    @Bean
     public AuthenticationProvider authenticationProvider() {
         AuthProv authProvider = new AuthProv(userDetailsService(), passwordEncoder(), loginAttemptServ());
         return authProvider;

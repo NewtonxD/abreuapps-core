@@ -1,5 +1,3 @@
-
-@template.content()
 <main  id="content-page">
     <div class="container-fluid px-4">
         <div class="row d-flex align-items-center justify-content-center mt-5 mb-5">

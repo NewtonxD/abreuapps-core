@@ -61,8 +61,8 @@ public class MainCntr {
         
         model.addAttribute("app_nombre",ConfiguracionServicio.consultar("appnombre"));
         model.addAttribute("vhl_log",LogVehiculoServicio.consultar(100));
-        model.addAttribute("total_views_today",PublicidadServicio.getTotalViewsHoy());
-        model.addAttribute("total_active_views",SSEServicio.obtenerTotalClientesActivos());
+        model.addAttribute("today_views",PublicidadServicio.getTotalViewsHoy());
+        model.addAttribute("active_views",SSEServicio.obtenerTotalClientesActivos());
         model.addAttribute("datos_personales",u.getPersona());
         model.addAttribute("conf",confServ.consultarConfMap());
         model.addAttribute("permisos",AccesosServicio.consultarAccesosMenuUsuario(u.getId()));

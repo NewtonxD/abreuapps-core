@@ -6,7 +6,8 @@
 @param String server_ip
 @param String app_nombre
 @param List<LogVehiculo> vhl_log
-
+@param int active_views
+@param int today_views
 @param Persona datos_personales
 @param Map< String, Boolean > permisos
 @param Map< String, String > conf
@@ -41,15 +42,24 @@
             const SERVER_IP = '${server_ip}';
         </script>
         <script src="/content/js/global_vars.js"></script>
-        @template.fragments.header( app_nombre )
+        @template.shared.header( app_nombre = app_nombre )
         <div id="layoutSidenav">
-            @template.fragments.menu( app_nombre, datos_personales, permisos, conf )
+            @template.shared.menu(
+                app_nombre = app_nombre,
+                datos_personales = datos_personales,
+                permisos = permisos,
+                conf = conf
+            )
             <div id="layoutSidenav_content">
                 <div aria-live="polite" aria-atomic="true" class="position-relative">
                     <div id="toast-container" class="toast-container top-0 end-0 p-3"></div>
                 </div>
                 <main>
-                    @template("fragments/general.jte", "content")
+                    @template.shared.general(
+                        active_views = active_views,
+                        today_views = today_views,
+                        vhl_log = vhl_log
+                    )
                 </main>
             </div>
             <div class="overlay" onclick="hideSidebar()"></div>
