@@ -3,7 +3,7 @@ import abreuapps.core.control.transporte.LogVehiculo;
 import java.util.List;
 @SuppressWarnings("unchecked")
 public final class JtegeneralGenerated {
-	public static final String JTE_NAME = "fragments/general.jte";
+	public static final String JTE_NAME = "shared/general.jte";
 	public static final int[] JTE_LINE_INFO = {0,0,1,3,3,3,3,14,14,14,14,22,22,22,48,48,50,50,50,50,50,50,50,50,50,51,51,51,53,53,55,55,57,57,59,59,62,62,62,63,63,63,64,64,64,65,65,65,68,68,82,82,82,3,4,5,5,5,5};
 	public static void render(gg.jte.html.HtmlTemplateOutput jteOutput, gg.jte.html.HtmlInterceptor jteHtmlInterceptor, int active_views, int today_views, List<LogVehiculo> vhl_log) {
 		jteOutput.writeContent("\n<main class=\"main-content\" id=\"content-page\">\n    <div class=\"container-fluid px-4\">\n        <div class=\"row d-flex justify-content-center mt-2\">\n            <div class=\"col-12 col-sm-6 col-lg-4 mt-1 mb-1\">\n                <div class=\"card\">\n                    <div class=\"card-body text-center row align-items-center\">\n                        <div class=\"col-12 col-lg-6\"><h3 class=\"pt-2 pb-2\">Clientes Activos</h3></div>\n                        <div class=\"col-12 col-lg-6\"><h1 id=\"clientes_activos\" >");

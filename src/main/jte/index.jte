@@ -42,9 +42,9 @@
             const SERVER_IP = '${server_ip}';
         </script>
         <script src="/content/js/global_vars.js"></script>
-        @template.fragments.header( app_nombre = app_nombre )
+        @template.shared.header( app_nombre = app_nombre )
         <div id="layoutSidenav">
-            @template.fragments.menu(
+            @template.shared.menu(
                 app_nombre = app_nombre,
                 datos_personales = datos_personales,
                 permisos = permisos,
@@ -55,7 +55,7 @@
                     <div id="toast-container" class="toast-container top-0 end-0 p-3"></div>
                 </div>
                 <main>
-                    @template.fragments.general(
+                    @template.shared.general(
                         active_views = active_views,
                         today_views = today_views,
                         vhl_log = vhl_log

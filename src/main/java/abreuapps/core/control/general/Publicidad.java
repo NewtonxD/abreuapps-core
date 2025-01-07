@@ -68,7 +68,7 @@ public class Publicidad {
     private Integer conteo_view;
     
     @Column(name = "act")
-    private Boolean activo;
+    private boolean activo;
 
     @ManyToOne
     @PrimaryKeyJoinColumn

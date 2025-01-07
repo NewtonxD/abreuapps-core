@@ -1,85 +1,43 @@
+@import abreuapps.core.control.usuario.UsuarioDTO
+@import java.util.List
 
-@template.content()
-<main  id="content-page">
+@param boolean usr_mgr_principal
+@param boolean usr_mgr_registro
+@param String msg
+@param boolean status
+@param List<UsuarioDTO> usuarios
 
-    <th:block th:if="${usr_mgr_principal}">
-        <div class="container-fluid px-4">
-            <div class="row d-flex align-items-center justify-content-center mt-5 mb-5">
-                <div class="card col-12 col-md-10 col-lg-8">
-                    <div class="card-body mt-3 mb-3">
-                        <div class="row">
-                            <div class="col-10 d-flex align-items-start justify-content-start">
-                                <h4>
-                                    Usuarios&nbsp;
-                                </h4>
-                            </div>
-                            <div
-                                class="col-2 d-flex align-items-end justify-content-end"
-                                >
-                                <button th:if="${usr_mgr_registro}"
-                                        type="button"
-                                        class="btn btn-success"
-                                        onclick="event.preventDefault();closeEventSource();cargar_contenido('usr_mgr_registro');"
-                                        >
-                                    <b><i class="fa fa-plus"></i></b>
-                                </button>
-                            </div>
+@template.shared.consulta(
+    titulo = "Usuarios",
+    id_registro = "usr_mgr_registro",
+    permiso_consulta = usr_mgr_principal,
+    permiso_registro = usr_mgr_registro,
+    msg = msg,
+    status = status,
+    content = @`
+        <thead class="bg-secondary text-white">
+        <tr>
+            <th scope="col">Usuario</th>
+            <th scope="col">Correo</th>
+            <th scope="col">Clave Vencida</th>
+            <th scope="col">Estado</th>
+        </tr>
+        </thead>
+        <tbody>
+        @for(var u: usuarios)
+            <tr data-id="${u.usr()}">
+                <th>${u.usr()}</th>
+                <td>${u.mail()}</td>
+                <td>${u.pwd_chg()?"Si":"No"}</td>
+                <td>${u.act()?"Activo":"Inactivo"}</td>
+            </tr>
+        @endfor
+        </tbody>
+    `,
+    scripts_content = @`
+        <script src="/content/js/tb_init.js"></script>
+        @if(usr_mgr_registro) <script src="/content/js/usrmgr/usr782360.js"></script> @endif
+        <script src="/content/js/usrmgr/es_usr782360.js"></script>
+    `
+)
 
-                        </div>
-
-                        <div class="row">
-                            <div class="col mt-2 mb-2">
-                                <th:block th:if="${msg!=null}">
-                                    <div
-                                        th:class="'alert '+${status ? 'alert-success' : 'alert-warning'}+' alert-dismissible fade show'"
-                                        role="alert"
-                                        >
-                                        <b><span th:text="${msg}"></span></b>
-                                        <button
-                                            type="button"
-                                            class="btn-close"
-                                            data-bs-dismiss="alert"
-                                            aria-label="Close"
-                                            ></button>
-                                    </div>
-                                </th:block>
-                            </div>
-                        </div>
-                        <br>
-                            <div class="row">
-                                <div class="table-responsive table-responsive-md">
-                                    <table
-                                        class="table table-hover mt-2"
-                                        id="table"
-                                        >
-                                        <thead class="bg-secondary text-white">
-                                            <tr>
-                                                <th scope="col">Usuario</th>
-                                                <th scope="col">Correo</th>
-                                                <th scope="col">Clave Vencida</th>
-                                                <th scope="col">Estado</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr th:each="u: ${usuarios}" th:attr="data-id=${u.usr}">
-                                                <th th:text="${u.usr}"></th>
-                                                <td th:text="${u.mail}"></td>
-                                                <td th:text="${u.pwd_chg?'Si':'No'}"></td>
-                                                <td th:text="${u.act?'Activo':'Inactivo'}"></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <script th:src="@{/content/js/tb_init.js}"></script>
-        <script th:if="${usr_mgr_registro}"  th:src="@{/content/js/usrmgr/usr782360.js}"></script>
-        <script th:src="@{/content/js/usrmgr/es_usr782360.js}"></script>
-    </th:block>
-
-    <th:block th:unless="${usr_mgr_principal}" th:insert="~{error/403 :: error403}">
-    </th:block>
-</main>

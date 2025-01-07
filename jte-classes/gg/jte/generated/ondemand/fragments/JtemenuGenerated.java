@@ -3,7 +3,7 @@ import abreuapps.core.control.general.Persona;
 import java.util.Map;
 @SuppressWarnings("unchecked")
 public final class JtemenuGenerated {
-	public static final String JTE_NAME = "fragments/menu.jte";
+	public static final String JTE_NAME = "shared/menu.jte";
 	public static final int[] JTE_LINE_INFO = {0,0,1,3,3,3,3,14,14,14,14,18,18,38,38,44,44,46,46,52,52,54,54,60,60,65,65,67,67,87,87,97,97,99,99,109,109,111,111,121,121,123,123,133,133,135,135,141,141,143,143,149,149,153,153,155,155,175,175,181,181,183,183,189,189,191,191,197,197,199,199,209,209,211,211,221,221,226,226,228,228,248,248,254,254,259,259,261,261,281,281,287,287,289,289,295,295,297,297,303,303,307,307,309,309,329,329,335,335,337,337,343,343,345,345,351,351,357,357,359,370,370,371,371,371,371,371,371,372,372,377,377,377,3,4,5,6,6,6,6};
 	public static void render(gg.jte.html.HtmlTemplateOutput jteOutput, gg.jte.html.HtmlInterceptor jteHtmlInterceptor, String app_nombre, Persona datos_personales, Map< String, Boolean > permisos, Map< String, String > conf) {
 		jteOutput.writeContent("\n\n<div id=\"layoutSidenav_nav\">\n    <nav id=\"sidenavAccordion\" class=\"bg-dark sidebar flex-shrink-0 p-3\" data-bs-theme=\"dark\">\n        <div class=\"sb-sidenav-menu\">\n            <a class=\"d-flex align-items-center pb-3 mb-3 text-decoration-none text-white\" href=\"/main/index\">\n                <img class=\"me-3\" width=\"32px\" height=\"32px\" src=\"/content/assets/img/Omsafooter.webp\" />\n                <span class=\"fs-4 fw-semibold\">");
