@@ -6,6 +6,8 @@
 @param boolean update
 @param Content content
 @param Content scripts_content
+@param boolean saveButton = true;
+@param boolean backButton = true;
 
 <main id="content-page">
     @if(permiso_registro)
@@ -17,22 +19,26 @@
                         @template.shared.title_registro(
                             titulo = titulo,
                             permiso = id_consulta,
-                            update = update
+                            update = update,
+                            backButton = backButton
                         )
                         <form class="form-group" id="form-guardar">
                             <div class="row">
                                 ${content}
 
-                                <div class="col-6 d-flex justify-content-end">
+                                @if(saveButton)
+                                    <div class="col-6 d-flex justify-content-end">
 
-                                    <button type="submit" class="btn btn-primary">
-                                        @if(!update)
-                                            <b><i class="fa fa-save"></i>Guardar</b>
-                                        @else
-                                            <b><i class="fa fa-pencil"></i>Editar</b>
-                                        @endif
-                                    </button>
-                                </div>
+                                        <button type="submit" class="btn btn-primary">
+                                            @if(!update)
+                                                <b><i class="fa fa-save"></i>Guardar</b>
+                                            @else
+                                                <b><i class="fa fa-pencil"></i>Editar</b>
+                                            @endif
+                                        </button>
+                                    </div>
+                                @endif
+
                             </div>
                         </form>
                     </div>

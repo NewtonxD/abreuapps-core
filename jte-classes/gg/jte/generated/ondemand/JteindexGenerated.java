@@ -19,11 +19,11 @@ public final class JteindexGenerated {
 		jteOutput.setContext("script", null);
 		jteOutput.writeUserContent(server_ip);
 		jteOutput.writeContent("';\n        </script>\n        <script src=\"/content/js/global_vars.js\"></script>\n        ");
-		gg.jte.generated.ondemand.fragments.JteheaderGenerated.render(jteOutput, jteHtmlInterceptor, app_nombre);
+		gg.jte.generated.ondemand.shared.JteheaderGenerated.render(jteOutput, jteHtmlInterceptor, app_nombre);
 		jteOutput.writeContent("\n        <div id=\"layoutSidenav\">\n            ");
-		gg.jte.generated.ondemand.fragments.JtemenuGenerated.render(jteOutput, jteHtmlInterceptor, app_nombre, datos_personales, permisos, conf);
+		gg.jte.generated.ondemand.shared.JtemenuGenerated.render(jteOutput, jteHtmlInterceptor, app_nombre, datos_personales, permisos, conf);
 		jteOutput.writeContent("\n            <div id=\"layoutSidenav_content\">\n                <div aria-live=\"polite\" aria-atomic=\"true\" class=\"position-relative\">\n                    <div id=\"toast-container\" class=\"toast-container top-0 end-0 p-3\"></div>\n                </div>\n                <main>\n                    ");
-		gg.jte.generated.ondemand.fragments.JtegeneralGenerated.render(jteOutput, jteHtmlInterceptor, active_views, today_views, vhl_log);
+		gg.jte.generated.ondemand.shared.JtegeneralGenerated.render(jteOutput, jteHtmlInterceptor, active_views, today_views, vhl_log);
 		jteOutput.writeContent("\n                </main>\n            </div>\n            <div class=\"overlay\" onclick=\"hideSidebar()\"></div>\n        </div>\n        <script src=\"/content/js/checkstatus.js\"></script>\n        <script src=\"/content/js/scripts.js\"></script>\n        <script src=\"/content/js/access.js\"></script>\n        <script src=\"/content/js/context-loading.js\"></script>\n    </body>\n</html>");
 	}
 	public static void renderMap(gg.jte.html.HtmlTemplateOutput jteOutput, gg.jte.html.HtmlInterceptor jteHtmlInterceptor, java.util.Map<String, Object> params) {

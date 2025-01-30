@@ -1,4 +1,4 @@
-package gg.jte.generated.ondemand.fragments;
+package gg.jte.generated.ondemand.shared;
 @SuppressWarnings("unchecked")
 public final class JteheaderGenerated {
 	public static final String JTE_NAME = "shared/header.jte";
