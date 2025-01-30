@@ -1,4 +1,4 @@
-package gg.jte.generated.ondemand.fragments;
+package gg.jte.generated.ondemand.shared;
 import abreuapps.core.control.transporte.LogVehiculo;
 import java.util.List;
 @SuppressWarnings("unchecked")

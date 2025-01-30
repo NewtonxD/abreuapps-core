@@ -1,4 +1,4 @@
-package gg.jte.generated.ondemand.fragments;
+package gg.jte.generated.ondemand.shared;
 import abreuapps.core.control.general.Persona;
 import java.util.Map;
 @SuppressWarnings("unchecked")
