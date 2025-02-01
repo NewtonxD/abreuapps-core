@@ -143,35 +143,27 @@ public class AppConf {
 
     @Bean
     public CacheManager cacheManager() {
-        List<CaffeineCache> caches = new ArrayList<>();
-
-        
-        caches.add(buildCache("Tiles", Duration.ofHours(12)));
-        caches.add(buildCache("Paradas", Duration.ofHours(8)));
-        caches.add(buildCache("Rutas", Duration.ofHours(4)));
-        caches.add(buildCache("RutasInfo", Duration.ofHours(12)));
-        
-        caches.add(buildCache("RutasLoc", Duration.ofHours(8)));
-        caches.add(buildCache("Vehiculos", Duration.ofHours(4)));
-        
-        caches.add(buildCache("PMC", Duration.ofMinutes(30)));
-        caches.add(buildCache("PI", Duration.ofSeconds(10)));
-        caches.add(buildCache("LV", Duration.ofSeconds(10)));
-        
-        caches.add(buildCache("Usuario", Duration.ofHours(8)));
-        caches.add(buildCache("Usuarios", Duration.ofHours(8)));
-        caches.add(buildCache("LogVehiculo", Duration.ofHours(8)));
-        
-        caches.add(buildCache("Publicidad", Duration.ofMinutes(6)));
-        caches.add(buildCache("PublicidadArchivos", Duration.ofMinutes(6)));
-        caches.add(buildCache("Publicidades", Duration.ofHours(8)));
-        
-        
-        caches.add(buildCache("PermisosPantalla",Duration.ofDays(7)));
-        caches.add(buildCache("PermisosMenu",Duration.ofDays(7)));
-        caches.add(buildCache("PermisosUsuario",Duration.ofDays(7)));
-        
-        caches.add(buildCache("Conf", Duration.ofDays(7)));
+        List<CaffeineCache> caches = List.of(
+                buildCache("Tiles", Duration.ofHours(12)),
+                buildCache("Paradas", Duration.ofHours(8)),
+                buildCache("Rutas", Duration.ofHours(4)),
+                buildCache("RutasInfo", Duration.ofHours(12)),
+                buildCache("RutasLoc", Duration.ofHours(8)),
+                buildCache("Vehiculos", Duration.ofHours(4)),
+                buildCache("PMC", Duration.ofMinutes(30)),
+                buildCache("PI", Duration.ofSeconds(10)),
+                buildCache("LV", Duration.ofSeconds(10)),
+                buildCache("Usuario", Duration.ofHours(8)),
+                buildCache("Usuarios", Duration.ofHours(8)),
+                buildCache("LogVehiculo", Duration.ofHours(8)),
+                buildCache("Publicidad", Duration.ofMinutes(6)),
+                buildCache("PublicidadArchivos", Duration.ofMinutes(6)),
+                buildCache("Publicidades", Duration.ofHours(8)),
+                buildCache("PermisosPantalla",Duration.ofDays(7)),
+                buildCache("PermisosMenu",Duration.ofDays(7)),
+                buildCache("PermisosUsuario",Duration.ofDays(7)),
+                buildCache("Conf", Duration.ofDays(7))
+        );
         
         SimpleCacheManager cacheManager = new SimpleCacheManager();
         cacheManager.setCaches(caches);

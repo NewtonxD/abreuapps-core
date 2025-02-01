@@ -56,21 +56,17 @@ public class RutasCntr {
         @RequestParam(name = "fecha_actualizacionn", 
                         required = false) String fechaActualizacionCliente,
         @RequestParam("data_poly") String data
-    ) throws ParseException {
-
-        boolean valido;
-        
+    ) {
         
         String plantillaRespuesta="fragments/trp_rutas_consulta :: content-default";
         
         Usuario u = AccesoServicio.getUsuarioLogueado();
         
         //INICIO DE VALIDACIONES
-        String sinPermisoPlantilla = AccesoServicio.verificarPermisos(
-            "trp_rutas_consulta", model, u );
+        String sinPermisoPlantilla = AccesoServicio.verificarPermisos("trp_rutas_consulta", model);
         
         //USUARIO NO TIENE PERMISOS PARA EJECUTAR ESTA ACCION
-        valido = sinPermisoPlantilla.equals("");
+        boolean valido = sinPermisoPlantilla.equals("");
         
         
         if(valido){
@@ -124,7 +120,7 @@ public class RutasCntr {
                     LocRutaServicio.borrarPorRuta(d);
                     LocRutaServicio.guardarTodos(listaLocRuta);
                 }
-                AccesoServicio.cargarPagina("trp_rutas_consulta", model, u.getId());
+                AccesoServicio.cargarPagina("trp_rutas_consulta", model);
             }
             
             model.addAttribute("status", valido);
@@ -143,9 +139,6 @@ public class RutasCntr {
         
         boolean valido=true;
         String plantillaRespuesta="fragments/trp_rutas_registro :: content-default";
-        
-        Usuario usuarioLogueado = AccesoServicio.getUsuarioLogueado();
-
         Optional<Ruta> ruta = RutaServicio.obtener(idRuta);
 
         if (!ruta.isPresent()) {
@@ -160,8 +153,7 @@ public class RutasCntr {
         if(valido){
             model.addAttribute("ruta", ruta.get());
             model.addAllAttributes(
-                    AccesoServicio.consultarAccesosPantallaUsuario(
-                            usuarioLogueado.getId(), "trp_rutas_registro" )
+                    AccesoServicio.consultarAccesosPantallaUsuario("trp_rutas_registro" )
             );
         }
 
@@ -173,17 +165,13 @@ public class RutasCntr {
     @ResponseBody
     public ResponseEntity ObtenerLocRuta(
         @RequestParam("idRuta") String idRuta
-    ) {  
-        boolean valido;
-        Usuario u = AccesoServicio.getUsuarioLogueado();
+    ) {
         
         //VERIFICAMOS PERMISOS PARA ESTA ACCION
         String sinPermisoPlantilla = 
-            AccesoServicio.verificarPermisos(
-            "trp_paradas_registro", null, u 
-            );
-        
-        valido = sinPermisoPlantilla.equals("");
+            AccesoServicio.verificarPermisos("trp_paradas_registro", null);
+
+        boolean valido = sinPermisoPlantilla.equals("");
         
         Map<String, Object> respuesta= new HashMap<>();
         

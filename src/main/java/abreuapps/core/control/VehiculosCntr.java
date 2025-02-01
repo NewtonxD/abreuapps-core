@@ -8,16 +8,12 @@ import abreuapps.core.control.transporte.LocVehiculoServ;
 import abreuapps.core.control.transporte.Vehiculo;
 import abreuapps.core.control.transporte.VehiculoServ;
 import abreuapps.core.control.usuario.AccesoServ;
-import abreuapps.core.control.usuario.Usuario;
-import abreuapps.core.control.utils.DateUtils;
-import jakarta.servlet.http.HttpServletRequest;
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import abreuapps.core.control.utils.DateUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -37,8 +33,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequiredArgsConstructor
 @RequestMapping("/vhl")
 public class VehiculosCntr {
-    
-    private final DateUtils FechaUtils;
 
     private final AccesoServ AccesoServicio;
     
@@ -47,6 +41,9 @@ public class VehiculosCntr {
     private final DatoServ DatosServicio;
     
     private final LocVehiculoServ LocVehiculoServicio;
+
+    private final DateUtils FechaUtils;
+
 //----------------------------------------------------------------------------//
 //------------------ENDPOINTS VEHICULOS---------------------------------------//
 //----------------------------------------------------------------------------//
@@ -54,175 +51,64 @@ public class VehiculosCntr {
     @PostMapping("/save")
     public String GuardarVehiculo(
         Model model,
-        Vehiculo vehiculoCliente,
-        @RequestParam(name = "fecha_actualizacionn", 
-                        required = false) String fechaActualizacionCliente
-    ) throws ParseException {
-
-        boolean valido;
+        Vehiculo vehiculo,
+        @RequestParam(name = "fecha_actualizacionn", required = false) String fechaActualizacion
+    )  {
         
-        String plantillaRespuesta="fragments/trp_vehiculo_consulta :: content-default";
-        
-        Usuario u = AccesoServicio.getUsuarioLogueado();
-        
-        //INICIO DE VALIDACIONES
-        String sinPermisoPlantilla = AccesoServicio.verificarPermisos(
-            "trp_vehiculo_registro", model, u );
-        
-        //USUARIO NO TIENE PERMISOS PARA EJECUTAR ESTA ACCION
-        valido = sinPermisoPlantilla.equals("");
-        
-        
-        if(valido){
-            
-            Optional<Vehiculo> vehiculoBD = VehiculoServicio.obtener(vehiculoCliente.getPlaca());
+        String template="fragments/trp_vehiculo_consulta :: content-default";
+        boolean isOK = AccesoServicio.verificarPermisos("trp_vehiculo_registro", model );
 
-            if (vehiculoBD.isPresent()) {
-
-                if (! FechaUtils.FechaFormato2.format(
-                        vehiculoBD.get().getFecha_actualizacion()
-                        ).equals(fechaActualizacionCliente)
-                ) {
-                    
-                    
-                    model.addAttribute(
-                        "msg",
-                        ! ( fechaActualizacionCliente == null || 
-                             fechaActualizacionCliente.equals("") ) ? 
-                        "Al parecer alguien ha realizado cambios en la información primero. Por favor, inténtalo otra vez. COD: 00635" :
-                        "No podemos realizar los cambios porque ya este Vehículo se encuentra registrado."
-                    );
-                    valido = false;
-                    
-                }
-
-            }
-            
-            //SI TODAS LAS ANTERIORES SON VALIDAS PROCEDEMOS
-            if(valido){
-                
-            
-                if ( ! ( fechaActualizacionCliente == null || 
-                        fechaActualizacionCliente.equals("") )
-                ) {
-                    vehiculoCliente.setFecha_actualizacion(
-                        FechaUtils.Formato2ToDate(fechaActualizacionCliente)
-                    );
-                }
-                
-                if (vehiculoBD.isPresent()) {
-                    vehiculoCliente.setFecha_registro(vehiculoBD.get().getFecha_registro());
-                    vehiculoCliente.setHecho_por(vehiculoBD.get().getHecho_por());
-                }
-
-                VehiculoServicio.guardar(vehiculoCliente, u, vehiculoBD.isPresent());
-                
-                model.addAttribute("msg", "Registro guardado exitosamente!");
-
-                AccesoServicio.cargarPagina("trp_vehiculo_consulta", model, u.getId());
-            }
-            
-            model.addAttribute("status", valido);
-            
-            
+        if(isOK){
+            isOK = VehiculoServicio.guardar( vehiculo, fechaActualizacion, model);
         }
 
-        return sinPermisoPlantilla.equals("") ? plantillaRespuesta : sinPermisoPlantilla;
+        AccesoServicio.cargarPagina("trp_vehiculo_consulta", model);
+        model.addAttribute("status", isOK);
+
+        return template;
 
     }
 //----------------------------------------------------------------------------//
     
     @PostMapping("/update")
     public String ActualizarVehiculo(
-        HttpServletRequest request,
         Model model,
         @RequestParam("placa") String placa
     ) {
-        
-        boolean valido=true;
-        String plantillaRespuesta="fragments/trp_vehiculo_registro :: content-default";
-        
-        Usuario usuarioLogueado = AccesoServicio.getUsuarioLogueado();
-
         Optional<Vehiculo> vehiculo = VehiculoServicio.obtener(placa);
 
         if (!vehiculo.isPresent()) {
-
             //log.error("Error COD: 00637 al editar vehículo. No encontrado ({})",placa);
-            plantillaRespuesta = "redirect:/error";
-            valido=false;
-
-        }
-        
-        //SI TODAS LAS ANTERIORES SON VALIDAS PROCEDEMOS
-        if(valido){
-            model.addAttribute("vehiculo", vehiculo.get());
-            model.addAttribute(
-                    "marca",
-                    DatosServicio.consultarPorGrupo("Marca") );
-            model.addAttribute(
-                    "last_loc", 
-                    LocVehiculoServicio.tieneUltimaLoc(placa)
-            );
-            model.addAttribute(
-                    "tipo_vehiculo",
-                    DatosServicio.consultarPorGrupo("Tipo Vehiculo") );
-            model.addAttribute(
-                    "estado",
-                    DatosServicio.consultarPorGrupo("Estados Vehiculo") );
-            model.addAttribute(
-                    "color",
-                    DatosServicio.consultarPorGrupo("Colores") );
-            model.addAttribute(
-                    "modelo",
-                    DatosServicio.consultarPorGrupo(vehiculo.get().getMarca().getDato() ) );
-            model.addAllAttributes(
-                    AccesoServicio.consultarAccesosPantallaUsuario(
-                            usuarioLogueado.getId(), "trp_vehiculo_registro" )
-            );
+            return "redirect:/error";
         }
 
-        return plantillaRespuesta;
+        model.addAttribute("vehiculo", vehiculo.get());
+        model.addAttribute("marca",DatosServicio.consultarPorGrupo("Marca") );
+        model.addAttribute("last_loc", LocVehiculoServicio.tieneUltimaLoc(placa));
+        model.addAttribute("tipo_vehiculo", DatosServicio.consultarPorGrupo("Tipo Vehiculo") );
+        model.addAttribute("estado", DatosServicio.consultarPorGrupo("Estados Vehiculo") );
+        model.addAttribute("color", DatosServicio.consultarPorGrupo("Colores") );
+        model.addAttribute("modelo", DatosServicio.consultarPorGrupo(vehiculo.get().getMarca().getDato() ) );
+        model.addAllAttributes(AccesoServicio.consultarAccesosPantallaUsuario("trp_vehiculo_registro" ));
+
+        return "fragments/trp_vehiculo_registro :: content-default";
     }
     
 //----------------------------------------------------------------------------//
     
     @PostMapping(value="/get-modelos", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity ObtenerListadoPermisosUsuario(
-        HttpServletRequest request, 
+    public ResponseEntity ObtenerModelosVehiculosPorMarca(
         @RequestParam("Marca") String marca
-    ) {  
-        boolean valido;
-        Usuario u = AccesoServicio.getUsuarioLogueado();
-        
-        //VERIFICAMOS PERMISOS PARA ESTA ACCION
-        String sinPermisoPlantilla = 
-            AccesoServicio.verificarPermisos(
-            "trp_vehiculo_registro", null, u 
-            );
-        
-        valido = sinPermisoPlantilla.equals("");
-        
-        List<DatoDTO> modelos = null; 
-        
-        if(valido){
-            Optional<Dato> Marca = DatosServicio.obtener(marca);
+    ) {
+        List<DatoDTO> modelos = null;
+        Optional<Dato> Marca = DatosServicio.obtener(marca);
+        if(
+            AccesoServicio.verificarPermisos("trp_vehiculo_registro", null) &&
+            Marca.isPresent()
+        ) modelos = DatosServicio.consultarPorGrupo(Marca.get().getDato());
 
-            if(!Marca.isPresent()){
-                //log.error("Error COD: 00639 al editar Vehiculo. Marca no encontrada ({})",marca);
-                valido=false;
-            }
-            
-            //SI TODAS LAS ANTERIORES SON VALIDAS PROCEDEMOS
-            if(valido) modelos = DatosServicio.consultarPorGrupo(Marca.get().getDato() ); 
-            
-        }
-        
-        return new ResponseEntity<>(
-                modelos,
-                new HttpHeaders(),
-        HttpStatus.OK);  
+        return new ResponseEntity<>(modelos, HttpStatus.OK);
     }
     
 //----------------------------------------------------------------------------//
@@ -231,22 +117,13 @@ public class VehiculosCntr {
     @ResponseBody
     public ResponseEntity ObtenerUltimaLocTransporte(
         @RequestParam("placa") String placa
-    ) {  
-        boolean valido;
-        Usuario u = AccesoServicio.getUsuarioLogueado();
+    ) {
         
-        //VERIFICAMOS PERMISOS PARA ESTA ACCION
-        String sinPermisoPlantilla = 
-            AccesoServicio.verificarPermisos(
-            "trp_vehiculo_registro", null, u 
-            );
-        
-        valido = sinPermisoPlantilla.equals("");
-        
-        Map<String, Object> respuesta= new HashMap<>();
-        
-        if(valido){
-            Optional<LocVehiculo> lastLoc = LocVehiculoServicio.consultarUltimaLocVehiculo(placa); 
+        Map<String, Object> respuesta = new HashMap<>();
+
+        if( AccesoServicio.verificarPermisos("trp_vehiculo_registro", null) ){
+
+            Optional<LocVehiculo> lastLoc = LocVehiculoServicio.consultarUltimaLocVehiculo(placa);
         
             //SI TODAS LAS ANTERIORES SON VALIDAS PROCEDEMOS
             if(lastLoc.isPresent()){
@@ -255,12 +132,10 @@ public class VehiculosCntr {
                 respuesta.put("lat", lastLoc.get().getLatitud());
                 respuesta.put("fecha",FechaUtils.DateToFormato1(lastLoc.get().getFecha_registro() ) );
             }
+
         }
-        
-        return new ResponseEntity<>(
-                respuesta.isEmpty() ? null: respuesta,
-                new HttpHeaders(),
-                HttpStatus.OK);  
+
+        return new ResponseEntity<>( respuesta, HttpStatus.OK);
     }
     
 }

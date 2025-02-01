@@ -44,8 +44,7 @@ public class DatosCntr {
         String plantillaRespuesta = "fragments/dat_gen_consulta_datos :: content-default";
         Usuario usuarioLogueado = AccesoServicio.getUsuarioLogueado();
         
-        String sinPermisoPlantilla = AccesoServicio.verificarPermisos(
-                "dat_gen_registro_datos", model, usuarioLogueado );
+        String sinPermisoPlantilla = AccesoServicio.verificarPermisos("dat_gen_registro_datos", model);
         
         valido = sinPermisoPlantilla.isEmpty();
         
@@ -102,8 +101,7 @@ public class DatosCntr {
         }
         
         if(sinPermisoPlantilla.isEmpty())
-            AccesoServicio.cargarPagina(
-                    "dat_gen_consulta_datos", model, usuarioLogueado.getId() );
+            AccesoServicio.cargarPagina("dat_gen_consulta_datos", model);
 
         
         return sinPermisoPlantilla.isEmpty() ? plantillaRespuesta : sinPermisoPlantilla;
@@ -137,8 +135,7 @@ public class DatosCntr {
             model.addAttribute("dateUtils",FechaUtils);
             model.addAttribute("grupos", DatoServicio.consultarPorGrupo(null));
             model.addAllAttributes(
-                    AccesoServicio.consultarAccesosPantallaUsuario(
-                    usuarioLogueado.getId(), "dat_gen_registro_datos" ) 
+                    AccesoServicio.consultarAccesosPantallaUsuario("dat_gen_registro_datos")
             );
 
         }
@@ -151,14 +148,13 @@ public class DatosCntr {
         Model model, 
         Dato dtgnr,
         @RequestParam(value = "fecha_actualizacionn", required = false) String fechaActualizacionCliente
-    ) throws ParseException {
+    ) {
 
         boolean valido;
         String plantillaRespuesta = "fragments/dat_gen_consulta_empresa :: content-default";
         Usuario usuarioLogueado = AccesoServicio.getUsuarioLogueado();
         
-        String sinPermisoPlantilla = AccesoServicio.verificarPermisos(
-                "dat_gen_registro_empresa", model, usuarioLogueado );
+        String sinPermisoPlantilla = AccesoServicio.verificarPermisos("dat_gen_registro_empresa", model);
         
         valido = sinPermisoPlantilla.isEmpty();
         
@@ -215,8 +211,7 @@ public class DatosCntr {
         }
         
         if(sinPermisoPlantilla.isEmpty())
-            AccesoServicio.cargarPagina(
-                    "dat_gen_consulta_empresa", model, usuarioLogueado.getId() );
+            AccesoServicio.cargarPagina("dat_gen_consulta_empresa", model);
 
         
         return sinPermisoPlantilla.isEmpty() ? plantillaRespuesta : sinPermisoPlantilla;
@@ -249,8 +244,7 @@ public class DatosCntr {
             model.addAttribute("update", true);
             model.addAttribute("dateUtils",FechaUtils);
             model.addAllAttributes(
-                    AccesoServicio.consultarAccesosPantallaUsuario(
-                    usuarioLogueado.getId(), "dat_gen_registro_empresa" ) 
+                    AccesoServicio.consultarAccesosPantallaUsuario("dat_gen_registro_empresa")
             );
         }
 
