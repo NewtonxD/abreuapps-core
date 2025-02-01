@@ -9,7 +9,6 @@ import abreuapps.core.control.transporte.RutaDTO;
 import abreuapps.core.control.transporte.RutaServ;
 import abreuapps.core.control.transporte.Vehiculo;
 import abreuapps.core.control.transporte.VehiculoServ;
-import abreuapps.core.control.utils.TransportTokenServ;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -88,7 +87,7 @@ public class APITransporteCntr {
                 pwd, 
                 PWD_HASH )
         ){
-            mensaje="Pwd invalida, intentelo nuevamente...";
+            mensaje="Contraseña invalida, intentelo nuevamente...";
             valido=false;
         }
             
@@ -114,13 +113,13 @@ public class APITransporteCntr {
         //SI TODAS LAS ANTERIORES SON VALIDAS PROCEDEMOS
         if(valido) {
 
-            token= TransportTokenServ.generateToken();
+            token= VehiculoServicio.generateToken();
             mensaje = "Transporte en Camino! Iniciando Servicio...";
             Vehiculo h=v.get();
             h.setEstado(DatosServicio.obtener("En Camino").get());
             h.setRuta(RutaServicio.obtener(ruta).get());
             h.setToken(token);
-            VehiculoServicio.guardar(h, null, true);
+            VehiculoServicio.guardarAPI(h);
             
         }
         
@@ -241,7 +240,7 @@ public class APITransporteCntr {
             if(! estado.equals("En Camino") && ! estado.equals("En Parada")){
                 h.setRuta(null);
             }
-            VehiculoServicio.guardar(h, null, true);
+            VehiculoServicio.guardarAPI(h);
             
         }
         
@@ -287,7 +286,7 @@ public class APITransporteCntr {
         respuesta.put("vehiculosLoc",LocVehiculoServicio.consultarDatosTransporteEnCamino());
 
         return new ResponseEntity<>(
-                respuesta.isEmpty() ? null: respuesta,
+                respuesta,
                 new HttpHeaders(),
                 HttpStatus.OK);  
     }

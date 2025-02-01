@@ -65,7 +65,7 @@ public class MainCntr {
         model.addAttribute("active_views",SSEServicio.obtenerTotalClientesActivos());
         model.addAttribute("datos_personales",u.getPersona());
         model.addAttribute("conf",confServ.consultarConfMap());
-        model.addAttribute("permisos",AccesosServicio.consultarAccesosMenuUsuario(u.getId()));
+        model.addAttribute("permisos",AccesosServicio.consultarAccesosMenuUsuario());
         model.addAttribute("server_ip",ConfiguracionServicio.consultar("serverip"));
         return "index";
     }
@@ -86,10 +86,7 @@ public class MainCntr {
         Model model,
         @RequestParam("id") String idPage
     ) {
-
-        Usuario u = AccesosServicio.getUsuarioLogueado();
-        AccesosServicio.cargarPagina(idPage, model, u.getId());
-
+        AccesosServicio.cargarPagina(idPage, model);
         return "fragments/" + idPage + " :: content";
     }
 //----------------------------------------------------------------------------//
@@ -151,17 +148,14 @@ public class MainCntr {
         @RequestParam Map<String,String> data
     ) {
         
-        Usuario u= AccesosServicio.getUsuarioLogueado();
-        
-        String verificarPermisos= AccesosServicio.verificarPermisos("sys_configuracion", model, u);
+        String verificarPermisos= AccesosServicio.verificarPermisos("sys_configuracion", model);
         if (! verificarPermisos.equals("")) return verificarPermisos;
         
-        confServ.GuardarTodosMap(data, u);
+        confServ.GuardarTodosMap(data, AccesosServicio.getUsuarioLogueado());
         model.addAttribute("status", true);
         model.addAttribute("msg", "Configuración guardada exitosamente!");
-           
         
-        AccesosServicio.cargarPagina("sys_configuracion", model, u.getId());
+        AccesosServicio.cargarPagina("sys_configuracion", model);
         
         return "fragments/sys_configuracion :: content";
 

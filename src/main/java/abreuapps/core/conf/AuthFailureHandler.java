@@ -39,7 +39,7 @@ public class AuthFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
         final Locale locale = localeResolver.resolveLocale(request);
 
-        String errorMessage = messages.getMessage("message.badCredentials", null, locale);
+        String errorMessage = "";
 
         if (loginAttemptService.isBlocked()) {
             errorMessage = "Ha sido bloqueado! Demasiados intentos de sesión. Intentelo más tarde.";

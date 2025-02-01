@@ -37,18 +37,13 @@ public class PermisosCntr {
     public String PermisosUsuario(
         Model model, 
         String idUsuario
-    ) {  
-        
-        boolean valido;
+    ) {
         String plantillaRespuesta="fragments/usr_mgr_permisos :: content-default";
         
-        Usuario usuarioLogeado = AccesoServicio.getUsuarioLogueado();
-        
         //VERIFICAMOS PERMISOS PARA ESTA ACCION
-        String sinPermisoPlantilla= AccesoServicio.verificarPermisos(
-                "usr_mgr_registro", model, usuarioLogeado );
-        
-        valido = sinPermisoPlantilla.equals("");
+        String sinPermisoPlantilla= AccesoServicio.verificarPermisos("usr_mgr_registro", model);
+
+        boolean valido = sinPermisoPlantilla.equals("");
         
         if(valido){
             
@@ -67,11 +62,10 @@ public class PermisosCntr {
         }
         
         model.addAllAttributes(
-                AccesoServicio.consultarAccesosPantallaUsuario(
-                        usuarioLogeado.getId(), "usr_mgr_registro" )
+                AccesoServicio.consultarAccesosPantallaUsuario("usr_mgr_registro")
         );
         
-        return sinPermisoPlantilla.equals("") ? plantillaRespuesta : sinPermisoPlantilla;  
+        return valido ? plantillaRespuesta : sinPermisoPlantilla;
     }
 //----------------------------------------------------------------------------//
     
@@ -80,16 +74,7 @@ public class PermisosCntr {
     public ResponseEntity ObtenerListadoPermisosUsuario(
         @RequestParam("idUsuario") String nombreUsuario
     ) {  
-        boolean valido;
-        
-        Usuario usuarioLogeado = AccesoServicio.getUsuarioLogueado();
-        
-        //VERIFICAMOS PERMISOS PARA ESTA ACCION
-        String sinPermisoPlantilla= AccesoServicio.verificarPermisos(
-                "usr_mgr_registro", null, usuarioLogeado );
-        
-        valido = sinPermisoPlantilla.equals("");
-        
+        boolean valido = AccesoServicio.verificarPermisos("usr_mgr_registro", null).equals("");
         
         List<Object[]> permisosUsuario = null;
         
@@ -121,17 +106,13 @@ public class PermisosCntr {
         Model model,
         @RequestParam Map<String,String> data
     ) {
-        
-        boolean valido;
         String plantillaRespuesta="fragments/usr_mgr_principal :: content-default";
-        
-        Usuario usuarioLogeado= AccesoServicio.getUsuarioLogueado();
         
         //VERIFICAMOS PERMISOS PARA ESTA ACCION
         String sinPermisoPlantilla= AccesoServicio.verificarPermisos(
-                "usr_mgr_registro", model, usuarioLogeado );
-        
-        valido = sinPermisoPlantilla.equals("");
+                "usr_mgr_registro", model );
+
+        boolean valido = sinPermisoPlantilla.equals("");
         
         if(valido){
             Optional<Usuario> usuarioBD=UsuarioServicio.obtener(data.getOrDefault("idUsuario",""));
@@ -149,14 +130,14 @@ public class PermisosCntr {
                 AccesoServicio.GuardarTodosMap(data, usuarioBD.get());
                 model.addAttribute("msg", "Permisos guardados exitosamente!");
 
-                AccesoServicio.cargarPagina("usr_mgr_principal", model, usuarioLogeado.getId());
+                AccesoServicio.cargarPagina("usr_mgr_principal", model);
 
             }
             
             model.addAttribute("status", valido);
         }
         
-        return sinPermisoPlantilla.equals("") ? plantillaRespuesta : sinPermisoPlantilla;
+        return valido ? plantillaRespuesta : sinPermisoPlantilla;
     }
 //----------------------------------------------------------------------------//
 }

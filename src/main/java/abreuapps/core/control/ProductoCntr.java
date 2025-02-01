@@ -58,8 +58,6 @@ public class ProductoCntr {
         @RequestParam(name = "fecha_actualizacionn", 
                         required = false) String fechaActualizacionCliente
     ) throws ParseException {
-
-        boolean valido;
         
         String plantillaRespuesta="fragments/inv_producto_consulta :: content-default";
         
@@ -67,11 +65,11 @@ public class ProductoCntr {
         
         //INICIO DE VALIDACIONES
         String sinPermisoPlantilla = AccesoServicio.verificarPermisos(
-            "inv_producto_consulta", model, u );
+            "inv_producto_consulta", model);
         
         //USUARIO NO TIENE PERMISOS PARA EJECUTAR ESTA ACCION
-        valido = sinPermisoPlantilla.equals("");
-        
+        boolean valido = sinPermisoPlantilla.equals("");
+
         if(valido){
             
             Optional<Producto> ProductoDB = ProductoServicio.obtener(producto!=null ? producto.getId() : 0 );
@@ -117,7 +115,7 @@ public class ProductoCntr {
                 ProductoServicio.guardar(producto, u, ProductoDB.isPresent());
                 model.addAttribute("msg", "Registro guardado exitosamente!");
 
-                AccesoServicio.cargarPagina("inv_producto_consulta", model, u.getId());
+                AccesoServicio.cargarPagina("inv_producto_consulta", model);
             }
             
             model.addAttribute("status", valido);
@@ -154,8 +152,6 @@ public class ProductoCntr {
         
         boolean valido=true;
         String plantillaRespuesta="fragments/inv_producto_registro :: content-default";
-        
-        Usuario usuarioLogueado = AccesoServicio.getUsuarioLogueado();
 
         Optional<Producto> ProductoDB = ProductoServicio.obtener(idProducto);
 
@@ -172,8 +168,7 @@ public class ProductoCntr {
             model.addAttribute("producto", ProductoDB.get());
             
             model.addAllAttributes(
-                    AccesoServicio.consultarAccesosPantallaUsuario(
-                            usuarioLogueado.getId(), "inv_producto_registro" )
+                    AccesoServicio.consultarAccesosPantallaUsuario("inv_producto_registro")
             );
             
             model.addAttribute("categorias", DatoServicio.consultarPorGrupo("Categoria Producto"));

@@ -106,7 +106,7 @@ public class ParadasCntr {
                 ParadaServicio.guardar(paradaCliente, u, paradaDB.isPresent());
                 model.addAttribute("msg", "Registro guardado exitosamente!");
 
-                AccesoServicio.cargarPagina("trp_paradas_consulta", model, u.getId());
+                AccesoServicio.cargarPagina("trp_paradas_consulta", model);
             }
             
             model.addAttribute("status", valido);
@@ -124,8 +124,6 @@ public class ParadasCntr {
         
         boolean valido=true;
         String plantillaRespuesta="fragments/trp_paradas_registro :: content-default";
-        
-        Usuario usuarioLogueado = AccesoServicio.getUsuarioLogueado();
 
         Optional<Parada> parada = ParadaServicio.obtener(idParada);
 
@@ -141,8 +139,7 @@ public class ParadasCntr {
         if(valido){
             model.addAttribute("parada", parada.get());
             model.addAllAttributes(
-                    AccesoServicio.consultarAccesosPantallaUsuario(
-                            usuarioLogueado.getId(), "trp_paradas_registro" )
+                    AccesoServicio.consultarAccesosPantallaUsuario("trp_paradas_registro")
             );
         }
 
@@ -156,15 +153,9 @@ public class ParadasCntr {
         @RequestParam("idParada") Integer idParada
     ) {  
         boolean valido;
-        Usuario u = AccesoServicio.getUsuarioLogueado();
+
         
-        //VERIFICAMOS PERMISOS PARA ESTA ACCION
-        String sinPermisoPlantilla = 
-            AccesoServicio.verificarPermisos(
-            "trp_paradas_registro", null, u 
-            );
-        
-        valido = sinPermisoPlantilla.equals("");
+        valido = AccesoServicio.verificarPermisos("trp_paradas_registro", null).equals("");
         
         Map<String, Object> respuesta= new HashMap<>();
         

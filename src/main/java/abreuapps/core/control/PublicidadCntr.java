@@ -57,11 +57,8 @@ public class PublicidadCntr {
     public String GuardarPublicidad(
         Model model,
         Publicidad publicidad,
-        @RequestParam(name = "fecha_actualizacionn", 
-                        required = false) String fechaActualizacionCliente
-    ) throws ParseException {
-
-        boolean valido;
+        @RequestParam(name = "fecha_actualizacionn", required = false) String fechaActualizacionCliente
+    ) {
         
         String plantillaRespuesta="fragments/pub_publicidad_consulta :: content-default";
         
@@ -69,11 +66,11 @@ public class PublicidadCntr {
         
         //INICIO DE VALIDACIONES
         String sinPermisoPlantilla = AccesoServicio.verificarPermisos(
-            "pub_publicidad_consulta", model, u );
+            "pub_publicidad_consulta", model);
         
         //USUARIO NO TIENE PERMISOS PARA EJECUTAR ESTA ACCION
-        valido = sinPermisoPlantilla.equals("");
-        
+        boolean valido = sinPermisoPlantilla.equals("");
+
         if(valido){
             
             Optional<Publicidad> publicidadDB = PublicidadServicio.obtener(publicidad.getId()!=null ? publicidad.getId() : 0 );
@@ -121,7 +118,7 @@ public class PublicidadCntr {
                 PublicidadServicio.guardar(publicidad, u, publicidadDB.isPresent());
                 model.addAttribute("msg", "Registro guardado exitosamente!");
 
-                AccesoServicio.cargarPagina("pub_publicidad_consulta", model, u.getId());
+                AccesoServicio.cargarPagina("pub_publicidad_consulta", model);
             }
             
             model.addAttribute("status", valido);
@@ -146,8 +143,6 @@ public class PublicidadCntr {
         
         boolean valido=true;
         String plantillaRespuesta="fragments/pub_publicidad_registro :: content-default";
-        
-        Usuario usuarioLogueado = AccesoServicio.getUsuarioLogueado();
 
         Optional<Publicidad> publicidadDB = PublicidadServicio.obtener(idPublicidad);
 
@@ -164,8 +159,7 @@ public class PublicidadCntr {
             model.addAttribute("publicidad", publicidadDB.get());
             
             model.addAllAttributes(
-                    AccesoServicio.consultarAccesosPantallaUsuario(
-                            usuarioLogueado.getId(), "pub_publicidad_registro" )
+                    AccesoServicio.consultarAccesosPantallaUsuario("pub_publicidad_registro" )
             );
             
             model.addAttribute("empresas", DatoServicio.consultarPorGrupo("Empresas"));

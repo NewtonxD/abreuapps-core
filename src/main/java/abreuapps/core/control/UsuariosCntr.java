@@ -51,15 +51,13 @@ public class UsuariosCntr {
     ) throws ParseException {
         
         String plantillaRespuesta="fragments/usr_mgr_principal :: content-default";
-        boolean valido;
-        
         Usuario usuarioLogueado= AccesoServicio.getUsuarioLogueado();
-        
+
         String sinPermisoPlantilla= AccesoServicio.verificarPermisos(
-                "usr_mgr_registro", model, usuarioLogueado );
-        
-        valido =  sinPermisoPlantilla.equals("");
-            
+                "usr_mgr_registro", model );
+
+        boolean valido =  sinPermisoPlantilla.equals("");
+
         if(valido){
             
             
@@ -136,7 +134,7 @@ public class UsuariosCntr {
         }
         
         if( sinPermisoPlantilla.equals("") )
-            AccesoServicio.cargarPagina("usr_mgr_principal", model, usuarioLogueado.getId());
+            AccesoServicio.cargarPagina("usr_mgr_principal", model);
         
         return sinPermisoPlantilla.equals("") ? plantillaRespuesta : sinPermisoPlantilla;
     }
@@ -169,12 +167,7 @@ public class UsuariosCntr {
             model.addAttribute("update", true);
             model.addAttribute("sexo",DatoServicio.consultarPorGrupo("Sexo") );
             model.addAttribute("sangre",DatoServicio.consultarPorGrupo("Tipos Sanguineos") );
-            model.addAllAttributes(
-                    AccesoServicio.consultarAccesosPantallaUsuario(
-                            usuarioLogueado.getId(), 
-                            "usr_mgr_registro"
-                    )
-            );
+            model.addAllAttributes(AccesoServicio.consultarAccesosPantallaUsuario("usr_mgr_registro"));
         }
 
         return plantillaRespuesta;  
@@ -256,8 +249,7 @@ public class UsuariosCntr {
         
         
         //VERIFICAMOS PERMISOS PARA ESTA ACCION
-        String sinPermisoPlantilla= AccesoServicio.verificarPermisos(
-                "usr_mgr_registro", model, usuarioLogeado );
+        String sinPermisoPlantilla= AccesoServicio.verificarPermisos("usr_mgr_registro", model);
         
         valido = sinPermisoPlantilla.equals("");
         
@@ -269,7 +261,7 @@ public class UsuariosCntr {
             model.addAttribute("status", valido);
             model.addAttribute("msg", "Sesión Cerrada Exitosamente!");
 
-            AccesoServicio.cargarPagina("usr_mgr_principal", model, usuarioLogeado.getId());
+            AccesoServicio.cargarPagina("usr_mgr_principal", model);
             
         }
         return sinPermisoPlantilla.equals("") ? plantillaRespuesta : sinPermisoPlantilla;
@@ -281,18 +273,14 @@ public class UsuariosCntr {
     public String ResetearContraseña(
         Model model, 
         String nombreUsuario
-    ) throws ParseException {
-        
-        boolean valido;
+    ){
         String plantillaRespuesta="fragments/usr_mgr_principal :: content-default";
-        
-        Usuario usuarioLogeado = AccesoServicio.getUsuarioLogueado();
         
         //VERIFICAMOS PERMISOS PARA ESTA ACCION
         String sinPermisoPlantilla= AccesoServicio.verificarPermisos(
-                "usr_mgr_registro", model, usuarioLogeado );
-        
-        valido = sinPermisoPlantilla.equals("");
+                "usr_mgr_registro", model );
+
+        boolean valido = sinPermisoPlantilla.equals("");
         
         if(valido){
             
@@ -315,11 +303,11 @@ public class UsuariosCntr {
                         "Contraseña Reseteada Exitosamente! Comuniquese con el usuario para que revise su correo."
                 );
 
-                AccesoServicio.cargarPagina("usr_mgr_principal", model, usuarioLogeado.getId());
+                AccesoServicio.cargarPagina("usr_mgr_principal", model);
             }
         }
         
-        return sinPermisoPlantilla.equals("") ? plantillaRespuesta : sinPermisoPlantilla;
+        return valido ? plantillaRespuesta : sinPermisoPlantilla;
 
     }
 
