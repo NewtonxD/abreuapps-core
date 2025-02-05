@@ -50,6 +50,7 @@ public class AccesoServ {
     private final AccesoUsuarioRepo AccesoUsuarioRepo; //repo
     private final AccesoRepo AccesoRepo;
     private final DatoRepo DatoRepo;
+    public final String NOT_AUTORIZED_TEMPLATE="redirect:/error";
     
     private Model dataModel=null;
 
@@ -264,8 +265,8 @@ public class AccesoServ {
     
       
     @Transactional  
-    @CacheEvict(value ={"PermisosUsuario","PermisosPantalla","PermisosMenu"}, allEntries = true)
-    public void GuardarTodosMap(Map<String,String> accesos,Usuario usuario){
+    @CacheEvict(value ={"PermisosPantalla","PermisosMenu"}, allEntries = true)
+    public void GuardarTodosMap( Map<String,String> accesos, Usuario usuario){
         List<AccesoUsuario> listaAccesoNuevo = new ArrayList<>();
         List<AccesoUsuario> listaAccesoEdicion = new ArrayList<>();
         for (String key : accesos.keySet()) {
@@ -311,7 +312,7 @@ public class AccesoServ {
         AccesoUsuarioRepo.saveAll(listaAccesoNuevo);
     }
     
-    public void cargarPagina(String idPage,Model model){
+    public void cargarPagina( String idPage, Model model ){
         this.dataModel=model;
         actions.getOrDefault(idPage, () -> log.warn("Acción no encontrada: " + idPage)).run();
     }
@@ -319,18 +320,10 @@ public class AccesoServ {
     public Usuario getUsuarioLogueado(){
         return (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
-    
-    @Cacheable("PermisosUsuario")
-    public boolean verificarPermisos(String permiso,Model modelo){
+
+    public boolean verificarPermisos( String permiso ){
         Map<String,Object> m=consultarAccesosPantallaUsuario(permiso);
-        if (m.get(permiso) == null || (!(Boolean) m.get(permiso))) {
-            if (modelo !=null){
-                modelo.addAttribute("status", false);
-                modelo.addAttribute("msg", "No tiene permisos para realizar esta acción!");
-            }
-            return false;
-        }
-        return true;
+        return m.containsKey(permiso) ? (Boolean) m.get(permiso) : false;
     }
     
 }

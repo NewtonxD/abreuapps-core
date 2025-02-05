@@ -35,8 +35,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequiredArgsConstructor
 @RequestMapping("/rta")
 public class RutasCntr {
-    
-    private final DateUtils FechaUtils;
 
     private final AccesoServ AccesoServicio;
         
@@ -52,112 +50,36 @@ public class RutasCntr {
     @PostMapping("/save")
     public String GuardarRuta(
         Model model,
-        Ruta rutaCliente,
-        @RequestParam(name = "fecha_actualizacionn", 
-                        required = false) String fechaActualizacionCliente,
+        Ruta ruta,
+        @RequestParam(name = "fecha_actualizacionn", required = false) String fechaActualizacion,
         @RequestParam("data_poly") String data
     ) {
-        
-        String plantillaRespuesta="fragments/trp_rutas_consulta :: content-default";
-        
-        Usuario u = AccesoServicio.getUsuarioLogueado();
-        
-        //INICIO DE VALIDACIONES
-        String sinPermisoPlantilla = AccesoServicio.verificarPermisos("trp_rutas_consulta", model);
-        
-        //USUARIO NO TIENE PERMISOS PARA EJECUTAR ESTA ACCION
-        boolean valido = sinPermisoPlantilla.equals("");
-        
-        
-        if(valido){
-            
-            Optional<Ruta> rutaDB = RutaServicio.obtener(rutaCliente.getRuta());
 
-            if (rutaDB.isPresent()) {
+        if(! AccesoServicio.verificarPermisos("trp_rutas_registro"))
+            return AccesoServicio.NOT_AUTORIZED_TEMPLATE;
 
-                if (! FechaUtils.FechaFormato2.format(
-                        rutaDB.get().getFecha_actualizacion()
-                        ).equals(fechaActualizacionCliente)
-                ) {
-                    
-                    model.addAttribute(
-                        "msg",
-                        ! ( fechaActualizacionCliente == null || 
-                             fechaActualizacionCliente.equals("") ) ? 
-                        "Al parecer alguien ha realizado cambios en la información primero. Por favor, inténtalo otra vez. COD: 00656" :
-                        "No podemos realizar los cambios porque ya esta Ruta se encuentra registrado."
-                    );
-                    valido = false;
-                    
-                }
-
-            }
-            
-            //SI TODAS LAS ANTERIORES SON VALIDAS PROCEDEMOS
-            if(valido){
-                
-            
-                if ( ! ( fechaActualizacionCliente == null || 
-                        fechaActualizacionCliente.equals("") )
-                ) {
-                    rutaCliente.setFecha_actualizacion(
-                        FechaUtils.Formato2ToDate(fechaActualizacionCliente)
-                    );
-                }
-                
-                if (rutaDB.isPresent()) {
-                    rutaCliente.setFecha_registro(rutaDB.get().getFecha_registro());
-                    rutaCliente.setHecho_por(rutaDB.get().getHecho_por());
-                }
-
-                Ruta d = RutaServicio.guardar(rutaCliente, u, rutaDB.isPresent());
-                model.addAttribute("msg", "Registro guardado exitosamente!");
-                
-                // GUARDAMOS LOC RUTA
-                if(!data.equals("")){
-                    String cadenaListaLocRuta=data.replace("LatLng(","[").replace(")", "]");
-                    List<LocRuta> listaLocRuta = LocRutaServicio.generarLista(cadenaListaLocRuta, d);
-                    LocRutaServicio.borrarPorRuta(d);
-                    LocRutaServicio.guardarTodos(listaLocRuta);
-                }
-                AccesoServicio.cargarPagina("trp_rutas_consulta", model);
-            }
-            
-            model.addAttribute("status", valido);
-        }
-
-        return sinPermisoPlantilla.equals("") ? plantillaRespuesta : sinPermisoPlantilla;
+        AccesoServicio.cargarPagina("trp_rutas_consulta", model);
+        model.addAttribute("status", RutaServicio.guardar(ruta,data,fechaActualizacion,model));
+        return "fragments/trp_rutas_consulta :: content-default";
 
     }    
 //----------------------------------------------------------------------------//
     @PostMapping("/update")
     public String ActualizarRuta(
-        HttpServletRequest request,
         Model model,
         @RequestParam("idRuta") String idRuta
     ) {
-        
-        boolean valido=true;
-        String plantillaRespuesta="fragments/trp_rutas_registro :: content-default";
+        if(! AccesoServicio.verificarPermisos("trp_rutas_registro"))
+            return AccesoServicio.NOT_AUTORIZED_TEMPLATE;
+
         Optional<Ruta> ruta = RutaServicio.obtener(idRuta);
 
-        if (!ruta.isPresent()) {
+        if (!ruta.isPresent()) return "redirect:/error";
 
-            //log.error("Error COD: 00637 al editar parada. No encontrado ({})",idRuta);
-            plantillaRespuesta = "redirect:/error";
-            valido=false;
+        model.addAttribute("ruta", ruta.get());
+        model.addAllAttributes(AccesoServicio.consultarAccesosPantallaUsuario("trp_rutas_registro"));
 
-        }
-        
-        //SI TODAS LAS ANTERIORES SON VALIDAS PROCEDEMOS
-        if(valido){
-            model.addAttribute("ruta", ruta.get());
-            model.addAllAttributes(
-                    AccesoServicio.consultarAccesosPantallaUsuario("trp_rutas_registro" )
-            );
-        }
-
-        return plantillaRespuesta;
+        return "fragments/trp_rutas_registro :: content-default";
     }
 //----------------------------------------------------------------------------//
     
@@ -166,34 +88,22 @@ public class RutasCntr {
     public ResponseEntity ObtenerLocRuta(
         @RequestParam("idRuta") String idRuta
     ) {
-        
-        //VERIFICAMOS PERMISOS PARA ESTA ACCION
-        String sinPermisoPlantilla = 
-            AccesoServicio.verificarPermisos("trp_paradas_registro", null);
-
-        boolean valido = sinPermisoPlantilla.equals("");
-        
         Map<String, Object> respuesta= new HashMap<>();
-        
-        if(valido){
-            Optional<Ruta> Ruta = RutaServicio.obtener(idRuta); 
-            
-            if(Ruta.isPresent()){
+        if(AccesoServicio.verificarPermisos("trp_paradas_registro")){
+
+            Optional<Ruta> Ruta = RutaServicio.obtener(idRuta);
+
+            if(Ruta.isPresent())
                 respuesta.put("ruta",
-                    LocRutaServicio.consultar(Ruta.get().getRuta(),null)) 
-                ;
-            } 
+                    LocRutaServicio.consultar(Ruta.get().getRuta(),null)
+                );
             
-            respuesta.put("paradas",ParadaServicio.consultarTodo( 
-                null , 
-                true)
-            );
+            respuesta.put("paradas",ParadaServicio.consultarTodo( null , true));
         
         }
         
         return new ResponseEntity<>(
                 respuesta.isEmpty() ? null: respuesta,
-                new HttpHeaders(),
                 HttpStatus.OK);  
     }
     

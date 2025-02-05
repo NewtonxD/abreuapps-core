@@ -2,8 +2,6 @@ package abreuapps.core.control;
 
 import abreuapps.core.control.usuario.AccesoServ;
 import abreuapps.core.control.utils.SSEServ;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -31,7 +29,7 @@ public class SSECntr {
     
     private final AccesoServ AccesoServicio;
     
-    private static final List<String> REQUIRED_AUTH = new ArrayList<>(Arrays.asList("dtgnr" ,"usrmgr","vhl" ,"pda","rta","pub","vhl_log","prd"));
+    private static final List<String> REQUIRED_AUTH = List.of("dtgnr" ,"usrmgr","vhl" ,"pda","rta","pub","vhl_log","prd");
     
     
 //----------------------------------------------------------------------------//
@@ -43,9 +41,7 @@ public class SSECntr {
         @RequestParam String clientId,
         @PathVariable String nombre
     ) {
-        if(REQUIRED_AUTH.contains(nombre) && 
-            AccesoServicio.getUsuarioLogueado()==null
-        ) return null;
+        if(REQUIRED_AUTH.contains(nombre) && AccesoServicio.getUsuarioLogueado()==null ) return null;
         
         return SSEServicio.agregar(clientId,nombre);
     }
@@ -58,7 +54,7 @@ public class SSECntr {
         @PathVariable String nombre
     ) {
         if(
-            (REQUIRED_AUTH.contains(nombre) && AccesoServicio.getUsuarioLogueado()!=null)||
+            (REQUIRED_AUTH.contains(nombre) && AccesoServicio.getUsuarioLogueado()!=null) ||
             (!REQUIRED_AUTH.contains(nombre))
         ) SSEServicio.cerrar(clientId,nombre);
     }

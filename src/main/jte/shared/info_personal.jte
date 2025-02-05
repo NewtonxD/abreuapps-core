@@ -11,8 +11,8 @@
 
 <div id="info-dinamica-personal" class="row">
     @if(update)
-        <input  type="number" th:field="*{id}" id="idPersona" style="display: none; width: 1px;height: 1px;" required>
-        <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" th:value="${#dates.format(persona.fecha_actualizacion, 'yyyy-MM-dd HH:mm:ss')}">
+        <input  type="number" name="id" id="idPersona" style="display: none; width: 1px;height: 1px;" required>
+        <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" value="${dateUtils.DateToFormato2(persona.getFecha_actualizacion())}">
     @endif
     <div class="col-12 mt-2 mb-2">
         <div class="alert alert-warning alert-cedula" role="alert" style="display:none;">
@@ -21,74 +21,78 @@
     </div>
     <div class="mb-3 col-12">
         <label for="cedula" class="form-label text-muted">Cédula:</label>
-        <th:block th:if="${update}" >
-            <input type="text" th:field="*{cedula}" style="display: none; width: 1px;height: 1px;" />
-
-            <input type="text" th:value="${persona.cedula}" name="ced" disabled placeholder="XXX-XXXXXXX-X" class="form-control cedula" aria-describedby="cedula" required>
-        </th:block>
-
-        <th:block th:if="${!update}">
-            <input type="text" th:field="*{cedula}" placeholder="XXX-XXXXXXX-X" class="form-control cedula" aria-describedby="cedula" required>
-
-        </th:block>
+        @if(update)
+            <input type="text" name="cedula" id="cedula" value="${persona.getCedula()}" style="display: none; width: 1px;height: 1px;" />
+            <input type="text" value="${persona.getCedula()}" name="ced" disabled placeholder="XXX-XXXXXXX-X" class="form-control cedula" aria-describedby="cedula" required>
+        @else
+            <input type="text" name="cedula" id="cedula" value="${persona.getCedula()}" placeholder="XXX-XXXXXXX-X" class="form-control cedula" aria-describedby="cedula" required>
+        @endif
     </div>
 
     <div class="mb-3 col-12 col-md-6">
         <label for="nombre" class="form-label text-muted">Nombre:</label>
-        <input type="text" th:field="*{nombre}" placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">
+        <input type="text" name="nombre" id="nombre" value="${persona.getNombre()}" placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">
     </div>
 
     <div class="mb-3 col-12 col-md-6">
         <label for="apellido" class="form-label text-muted">Apellido:</label>
-        <input type="text" th:field="*{apellido}"  placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">
+        <input type="text"  name="apellido" id="apellido" value="${persona.getApellido()}" placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">
     </div>
 
     <div class="mb-3 col-12 col-md-6">
         <label for="apodo" class="form-label text-muted">Apodo:</label>
-        <input type="text" th:field="*{apodo}"  placeholder=" ... " class="form-control" aria-describedby="basic-addon4">
+        <input type="text" name="apodo" id="apodo" value="${persona.getApodo()}"  placeholder=" ... " class="form-control" aria-describedby="basic-addon4">
     </div>
 
 
 
     <div class="mb-3 col-12 col-md-6">
         <label for="sexo" class="form-label text-muted" required>Sexo:</label>
-        <select class="form-select custom-select" th:field="*{sexo}">
+        <select class="form-select custom-select" name="sexo" id="sexo">
             <option value="0" selected disabled>--Seleccione--</option>
-            <option th:value="${s.dat}" th:each="s :${sexo}" th:text="${s.dat}"></option>
+            @for(var g : sexo)
+                @if(g.act())
+                    <option value="${g.dat()}" >${g.dat()}</option>
+                @endif
+            @endfor
         </select>
     </div>
 
 
     <div class="mb-3 col-12 col-md-6">
         <label for="numero_celular" class="form-label text-muted">Núm. Celular:</label>
-        <input type="tel" th:field="*{numero_celular}" placeholder="809-999-123" class="form-control telefono" aria-describedby="numero_celular" required>
+        <input type="tel" name="numero_celular" id="numero_celular" placeholder="809-999-123" class="form-control telefono" aria-describedby="numero_celular" required>
     </div>
 
     <div class="mb-3 col-12">
         <label for="direccion" class="form-label text-muted">Dirección:</label>
-        <textarea class="form-control" th:field="*{direccion}" rows="3" required maxlength="255" aria-describedby="direccion"></textarea>
+        <textarea class="form-control" name="direccion" id="direccion" rows="3" required maxlength="255" aria-describedby="direccion"></textarea>
     </div>
 
     <div class="mb-3 col-12 col-md-6">
         <label for="nombre_emergencia" class="form-label text-muted">Nombre Contacto Emergencia:</label>
-        <input type="text" th:field="*{nombre_emergencia}" class="form-control" aria-describedby="nombre_emg">
+        <input type="text" name="nombre_emergencia" id="nombre_emergencia" class="form-control" aria-describedby="nombre_emg">
     </div>
 
     <div class="mb-3 col-12 col-md-6">
         <label for="numero_emergencia" class="form-label text-muted">Núm. Celular Emergencia:</label>
-        <input type="tel" th:field="*{numero_emergencia}" placeholder="809-999-123" class="form-control telefono" aria-describedby="numero_celular_emg">
+        <input type="tel" name="numero_emergencia" id="numero_emergencia" placeholder="809-999-123" class="form-control telefono" aria-describedby="numero_celular_emg">
     </div>
 
     <div class="mb-3 col-12 col-md-6">
         <label for="fecha_nacimiento" class="form-label text-muted">Fecha de Nacimiento:</label>
-        <input type="date" th:field="*{fecha_nacimiento}" class="form-control" aria-describedby="fecha_nacimiento" required>
+        <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" class="form-control" aria-describedby="fecha_nacimiento" required>
     </div>
 
     <div class="mb-3 col-12 col-md-6">
         <label for="tipo_sangre" class="form-label text-muted">Tipo de Sangre:</label>
-        <select class="form-select custom-select" th:field="*{tipo_sangre}" required>
+        <select class="form-select custom-select" name="tipo_sangre" id="tipo_sangre" required>
             <option value="0" selected disabled>--Seleccione--</option>
-            <option th:value="${ts.dat}" th:each="ts :${sangre}" th:text="${ts.dat}"></option>
+            @for(var g : sangre)
+                @if(g.act())
+                    <option value="${g.dat()}" >${g.dat()}</option>
+                @endif
+            @endfor
         </select>
     </div>
 </div>

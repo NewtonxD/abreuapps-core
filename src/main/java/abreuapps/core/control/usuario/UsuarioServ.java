@@ -1,6 +1,8 @@
 package abreuapps.core.control.usuario;
 
+import abreuapps.core.control.general.PersonaServ;
 import abreuapps.core.control.utils.CorreoServ;
+import abreuapps.core.control.utils.DateUtils;
 import jakarta.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
@@ -14,6 +16,7 @@ import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 /**
  *
@@ -28,8 +31,14 @@ public class UsuarioServ {
     private final UsuarioRepo repo;
     
     private final PasswordEncoder passwordEncoder;
+
+    private final DateUtils FechaUtils;
+
+    private final PersonaServ PersonaServicio;
+
+    private final AccesoServ AccesoServicio;
     
-    private final CorreoServ correoServicio;
+    private final CorreoServ CorreoServicio;
     
     private final  SessionRegistry sessionRegistry;
     
@@ -50,14 +59,17 @@ public class UsuarioServ {
     }
     
     public void cambiarPassword(Usuario u, String Contraseña, boolean enviaCorreo){
-        
-        correoServicio.enviarMensajeSimple(
-                u.getCorreo(),
-                "Sistema: Su contraseña fue actualizada", 
-                "Su nueva contraseña es "+Contraseña+" . Al ingresar podra colocar una nueva contraseña.");
+        if(enviaCorreo)
+            CorreoServicio.enviarMensajeSimple(
+                    u.getCorreo(),
+                    "Sistema: Su contraseña fue actualizada",
+                    "Su nueva contraseña es "+Contraseña+" . Al ingresar podra colocar una nueva contraseña.");
+
         u.setPassword(passwordEncoder.encode(Contraseña));
         u.setCambiarPassword(true);
-        guardar(u,u,true);
+        u.setActualizado_por(u.getId());
+        u.setFecha_actualizacion(new Date());
+        repo.save(u);
     }
     
     public boolean coincidenPassword(String Contraseña,int IdUsuario){
@@ -67,27 +79,73 @@ public class UsuarioServ {
             repo.findById(IdUsuario).get().getPassword()
         );
     }
-    
+
     @Transactional
     @CacheEvict(value={"Usuarios","Usuario"},allEntries = true)
-    public void guardar(Usuario gd, Usuario usuario,boolean existe){
-        
-        if(existe){ 
-            gd.setActualizado_por(usuario.getId());
-        }else{
-            String nuevaContraseña=generarPassword();
-            correoServicio.enviarMensajeSimple(
-                gd.getCorreo(),
-                "Sistema: Su contraseña fue actualizada", 
-                "Su nueva contraseña es "+nuevaContraseña+" . Al ingresar podra colocar una nueva contraseña.");
-            
-            gd.setCambiarPassword(true);
-            gd.setPassword(passwordEncoder.encode(nuevaContraseña));
-            gd.setHecho_por(usuario.getId());
-            gd.setFecha_registro(new Date());
+    public boolean guardar(Usuario usuario, Integer idPersona, String fechaActualizacion, Model model){
+
+        if(usuario.equals(null)) {
+            model.addAttribute(
+                    "msg",
+                    "La información del usuario no puede ser guardada. Por favor, inténtalo otra vez. COD: 00537"
+            );
+            return false;
         }
-        gd.setFecha_actualizacion(new Date());
-        repo.save(gd);
+
+        Usuario usuarioLogueado = AccesoServicio.getUsuarioLogueado();
+
+        Optional<Usuario> usuarioBD = obtenerPorId(usuario.getId());
+
+        if (usuarioBD.isPresent()) {
+
+            if (! FechaUtils.FechaFormato2
+                    .format(usuarioBD.get().getFecha_actualizacion())
+                    .equals(fechaActualizacion)
+            ) {
+                model.addAttribute(
+                        "msg",
+                        ! fechaActualizacion.isEmpty() ?
+                            "Alguien ha realizado cambios en la información. Inténtentelo nuevamente. COD: 00535" :
+                            "Este usuario ya existe!. Verifique e intentelo nuevamente."
+                );
+                return false;
+            }
+
+            usuario.setFecha_registro(usuarioBD.get().getFecha_registro());
+            usuario.setHecho_por(usuarioBD.get().getHecho_por());
+            usuario.setPassword(usuarioBD.get().getPassword());
+            usuario.setPersona(usuarioBD.get().getPersona());
+
+
+        }else{
+
+            String nuevaContraseña=generarPassword();
+            CorreoServicio.enviarMensajeSimple(
+                    usuario.getCorreo(),
+                    "Sistema: credenciales de su nueva cuenta",
+                    "El usuario de su cuenta es: "+usuario.getUsername()+" y su contraseña es "+nuevaContraseña+" .");
+
+            usuario.setCambiarPassword(true);
+            usuario.setPassword(passwordEncoder.encode(nuevaContraseña));
+            usuario.setHecho_por(usuario.getId());
+            usuario.setFecha_registro(new Date());
+
+        }
+
+        if(idPersona!=0)
+            usuario.setPersona(PersonaServicio.obtenerPorId(idPersona).get());
+        else {
+            model.addAttribute("msg","La información personal no pudo ser guardada. Por favor, inténtalo otra vez. COD: 00536");
+            return false;
+        }
+
+        cerrarSesion(usuario.getUsername());
+        usuario.setFecha_actualizacion(new Date());
+        repo.save(usuario);
+
+        model.addAttribute("msg", "Registro guardado exitosamente!");
+
+        return true;
     }
     
     @Cacheable("Usuarios")
