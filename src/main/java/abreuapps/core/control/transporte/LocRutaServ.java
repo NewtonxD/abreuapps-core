@@ -35,7 +35,7 @@ public class LocRutaServ {
         repo.saveAll(gd);
     }
     
-    public List<LocRuta> generarLista(String lista_cadena,Ruta ruta){
+    public List<LocRuta> generarLista(String lista_cadena, Ruta ruta ){
         List<LocRuta> points = new ArrayList<>();
         String[] coordinatePairs = lista_cadena.split("],\\[");
 
