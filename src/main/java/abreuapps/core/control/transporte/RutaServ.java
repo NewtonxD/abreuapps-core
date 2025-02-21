@@ -4,15 +4,15 @@ import abreuapps.core.control.usuario.AccesoServ;
 import abreuapps.core.control.usuario.Usuario;
 import abreuapps.core.control.utils.DateUtils;
 import jakarta.transaction.Transactional;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
 /**
  *
@@ -45,10 +45,11 @@ public class RutaServ {
 
     @Transactional
     @CacheEvict(value="Rutas",allEntries = true)
-    public boolean guardar(Ruta ruta, String polylineData, String fechaActualizacion, Model model){
+    public List<Object> guardar(Ruta ruta, String polylineData, String fechaActualizacion){
 
         Usuario usuario = AccesoServicio.getUsuarioLogueado();
         Optional<Ruta> rutaDB = obtener(ruta.getRuta());
+        List<Object> resultados = new ArrayList<>();
 
         if (rutaDB.isPresent()) {
 
@@ -56,15 +57,14 @@ public class RutaServ {
                     .format(rutaDB.get().getFecha_actualizacion())
                     .equals(fechaActualizacion)
             ) {
-
-                model.addAttribute(
-                        "msg",
+                resultados.add(false);
+                resultados.add(
                         ! ( fechaActualizacion == null ||
                                 fechaActualizacion.equals("") ) ?
                                 "Alguien ha realizado cambios en la información. Intentelo neuvamente. COD: 00656" :
                                 "Esta ruta ya existe!. Verifique e intentelo nuevamente."
                 );
-                return false;
+                return resultados;
             }
 
             ruta.setHecho_por(rutaDB.get().getHecho_por());
@@ -86,9 +86,9 @@ public class RutaServ {
             LocRutaServicio.guardarTodos(listaLocRuta);
         }
 
-        model.addAttribute("msg", "Registro guardado exitosamente!");
-
-        return true;
+        resultados.add(true);
+        resultados.add("Registro guardado exitosamente!");
+        return resultados;
     }
     
     public Optional<Ruta> obtener(String Ruta){

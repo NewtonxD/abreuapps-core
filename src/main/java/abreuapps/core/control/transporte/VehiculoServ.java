@@ -7,15 +7,12 @@ import jakarta.transaction.Transactional;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -30,7 +27,7 @@ import javax.crypto.spec.SecretKeySpec;
 public class VehiculoServ {
     
     private final VehiculoRepo repo;
-    private final AccesoServ AccesoServ;
+    private final AccesoServ AccesoServicio;
     private final DateUtils FechaUtils;
 
     private final String SECRET_KEY="*@3ad_@4%dE*ez";
@@ -48,10 +45,11 @@ public class VehiculoServ {
     
     @Transactional
     @CacheEvict(value={"Vehiculos","RutasInfo","LogVehiculo"},allEntries = true)
-    public boolean guardar(Vehiculo vehiculo, String fechaActualizacion, Model model){
+    public List<Object> guardar(Vehiculo vehiculo, String fechaActualizacion){
 
         Optional<Vehiculo> vehiculoBD = obtener(vehiculo.getPlaca());
-        Usuario usuario = AccesoServ.getUsuarioLogueado();
+        Usuario usuario = AccesoServicio.getUsuarioLogueado();
+        List<Object> resultados = new ArrayList<>();
 
         if (vehiculoBD.isPresent()) { // EXISTE?
 
@@ -59,12 +57,11 @@ public class VehiculoServ {
                     .format(vehiculoBD.get().getFecha_actualizacion() )
                     .equals(fechaActualizacion)
             ) {
-                model.addAttribute("msg",
-                        ! fechaActualizacion.isEmpty() ?
-                                "Alguien ha realizado cambios en la información. Inténtentelo nuevamente. COD: 00635" :
-                                "Este vehiculo ya existe!. Verifique e intentelo nuevamente."
-                );
-                return false;
+                resultados.add(false);
+                resultados.add(! fechaActualizacion.isEmpty() ?
+                        "Alguien ha realizado cambios en la información. Inténtentelo nuevamente. COD: 00635" :
+                        "Este vehiculo ya existe!. Verifique e intentelo nuevamente.");
+                return resultados;
             }
 
             vehiculo.setFecha_registro(vehiculoBD.get().getFecha_registro());
@@ -79,10 +76,10 @@ public class VehiculoServ {
         vehiculo.setFecha_actualizacion(new Date());
 
         repo.save(vehiculo);
+        resultados.add(true);
+        resultados.add("Registro guardado exitosamente!");
 
-        model.addAttribute("msg", "Registro guardado exitosamente!");
-
-        return true;
+        return resultados;
     }
 
 

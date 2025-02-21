@@ -49,18 +49,18 @@ public class ProductoCntr {
     private final RecursoServ ResourcesServicio;
     
 //--------------------------------------------------------------------------------//
-//------------------ENDPOINTS PUBLICIDAD------------------------------------------//
+//------------------ENDPOINTS PRODUCTO------------------------------------------//
 //--------------------------------------------------------------------------------//
     @PostMapping("/save")
-    public String GuardarPublicidad(
+    public String GuardarProducto(
         Model model,
         Producto producto,
         @RequestParam(name = "fecha_actualizacionn", 
                         required = false) String fechaActualizacionCliente
     ) throws ParseException {
         
-        String plantillaRespuesta="fragments/inv_producto_consulta :: content-default";
-        
+        String plantillaRespuesta="fragments/inv_producto_consulta";
+        /*
         Usuario u = AccesoServicio.getUsuarioLogueado();
         
         //INICIO DE VALIDACIONES
@@ -121,7 +121,8 @@ public class ProductoCntr {
             model.addAttribute("status", valido);
         }
 
-        return sinPermisoPlantilla.equals("") ? plantillaRespuesta : sinPermisoPlantilla;
+        return sinPermisoPlantilla.equals("") ? plantillaRespuesta : sinPermisoPlantilla;*/
+        return plantillaRespuesta;
 
     }
     
@@ -136,12 +137,12 @@ public class ProductoCntr {
     @GetMapping(value="/archivo/{nombre}")
     public ResponseEntity<Resource> consultarArchivoActualPublicidad(@PathVariable("nombre") String nombre ){
         Map<String,Object> archivo=ResourcesServicio.obtenerArchivo(URLDecoder.decode(nombre, StandardCharsets.UTF_8) );
-        if(archivo!=null)
-            return ResponseEntity.ok()
+        return (! archivo.equals(null)) ?
+                ResponseEntity.ok()
                         .contentType( (MediaType) archivo.get("media-type") )
                         .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + ((Resource)archivo.get("body")).getFilename() + "\"")
-                        .body((Resource)archivo.get("body"));
-        else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                        .body((Resource)archivo.get("body")) :
+                new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 //----------------------------------------------------------------------------//
     @PostMapping("/update")
@@ -151,7 +152,7 @@ public class ProductoCntr {
     ) {
         
         boolean valido=true;
-        String plantillaRespuesta="fragments/inv_producto_registro :: content-default";
+        String plantillaRespuesta="fragments/inv_producto_registro";
 
         Optional<Producto> ProductoDB = ProductoServicio.obtener(idProducto);
 

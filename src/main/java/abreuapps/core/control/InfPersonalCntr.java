@@ -45,7 +45,7 @@ public class InfPersonalCntr {
         
         boolean valido;
         int idPersona=0;
-        Usuario usuarioLogueado=AccesoServicio.getUsuarioLogueado();
+        /*Usuario usuarioLogueado=AccesoServicio.getUsuarioLogueado();
         
         String verificarPermisos= AccesoServicio.verificarPermisos(
                 "usr_mgr_registro", model, usuarioLogueado );
@@ -76,7 +76,7 @@ public class InfPersonalCntr {
                 idPersona=d.getId();
             }
             
-        }
+        }*/
         
         return idPersona;
 

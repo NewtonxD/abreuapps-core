@@ -1,6 +1,7 @@
 package abreuapps.core.control;
 
 import abreuapps.core.control.general.DatoServ;
+import abreuapps.core.control.general.TemplateServ;
 import abreuapps.core.control.usuario.AccesoServ;
 import abreuapps.core.control.usuario.Usuario;
 import abreuapps.core.control.usuario.UsuarioServ;
@@ -30,6 +31,8 @@ public class UsuariosCntr {
 
     private final UsuarioServ UsuarioServicio;
 
+    private final TemplateServ TemplateServicio;
+
 //----------------------------------------------------------------------------//
 //-------------------------ENDPOINTS USUARIOS---------------------------------//
 //----------------------------------------------------------------------------//
@@ -43,13 +46,16 @@ public class UsuariosCntr {
     ) {
         if (!AccesoServicio.verificarPermisos("usr_mgr_registro") ||
                 !usuario.getId().equals(AccesoServicio.getUsuarioLogueado().getId())
-        ) return AccesoServicio.NOT_AUTORIZED_TEMPLATE;
+        ) return TemplateServicio.NOT_FOUND_TEMPLATE;
 
-        model.addAttribute("status", UsuarioServicio.guardar(usuario, idPersona, fechaActualizacion, model));
-        AccesoServicio.cargarPagina("usr_mgr_principal", model);
+        var resultados = UsuarioServicio.guardar(usuario, idPersona, fechaActualizacion);
+        model.addAttribute("status", resultados.get(0));
+        model.addAttribute("msg",resultados.get(1));
+
+        TemplateServicio.cargarPagina("usr_mgr_principal", model);
 
         return usuario.getId().equals(AccesoServicio.getUsuarioLogueado().getId()) // mismo usuario logueado que actualizado
-                ? "redirect:/main/index" : "fragments/usr_mgr_principal :: content-default";
+                ? "redirect:/main/index" : "fragments/usr_mgr_principal";
     }
 //----------------------------------------------------------------------------//
 
@@ -60,11 +66,12 @@ public class UsuariosCntr {
             String idUsuario
     ) {
         if (!AccesoServicio.verificarPermisos("usr_mgr_registro"))
-            return AccesoServicio.NOT_AUTORIZED_TEMPLATE;
+            return TemplateServicio.NOT_FOUND_TEMPLATE;
 
         Optional<Usuario> usuario = UsuarioServicio.obtener(idUsuario);
 
-        if (!usuario.isPresent()) return "redirect:/error";
+        if (!usuario.isPresent())
+            return TemplateServicio.NOT_FOUND_TEMPLATE;
 
         model.addAttribute("user", usuario.get());
         model.addAttribute("persona", usuario.get().getPersona());
@@ -73,7 +80,7 @@ public class UsuariosCntr {
         model.addAttribute("sangre", DatoServicio.consultarPorGrupo("Tipos Sanguineos"));
         model.addAllAttributes(AccesoServicio.consultarAccesosPantallaUsuario("usr_mgr_registro"));
 
-        return "fragments/usr_mgr_registro :: content-default";
+        return "fragments/usr_mgr_registro";
     }
 //----------------------------------------------------------------------------//
 
@@ -92,7 +99,7 @@ public class UsuariosCntr {
         model.addAttribute("usr_mgr_registro", true);
         model.addAttribute("configuracion", true);
 
-        return "fragments/usr_mgr_registro :: content-default";
+        return "fragments/usr_mgr_registro";
     }
 //----------------------------------------------------------------------------//
 
@@ -133,13 +140,13 @@ public class UsuariosCntr {
     ) {
 
         if (!AccesoServicio.verificarPermisos("usr_mgr_registro"))
-            return AccesoServicio.NOT_AUTORIZED_TEMPLATE;
+            return TemplateServicio.NOT_FOUND_TEMPLATE;
 
         UsuarioServicio.cerrarSesion(nombreUsuario);
         model.addAttribute("status", true);
         model.addAttribute("msg", "Sesión Cerrada Exitosamente!");
-        AccesoServicio.cargarPagina("usr_mgr_principal", model);
-        return "fragments/usr_mgr_principal :: content-default";
+        TemplateServicio.cargarPagina("usr_mgr_principal", model);
+        return "fragments/usr_mgr_principal";
 
     }
 //----------------------------------------------------------------------------//
@@ -150,18 +157,20 @@ public class UsuariosCntr {
             String nombreUsuario
     ) {
         if (!AccesoServicio.verificarPermisos("usr_mgr_registro"))
-            return AccesoServicio.NOT_AUTORIZED_TEMPLATE;
+            return TemplateServicio.NOT_FOUND_TEMPLATE;
 
         Optional<Usuario> usuarioBD = UsuarioServicio.obtener(nombreUsuario);
 
-        if (!usuarioBD.isPresent()) return "redirect:/error";
+        if (!usuarioBD.isPresent())
+            return TemplateServicio.NOT_FOUND_TEMPLATE;
 
         UsuarioServicio.cerrarSesion(nombreUsuario);
         UsuarioServicio.cambiarPassword(usuarioBD.get(), UsuarioServicio.generarPassword(), true);
         model.addAttribute("status", true);
         model.addAttribute("msg", "Contraseña Reseteada Exitosamente! Comuniquese con el usuario para que revise su correo.");
-        AccesoServicio.cargarPagina("usr_mgr_principal", model);
-        return "fragments/usr_mgr_principal :: content-default";
+        TemplateServicio.cargarPagina("usr_mgr_principal", model);
+
+        return "fragments/usr_mgr_principal";
 
     }
 

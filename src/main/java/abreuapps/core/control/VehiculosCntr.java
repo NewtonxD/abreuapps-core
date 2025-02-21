@@ -3,6 +3,7 @@ package abreuapps.core.control;
 import abreuapps.core.control.general.Dato;
 import abreuapps.core.control.general.DatoDTO;
 import abreuapps.core.control.general.DatoServ;
+import abreuapps.core.control.general.TemplateServ;
 import abreuapps.core.control.transporte.LocVehiculo;
 import abreuapps.core.control.transporte.LocVehiculoServ;
 import abreuapps.core.control.transporte.Vehiculo;
@@ -45,6 +46,8 @@ public class VehiculosCntr {
 
     private final DateUtils FechaUtils;
 
+    private final TemplateServ TemplateServicio;
+
 
 //----------------------------------------------------------------------------//
 //------------------ENDPOINTS VEHICULOS---------------------------------------//
@@ -58,11 +61,15 @@ public class VehiculosCntr {
     ) {
 
         if (!AccesoServicio.verificarPermisos("trp_vehiculo_registro"))
-            return AccesoServicio.NOT_AUTORIZED_TEMPLATE;
+            return TemplateServicio.NOT_FOUND_TEMPLATE;
 
-        AccesoServicio.cargarPagina("trp_vehiculo_consulta", model);
-        model.addAttribute("status", VehiculoServicio.guardar(vehiculo, fechaActualizacion, model));
-        return "fragments/trp_vehiculo_consulta :: content-default";
+        TemplateServicio.cargarPagina("trp_vehiculo_consulta", model);
+
+        var resultados = VehiculoServicio.guardar(vehiculo, fechaActualizacion);
+        model.addAttribute("status", resultados.get(0));
+        model.addAttribute("msg", resultados.get(1));
+
+        return "fragments/trp_vehiculo_consulta";
 
     }
 //----------------------------------------------------------------------------//
@@ -74,7 +81,7 @@ public class VehiculosCntr {
     ) {
         Optional<Vehiculo> vehiculo = VehiculoServicio.obtener(placa);
 
-        if (!vehiculo.isPresent()) return "redirect:/error";
+        if (!vehiculo.isPresent()) return TemplateServicio.NOT_FOUND_TEMPLATE;
 
         model.addAttribute("vehiculo", vehiculo.get());
         model.addAttribute("marca", DatosServicio.consultarPorGrupo("Marca"));
@@ -85,7 +92,7 @@ public class VehiculosCntr {
         model.addAttribute("modelo", DatosServicio.consultarPorGrupo(vehiculo.get().getMarca().getDato()));
         model.addAllAttributes(AccesoServicio.consultarAccesosPantallaUsuario("trp_vehiculo_registro"));
 
-        return "fragments/trp_vehiculo_registro :: content-default";
+        return "fragments/trp_vehiculo_registro";
     }
 
 //----------------------------------------------------------------------------//

@@ -41,8 +41,8 @@ public class DatosCntr {
     ) {
 
         boolean valido;
-        String plantillaRespuesta = "fragments/dat_gen_consulta_datos :: content-default";
-        Usuario usuarioLogueado = AccesoServicio.getUsuarioLogueado();
+        String plantillaRespuesta = "fragments/dat_gen_consulta_datos";
+        /*Usuario usuarioLogueado = AccesoServicio.getUsuarioLogueado();
         
         String sinPermisoPlantilla = AccesoServicio.verificarPermisos("dat_gen_registro_datos", model);
         
@@ -104,7 +104,8 @@ public class DatosCntr {
             AccesoServicio.cargarPagina("dat_gen_consulta_datos", model);
 
         
-        return sinPermisoPlantilla.isEmpty() ? plantillaRespuesta : sinPermisoPlantilla;
+        return sinPermisoPlantilla.isEmpty() ? plantillaRespuesta : sinPermisoPlantilla;*/
+        return plantillaRespuesta;
     }
 //----------------------------------------------------------------------------//
 
@@ -114,7 +115,7 @@ public class DatosCntr {
         String idDato
     ) {
 
-        String plantillaRespuesta="fragments/dat_gen_registro_datos :: content-default";
+        String plantillaRespuesta="fragments/dat_gen_registro_datos";
         boolean valido = true;
         
         Usuario usuarioLogueado = AccesoServicio.getUsuarioLogueado();
@@ -151,8 +152,8 @@ public class DatosCntr {
     ) {
 
         boolean valido;
-        String plantillaRespuesta = "fragments/dat_gen_consulta_empresa :: content-default";
-        Usuario usuarioLogueado = AccesoServicio.getUsuarioLogueado();
+        String plantillaRespuesta = "fragments/dat_gen_consulta_empresa";
+        /*Usuario usuarioLogueado = AccesoServicio.getUsuarioLogueado();
         
         String sinPermisoPlantilla = AccesoServicio.verificarPermisos("dat_gen_registro_empresa", model);
         
@@ -213,8 +214,9 @@ public class DatosCntr {
         if(sinPermisoPlantilla.isEmpty())
             AccesoServicio.cargarPagina("dat_gen_consulta_empresa", model);
 
-        
-        return sinPermisoPlantilla.isEmpty() ? plantillaRespuesta : sinPermisoPlantilla;
+
+        return sinPermisoPlantilla.isEmpty() ? plantillaRespuesta : sinPermisoPlantilla;*/
+        return plantillaRespuesta;
     }
 //----------------------------------------------------------------------------//
 
@@ -224,7 +226,7 @@ public class DatosCntr {
         String idDato
     ) {
 
-        String plantillaRespuesta="fragments/dat_gen_registro_empresa :: content-default";
+        String plantillaRespuesta="fragments/dat_gen_registro_empresa";
         boolean valido = true;
         
         Usuario usuarioLogueado = AccesoServicio.getUsuarioLogueado();
