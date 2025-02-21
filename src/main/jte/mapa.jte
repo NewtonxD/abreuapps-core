@@ -1,7 +1,8 @@
 @param String server_ip
 @param String base_dir
-@param Double base_lat
-@param Double base_lng
+@param String base_lat
+@param String base_lng
+@param String app_provincia
 
 <!DOCTYPE html>
 <html lang="es">
@@ -20,7 +21,7 @@
     <body>
         <div id="loading">
             <img width="64px" height="64px" src="/content/assets/img/Omsafooter.webp" alt="OMSA" />
-            <h1>@app_provincia</h1>
+            <h1>${app_provincia}</h1>
             <span id="loader" style="margin-top: 4px;"></span>
         </div>
         <div aria-live="polite" aria-atomic="true" class="position-relative">
@@ -41,9 +42,9 @@
         <script src="/content/js/lib/jquery-3.6.4.min.js"></script>
         <script src="/content/js/lib/bootstrap.bundle.min.js"></script>
         <script type="text/javascript">
-            const SERVER_IP = '${server_ip}';
-            const BASE_LAT = ${base_lat};
-            const BASE_LNG = ${base_lng};
+            const SERVER_IP = '$unsafe{server_ip}';
+            const BASE_LAT = $unsafe{base_lat};
+            const BASE_LNG = $unsafe{base_lng};
             const BASE_DIR = '${base_dir}';
         </script>
         <script src="/content/js/global_vars.js"></script>

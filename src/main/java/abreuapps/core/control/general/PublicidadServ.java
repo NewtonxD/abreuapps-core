@@ -1,16 +1,15 @@
 package abreuapps.core.control.general;
 
+import abreuapps.core.control.usuario.AccesoServ;
 import abreuapps.core.control.usuario.Usuario;
+import abreuapps.core.control.utils.DateUtils;
 import abreuapps.core.control.utils.RecursoServ;
 import jakarta.transaction.Transactional;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -33,7 +32,9 @@ public class PublicidadServ {
     
     private final RecursoServ ResourcesServicio;
     
-    private final ConfServ ConfiguracionServicio;
+    private final AccesoServ AccesoServicio;
+
+    private final DateUtils FechaUtils;
     
     @Cacheable(value="Publicidades")
     public List<PublicidadDTO> consultar(){
@@ -42,18 +43,48 @@ public class PublicidadServ {
     
     @Transactional
     @CacheEvict(value={"Publicidad","Publicidades","PublicidadArchivos"}, allEntries = true)
-    public void guardar(Publicidad gd, Usuario usuario,boolean existe){
-        
-        if(existe){ 
-            gd.setActualizado_por(usuario);
+    public List<Object> guardar(Publicidad publicidad, String fechaActualizacion){
+
+        Optional<Publicidad> publicidadDB = obtener(! publicidad.getId().equals(null) ? publicidad.getId() : 0 );
+        List<Object> resultados = new ArrayList<>();
+        Usuario usuario = AccesoServicio.getUsuarioLogueado();
+
+        if (publicidadDB.isPresent()) {
+
+            if (! FechaUtils.FechaFormato2
+                    .format(publicidadDB.get().getFecha_actualizacion())
+                    .equals(fechaActualizacion)
+            ) {
+                resultados.add(false);
+                resultados.add(
+                        ! ( fechaActualizacion == null ||
+                                fechaActualizacion.equals("") ) ?
+                                "Alguien ha realizado cambios en la información. Inténtalo nuevamente. COD: 00686" :
+                                "Esta Publicidad ya existe!. Verifique e intentelo nuevamente."
+                );
+                return resultados;
+            }
+
+            publicidad.setFecha_registro(publicidadDB.get().getFecha_registro());
+            publicidad.setHecho_por(publicidadDB.get().getHecho_por());
+            publicidad.setConteo_clic(publicidadDB.get().getConteo_clic());
+            publicidad.setConteo_view(publicidadDB.get().getConteo_view());
+            publicidad.setActualizado_por(usuario);
+
         }else{
-            gd.setHecho_por(usuario);
-            gd.setFecha_registro(new Date());
-            gd.setConteo_clic(0);
-            gd.setConteo_view(0);
+            publicidad.setHecho_por(usuario);
+            publicidad.setFecha_registro(new Date());
+            publicidad.setConteo_clic(0);
+            publicidad.setConteo_view(0);
         }
-        gd.setFecha_actualizacion(new Date());
-        repo.save(gd);
+
+
+        publicidad.setFecha_actualizacion(new Date());
+        repo.save(publicidad);
+
+        resultados.add(true);
+        resultados.add( "Registro guardado exitosamente!");
+        return resultados;
     }
     
     public Optional<Publicidad> obtener(Long id){

@@ -38,8 +38,8 @@ public class PermisosCntr {
         Model model, 
         String idUsuario
     ) {
-        String plantillaRespuesta="fragments/usr_mgr_permisos :: content-default";
-        
+        String plantillaRespuesta="fragments/usr_mgr_permisos";
+        /*
         //VERIFICAMOS PERMISOS PARA ESTA ACCION
         String sinPermisoPlantilla= AccesoServicio.verificarPermisos("usr_mgr_registro", model);
 
@@ -65,7 +65,8 @@ public class PermisosCntr {
                 AccesoServicio.consultarAccesosPantallaUsuario("usr_mgr_registro")
         );
         
-        return valido ? plantillaRespuesta : sinPermisoPlantilla;
+        return valido ? plantillaRespuesta : sinPermisoPlantilla;*/
+        return plantillaRespuesta;
     }
 //----------------------------------------------------------------------------//
     
@@ -74,8 +75,8 @@ public class PermisosCntr {
     public ResponseEntity ObtenerListadoPermisosUsuario(
         @RequestParam("idUsuario") String nombreUsuario
     ) {  
-        boolean valido = AccesoServicio.verificarPermisos("usr_mgr_registro", null).equals("");
-        
+        //boolean valido = AccesoServicio.verificarPermisos("usr_mgr_registro", null).equals("");
+        boolean valido = true;
         List<Object[]> permisosUsuario = null;
         
         if(valido){
@@ -106,10 +107,10 @@ public class PermisosCntr {
         Model model,
         @RequestParam Map<String,String> data
     ) {
-        String plantillaRespuesta="fragments/usr_mgr_principal :: content-default";
+        String plantillaRespuesta="fragments/usr_mgr_principal";
         
         //VERIFICAMOS PERMISOS PARA ESTA ACCION
-        String sinPermisoPlantilla= AccesoServicio.verificarPermisos(
+        /*String sinPermisoPlantilla= AccesoServicio.verificarPermisos(
                 "usr_mgr_registro", model );
 
         boolean valido = sinPermisoPlantilla.equals("");
@@ -137,7 +138,8 @@ public class PermisosCntr {
             model.addAttribute("status", valido);
         }
         
-        return valido ? plantillaRespuesta : sinPermisoPlantilla;
+        return valido ? plantillaRespuesta : sinPermisoPlantilla;*/
+        return plantillaRespuesta;
     }
 //----------------------------------------------------------------------------//
 }

@@ -1,21 +1,16 @@
 package abreuapps.core.control;
 
-import abreuapps.core.control.transporte.LocRuta;
+import abreuapps.core.control.general.TemplateServ;
 import abreuapps.core.control.transporte.LocRutaServ;
 import abreuapps.core.control.transporte.ParadaServ;
 import abreuapps.core.control.transporte.Ruta;
 import abreuapps.core.control.transporte.RutaServ;
 import abreuapps.core.control.usuario.AccesoServ;
-import abreuapps.core.control.usuario.Usuario;
-import abreuapps.core.control.utils.DateUtils;
-import jakarta.servlet.http.HttpServletRequest;
-import java.text.ParseException;
+
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -43,6 +38,8 @@ public class RutasCntr {
     private final LocRutaServ LocRutaServicio;
     
     private final ParadaServ ParadaServicio;
+
+    private final TemplateServ TemplateServicio;
     
 //----------------------------------------------------------------------------//
 //------------------ENDPOINTS RUTAS-------------------------------------------//
@@ -56,11 +53,15 @@ public class RutasCntr {
     ) {
 
         if(! AccesoServicio.verificarPermisos("trp_rutas_registro"))
-            return AccesoServicio.NOT_AUTORIZED_TEMPLATE;
+            return TemplateServicio.NOT_FOUND_TEMPLATE;
 
-        AccesoServicio.cargarPagina("trp_rutas_consulta", model);
-        model.addAttribute("status", RutaServicio.guardar(ruta,data,fechaActualizacion,model));
-        return "fragments/trp_rutas_consulta :: content-default";
+        TemplateServicio.cargarPagina("trp_rutas_consulta", model);
+
+        var resultados = RutaServicio.guardar(ruta,data,fechaActualizacion);
+        model.addAttribute("status", resultados.get(0));
+        model.addAttribute("msg", resultados.get(1));
+
+        return "fragments/trp_rutas_consulta";
 
     }    
 //----------------------------------------------------------------------------//
@@ -70,7 +71,7 @@ public class RutasCntr {
         @RequestParam("idRuta") String idRuta
     ) {
         if(! AccesoServicio.verificarPermisos("trp_rutas_registro"))
-            return AccesoServicio.NOT_AUTORIZED_TEMPLATE;
+            return TemplateServicio.NOT_FOUND_TEMPLATE;
 
         Optional<Ruta> ruta = RutaServicio.obtener(idRuta);
 
@@ -79,7 +80,7 @@ public class RutasCntr {
         model.addAttribute("ruta", ruta.get());
         model.addAllAttributes(AccesoServicio.consultarAccesosPantallaUsuario("trp_rutas_registro"));
 
-        return "fragments/trp_rutas_registro :: content-default";
+        return "fragments/trp_rutas_registro";
     }
 //----------------------------------------------------------------------------//
     

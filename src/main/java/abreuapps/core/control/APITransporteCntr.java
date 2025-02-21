@@ -334,7 +334,6 @@ public class APITransporteCntr {
 
         return new ResponseEntity<>(
                 respuesta,
-                new HttpHeaders(),
                 HttpStatus.OK);  
     }
     

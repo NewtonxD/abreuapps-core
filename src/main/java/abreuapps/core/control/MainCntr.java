@@ -2,6 +2,7 @@ package abreuapps.core.control;
 
 import abreuapps.core.control.general.ConfServ;
 import abreuapps.core.control.general.PublicidadServ;
+import abreuapps.core.control.general.TemplateServ;
 import abreuapps.core.control.transporte.LogVehiculoServ;
 import abreuapps.core.control.usuario.Usuario;
 import abreuapps.core.control.usuario.AccesoServ;
@@ -29,6 +30,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class MainCntr {
 
     private final AccesoServ AccesosServicio;
+
+    private final TemplateServ TemplateServicio;
     
     private final UsuarioServ UsuarioServicio;
     
@@ -86,8 +89,8 @@ public class MainCntr {
         Model model,
         @RequestParam("id") String idPage
     ) {
-        AccesosServicio.cargarPagina(idPage, model);
-        return "fragments/" + idPage + " :: content";
+        TemplateServicio.cargarPagina(idPage, model);
+        return "fragments/" + idPage + "";
     }
 //----------------------------------------------------------------------------//
     
@@ -101,7 +104,7 @@ public class MainCntr {
         model.addAttribute("usuario", userBd);
         
         if(userBd.isCredentialsNonExpired())
-            return "password  :: content";
+            return "password ";
         else 
             return "password";
            
@@ -134,7 +137,7 @@ public class MainCntr {
         
         userBd.setCambiarPassword(false);
         userBd.setPassword(passwordEncoder.encode(newPwd));
-        UsuarioServicio.guardar(userBd, UsuarioServicio.obtenerPorId(1).get() , true);
+        //UsuarioServicio.guardar(userBd, UsuarioServicio.obtenerPorId(1).get() , true);
         respuesta.put("status", "success");
         respuesta.put("msg", "Contraseña fue guardada exitosamente! En breve lo redirigiremos.");
         return respuesta;
@@ -148,16 +151,16 @@ public class MainCntr {
         @RequestParam Map<String,String> data
     ) {
         
-        String verificarPermisos= AccesosServicio.verificarPermisos("sys_configuracion", model);
-        if (! verificarPermisos.equals("")) return verificarPermisos;
+        /*String verificarPermisos= AccesosServicio.verificarPermisos("sys_configuracion", model);
+        if (! verificarPermisos.equals("")) return verificarPermisos;*/
         
         confServ.GuardarTodosMap(data, AccesosServicio.getUsuarioLogueado());
         model.addAttribute("status", true);
         model.addAttribute("msg", "Configuración guardada exitosamente!");
+
+        TemplateServicio.cargarPagina("sys_configuracion", model);
         
-        AccesosServicio.cargarPagina("sys_configuracion", model);
-        
-        return "fragments/sys_configuracion :: content";
+        return "fragments/sys_configuracion";
 
     }
     

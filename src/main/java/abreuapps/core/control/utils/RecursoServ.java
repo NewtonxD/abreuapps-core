@@ -28,7 +28,7 @@ public class RecursoServ {
     private final ConfServ ConfiguracionServicio;
     
     //-------------------------------------------------------------------------//
-    @Cacheable("Tiles")
+    /*@Cacheable("Tiles")
     public byte[] getTilesBytes(int zoom, int x, int y) {
         String tileKey = String.format("%d/%d/%d", zoom, x, y);
         String tilePath = String.format("%s/%s.webp", ConfiguracionServicio.consultar("maptilesdir"), tileKey);
@@ -42,6 +42,18 @@ public class RecursoServ {
             Logger.getLogger(RecursoServ.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
+    }*/
+
+    @Cacheable("Tiles")
+    public Resource getTiles(int zoom, int x, int y) {
+        Path path = Paths.get(
+                String.format("%s/%s.webp", ConfiguracionServicio.consultar("maptilesdir"), String.format("%d/%d/%d", zoom, x, y))
+        );
+
+        if (!Files.exists(path))
+            path = Paths.get(ConfiguracionServicio.consultar("maptilesdir")+"/default_tile.webp");
+
+        return new FileSystemResource(path);
     }
     //------------------------------------------------------------------------//
     public String subirArchivo(MultipartFile file){

@@ -4,10 +4,9 @@ import abreuapps.core.control.general.PersonaServ;
 import abreuapps.core.control.utils.CorreoServ;
 import abreuapps.core.control.utils.DateUtils;
 import jakarta.transaction.Transactional;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+
+import java.util.*;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -16,7 +15,6 @@ import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
 /**
  *
@@ -36,7 +34,7 @@ public class UsuarioServ {
 
     private final PersonaServ PersonaServicio;
 
-    private final AccesoServ AccesoServicio;
+    //private final AccesoServ AccesoServicio;
     
     private final CorreoServ CorreoServicio;
     
@@ -82,17 +80,14 @@ public class UsuarioServ {
 
     @Transactional
     @CacheEvict(value={"Usuarios","Usuario"},allEntries = true)
-    public boolean guardar(Usuario usuario, Integer idPersona, String fechaActualizacion, Model model){
+    public List<Object> guardar(Usuario usuario, Integer idPersona, String fechaActualizacion){
+        List<Object> resultados = new ArrayList<>();
 
         if(usuario.equals(null)) {
-            model.addAttribute(
-                    "msg",
-                    "La información del usuario no puede ser guardada. Por favor, inténtalo otra vez. COD: 00537"
-            );
-            return false;
+            resultados.add(false);
+            resultados.add("La información del usuario no puede ser guardada. Por favor, inténtalo otra vez. COD: 00537");
+            return resultados;
         }
-
-        Usuario usuarioLogueado = AccesoServicio.getUsuarioLogueado();
 
         Optional<Usuario> usuarioBD = obtenerPorId(usuario.getId());
 
@@ -102,13 +97,14 @@ public class UsuarioServ {
                     .format(usuarioBD.get().getFecha_actualizacion())
                     .equals(fechaActualizacion)
             ) {
-                model.addAttribute(
-                        "msg",
+
+                resultados.add(false);
+                resultados.add(
                         ! fechaActualizacion.isEmpty() ?
                             "Alguien ha realizado cambios en la información. Inténtentelo nuevamente. COD: 00535" :
                             "Este usuario ya existe!. Verifique e intentelo nuevamente."
                 );
-                return false;
+                return resultados;
             }
 
             usuario.setFecha_registro(usuarioBD.get().getFecha_registro());
@@ -135,17 +131,19 @@ public class UsuarioServ {
         if(idPersona!=0)
             usuario.setPersona(PersonaServicio.obtenerPorId(idPersona).get());
         else {
-            model.addAttribute("msg","La información personal no pudo ser guardada. Por favor, inténtalo otra vez. COD: 00536");
-            return false;
+            resultados.add(false);
+            resultados.add("La información personal no pudo ser guardada. Por favor, inténtalo otra vez. COD: 00536");
+            return resultados;
         }
 
         cerrarSesion(usuario.getUsername());
         usuario.setFecha_actualizacion(new Date());
         repo.save(usuario);
 
-        model.addAttribute("msg", "Registro guardado exitosamente!");
+        resultados.add(true);
+        resultados.add( "Registro guardado exitosamente!");
 
-        return true;
+        return resultados;
     }
     
     @Cacheable("Usuarios")

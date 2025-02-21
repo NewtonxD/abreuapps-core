@@ -50,8 +50,8 @@ public class ParadasCntr {
 
         boolean valido;
         
-        String plantillaRespuesta="fragments/trp_paradas_consulta :: content-default";
-        
+        String plantillaRespuesta="fragments/trp_paradas_consulta";
+        /*
         Usuario u = AccesoServicio.getUsuarioLogueado();
         
         //INICIO DE VALIDACIONES
@@ -113,7 +113,8 @@ public class ParadasCntr {
         }
 
         return sinPermisoPlantilla.equals("") ? plantillaRespuesta : sinPermisoPlantilla;
-
+        */
+        return plantillaRespuesta;
     }    
 //----------------------------------------------------------------------------//
     @PostMapping("/update")
@@ -123,7 +124,7 @@ public class ParadasCntr {
     ) {
         
         boolean valido=true;
-        String plantillaRespuesta="fragments/trp_paradas_registro :: content-default";
+        String plantillaRespuesta="fragments/trp_paradas_registro";
 
         Optional<Parada> parada = ParadaServicio.obtener(idParada);
 
@@ -152,10 +153,7 @@ public class ParadasCntr {
     public ResponseEntity ObtenerLocParada(
         @RequestParam("idParada") Integer idParada
     ) {  
-        boolean valido;
-
-        
-        valido = AccesoServicio.verificarPermisos("trp_paradas_registro", null).equals("");
+        boolean valido= AccesoServicio.verificarPermisos("trp_paradas_registro");
         
         Map<String, Object> respuesta= new HashMap<>();
         

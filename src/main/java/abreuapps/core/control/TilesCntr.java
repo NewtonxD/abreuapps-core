@@ -2,6 +2,7 @@ package abreuapps.core.control;
 
 import abreuapps.core.control.utils.RecursoServ;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,17 +20,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class TilesCntr {
     
-    private final RecursoServ ResourcesServicio;
+    private final RecursoServ RecursoServicio;
 
 //----------------------------------------------------------------------------//
 //------------------ENDPOINTS TILES MAPA--------------------------------------//
 //----------------------------------------------------------------------------//
 
     @GetMapping(value = "/API/tiles/{zoom}/{x}/{y}", produces = "image/webp")
-    public ResponseEntity<byte[]> getMapTile(@PathVariable int zoom, @PathVariable int x, @PathVariable int y)  {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(new MediaType("image","webp"));
-        return new ResponseEntity<>(ResourcesServicio.getTilesBytes(zoom, x, y), headers, HttpStatus.OK);
+    public ResponseEntity<Resource> getMapTile(@PathVariable int zoom, @PathVariable int x, @PathVariable int y)  {
+        return ResponseEntity.ok(RecursoServicio.getTiles(zoom, x, y));
     }
 
 //----------------------------------------------------------------------------//    

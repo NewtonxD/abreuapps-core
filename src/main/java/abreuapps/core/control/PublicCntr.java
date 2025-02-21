@@ -53,12 +53,13 @@ public class PublicCntr {
     @GetMapping(value="/p/pub/archivo/{nombre}")
     public ResponseEntity<Resource> consultarArchivoActualPublicidad(@PathVariable("nombre") String nombre ){
         Map<String,Object> archivo=PublicidadServicio.obtenerArchivoPublicidad(URLDecoder.decode(nombre, StandardCharsets.UTF_8) );
-        if(archivo!=null)
-            return ResponseEntity.ok()
-                        .contentType( (MediaType) archivo.get("media-type") )
-                        .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + ((Resource)archivo.get("body")).getFilename() + "\"")
-                        .body((Resource)archivo.get("body"));
-        else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        return (archivo!=null) ?
+            ResponseEntity.ok()
+                .contentType( (MediaType) archivo.get("media-type") )
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + ((Resource)archivo.get("body")).getFilename() + "\"")
+                .body((Resource)archivo.get("body"))
+            : new ResponseEntity<>(HttpStatus.NOT_FOUND);
         
     }
     
@@ -120,14 +121,14 @@ public class PublicCntr {
     
     @GetMapping("/")
     public String redirectLogin(Model model){
-        /*model.addAttribute("server_ip",ConfiguracionServicio.consultar("serverip"));
+        model.addAttribute("server_ip",ConfiguracionServicio.consultar("serverip"));
         model.addAttribute("app_provincia",ConfiguracionServicio.consultar("appprovincia"));
         model.addAttribute("base_dir",ConfiguracionServicio.consultar("centraldir"));
         String baseLatLng = ConfiguracionServicio.consultar("centrallatlng");
         model.addAttribute("base_lat",baseLatLng.split(",")[0]);
         model.addAttribute("base_lng",baseLatLng.split(",")[1]);
-        return "mapa";*/
-        return "redirect:/auth/login";
+        return "mapa";
+        //return "redirect:/auth/login";
     }    
 //----------------------------------------------------------------------------//
     @RequestMapping("/favicon.ico")
