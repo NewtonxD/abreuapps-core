@@ -1,23 +1,20 @@
 package abreuapps.core.control.general;
 
 import abreuapps.core.control.usuario.AccesoServ;
-import abreuapps.core.control.usuario.Usuario;
 import abreuapps.core.control.utils.DateUtils;
 import abreuapps.core.control.utils.RecursoServ;
 import jakarta.transaction.Transactional;
-import java.net.MalformedURLException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.*;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  *
@@ -45,9 +42,14 @@ public class PublicidadServ {
     @CacheEvict(value={"Publicidad","Publicidades","PublicidadArchivos"}, allEntries = true)
     public List<Object> guardar(Publicidad publicidad, String fechaActualizacion){
 
-        Optional<Publicidad> publicidadDB = obtener(! publicidad.getId().equals(null) ? publicidad.getId() : 0 );
-        List<Object> resultados = new ArrayList<>();
-        Usuario usuario = AccesoServicio.getUsuarioLogueado();
+        if(publicidad.equals(null))
+            return List.of( false,
+                    "La publicidad no puede ser guardada. Por favor, inténtalo otra vez. COD: 00537"
+            );
+
+
+        var publicidadDB = obtener( publicidad.getId() );
+        var usuario = AccesoServicio.getUsuarioLogueado();
 
         if (publicidadDB.isPresent()) {
 
@@ -55,14 +57,12 @@ public class PublicidadServ {
                     .format(publicidadDB.get().getFecha_actualizacion())
                     .equals(fechaActualizacion)
             ) {
-                resultados.add(false);
-                resultados.add(
-                        ! ( fechaActualizacion == null ||
+                return List.of( false,
+                        ! ( fechaActualizacion.equals(null) ||
                                 fechaActualizacion.equals("") ) ?
                                 "Alguien ha realizado cambios en la información. Inténtalo nuevamente. COD: 00686" :
                                 "Esta Publicidad ya existe!. Verifique e intentelo nuevamente."
                 );
-                return resultados;
             }
 
             publicidad.setFecha_registro(publicidadDB.get().getFecha_registro());
@@ -82,9 +82,9 @@ public class PublicidadServ {
         publicidad.setFecha_actualizacion(new Date());
         repo.save(publicidad);
 
-        resultados.add(true);
-        resultados.add( "Registro guardado exitosamente!");
-        return resultados;
+        return List.of( true,
+                "Registro guardado exitosamente!"
+        );
     }
     
     public Optional<Publicidad> obtener(Long id){

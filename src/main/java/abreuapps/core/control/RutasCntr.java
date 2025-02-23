@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -55,7 +54,7 @@ public class RutasCntr {
         if(! AccesoServicio.verificarPermisos("trp_rutas_registro"))
             return TemplateServicio.NOT_FOUND_TEMPLATE;
 
-        TemplateServicio.cargarPagina("trp_rutas_consulta", model);
+        TemplateServicio.cargarDatosPagina("trp_rutas_consulta", model);
 
         var resultados = RutaServicio.guardar(ruta,data,fechaActualizacion);
         model.addAttribute("status", resultados.get(0));
@@ -73,9 +72,10 @@ public class RutasCntr {
         if(! AccesoServicio.verificarPermisos("trp_rutas_registro"))
             return TemplateServicio.NOT_FOUND_TEMPLATE;
 
-        Optional<Ruta> ruta = RutaServicio.obtener(idRuta);
+        var ruta = RutaServicio.obtener(idRuta);
 
-        if (!ruta.isPresent()) return "redirect:/error";
+        if (! ruta.isPresent())
+            return TemplateServicio.NOT_FOUND_TEMPLATE;
 
         model.addAttribute("ruta", ruta.get());
         model.addAllAttributes(AccesoServicio.consultarAccesosPantallaUsuario("trp_rutas_registro"));
@@ -89,23 +89,18 @@ public class RutasCntr {
     public ResponseEntity ObtenerLocRuta(
         @RequestParam("idRuta") String idRuta
     ) {
+        if(! AccesoServicio.verificarPermisos("trp_paradas_registro"))
+            return ResponseEntity.ok(null);
+
         Map<String, Object> respuesta= new HashMap<>();
-        if(AccesoServicio.verificarPermisos("trp_paradas_registro")){
 
-            Optional<Ruta> Ruta = RutaServicio.obtener(idRuta);
+        Optional<Ruta> Ruta = RutaServicio.obtener(idRuta);
+        if(Ruta.isPresent())
+            respuesta.put("ruta", LocRutaServicio.consultar(Ruta.get().getRuta(),null));
 
-            if(Ruta.isPresent())
-                respuesta.put("ruta",
-                    LocRutaServicio.consultar(Ruta.get().getRuta(),null)
-                );
-            
-            respuesta.put("paradas",ParadaServicio.consultarTodo( null , true));
-        
-        }
-        
-        return new ResponseEntity<>(
-                respuesta.isEmpty() ? null: respuesta,
-                HttpStatus.OK);  
+        respuesta.put("paradas",ParadaServicio.consultarTodo( null , true));
+
+        return ResponseEntity.ok(respuesta);
     }
     
 }

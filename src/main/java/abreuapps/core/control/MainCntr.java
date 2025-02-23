@@ -11,7 +11,6 @@ import abreuapps.core.control.utils.SSEServ;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,8 +34,6 @@ public class MainCntr {
     
     private final UsuarioServ UsuarioServicio;
     
-    private final PasswordEncoder passwordEncoder;
-    
     private final LogVehiculoServ LogVehiculoServicio;
     
     private final PublicidadServ PublicidadServicio;
@@ -57,10 +54,8 @@ public class MainCntr {
     ) {
         Usuario u = AccesosServicio.getUsuarioLogueado();
         
-        if (!UsuarioServicio.obtener(
-                u.getUsername()
-            ).get().isCredentialsNonExpired()
-        ) return "redirect:/main/changePwd";
+        if (!UsuarioServicio.obtener(u.getUsername()).get().isCredentialsNonExpired())
+            return "redirect:/main/changePwd";
         
         model.addAttribute("app_nombre",ConfiguracionServicio.consultar("appnombre"));
         model.addAttribute("vhl_log",LogVehiculoServicio.consultar(100));
@@ -89,8 +84,8 @@ public class MainCntr {
         Model model,
         @RequestParam("id") String idPage
     ) {
-        TemplateServicio.cargarPagina(idPage, model);
-        return "fragments/" + idPage + "";
+        TemplateServicio.cargarDatosPagina(idPage, model);
+        return "fragments/" + idPage ;
     }
 //----------------------------------------------------------------------------//
     
@@ -98,15 +93,14 @@ public class MainCntr {
     public String changePasswordExpired(
         Model model
     ) {
-        Usuario userSession = AccesosServicio.getUsuarioLogueado();
-        Usuario userBd = UsuarioServicio.obtener(userSession.getUsername()).get();
-        userBd.setPassword("");
-        model.addAttribute("usuario", userBd);
-        
-        if(userBd.isCredentialsNonExpired())
-            return "password ";
-        else 
-            return "password";
+        var usuario = UsuarioServicio
+                .obtener(AccesosServicio.getUsuarioLogueado().getUsername())
+                .get();
+
+        usuario.setPassword("");
+        model.addAttribute("usuario", usuario);
+
+        return "password";
            
     }
 //----------------------------------------------------------------------------//
@@ -114,19 +108,19 @@ public class MainCntr {
     @PostMapping("/changeMyPwdNow")
     @ResponseBody
     public Map<String,String> changePasswordExpired(
-        @RequestParam(name = "actualPassword",required = false) String oldPwd,
-        @RequestParam("newPassword") String newPwd
+        @RequestParam(name = "actualPassword",required = false) String AnteriorPassword,
+        @RequestParam("newPassword") String NuevaPassword
     ) {
-        oldPwd = oldPwd==null ? "" : oldPwd ;
-        Usuario userSession = AccesosServicio.getUsuarioLogueado();
-        Usuario userBd = UsuarioServicio.obtener(userSession.getUsername()).get();
+        AnteriorPassword = AnteriorPassword.equals(null) ? "" : AnteriorPassword ;
+        var usuario = UsuarioServicio.obtener(AccesosServicio.getUsuarioLogueado().getUsername()).get();
+
         Map<String, String> respuesta= new HashMap<>();
         
         //si credenciales no estan expiradas verificar old pass
-        if(userBd.isCredentialsNonExpired() && 
-                !passwordEncoder.matches(
-                        oldPwd, 
-                        userBd.getPassword()
+        if(usuario.isCredentialsNonExpired() &&
+                ! UsuarioServicio.coincidenPassword(
+                        AnteriorPassword, 
+                        usuario.getId()
                 )
           ) {
             respuesta.put("status", "warning");
@@ -134,10 +128,9 @@ public class MainCntr {
             return respuesta; //contraseña vieja no matchea
         }
         
+        usuario.setCambiarPassword(false);
+        UsuarioServicio.cambiarPassword(usuario,NuevaPassword,false);
         
-        userBd.setCambiarPassword(false);
-        userBd.setPassword(passwordEncoder.encode(newPwd));
-        //UsuarioServicio.guardar(userBd, UsuarioServicio.obtenerPorId(1).get() , true);
         respuesta.put("status", "success");
         respuesta.put("msg", "Contraseña fue guardada exitosamente! En breve lo redirigiremos.");
         return respuesta;
@@ -151,14 +144,14 @@ public class MainCntr {
         @RequestParam Map<String,String> data
     ) {
         
-        /*String verificarPermisos= AccesosServicio.verificarPermisos("sys_configuracion", model);
-        if (! verificarPermisos.equals("")) return verificarPermisos;*/
+        if(!AccesosServicio.verificarPermisos("sys_configuracion"))
+            return TemplateServicio.NOT_FOUND_TEMPLATE;
         
         confServ.GuardarTodosMap(data, AccesosServicio.getUsuarioLogueado());
         model.addAttribute("status", true);
         model.addAttribute("msg", "Configuración guardada exitosamente!");
 
-        TemplateServicio.cargarPagina("sys_configuracion", model);
+        TemplateServicio.cargarDatosPagina("sys_configuracion", model);
         
         return "fragments/sys_configuracion";
 

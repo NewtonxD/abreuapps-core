@@ -4,7 +4,9 @@ package abreuapps.core.control.general;
 import abreuapps.core.control.inventario.Producto;
 import abreuapps.core.control.inventario.ProductoServ;
 import abreuapps.core.control.transporte.*;
-import abreuapps.core.control.usuario.*;
+import abreuapps.core.control.usuario.AccesoServ;
+import abreuapps.core.control.usuario.Usuario;
+import abreuapps.core.control.usuario.UsuarioServ;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,8 +36,7 @@ public class TemplateServ {
 
     private Model dataModel=null;
 
-
-    public void cargarPagina( String idPage, Model model ){
+    public void cargarDatosPagina(String idPage, Model model ){
         this.dataModel=model;
         Map<String,Runnable> actions = Map.ofEntries(
                 entry("dat_gen_consulta_datos", () -> {

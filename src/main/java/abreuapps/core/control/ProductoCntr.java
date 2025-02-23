@@ -1,17 +1,14 @@
 package abreuapps.core.control;
 
 import abreuapps.core.control.general.DatoServ;
+import abreuapps.core.control.general.TemplateServ;
 import abreuapps.core.control.inventario.Producto;
 import abreuapps.core.control.inventario.ProductoServ;
 import abreuapps.core.control.usuario.AccesoServ;
-import abreuapps.core.control.usuario.Usuario;
-import abreuapps.core.control.utils.DateUtils;
 import abreuapps.core.control.utils.RecursoServ;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.text.ParseException;
-import java.util.Map;
-import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -37,8 +34,8 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 @RequestMapping("/prd")
 public class ProductoCntr {
-    
-    private final DateUtils FechaUtils;
+
+    private final TemplateServ TemplateServicio;
 
     private final AccesoServ AccesoServicio;
     
@@ -55,75 +52,18 @@ public class ProductoCntr {
     public String GuardarProducto(
         Model model,
         Producto producto,
-        @RequestParam(name = "fecha_actualizacionn", 
-                        required = false) String fechaActualizacionCliente
-    ) throws ParseException {
-        
-        String plantillaRespuesta="fragments/inv_producto_consulta";
-        /*
-        Usuario u = AccesoServicio.getUsuarioLogueado();
-        
-        //INICIO DE VALIDACIONES
-        String sinPermisoPlantilla = AccesoServicio.verificarPermisos(
-            "inv_producto_consulta", model);
-        
-        //USUARIO NO TIENE PERMISOS PARA EJECUTAR ESTA ACCION
-        boolean valido = sinPermisoPlantilla.equals("");
+        @RequestParam(name = "fecha_actualizacionn", required = false) String fechaActualizacion
+    ) {
+        if(AccesoServicio.verificarPermisos("inv_producto_registro"))
+            return TemplateServicio.NOT_FOUND_TEMPLATE;
 
-        if(valido){
-            
-            Optional<Producto> ProductoDB = ProductoServicio.obtener(producto!=null ? producto.getId() : 0 );
+        TemplateServicio.cargarDatosPagina("inv_producto_consulta", model);
 
-            if (ProductoDB.isPresent()) {
-                
+        var resultados = ProductoServicio.guardar(producto,fechaActualizacion);
+        model.addAttribute("status", resultados.get(0));
+        model.addAttribute("msg", resultados.get(1));
 
-                if (! FechaUtils.FechaFormato2.format(
-                        ProductoDB.get().getFecha_actualizacion()
-                        ).equals(fechaActualizacionCliente)
-                ) {
-                    
-                    model.addAttribute(
-                        "msg",
-                        ! ( fechaActualizacionCliente == null || 
-                             fechaActualizacionCliente.equals("") ) ? 
-                        "Al parecer alguien ha realizado cambios en la información primero. Por favor, inténtalo otra vez. COD: 00686" :
-                        "No podemos realizar los cambios porque ya esta Parada se encuentra registrado."
-                    );
-                    valido = false;
-                    
-                }
-
-            }
-            
-            //SI TODAS LAS ANTERIORES SON VALIDAS PROCEDEMOS
-            if(valido){
-                
-            
-                if ( ! ( fechaActualizacionCliente == null || 
-                        fechaActualizacionCliente.equals("") )
-                ) {
-                    producto.setFecha_actualizacion(
-                        FechaUtils.Formato2ToDate(fechaActualizacionCliente)
-                    );
-                }
-                
-                if (ProductoDB.isPresent()) {
-                    producto.setFecha_registro(ProductoDB.get().getFecha_registro());
-                    producto.setHecho_por(ProductoDB.get().getHecho_por());
-                }
-
-                ProductoServicio.guardar(producto, u, ProductoDB.isPresent());
-                model.addAttribute("msg", "Registro guardado exitosamente!");
-
-                AccesoServicio.cargarPagina("inv_producto_consulta", model);
-            }
-            
-            model.addAttribute("status", valido);
-        }
-
-        return sinPermisoPlantilla.equals("") ? plantillaRespuesta : sinPermisoPlantilla;*/
-        return plantillaRespuesta;
-
+        return "fragments/inv_producto_consulta";
     }
     
     //----------------------------------------------------------------------------//
@@ -135,8 +75,10 @@ public class ProductoCntr {
     
     //--------------------------------------------------------------------------
     @GetMapping(value="/archivo/{nombre}")
-    public ResponseEntity<Resource> consultarArchivoActualPublicidad(@PathVariable("nombre") String nombre ){
-        Map<String,Object> archivo=ResourcesServicio.obtenerArchivo(URLDecoder.decode(nombre, StandardCharsets.UTF_8) );
+    public ResponseEntity<Resource> consultarArchivoActualPublicidad(
+            @PathVariable("nombre") String nombre
+    ){
+        var archivo = ResourcesServicio.obtenerArchivo(URLDecoder.decode(nombre, StandardCharsets.UTF_8) );
         return (! archivo.equals(null)) ?
                 ResponseEntity.ok()
                         .contentType( (MediaType) archivo.get("media-type") )
@@ -150,32 +92,19 @@ public class ProductoCntr {
         Model model,
         @RequestParam("idProducto") Long idProducto
     ) {
-        
-        boolean valido=true;
-        String plantillaRespuesta="fragments/inv_producto_registro";
+        if(! AccesoServicio.verificarPermisos("inv_producto_registro"))
+            return TemplateServicio.NOT_FOUND_TEMPLATE;
 
-        Optional<Producto> ProductoDB = ProductoServicio.obtener(idProducto);
+        var ProductoDB = ProductoServicio.obtener(idProducto);
 
-        if (!ProductoDB.isPresent()) {
+        if (!ProductoDB.isPresent())
+            return TemplateServicio.NOT_FOUND_TEMPLATE;
 
-            //log.error("Error COD: 00637 al editar Publicidad. No encontrado ({})",Publicidad);
-            plantillaRespuesta = "redirect:/error";
-            valido=false;
+        model.addAttribute("producto", ProductoDB.get());
+        model.addAllAttributes( AccesoServicio.consultarAccesosPantallaUsuario("inv_producto_registro"));
+        model.addAttribute("categorias", DatoServicio.consultarPorGrupo("Categoria Producto"));
 
-        }
-        
-        //SI TODAS LAS ANTERIORES SON VALIDAS PROCEDEMOS
-        if(valido){
-            model.addAttribute("producto", ProductoDB.get());
-            
-            model.addAllAttributes(
-                    AccesoServicio.consultarAccesosPantallaUsuario("inv_producto_registro")
-            );
-            
-            model.addAttribute("categorias", DatoServicio.consultarPorGrupo("Categoria Producto"));
-        }
-
-        return plantillaRespuesta;
+        return "fragments/inv_producto_registro";
     }
 //----------------------------------------------------------------------------//
     

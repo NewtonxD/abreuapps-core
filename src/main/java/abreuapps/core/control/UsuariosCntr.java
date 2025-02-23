@@ -6,8 +6,6 @@ import abreuapps.core.control.usuario.AccesoServ;
 import abreuapps.core.control.usuario.Usuario;
 import abreuapps.core.control.usuario.UsuarioServ;
 
-import java.util.Optional;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -52,7 +50,7 @@ public class UsuariosCntr {
         model.addAttribute("status", resultados.get(0));
         model.addAttribute("msg",resultados.get(1));
 
-        TemplateServicio.cargarPagina("usr_mgr_principal", model);
+        TemplateServicio.cargarDatosPagina("usr_mgr_principal", model);
 
         return usuario.getId().equals(AccesoServicio.getUsuarioLogueado().getId()) // mismo usuario logueado que actualizado
                 ? "redirect:/main/index" : "fragments/usr_mgr_principal";
@@ -68,7 +66,7 @@ public class UsuariosCntr {
         if (!AccesoServicio.verificarPermisos("usr_mgr_registro"))
             return TemplateServicio.NOT_FOUND_TEMPLATE;
 
-        Optional<Usuario> usuario = UsuarioServicio.obtener(idUsuario);
+        var usuario = UsuarioServicio.obtener(idUsuario);
 
         if (!usuario.isPresent())
             return TemplateServicio.NOT_FOUND_TEMPLATE;
@@ -89,7 +87,7 @@ public class UsuariosCntr {
             Model model
     ) {
 
-        Usuario usuarioLogueado = AccesoServicio.getUsuarioLogueado();
+        var usuarioLogueado = AccesoServicio.getUsuarioLogueado();
 
         model.addAttribute("user", usuarioLogueado);
         model.addAttribute("persona", usuarioLogueado.getPersona());
@@ -109,7 +107,7 @@ public class UsuariosCntr {
     public boolean VerificarUsuario(
             @RequestParam("username") String nombreUsuario
     ) {
-        return !UsuarioServicio.obtener(nombreUsuario).isPresent();
+        return ! UsuarioServicio.obtener(nombreUsuario).isPresent();
     }
 //----------------------------------------------------------------------------//
 
@@ -119,7 +117,7 @@ public class UsuariosCntr {
     public boolean VerificarCorreo(
             @RequestParam("correo") String correo
     ) {
-        return !UsuarioServicio.obtenerPorCorreo(correo).isPresent();
+        return ! UsuarioServicio.obtenerPorCorreo(correo).isPresent();
     }
 //----------------------------------------------------------------------------//
 
@@ -145,9 +143,9 @@ public class UsuariosCntr {
         UsuarioServicio.cerrarSesion(nombreUsuario);
         model.addAttribute("status", true);
         model.addAttribute("msg", "Sesión Cerrada Exitosamente!");
-        TemplateServicio.cargarPagina("usr_mgr_principal", model);
-        return "fragments/usr_mgr_principal";
+        TemplateServicio.cargarDatosPagina("usr_mgr_principal", model);
 
+        return "fragments/usr_mgr_principal";
     }
 //----------------------------------------------------------------------------//
 
@@ -159,7 +157,7 @@ public class UsuariosCntr {
         if (!AccesoServicio.verificarPermisos("usr_mgr_registro"))
             return TemplateServicio.NOT_FOUND_TEMPLATE;
 
-        Optional<Usuario> usuarioBD = UsuarioServicio.obtener(nombreUsuario);
+        var usuarioBD = UsuarioServicio.obtener(nombreUsuario);
 
         if (!usuarioBD.isPresent())
             return TemplateServicio.NOT_FOUND_TEMPLATE;
@@ -168,7 +166,7 @@ public class UsuariosCntr {
         UsuarioServicio.cambiarPassword(usuarioBD.get(), UsuarioServicio.generarPassword(), true);
         model.addAttribute("status", true);
         model.addAttribute("msg", "Contraseña Reseteada Exitosamente! Comuniquese con el usuario para que revise su correo.");
-        TemplateServicio.cargarPagina("usr_mgr_principal", model);
+        TemplateServicio.cargarDatosPagina("usr_mgr_principal", model);
 
         return "fragments/usr_mgr_principal";
 

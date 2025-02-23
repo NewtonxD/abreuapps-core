@@ -1,17 +1,14 @@
 package abreuapps.core.control;
 
+import abreuapps.core.control.general.TemplateServ;
 import abreuapps.core.control.transporte.Parada;
 import abreuapps.core.control.transporte.ParadaServ;
 import abreuapps.core.control.usuario.AccesoServ;
-import abreuapps.core.control.usuario.Usuario;
-import abreuapps.core.control.utils.DateUtils;
-import java.text.ParseException;
+
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -30,12 +27,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequiredArgsConstructor
 @RequestMapping("/pda")
 public class ParadasCntr {
-    
-    private final DateUtils FechaUtils;
 
     private final AccesoServ AccesoServicio;
     
     private final ParadaServ ParadaServicio;
+
+    private final TemplateServ TemplateServicio;
         
 //----------------------------------------------------------------------------//
 //------------------ENDPOINTS PARADAS-----------------------------------------//
@@ -43,78 +40,21 @@ public class ParadasCntr {
     @PostMapping("/save")
     public String GuardarParada(
         Model model,
-        Parada paradaCliente,
+        Parada parada,
         @RequestParam(name = "fecha_actualizacionn", 
-                        required = false) String fechaActualizacionCliente
-    ) throws ParseException {
-
-        boolean valido;
+                        required = false) String fechaActualizacion
+    ) {
         
-        String plantillaRespuesta="fragments/trp_paradas_consulta";
-        /*
-        Usuario u = AccesoServicio.getUsuarioLogueado();
-        
-        //INICIO DE VALIDACIONES
-        String sinPermisoPlantilla = AccesoServicio.verificarPermisos(
-            "trp_paradas_consulta", model, u );
-        
-        //USUARIO NO TIENE PERMISOS PARA EJECUTAR ESTA ACCION
-        valido = sinPermisoPlantilla.equals("");
-        
-        
-        if(valido){
-            
-            Optional<Parada> paradaDB = ParadaServicio.obtener(paradaCliente.getId());
+        if (!AccesoServicio.verificarPermisos("trp_paradas_consulta"))
+            return TemplateServicio.NOT_FOUND_TEMPLATE;
 
-            if (paradaDB.isPresent()) {
+        var respuesta = ParadaServicio.guardar(parada,fechaActualizacion);
+        model.addAttribute("status", (Boolean)respuesta.get(0));
+        model.addAttribute("msg", respuesta.get(1));
 
-                if (! FechaUtils.FechaFormato2.format(
-                        paradaDB.get().getFecha_actualizacion()
-                        ).equals(fechaActualizacionCliente)
-                ) {
-                    
-                    model.addAttribute(
-                        "msg",
-                        ! ( fechaActualizacionCliente == null || 
-                             fechaActualizacionCliente.equals("") ) ? 
-                        "Al parecer alguien ha realizado cambios en la información primero. Por favor, inténtalo otra vez. COD: 00656" :
-                        "No podemos realizar los cambios porque ya esta Parada se encuentra registrado."
-                    );
-                    valido = false;
-                    
-                }
+        TemplateServicio.cargarDatosPagina("trp_paradas_consulta", model);
 
-            }
-            
-            //SI TODAS LAS ANTERIORES SON VALIDAS PROCEDEMOS
-            if(valido){
-                
-            
-                if ( ! ( fechaActualizacionCliente == null || 
-                        fechaActualizacionCliente.equals("") )
-                ) {
-                    paradaCliente.setFecha_actualizacion(
-                        FechaUtils.Formato2ToDate(fechaActualizacionCliente)
-                    );
-                }
-                
-                if (paradaDB.isPresent()) {
-                    paradaCliente.setFecha_registro(paradaDB.get().getFecha_registro());
-                    paradaCliente.setHecho_por(paradaDB.get().getHecho_por());
-                }
-
-                ParadaServicio.guardar(paradaCliente, u, paradaDB.isPresent());
-                model.addAttribute("msg", "Registro guardado exitosamente!");
-
-                AccesoServicio.cargarPagina("trp_paradas_consulta", model);
-            }
-            
-            model.addAttribute("status", valido);
-        }
-
-        return sinPermisoPlantilla.equals("") ? plantillaRespuesta : sinPermisoPlantilla;
-        */
-        return plantillaRespuesta;
+        return "fragments/trp_paradas_consulta";
     }    
 //----------------------------------------------------------------------------//
     @PostMapping("/update")
@@ -122,29 +62,20 @@ public class ParadasCntr {
         Model model,
         @RequestParam("idParada") Integer idParada
     ) {
-        
-        boolean valido=true;
-        String plantillaRespuesta="fragments/trp_paradas_registro";
 
-        Optional<Parada> parada = ParadaServicio.obtener(idParada);
+        if (! AccesoServicio.verificarPermisos("trp_paradas_registro"))
+            return TemplateServicio.NOT_FOUND_TEMPLATE;
 
-        if (!parada.isPresent()) {
+        var parada = ParadaServicio.obtener(idParada);
+        if (!parada.isPresent())
+            return TemplateServicio.NOT_FOUND_TEMPLATE;
 
-            //log.error("Error COD: 00637 al editar parada. No encontrado ({})",idParada);
-            plantillaRespuesta = "redirect:/error";
-            valido=false;
+        model.addAttribute("parada", parada.get());
+        model.addAllAttributes(
+                AccesoServicio.consultarAccesosPantallaUsuario("trp_paradas_registro")
+        );
 
-        }
-        
-        //SI TODAS LAS ANTERIORES SON VALIDAS PROCEDEMOS
-        if(valido){
-            model.addAttribute("parada", parada.get());
-            model.addAllAttributes(
-                    AccesoServicio.consultarAccesosPantallaUsuario("trp_paradas_registro")
-            );
-        }
-
-        return plantillaRespuesta;
+        return "fragments/trp_paradas_registro";
     }
 //----------------------------------------------------------------------------//
     
@@ -153,29 +84,23 @@ public class ParadasCntr {
     public ResponseEntity ObtenerLocParada(
         @RequestParam("idParada") Integer idParada
     ) {  
-        boolean valido= AccesoServicio.verificarPermisos("trp_paradas_registro");
+        if(!AccesoServicio.verificarPermisos("trp_paradas_registro"))
+            return ResponseEntity.ok(null);
         
         Map<String, Object> respuesta= new HashMap<>();
-        
-        if(valido){
-            Optional<Parada> LocParada = ParadaServicio.obtener(idParada); 
-            
-            respuesta.put("paradas",ParadaServicio.consultarTodo( 
-                idParada , 
-                true
-            ));
-        
-            //SI TODAS LAS ANTERIORES SON VALIDAS PROCEDEMOS
-            if(LocParada.isPresent()){
-                respuesta.put("lon",LocParada.get().getLongitud());
-                respuesta.put("lat", LocParada.get().getLatitud());
-            }
+
+        respuesta.put(
+                "paradas",
+                ParadaServicio.consultarTodo( idParada ,true)
+        );
+
+        var LocParada = ParadaServicio.obtener(idParada);
+        if(LocParada.isPresent()){
+            respuesta.put("lon",LocParada.get().getLongitud());
+            respuesta.put("lat", LocParada.get().getLatitud());
         }
-        
-        return new ResponseEntity<>(
-                respuesta.isEmpty() ? null: respuesta,
-                new HttpHeaders(),
-                HttpStatus.OK);  
+
+        return ResponseEntity.ok(respuesta);
     }
     
     

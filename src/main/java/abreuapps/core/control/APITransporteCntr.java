@@ -14,9 +14,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import static java.util.Map.entry;
 
 /**
  *
@@ -63,72 +64,63 @@ public class APITransporteCntr {
             consumes=MediaType.APPLICATION_JSON_VALUE )
     public Map<String, Object> VerificarInformacionTransporte(
         @RequestBody Map<String, String> req
-    ) {  
-        boolean valido=true;
-        
-        String mensaje="";
+    ) {
         String token="";
         String placa=req.getOrDefault("placa","");
         String ruta=req.getOrDefault("ruta","");
         String pwd=req.getOrDefault("password","");
 
         //INICIO DE LAS VALIDACIONES
-        if(placa.equals("") ){
-            mensaje="Placa no pudo ser procesada...";
-            valido=false;
-        }
+        if(placa.equals("") )
+            return Map.ofEntries(
+                entry("message","Placa no pudo ser procesada"),
+                entry("isValid",false), entry("token",token)
+            );
         
-        if(ruta.equals("") ){
-            mensaje="Ruta invalida...";
-            valido=false;
-        }
+        if(ruta.equals("") )
+            return Map.ofEntries(
+                entry("message","Ruta invalida"),
+                entry("isValid",false), entry("token",token)
+            );
 
-        if(valido && !passwordEncoder.matches(
-                pwd, 
-                PWD_HASH )
-        ){
-            mensaje="Contraseña invalida, intentelo nuevamente...";
-            valido=false;
-        }
+        if(!passwordEncoder.matches(pwd, PWD_HASH ))
+            return Map.ofEntries(
+                entry("message","Contraseña invalida, intentelo otra vez"),
+                entry("isValid",false), entry("token",token)
+            );
             
-        Optional<Vehiculo> v = VehiculoServicio.obtener(placa);
+        var vehiculoDB = VehiculoServicio.obtener(placa);
 
-        if(! v.isPresent()){
-            mensaje = "Vehiculo no existe!";
-            valido=false;
-        } 
-        
-        if(valido){
-            if (! v.get().isActivo() ){
-                mensaje = "Vehiculo Inactivo! Verifique Placa...";
-                valido=false;
-            }
+        if(! vehiculoDB.isPresent())
+            return Map.ofEntries(
+                entry("message","Vehiculo no existe!"),
+                entry("isValid",false), entry("token",token)
+            );
 
-            if (! (v.get().getEstado().getDato().equals("Estacionado") || v.get().getEstado().getDato().equals("Averiado")) ) {
-                mensaje = "Presione Detener primero, y luego Iniciar.";
-                valido=false;
-            }
-        }
-        
-        //SI TODAS LAS ANTERIORES SON VALIDAS PROCEDEMOS
-        if(valido) {
+        if (! vehiculoDB.get().isActivo() )
+            return Map.ofEntries(
+                    entry("message","Vehiculo inactivo! verifique placa"),
+                    entry("isValid",false), entry("token",token)
+            );
 
-            token= VehiculoServicio.generateToken();
-            mensaje = "Transporte en Camino! Iniciando Servicio...";
-            Vehiculo h=v.get();
-            h.setEstado(DatosServicio.obtener("En Camino").get());
-            h.setRuta(RutaServicio.obtener(ruta).get());
-            h.setToken(token);
-            VehiculoServicio.guardarAPI(h);
-            
-        }
-        
-        Map<String, Object> respuesta= new HashMap<>();
-        respuesta.put("isValid", valido);
-        respuesta.put("message", mensaje);
-        respuesta.put("token", token);
-        
-        return respuesta;  
+        if (! (vehiculoDB.get().getEstado().getDato().equals("Estacionado") || vehiculoDB.get().getEstado().getDato().equals("Averiado")) )
+            return Map.ofEntries(
+                    entry("message","Presione detener y luego iniciar"),
+                    entry("isValid",false), entry("token",token)
+            );
+
+
+        token = VehiculoServicio.generateToken();
+        var vehiculo=vehiculoDB.get();
+        vehiculo.setEstado(DatosServicio.obtener("En Camino").get());
+        vehiculo.setRuta(RutaServicio.obtener(ruta).get());
+        vehiculo.setToken(token);
+        VehiculoServicio.guardarAPI(vehiculo);
+
+        return Map.ofEntries(
+                entry("message","Transporte en Camino! Iniciando Servicio..."),
+                entry("isValid",true), entry("token",token)
+        );
     } 
 //----------------------------------------------------------------------------//
     
@@ -138,50 +130,46 @@ public class APITransporteCntr {
                     consumes=MediaType.APPLICATION_JSON_VALUE )
     public Map<String, Object> RegistrarInformacionTransporte(
         @RequestBody Map<String, String> req
-    ) {  
-        boolean valido=true;
-        
-        String mensaje = "";
+    ) {
         String placa   = req.getOrDefault("placa","");
         Double lat     = Double.valueOf(req.get("lat"));
         Double lon     = Double.valueOf(req.get("lon"));
         String token   = req.getOrDefault("token","");
         
         //INICIO DE VALIDACIONES
-        if((placa.isBlank() || lat.isNaN() || lon.isNaN() )){
-            mensaje = "Datos invalidos! intentelo de nuevo.";
-            valido=false;
-        }
-        
+        if((placa.isBlank() || lat.isNaN() || lon.isNaN() ))
+            return Map.ofEntries(
+                    entry("message","Datos invalidos! intentelo de nuevo."),
+                    entry("isValid",false)
+            );
+
         Optional<Vehiculo> v=VehiculoServicio.obtener(placa);
-        if(valido && !v.isPresent() ){
-            mensaje = "Vehiculo no existe!";
-            valido=false;
-        }
+
+        if(!v.isPresent() )
+            return Map.ofEntries(
+                    entry("message","Vehiculo no existe!"),
+                    entry("isValid",false)
+            );
         
 
-        if(valido){
-            if(! token.equals(v.get().getToken())){
-                mensaje = "Token invalido!";
-                valido=false;
-            }   
-        }
-        
-        //SI TODAS LAS ANTERIORES SON VALIDAS PROCEDEMOS
-        if(valido){
-            LocVehiculo lv = new LocVehiculo();
-            lv.setLatitud(lat);
-            lv.setLongitud(lon);
-            lv.setPlaca(v.get());
-            lv.setRuta(v.get().getRuta());
-            LocVehiculoServicio.guardar(lv);
-        }
-        
-        Map<String, Object> respuesta= new HashMap<>();
-        respuesta.put("isValid", valido);
-        respuesta.put("message", mensaje);
-        
-        return respuesta;  
+        if(! token.equals(v.get().getToken()))
+            return Map.ofEntries(
+                    entry("message","Token invalido!"),
+                    entry("isValid",false)
+            );
+
+
+        LocVehiculo lv = new LocVehiculo();
+        lv.setLatitud(lat);
+        lv.setLongitud(lon);
+        lv.setPlaca(v.get());
+        lv.setRuta(v.get().getRuta());
+        LocVehiculoServicio.guardar(lv);
+
+        return Map.ofEntries(
+                entry("message",""),
+                entry("isValid",true)
+        );
         
     }
 //----------------------------------------------------------------------------//
@@ -191,104 +179,79 @@ public class APITransporteCntr {
                     consumes=MediaType.APPLICATION_JSON_VALUE )
     public Map<String, Object> CambiarEstadoTransporte(
         @RequestBody Map<String, String> req
-    ) {  
-        boolean valido=true;
-        String mensaje="";
-        
+    ) {
         String placa  =  req.getOrDefault("placa","");
         String estado =  req.getOrDefault("estado","");
         String pwd    =  req.getOrDefault("password","");
-        
-        
+
         //INICIO DE VALIDACIONES
-        if( placa.equals("")){
-            mensaje="Placa no pudo ser procesada...";
-            valido=false;
-        }
-        
-        if(valido && !passwordEncoder.matches(
-                pwd, 
-                PWD_HASH )
-        ){
-            mensaje="Token invalido, intentelo nuevamente...";
-            valido=false;
-        } 
-            
-        Optional<Vehiculo> v = VehiculoServicio.obtener(placa);
-            
-        if(valido && !v.isPresent() ){
-            mensaje = "Vehiculo no existe!";
-            valido=false;
-        }
+        if( placa.equals(""))
+            return Map.ofEntries(
+                    entry("message","Placa no pudo ser procesada..."),
+                    entry("isValid",false)
+            );
 
+        if(! passwordEncoder.matches(pwd,PWD_HASH))
+            return Map.ofEntries(
+                    entry("message","Token invalido, intentelo nuevamente..."),
+                    entry("isValid",false)
+            );
 
-        if (valido){
-            if(!v.get().isActivo()){
-                mensaje = "Vehiculo Inactivo! Verifique Placa...";
-                valido=false;
-            }
-        } 
-        
-        
-        //SI TODAS LAS ANTERIORES SON VALIDAS PROCEDEMOS
-        if(valido){
-
-            mensaje = "Transporte "+estado+"! ";
-            Vehiculo h=v.get();
-            h.setToken("");
-            h.setEstado(DatosServicio.obtener(estado).get());
-            if(! estado.equals("En Camino") && ! estado.equals("En Parada")){
-                h.setRuta(null);
-            }
-            VehiculoServicio.guardarAPI(h);
             
+        Optional<Vehiculo> vehiculoBD = VehiculoServicio.obtener(placa);
+            
+        if(!vehiculoBD.isPresent() )
+            return Map.ofEntries(
+                    entry("message","Vehiculo no existe!"),
+                    entry("isValid",false)
+            );
+
+        if(!vehiculoBD.get().isActivo())
+            return Map.ofEntries(
+                    entry("message","Vehiculo Inactivo! Verifique Placa..."),
+                    entry("isValid",false)
+            );
+
+        Vehiculo vehiculo=vehiculoBD.get();
+        vehiculo.setToken("");
+        vehiculo.setEstado(DatosServicio.obtener(estado).get());
+        if(! estado.equals("En Camino") && ! estado.equals("En Parada")){
+            vehiculo.setRuta(null);
         }
-        
-        Map<String, Object> respuesta= new HashMap<>();
-        respuesta.put("isValid", valido);
-        respuesta.put("message", mensaje);
-        
-        return respuesta;  
+        VehiculoServicio.guardarAPI(vehiculo);
+
+        return Map.ofEntries(
+                entry("message","Transporte "+estado+"! "),
+                entry("isValid",true)
+        );
     } 
 //----------------------------------------------------------------------------//
     @ResponseBody
     @GetMapping(value="/trp/getRutas")
     public Map<String, Object> ObtenerRutasActivas(
-    ) {  
-        Map<String, Object> respuesta= new HashMap<>();
-        List<RutaDTO> Rutas=RutaServicio.consultarActivo();
-        List<String> NombreRutas=new ArrayList<>();
-        for(RutaDTO r : Rutas){
-            NombreRutas.add(r.rta());
-        }
-        respuesta.put("rutas", NombreRutas);                
-        return respuesta;  
+    ) { //rutas activas por nombre
+        return Map.ofEntries(
+                entry("rutas",
+                        RutaServicio.consultarActivo()
+                            .stream()
+                            .map(RutaDTO::rta)
+                            .collect(Collectors.toList())
+                )
+        );
     }
     
 //----------------------------------------------------------------------------//
     @ResponseBody
     @GetMapping(value="/trp/getStatic", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity ObtenerLocStaticAPI(
-    ) {  
-
-        Map<String, Object> respuesta= new HashMap<>();
-
-        respuesta.put("rutasInfo", RutaServicio.consultarInfo() );
-        
-        respuesta.put("rutasLoc", LocRutaServicio.consultar(
-                null,true) 
+    public ResponseEntity ObtenerLocStaticAPI() {
+        return ResponseEntity.ok(//respuesta
+                Map.ofEntries(
+                        entry("rutasInfo", RutaServicio.consultarInfo() ),
+                        entry("rutasLoc", LocRutaServicio.consultar(null,true) ),
+                        entry("paradas",ParadaServicio.consultarTodo(0 , true) ),
+                        entry("vehiculosLoc", LocVehiculoServicio.consultarDatosTransporteEnCamino() )
+                )
         );
-        
-        respuesta.put("paradas",ParadaServicio.consultarTodo( 
-            0 , true)
-        );
-        
-        respuesta.put("vehiculosLoc",LocVehiculoServicio.consultarDatosTransporteEnCamino());
-
-        return new ResponseEntity<>(
-                respuesta,
-                new HttpHeaders(),
-                HttpStatus.OK);  
     }
     
     @ResponseBody
@@ -297,44 +260,37 @@ public class APITransporteCntr {
                     consumes=MediaType.APPLICATION_JSON_VALUE )
     public ResponseEntity ObtenerInfoObjeto(
         @RequestBody Map<String, String> req
-    ) {         
-        
+    ) {
         String tipo  =  req.getOrDefault("type","");
-        
         Map<String, Object> respuesta= new HashMap<>();
-        
-        if (!"".equals(tipo)){
-            switch (tipo) {
-                //--------------------------------------------------------------
-               /* case "rta" -> {
-                    // informacion de la ruta:
-                    // 1- vehiculos activos con esta ruta (clic desde el cliente)
-                    // 2- distancia total de la ruta 
-                    // 3- hacia donde va
-                }*/
-                //--------------------------------------------------------------
-                case "pda" -> {
-                    Integer id = Integer.valueOf(req.getOrDefault("id",""));
-                    respuesta.put("pdaInfo",ParadaServicio.getParadaInfo(id));
-                }
-                //--------------------------------------------------------------
-                case "myloc" -> {
-                    Double lat=Double.valueOf(req.getOrDefault("lat","0"));
-                    Double lon=Double.valueOf(req.getOrDefault("lon","0"));
-                    respuesta.put("locInfo",ParadaServicio.getParadaMasCercana(lat,lon)); 
-                }
-                //--------------------------------------------------------------
-                default -> {
-                    // do nothing
-                }
-                //--------------------------------------------------------------
-            }
 
+        switch (tipo) {
+            //--------------------------------------------------------------
+           /* case "rta" -> {
+                // informacion de la ruta:
+                // 1- vehiculos activos con esta ruta (clic desde el cliente)
+                // 2- distancia total de la ruta
+                // 3- hacia donde va
+            }*/
+            //--------------------------------------------------------------
+            case "pda" -> {
+                Integer id = Integer.valueOf(req.getOrDefault("id",""));
+                respuesta.put("pdaInfo",ParadaServicio.getParadaInfo(id));
+            }
+            //--------------------------------------------------------------
+            case "myloc" -> {
+                Double lat=Double.valueOf(req.getOrDefault("lat","0"));
+                Double lon=Double.valueOf(req.getOrDefault("lon","0"));
+                respuesta.put("locInfo",ParadaServicio.getParadaMasCercana(lat,lon));
+            }
+            //--------------------------------------------------------------
+            default -> {
+                // do nothing
+            }
+            //--------------------------------------------------------------
         }
 
-        return new ResponseEntity<>(
-                respuesta,
-                HttpStatus.OK);  
+        return ResponseEntity.ok(respuesta);
     }
     
 }

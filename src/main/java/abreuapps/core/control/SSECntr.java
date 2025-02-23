@@ -29,19 +29,17 @@ public class SSECntr {
     
     private final AccesoServ AccesoServicio;
     
-    private static final List<String> REQUIRED_AUTH = List.of("dtgnr" ,"usrmgr","vhl" ,"pda","rta","pub","vhl_log","prd");
-    
-    
-//----------------------------------------------------------------------------//
-//--------------ENDPOINTS SERVER SIDE EVENTS----------------------------------//
-//----------------------------------------------------------------------------//
-    
+    private final List<String> REQUIRED_AUTH = List.of("dtgnr" ,"usrmgr","vhl" ,"pda","rta","pub","vhl_log","prd");
+
+
+    //----------------------------------------------------------------------------//
     @GetMapping(value = "/{nombre}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter consultarSSE(
         @RequestParam String clientId,
         @PathVariable String nombre
     ) {
-        if(REQUIRED_AUTH.contains(nombre) && AccesoServicio.getUsuarioLogueado()==null ) return null;
+        if(REQUIRED_AUTH.contains(nombre) && AccesoServicio.getUsuarioLogueado()==null )
+            return null;
         
         return SSEServicio.agregar(clientId,nombre);
     }

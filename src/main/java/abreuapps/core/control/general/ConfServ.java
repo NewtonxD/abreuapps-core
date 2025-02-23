@@ -2,12 +2,13 @@ package abreuapps.core.control.general;
 
 import abreuapps.core.control.usuario.Usuario;
 import jakarta.transaction.Transactional;
-import java.util.ArrayList;
+
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -26,12 +27,8 @@ public class ConfServ {
     public final String DEFAULT_NONE_PERMISSION = "n/a" ;
  
     public Map<String,String> consultarConfMap(){
-        List<ConfDTO> results=repo.customFindAll();
-        Map<String, String> convert=new HashMap<>();
-        
-        for (ConfDTO result : results) convert.put(result.cod(), result.val());
-        
-        return convert;
+        return repo.customFindAll().stream()
+                .collect(Collectors.toMap(ConfDTO::cod, ConfDTO::val));
     }
     
     @Cacheable("Conf")
@@ -46,7 +43,26 @@ public class ConfServ {
     @Transactional
     @CacheEvict(allEntries = true,value = {"Conf"})
     public void GuardarTodosMap(Map<String,String> configuracion,Usuario usuario){
-        List<Conf> listaConf = new ArrayList<>();
+
+        repo.saveAllAndFlush(
+                configuracion
+                        .entrySet()
+                        .stream()
+                        .map(entry -> repo.findById(entry.getKey())
+                                .filter(conf -> !conf.getValor().equals(entry.getValue()))
+                                .map(conf -> new Conf(
+                                        entry.getKey(),
+                                        conf.getDescripcion(),
+                                        entry.getValue(),
+                                        usuario,
+                                        new Date()))
+                        )
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList())
+        );
+
+        /*List<Conf> listaConf = new ArrayList<>();
         for (Map.Entry<String,String> val : configuracion.entrySet()) {
             Optional<Conf> conf=repo.findById(val.getKey());
             if(conf.isPresent()){
@@ -63,7 +79,7 @@ public class ConfServ {
             }
         }
         
-        repo.saveAllAndFlush(listaConf);
+        repo.saveAllAndFlush(listaConf);*/
     }
     
 }

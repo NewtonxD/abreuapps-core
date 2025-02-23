@@ -1,14 +1,13 @@
 package abreuapps.core.control;
 
+import abreuapps.core.control.general.TemplateServ;
 import abreuapps.core.control.usuario.AccesoServ;
 import abreuapps.core.control.usuario.Usuario;
 import abreuapps.core.control.usuario.UsuarioServ;
-import java.util.List;
+
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -32,41 +31,27 @@ public class PermisosCntr {
     
     private final UsuarioServ UsuarioServicio;
 
+    private final TemplateServ TemplateServicio;
+
 //----------------------------------------------------------------------------//
     @PostMapping("/access")
-    public String PermisosUsuario(
+    public String ActualizarPermisosUsuario(
         Model model, 
         String idUsuario
     ) {
-        String plantillaRespuesta="fragments/usr_mgr_permisos";
-        /*
-        //VERIFICAMOS PERMISOS PARA ESTA ACCION
-        String sinPermisoPlantilla= AccesoServicio.verificarPermisos("usr_mgr_registro", model);
 
-        boolean valido = sinPermisoPlantilla.equals("");
-        
-        if(valido){
-            
-            Optional<Usuario> usuarioBD=UsuarioServicio.obtener(idUsuario); 
+        if(! AccesoServicio.verificarPermisos("usr_mgr_registro"))
+            return TemplateServicio.NOT_FOUND_TEMPLATE;
 
-            if( ! usuarioBD.isPresent() ){
-                //log.error("Error COD: 00537 al editar Usuario. Usuario no encontrado ({})",idUsuario);
-                plantillaRespuesta = "redirect:/error";
-                valido=false;
-            }
-            
-            
-            //PROCEDEMOS SI TODOS LOS DATOS SON VALIDOS
-            if(valido) model.addAttribute("usuario",usuarioBD.get());
-            
-        }
-        
-        model.addAllAttributes(
-                AccesoServicio.consultarAccesosPantallaUsuario("usr_mgr_registro")
-        );
-        
-        return valido ? plantillaRespuesta : sinPermisoPlantilla;*/
-        return plantillaRespuesta;
+        Optional<Usuario> usuarioBD = UsuarioServicio.obtener(idUsuario);
+
+        if( ! usuarioBD.isPresent() )
+            return TemplateServicio.NOT_FOUND_TEMPLATE;
+
+        model.addAttribute("usuario",usuarioBD.get());
+        model.addAllAttributes(AccesoServicio.consultarAccesosPantallaUsuario("usr_mgr_registro"));
+
+        return "fragments/usr_mgr_permisos";
     }
 //----------------------------------------------------------------------------//
     
@@ -75,30 +60,17 @@ public class PermisosCntr {
     public ResponseEntity ObtenerListadoPermisosUsuario(
         @RequestParam("idUsuario") String nombreUsuario
     ) {  
-        //boolean valido = AccesoServicio.verificarPermisos("usr_mgr_registro", null).equals("");
-        boolean valido = true;
-        List<Object[]> permisosUsuario = null;
-        
-        if(valido){
-            Optional<Usuario> usuarioBD=UsuarioServicio.obtener(nombreUsuario); 
+        if(! AccesoServicio.verificarPermisos("usr_mgr_registro"))
+            return ResponseEntity.notFound().build();
 
-            if(!usuarioBD.isPresent()){
-                //log.error("Error COD: 00539 al editar Usuario. Usuario no encontrado ({})",nombreUsuario);
-                valido=false;
-            }
-        
-            
-            //PROCEDEMOS SI TODOS LOS DATOS SON VALIDOS
-            if(valido) permisosUsuario = AccesoServicio.ListadoAccesosUsuarioEditar(
-                    usuarioBD.get().getId() );
-            
-        }
-        
-        return new ResponseEntity<>(
-            permisosUsuario,
-            new HttpHeaders(),
-            valido ? HttpStatus.OK: HttpStatus.NOT_FOUND
-        );  
+        Optional<Usuario> usuarioBD=UsuarioServicio.obtener(nombreUsuario);
+
+        if(!usuarioBD.isPresent())
+            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok(
+                AccesoServicio.ListadoAccesosUsuarioEditar( usuarioBD.get().getId() )
+        );
     }
 //----------------------------------------------------------------------------//
     
@@ -107,39 +79,25 @@ public class PermisosCntr {
         Model model,
         @RequestParam Map<String,String> data
     ) {
-        String plantillaRespuesta="fragments/usr_mgr_principal";
         
-        //VERIFICAMOS PERMISOS PARA ESTA ACCION
-        /*String sinPermisoPlantilla= AccesoServicio.verificarPermisos(
-                "usr_mgr_registro", model );
+        if(!AccesoServicio.verificarPermisos("usr_mgr_registro" ))
+            return TemplateServicio.NOT_FOUND_TEMPLATE;
 
-        boolean valido = sinPermisoPlantilla.equals("");
-        
-        if(valido){
-            Optional<Usuario> usuarioBD=UsuarioServicio.obtener(data.getOrDefault("idUsuario",""));
+        Optional<Usuario> usuarioBD=UsuarioServicio.obtener(data.getOrDefault("idUsuario",""));
 
-            if(!usuarioBD.isPresent()){
-                valido=false;
-                model.addAttribute("msg", 
-                        "No pudimos encontrar al usuario. Por favor, inténtalo otra vez. COD: 00545"
-                );
-            }
-            
-            //PROCEDEMOS SI TODOS LOS DATOS SON VALIDOS
-            if(valido){
-                UsuarioServicio.cerrarSesion(usuarioBD.get().getUsername());
-                AccesoServicio.GuardarTodosMap(data, usuarioBD.get());
-                model.addAttribute("msg", "Permisos guardados exitosamente!");
-
-                AccesoServicio.cargarPagina("usr_mgr_principal", model);
-
-            }
-            
-            model.addAttribute("status", valido);
+        if(!usuarioBD.isPresent()){
+            model.addAttribute("status",false);
+            model.addAttribute("msg",
+                    "No pudimos encontrar al usuario. Por favor, inténtalo otra vez. COD: 00545"
+            );
+        }else {
+            UsuarioServicio.cerrarSesion(usuarioBD.get().getUsername());
+            AccesoServicio.GuardarTodosMap(data, usuarioBD.get());
+            model.addAttribute("msg", "Permisos guardados exitosamente!");
+            model.addAttribute("status", true);
         }
-        
-        return valido ? plantillaRespuesta : sinPermisoPlantilla;*/
-        return plantillaRespuesta;
+        TemplateServicio.cargarDatosPagina("usr_mgr_principal",model);
+        return "fragments/usr_mgr_principal";
     }
 //----------------------------------------------------------------------------//
 }

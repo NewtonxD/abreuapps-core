@@ -47,25 +47,25 @@ public class RutaServ {
     @CacheEvict(value="Rutas",allEntries = true)
     public List<Object> guardar(Ruta ruta, String polylineData, String fechaActualizacion){
 
+        if(ruta.equals(null))
+            return List.of( false,
+                    "La ruta no puede ser guardada. Por favor, inténtalo otra vez."
+            );
+
         Usuario usuario = AccesoServicio.getUsuarioLogueado();
         Optional<Ruta> rutaDB = obtener(ruta.getRuta());
-        List<Object> resultados = new ArrayList<>();
 
         if (rutaDB.isPresent()) {
 
             if (! FechaUtils.FechaFormato2
                     .format(rutaDB.get().getFecha_actualizacion())
                     .equals(fechaActualizacion)
-            ) {
-                resultados.add(false);
-                resultados.add(
+            ) return List.of( false,
                         ! ( fechaActualizacion == null ||
                                 fechaActualizacion.equals("") ) ?
                                 "Alguien ha realizado cambios en la información. Intentelo neuvamente. COD: 00656" :
                                 "Esta ruta ya existe!. Verifique e intentelo nuevamente."
                 );
-                return resultados;
-            }
 
             ruta.setHecho_por(rutaDB.get().getHecho_por());
             ruta.setFecha_registro(rutaDB.get().getFecha_registro());
@@ -86,9 +86,9 @@ public class RutaServ {
             LocRutaServicio.guardarTodos(listaLocRuta);
         }
 
-        resultados.add(true);
-        resultados.add("Registro guardado exitosamente!");
-        return resultados;
+        return List.of( true,
+                "Registro guardado exitosamente!"
+        );
     }
     
     public Optional<Ruta> obtener(String Ruta){

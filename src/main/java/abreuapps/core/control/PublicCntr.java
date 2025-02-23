@@ -44,8 +44,8 @@ public class PublicCntr {
     @GetMapping(value="/p/pub/datos")
     @ResponseBody
     public PublicidadDTO consultarDatosActualPublicidad(){
-        PublicidadDTO p=PublicidadServicio.obtenerUltimo();
-        if(p!=null) PublicidadServicio.IncrementarVistas(p.id());
+        var p = PublicidadServicio.obtenerUltimo();
+        if(!p.equals(null)) PublicidadServicio.IncrementarVistas(p.id());
         return p;
     }
     
