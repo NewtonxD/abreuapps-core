@@ -47,22 +47,25 @@ public class VehiculoServ {
     @CacheEvict(value={"Vehiculos","RutasInfo","LogVehiculo"},allEntries = true)
     public List<Object> guardar(Vehiculo vehiculo, String fechaActualizacion){
 
+        if(vehiculo.equals(null))
+            return List.of( false,
+                    "El Vehiculo no puede ser guardado. Por favor, inténtalo otra vez."
+            );
+
+
         Optional<Vehiculo> vehiculoBD = obtener(vehiculo.getPlaca());
         Usuario usuario = AccesoServicio.getUsuarioLogueado();
-        List<Object> resultados = new ArrayList<>();
 
         if (vehiculoBD.isPresent()) { // EXISTE?
 
             if (!  FechaUtils.FechaFormato2 // LAS FECHAS DE ACTUALIZACION SON CONSISTENTES?
                     .format(vehiculoBD.get().getFecha_actualizacion() )
                     .equals(fechaActualizacion)
-            ) {
-                resultados.add(false);
-                resultados.add(! fechaActualizacion.isEmpty() ?
-                        "Alguien ha realizado cambios en la información. Inténtentelo nuevamente. COD: 00635" :
-                        "Este vehiculo ya existe!. Verifique e intentelo nuevamente.");
-                return resultados;
-            }
+            ) return List.of( false,
+                    ! fechaActualizacion.isEmpty() ?
+                            "Alguien ha realizado cambios en la información. Inténtentelo nuevamente. COD: 00635" :
+                            "Este vehiculo ya existe!. Verifique e intentelo nuevamente."
+            );
 
             vehiculo.setFecha_registro(vehiculoBD.get().getFecha_registro());
             vehiculo.setHecho_por(vehiculoBD.get().getHecho_por());
@@ -76,10 +79,10 @@ public class VehiculoServ {
         vehiculo.setFecha_actualizacion(new Date());
 
         repo.save(vehiculo);
-        resultados.add(true);
-        resultados.add("Registro guardado exitosamente!");
 
-        return resultados;
+        return List.of( true,
+                "Registro guardado exitosamente!"
+        );
     }
 
 

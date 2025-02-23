@@ -4,10 +4,7 @@ import abreuapps.core.control.general.DatoServ;
 import abreuapps.core.control.general.Persona;
 import abreuapps.core.control.general.PersonaServ;
 import abreuapps.core.control.usuario.AccesoServ;
-import abreuapps.core.control.usuario.Usuario;
-import abreuapps.core.control.utils.DateUtils;
-import java.text.ParseException;
-import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,9 +22,7 @@ public class InfPersonalCntr {
     
     private final PersonaServ PersonaServicio;
     
-    private final DateUtils FechaUtils;
-    
-    private final DatoServ dtserv;
+    private final DatoServ DatoServicio;
     
     private final AccesoServ AccesoServicio;
     
@@ -40,45 +35,13 @@ public class InfPersonalCntr {
     public int GuardarPersona(
         Model model, 
         Persona persona,
-        @RequestParam(name = "fecha_actualizacionn", required = false) String fechaActualizacionCliente
-    ) throws ParseException {
-        
-        boolean valido;
-        int idPersona=0;
-        /*Usuario usuarioLogueado=AccesoServicio.getUsuarioLogueado();
-        
-        String verificarPermisos= AccesoServicio.verificarPermisos(
-                "usr_mgr_registro", model, usuarioLogueado );
-        
-        valido = verificarPermisos.equals("");
-        
-        
-        if(valido){
-            
-            Optional<Persona> personaBD = PersonaServicio.obtenerPorId(persona==null? 0 : persona.getId() );
+        @RequestParam(name = "fecha_actualizacionn", required = false) String fechaActualizacion
+    ) {
+        if(!AccesoServicio.verificarPermisos("usr_mgr_registro"))
+            return 0;
 
-            if (personaBD.isPresent() && 
-                    ! FechaUtils.FechaFormato2.format(
-                            personaBD.get().getFecha_actualizacion() )
-                    .equals(fechaActualizacionCliente)
-            ) valido = false;
-
-            if (valido) {
-                if (!(fechaActualizacionCliente == null || fechaActualizacionCliente.equals(""))) 
-                    persona.setFecha_actualizacion(FechaUtils.Formato2ToDate(fechaActualizacionCliente));
-
-                if(personaBD.isPresent()){
-                    persona.setFecha_registro(personaBD.get().getFecha_registro());
-                    persona.setHecho_por(personaBD.get().getHecho_por());
-                }
-
-                Persona d = PersonaServicio.guardar(persona, usuarioLogueado, personaBD.isPresent());
-                idPersona=d.getId();
-            }
-            
-        }*/
-        
-        return idPersona;
+        var personaGuardada = PersonaServicio.guardar(persona, fechaActualizacion);
+        return personaGuardada.equals(null) ? 0 : personaGuardada.getId();
 
     }
 //----------------------------------------------------------------------------//  
@@ -101,13 +64,11 @@ public class InfPersonalCntr {
     ){
         Persona personaBD=PersonaServicio.obtenerPorCedula(cedula).orElse(new Persona());
         personaBD.setCedula(cedula);
-        model.addAttribute("sexo",
-                dtserv.consultarPorGrupo("Sexo") );
-        model.addAttribute("sangre",
-                dtserv.consultarPorGrupo("Tipos Sanguineos") );
+        model.addAttribute("sexo", DatoServicio.consultarPorGrupo("Sexo") );
+        model.addAttribute("sangre",DatoServicio.consultarPorGrupo("Tipos Sanguineos") );
         model.addAttribute("persona", personaBD);
         model.addAttribute("update",update);
-        return "fragments/usr_mgr_registro :: info-dinamica-personal";
+        return "shared/info_personal";
     }
 //----------------------------------------------------------------------------//  
     

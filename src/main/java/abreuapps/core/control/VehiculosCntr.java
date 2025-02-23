@@ -1,23 +1,17 @@
 package abreuapps.core.control;
 
-import abreuapps.core.control.general.Dato;
-import abreuapps.core.control.general.DatoDTO;
 import abreuapps.core.control.general.DatoServ;
 import abreuapps.core.control.general.TemplateServ;
-import abreuapps.core.control.transporte.LocVehiculo;
 import abreuapps.core.control.transporte.LocVehiculoServ;
 import abreuapps.core.control.transporte.Vehiculo;
 import abreuapps.core.control.transporte.VehiculoServ;
 import abreuapps.core.control.usuario.AccesoServ;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import abreuapps.core.control.utils.DateUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -63,7 +57,7 @@ public class VehiculosCntr {
         if (!AccesoServicio.verificarPermisos("trp_vehiculo_registro"))
             return TemplateServicio.NOT_FOUND_TEMPLATE;
 
-        TemplateServicio.cargarPagina("trp_vehiculo_consulta", model);
+        TemplateServicio.cargarDatosPagina("trp_vehiculo_consulta", model);
 
         var resultados = VehiculoServicio.guardar(vehiculo, fechaActualizacion);
         model.addAttribute("status", resultados.get(0));
@@ -79,9 +73,14 @@ public class VehiculosCntr {
             Model model,
             @RequestParam("placa") String placa
     ) {
-        Optional<Vehiculo> vehiculo = VehiculoServicio.obtener(placa);
 
-        if (!vehiculo.isPresent()) return TemplateServicio.NOT_FOUND_TEMPLATE;
+        if (!AccesoServicio.verificarPermisos("trp_vehiculo_registro"))
+            return TemplateServicio.NOT_FOUND_TEMPLATE;
+
+        var vehiculo = VehiculoServicio.obtener(placa);
+
+        if (!vehiculo.isPresent())
+            return TemplateServicio.NOT_FOUND_TEMPLATE;
 
         model.addAttribute("vehiculo", vehiculo.get());
         model.addAttribute("marca", DatosServicio.consultarPorGrupo("Marca"));
@@ -102,14 +101,16 @@ public class VehiculosCntr {
     public ResponseEntity ObtenerModelosVehiculosPorMarca(
             @RequestParam("Marca") String marca
     ) {
-        List<DatoDTO> modelos = null;
-        Optional<Dato> Marca = DatosServicio.obtener(marca);
-        if (
-                AccesoServicio.verificarPermisos("trp_vehiculo_registro") &&
-                        Marca.isPresent()
-        ) modelos = DatosServicio.consultarPorGrupo(Marca.get().getDato());
+        if (!AccesoServicio.verificarPermisos("trp_vehiculo_registro"))
+            return ResponseEntity.ok(null);
 
-        return new ResponseEntity<>(modelos, HttpStatus.OK);
+        var Marca = DatosServicio.obtener(marca);
+
+        return ResponseEntity.ok(
+                ! Marca.isPresent()?
+                        null:
+                        DatosServicio.consultarPorGrupo(Marca.get().getDato())
+        );
     }
 
 //----------------------------------------------------------------------------//
@@ -120,23 +121,20 @@ public class VehiculosCntr {
             @RequestParam("placa") String placa
     ) {
 
+        if (AccesoServicio.verificarPermisos("trp_vehiculo_registro") )
+            return ResponseEntity.ok(null);
+
         Map<String, Object> respuesta = new HashMap<>();
+        var lastLoc = LocVehiculoServicio.consultarUltimaLocVehiculo(placa);
 
-        if (AccesoServicio.verificarPermisos("trp_vehiculo_registro")) {
-
-            Optional<LocVehiculo> lastLoc = LocVehiculoServicio.consultarUltimaLocVehiculo(placa);
-
-            //SI TODAS LAS ANTERIORES SON VALIDAS PROCEDEMOS
-            if (lastLoc.isPresent()) {
-                respuesta.put("placa", placa);
-                respuesta.put("lon", lastLoc.get().getLongitud());
-                respuesta.put("lat", lastLoc.get().getLatitud());
-                respuesta.put("fecha", FechaUtils.DateToFormato1(lastLoc.get().getFecha_registro()));
-            }
-
+        if (lastLoc.isPresent()) {
+            respuesta.put("placa", placa);
+            respuesta.put("lon", lastLoc.get().getLongitud());
+            respuesta.put("lat", lastLoc.get().getLatitud());
+            respuesta.put("fecha", FechaUtils.DateToFormato1(lastLoc.get().getFecha_registro()));
         }
 
-        return new ResponseEntity<>(respuesta, HttpStatus.OK);
+        return ResponseEntity.ok(respuesta);
     }
 
 }

@@ -71,18 +71,16 @@ public class SSEServ {
         };
     }
     //--------------------------------------------------------------------------
-    
-    @Async
-    public void publicar(String nombre,HashMap<String, Object> Datos){
-        
-        Map<String,SseEmitter> emitters=obtenerEmitter(nombre);
-        
+    /*public void publicar(String nombre, HashMap<String, Object> Datos){
+
+        var emitters = obtenerEmitter(nombre);
+
         if(nombre.equals("vis_log")){
             Datos.put("total_views_today", PublicidadServicio.getTotalViewsHoy());
             Datos.put("total_active_views", trpInfoEmitters.size());
         }
-        
-        if(emitters!=null){
+
+        if(!emitters.equals(null)){
             for (Map.Entry<String,SseEmitter> val : emitters.entrySet()) {
                 try {
                     val.getValue().send(Datos);
@@ -96,9 +94,57 @@ public class SSEServ {
                 }
             }
         }
-    }
-    
+    }*/
+
     @Async
+    public void publicar(String nombre, HashMap<String, Object> Datos) {
+        var emitters = obtenerEmitter(nombre);
+
+        if ("vis_log".equals(nombre)) {
+            Datos.put("total_views_today", PublicidadServicio.getTotalViewsHoy());
+            Datos.put("total_active_views", trpInfoEmitters.size());
+        }
+
+        if (!emitters.equals(null)) {
+            emitters.entrySet().removeIf(
+                entry -> {
+                        try {
+                            entry.getValue().send(Datos);
+                            return false;
+                        } catch (CloseNowException | AsyncRequestNotUsableException ex) {
+                            entry.getValue().complete();
+                            return true;
+                        } catch (IOException ex) {
+                            entry.getValue().complete();
+                            Logger.getLogger(SSEServ.class.getName()).log(Level.SEVERE, null, ex);
+                            return true;
+                        }
+                }
+            );
+        }
+    }
+
+
+    @Async
+    public void publicarParadaInfo() {
+        if (! pdaInfoEmitters.equals(null) ) {
+            pdaInfoEmitters.entrySet().removeIf(entry -> {
+                Integer idParada = Integer.valueOf(entry.getKey().split("-")[2]);
+                try {
+                    entry.getValue().send(ParadaServicio.getParadaInfo(idParada));
+                    return false;
+                } catch (CloseNowException | AsyncRequestNotUsableException ex) {
+                    entry.getValue().complete();
+                    return true;
+                } catch (IOException ex) {
+                    entry.getValue().complete();
+                    Logger.getLogger(SSEServ.class.getName()).log(Level.SEVERE, null, ex);
+                    return true;
+                }
+            });
+        }
+    }
+/*
     public void publicarParadaInfo(){        
         if(pdaInfoEmitters!=null){
             for (Map.Entry<String,SseEmitter> val : pdaInfoEmitters.entrySet()) {
@@ -115,11 +161,28 @@ public class SSEServ {
                 }
             }
         }
-    }
+    }*/
     
     @Async
     public void publicarTransporteInfo(){
-        if(trpInfoEmitters!=null){
+        if (! trpInfoEmitters.equals(null) ) {
+            trpInfoEmitters.entrySet().removeIf(entry -> {
+                Integer idParada = Integer.valueOf(entry.getKey().split("-")[2]);
+                try {
+                    entry.getValue().send(LocServicio.consultarDatosTransporteEnCamino());
+                    return false;
+                } catch (CloseNowException | AsyncRequestNotUsableException ex) {
+                    entry.getValue().complete();
+                    return true;
+                } catch (IOException ex) {
+                    entry.getValue().complete();
+                    Logger.getLogger(SSEServ.class.getName()).log(Level.SEVERE, null, ex);
+                    return true;
+                }
+            });
+        }
+
+        /*if(trpInfoEmitters!=null){
             for (Map.Entry<String,SseEmitter> val : trpInfoEmitters.entrySet()) {
                 try {
                     val.getValue().send(LocServicio.consultarDatosTransporteEnCamino());
@@ -132,7 +195,7 @@ public class SSEServ {
                     Logger.getLogger(SSEServ.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-        }
+        }*/
     }
     
     @Async
@@ -149,11 +212,11 @@ public class SSEServ {
     public SseEmitter agregar(String id,String nombre){
         Map<String,SseEmitter> emitters=obtenerEmitter(nombre);
         
-        if(nombre.equals("trpInfo")){
+        if(nombre.equals("trpInfo"))
             PublicidadServicio.aumentarVisitas();
-        }
-        
-        if(emitters!=null){
+
+
+        if(!emitters.equals(null)){
             long timeout = 7200000;
             SseEmitter emitter = new SseEmitter(timeout);
             emitter.onCompletion(() -> emitters.remove(id));

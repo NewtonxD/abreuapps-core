@@ -1,13 +1,14 @@
 package abreuapps.core.control.usuario;
 
-import abreuapps.core.control.general.Dato;
 import abreuapps.core.control.general.DatoRepo;
 import jakarta.transaction.Transactional;
-import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -29,9 +30,8 @@ public class AccesoServ {
     private final AccesoUsuarioRepo AccesoUsuarioRepo; //repo
     private final AccesoRepo AccesoRepo;
     private final DatoRepo DatoRepo;
-    
-    @Cacheable("PermisosMenu")
-    public Map<String, Boolean> consultarAccesosMenuUsuario(){
+
+    /*public Map<String, Boolean> consultarAccesosMenuUsuario(){
         List<Object[]> results=AccesoUsuarioRepo.ListadoMenuUsuario(getUsuarioLogueado().getId());
         Map<String, Boolean> convert=new HashMap<>();
         
@@ -43,8 +43,7 @@ public class AccesoServ {
         
         return convert;
     }
-    
-    @Cacheable("PermisosPantalla")
+
     public Map<String, Object> consultarAccesosPantallaUsuario(String pantalla){
         List<Object[]> results=AccesoUsuarioRepo.ListadoAccesosPantallaUsuario(getUsuarioLogueado().getId(),pantalla);
         Map<String, Object> convert=new HashMap<>();
@@ -56,8 +55,29 @@ public class AccesoServ {
         }
         
         return convert;
+    }*/
+
+    @Cacheable("PermisosMenu")
+    public Map<String, Boolean> consultarAccesosMenuUsuario() {
+        return AccesoUsuarioRepo.ListadoMenuUsuario(getUsuarioLogueado().getId())
+                .stream()
+                .collect(Collectors.toMap(
+                        result -> (String) result[0],
+                        result -> (Boolean) result[1]
+                ));
     }
-    
+
+    @Cacheable("PermisosPantalla")
+    public Map<String, Object> consultarAccesosPantallaUsuario(String pantalla) {
+        return AccesoUsuarioRepo.ListadoAccesosPantallaUsuario(getUsuarioLogueado().getId(), pantalla)
+                .stream()
+                .collect(Collectors.toMap(
+                        result -> (String) result[0],
+                        result -> result[1]
+                ));
+    }
+
+
     public List<Object[]> ListadoAccesosUsuarioEditar(int idUsuario){
         return AccesoUsuarioRepo.ListadoAccesosUsuarioEditar(idUsuario);
     }
@@ -66,7 +86,51 @@ public class AccesoServ {
     @Transactional  
     @CacheEvict(value ={"PermisosPantalla","PermisosMenu"}, allEntries = true)
     public void GuardarTodosMap( Map<String,String> accesos, Usuario usuario){
-        List<AccesoUsuario> listaAccesoNuevo = new ArrayList<>();
+        AccesoUsuarioRepo.saveAll(
+            accesos
+                .entrySet()
+                .stream()
+                .map(entry -> {
+                    // Transformación del valor: "on" -> "true", "off" -> "false", o el valor original
+                    String valorTransformado = "on".equals(entry.getValue())
+                            ? "true"
+                            : ("off".equals(entry.getValue()) ? "false" : entry.getValue());
+
+                    return DatoRepo
+                            .findById(entry.getKey())
+                            .flatMap(
+                                    dato -> AccesoRepo.findByPantalla(dato)
+                                                .flatMap(acceso -> {
+                                                    var accesoUsuario = AccesoUsuarioRepo.findAllByUsuarioAndAcceso(usuario, acceso);
+
+                                                    if (accesoUsuario.isPresent()) {
+                                                        var accesoBD = accesoUsuario.get();
+                                                        accesoBD.setActivo(true);
+                                                        accesoBD.setValor(valorTransformado);
+                                                        return Optional.of(accesoBD);
+                                                    }
+
+                                                    return Optional.of(new AccesoUsuario(
+                                                            null,
+                                                            valorTransformado,
+                                                            true,
+                                                            usuario,
+                                                            acceso
+                                                    ));
+
+                                                })
+                            );
+                })
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList())
+        );
+
+
+
+
+
+        /*List<AccesoUsuario> listaAccesoNuevo = new ArrayList<>();
         List<AccesoUsuario> listaAccesoEdicion = new ArrayList<>();
         for (String key : accesos.keySet()) {
             //si el acceso existe crear acceso y agregar
@@ -108,7 +172,7 @@ public class AccesoServ {
         }
 
         AccesoUsuarioRepo.saveAll(listaAccesoEdicion);
-        AccesoUsuarioRepo.saveAll(listaAccesoNuevo);
+        AccesoUsuarioRepo.saveAll(listaAccesoNuevo);*/
     }
     
     public Usuario getUsuarioLogueado(){
@@ -116,8 +180,8 @@ public class AccesoServ {
     }
 
     public boolean verificarPermisos( String permiso ){
-        Map<String,Object> m=consultarAccesosPantallaUsuario(permiso);
-        return m.containsKey(permiso) ? (Boolean) m.get(permiso) : false;
+        var permisos=consultarAccesosPantallaUsuario(permiso);
+        return permisos.containsKey(permiso) ? (Boolean) permisos.get(permiso) : false;
     }
     
 }

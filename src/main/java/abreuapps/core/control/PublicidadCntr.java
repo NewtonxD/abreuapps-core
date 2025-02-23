@@ -5,8 +5,6 @@ import abreuapps.core.control.general.Publicidad;
 import abreuapps.core.control.general.PublicidadServ;
 import abreuapps.core.control.general.TemplateServ;
 import abreuapps.core.control.usuario.AccesoServ;
-import abreuapps.core.control.usuario.Usuario;
-import abreuapps.core.control.utils.DateUtils;
 import abreuapps.core.control.utils.RecursoServ;
 import abreuapps.core.control.utils.ReporteServ;
 
@@ -58,7 +56,7 @@ public class PublicidadCntr {
             return TemplateServicio.NOT_FOUND_TEMPLATE;
 
 
-        TemplateServicio.cargarPagina("pub_publicidad_consulta", model);
+        TemplateServicio.cargarDatosPagina("pub_publicidad_consulta", model);
 
         var resultados = PublicidadServicio.guardar(publicidad,fechaActualizacion);
         model.addAttribute("status", resultados.get(0));

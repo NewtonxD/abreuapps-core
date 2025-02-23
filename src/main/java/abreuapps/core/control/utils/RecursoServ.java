@@ -8,7 +8,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,28 +20,13 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import static java.util.Map.entry;
+
 @Service
 @RequiredArgsConstructor
 public class RecursoServ {
     
     private final ConfServ ConfiguracionServicio;
-    
-    //-------------------------------------------------------------------------//
-    /*@Cacheable("Tiles")
-    public byte[] getTilesBytes(int zoom, int x, int y) {
-        String tileKey = String.format("%d/%d/%d", zoom, x, y);
-        String tilePath = String.format("%s/%s.webp", ConfiguracionServicio.consultar("maptilesdir"), tileKey);
-        Path path = Paths.get(tilePath);
-        if (!Files.exists(path)) {
-            path = Paths.get(ConfiguracionServicio.consultar("maptilesdir")+"/default_tile.webp");
-        }
-        try {
-            return new FileSystemResource(path).getContentAsByteArray();
-        } catch (IOException ex) {
-            Logger.getLogger(RecursoServ.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        }
-    }*/
 
     @Cacheable("Tiles")
     public Resource getTiles(int zoom, int x, int y) {
@@ -74,19 +58,28 @@ public class RecursoServ {
     
     public Map<String, Object> obtenerArchivo(String archivo){
         try {
-            archivo=archivo.replaceAll("[^a-zA-Z0-9.]", "");
-            Path filePath = Paths.get(ConfiguracionServicio.consultar("filesdir")).toAbsolutePath().normalize().resolve(archivo).normalize();
-            Resource resource = new UrlResource(filePath.toUri());
-            if (!resource.exists()) {
+            archivo = archivo.replaceAll("[^a-zA-Z0-9.]", "");
+            Resource recurso = new UrlResource(
+                    Paths
+                            .get( ConfiguracionServicio.consultar("filesdir") )
+                            .toAbsolutePath()
+                            .normalize()
+                            .resolve(archivo)
+                            .normalize()
+                            .toUri()
+            );
+            if (!recurso.exists())
                 return null;
-            }
+
             String contentType = archivo.endsWith(".mp4") ? "video/mp4" : "image/"+archivo.substring(archivo.lastIndexOf("."));
-            if(contentType.equals("image/jpg"))contentType="image/jpeg";
-            
-            Map<String, Object> m = new HashMap<>();
-            m.put("body", resource);
-            m.put("media-type",MediaType.parseMediaType(contentType));
-            return m;
+            if( contentType.equals("image/jpg") )
+                contentType="image/jpeg";
+
+            return Map.ofEntries(
+                    entry("body", recurso),
+                    entry("media-type",MediaType.parseMediaType(contentType))
+            );
+
         }catch(MalformedURLException ex){
                 return null;
         }

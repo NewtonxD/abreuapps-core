@@ -33,8 +33,6 @@ public class UsuarioServ {
     private final DateUtils FechaUtils;
 
     private final PersonaServ PersonaServicio;
-
-    //private final AccesoServ AccesoServicio;
     
     private final CorreoServ CorreoServicio;
     
@@ -81,37 +79,30 @@ public class UsuarioServ {
     @Transactional
     @CacheEvict(value={"Usuarios","Usuario"},allEntries = true)
     public List<Object> guardar(Usuario usuario, Integer idPersona, String fechaActualizacion){
-        List<Object> resultados = new ArrayList<>();
 
-        if(usuario.equals(null)) {
-            resultados.add(false);
-            resultados.add("La información del usuario no puede ser guardada. Por favor, inténtalo otra vez. COD: 00537");
-            return resultados;
-        }
+        if(usuario.equals(null))
+            return List.of( false,
+                "El usuario no puede ser guardado. Por favor, inténtalo otra vez. COD: 00537"
+            );
 
-        Optional<Usuario> usuarioBD = obtenerPorId(usuario.getId());
+        var usuarioBD = obtenerPorId(usuario.getId());
 
         if (usuarioBD.isPresent()) {
 
             if (! FechaUtils.FechaFormato2
                     .format(usuarioBD.get().getFecha_actualizacion())
                     .equals(fechaActualizacion)
-            ) {
+            ) return List.of( false,
+                ! fechaActualizacion.isEmpty() ?
+                        "Alguien ha realizado cambios en la información. Inténtentelo nuevamente. COD: 00535" :
+                        "Este usuario ya existe!. Verifique e intentelo nuevamente."
+            );
 
-                resultados.add(false);
-                resultados.add(
-                        ! fechaActualizacion.isEmpty() ?
-                            "Alguien ha realizado cambios en la información. Inténtentelo nuevamente. COD: 00535" :
-                            "Este usuario ya existe!. Verifique e intentelo nuevamente."
-                );
-                return resultados;
-            }
 
             usuario.setFecha_registro(usuarioBD.get().getFecha_registro());
             usuario.setHecho_por(usuarioBD.get().getHecho_por());
             usuario.setPassword(usuarioBD.get().getPassword());
             usuario.setPersona(usuarioBD.get().getPersona());
-
 
         }else{
 
@@ -130,20 +121,19 @@ public class UsuarioServ {
 
         if(idPersona!=0)
             usuario.setPersona(PersonaServicio.obtenerPorId(idPersona).get());
-        else {
-            resultados.add(false);
-            resultados.add("La información personal no pudo ser guardada. Por favor, inténtalo otra vez. COD: 00536");
-            return resultados;
-        }
+        else
+            return List.of( false,
+                    "La información personal no pudo ser guardada. Por favor, inténtalo otra vez. COD: 00536"
+            );
+
 
         cerrarSesion(usuario.getUsername());
         usuario.setFecha_actualizacion(new Date());
         repo.save(usuario);
 
-        resultados.add(true);
-        resultados.add( "Registro guardado exitosamente!");
-
-        return resultados;
+        return List.of( true,
+            "Registro guardado exitosamente!"
+        );
     }
     
     @Cacheable("Usuarios")
@@ -168,16 +158,16 @@ public class UsuarioServ {
     }
     
     public void cerrarSesion(String usuario){
-        List<Object> principals = sessionRegistry.getAllPrincipals();
-        for (Object principal : principals) {
-            if (principal instanceof UserDetails userDetails) {
-                if (userDetails.getUsername().equals(usuario)) {
-                    List<SessionInformation> sessions = sessionRegistry.getAllSessions(principal, false);
-                    for (SessionInformation session : sessions) {
-                        session.expireNow();
-                    }
-                }
-            }
-        }
+        sessionRegistry
+                .getAllPrincipals()
+                .stream()
+                .filter(principal -> principal instanceof UserDetails)
+                .map(principal -> (UserDetails) principal)
+                .filter(userDetails -> userDetails.getUsername().equals(usuario))
+                .forEach(userDetails ->
+                        sessionRegistry
+                                .getAllSessions(userDetails, false)
+                                .forEach(SessionInformation::expireNow)
+                );
     }
 }

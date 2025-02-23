@@ -20,7 +20,6 @@ import abreuapps.core.control.utils.SSEServ;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.zaxxer.hikari.util.DriverDataSource;
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import org.springframework.boot.CommandLineRunner;
@@ -159,6 +158,7 @@ public class AppConf {
                 buildCache("Publicidad", Duration.ofMinutes(6)),
                 buildCache("PublicidadArchivos", Duration.ofMinutes(6)),
                 buildCache("Publicidades", Duration.ofHours(8)),
+                buildCache("Productos", Duration.ofHours(8)),
                 buildCache("PermisosPantalla",Duration.ofDays(7)),
                 buildCache("PermisosMenu",Duration.ofDays(7)),
                 buildCache("PermisosUsuario",Duration.ofDays(7)),

@@ -6,6 +6,8 @@ import com.google.common.cache.LoadingCache;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +20,7 @@ public class LoginAttemptServ {
 
     public static final int MAX_ATTEMPT = 10;
     private final LoadingCache<String, Integer> attemptsCache;
-    
+
     @Autowired
     private HttpServletRequest request;
 
@@ -50,8 +52,6 @@ public class LoginAttemptServ {
             return false;
         }
     }
-    
-    
 
     private String getClientIP() {
         String xfHeader = request.getHeader("X-Forwarded-For");
