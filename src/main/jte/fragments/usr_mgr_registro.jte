@@ -4,9 +4,9 @@
 @import abreuapps.core.control.general.DatoDTO
 @import java.util.List
 
-@param boolean usr_mgr_registro
+@param Boolean usr_mgr_registro
 @param DateUtils dateUtils
-@param boolean configuracion
+@param Boolean configuracion
 @param Usuario user
 @param Persona persona
 @param List<DatoDTO> sexo
@@ -15,7 +15,7 @@
 @param boolean update
 
 @template.shared.registro(
-    titulo = (configuracion ? "Editar&nbsp;Mi&nbsp;" : "&nbsp;" ) +"Usuario",
+    titulo = (configuracion ? "Editar Mi" : "" ) +" Usuario",
     id_consulta = "usr_mgr_principal",
     permiso_registro = usr_mgr_registro,
     update = update,

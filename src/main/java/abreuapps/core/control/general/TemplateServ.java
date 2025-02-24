@@ -72,6 +72,7 @@ public class TemplateServ {
                     try {
                         var accesos = AccesoServicio.consultarAccesosPantallaUsuario("dat_gen_registro_empresa");
                         dataModel.addAllAttributes(accesos);
+                        dataModel.addAttribute("dateUtils",dateUtils);
                         dataModel.addAttribute("update", false);
                     } catch (Exception e) {
                         log.error("Error ejecutando 'dat_gen_registro_empresa'", e);
@@ -90,8 +91,11 @@ public class TemplateServ {
                     try {
                         var accesos = AccesoServicio.consultarAccesosPantallaUsuario("usr_mgr_registro");
                         dataModel.addAttribute("update", false);
+                        dataModel.addAttribute("configuracion", false);
                         Persona p = new Persona();
                         Usuario u = new Usuario();
+
+                        dataModel.addAttribute("dateUtils",dateUtils);
                         u.setPersona(p);
                         dataModel.addAttribute("user", u);
                         dataModel.addAttribute("persona", p);
@@ -115,6 +119,7 @@ public class TemplateServ {
                     try {
                         var accesos = AccesoServicio.consultarAccesosPantallaUsuario("trp_vehiculo_registro");
                         Vehiculo p = new Vehiculo();
+                        dataModel.addAttribute("dateUtils",dateUtils);
                         dataModel.addAttribute("vehiculo", p);
                         List<DatoDTO> marcas = DatoRepo.customFindAll("Marca",false);
                         dataModel.addAttribute("marca", marcas);
@@ -149,6 +154,7 @@ public class TemplateServ {
                     try {
                         var accesos = AccesoServicio.consultarAccesosPantallaUsuario("trp_paradas_registro");
                         Parada p = new Parada();
+                        dataModel.addAttribute("dateUtils",dateUtils);
                         dataModel.addAttribute("parada", p);
                         dataModel.addAllAttributes(accesos);
                     } catch (Exception e) {
@@ -168,6 +174,7 @@ public class TemplateServ {
                     try {
                         var accesos = AccesoServicio.consultarAccesosPantallaUsuario("trp_rutas_registro");
                         Ruta r = new Ruta();
+                        dataModel.addAttribute("dateUtils",dateUtils);
                         dataModel.addAttribute("ruta", r);
                         dataModel.addAllAttributes(accesos);
                     } catch (Exception e) {
@@ -187,6 +194,7 @@ public class TemplateServ {
                     try {
                         var accesos = AccesoServicio.consultarAccesosPantallaUsuario("pub_publicidad_registro");
                         Publicidad r = new Publicidad();
+                        dataModel.addAttribute("dateUtils",dateUtils);
                         dataModel.addAttribute("publicidad", r);
                         dataModel.addAttribute("empresas", DatoRepo.customFindAll("Empresas",false));
                         dataModel.addAllAttributes(accesos);
@@ -207,6 +215,7 @@ public class TemplateServ {
                     try {
                         var accesos = AccesoServicio.consultarAccesosPantallaUsuario("inv_producto_registro");
                         Producto r = new Producto();
+                        dataModel.addAttribute("dateUtils",dateUtils);
                         dataModel.addAttribute("producto", r);
                         dataModel.addAttribute("categorias", DatoRepo.customFindAll("Categoria Producto",false));
                         dataModel.addAllAttributes(accesos);

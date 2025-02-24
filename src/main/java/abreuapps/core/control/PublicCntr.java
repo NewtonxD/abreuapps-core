@@ -102,16 +102,20 @@ public class PublicCntr {
     public String Login(
         @RequestParam(name = "invalidSession", required = false,defaultValue = "false") boolean invalidSession,
         @RequestParam(name = "logout", required = false,defaultValue = "false") boolean logout,
+        @RequestParam(name = "error", required = false,defaultValue = "false") boolean error,
+
         Model model
     ) {
-        model.addAttribute("app_nombre",ConfiguracionServicio.consultar("appnombre"));
-        
+
         if((SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken))
             return "redirect:/main/index";
-        
+
+        model.addAttribute("app_nombre",ConfiguracionServicio.consultar("appnombre"));
+
         if(invalidSession)
-            model.addAttribute("error_msg","Su sesión expiró. Ingrese sus credenciales nuevamente.");
-        
+            model.addAttribute("error_msg","Sesión abierta en otro dispositivo!, cierre la sesión o contacte al administrador.");
+        if(error)
+            model.addAttribute("error_msg","Usuario o Contraseña invalidos!");
         if(logout)
             model.addAttribute("success_msg","Sesión cerrada exitosamente!");
         

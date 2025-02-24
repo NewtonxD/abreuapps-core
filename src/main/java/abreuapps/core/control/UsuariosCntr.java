@@ -6,6 +6,7 @@ import abreuapps.core.control.usuario.AccesoServ;
 import abreuapps.core.control.usuario.Usuario;
 import abreuapps.core.control.usuario.UsuarioServ;
 
+import abreuapps.core.control.utils.DateUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,6 +31,8 @@ public class UsuariosCntr {
     private final UsuarioServ UsuarioServicio;
 
     private final TemplateServ TemplateServicio;
+
+    private final DateUtils dateUtils;
 
 //----------------------------------------------------------------------------//
 //-------------------------ENDPOINTS USUARIOS---------------------------------//
@@ -71,9 +74,11 @@ public class UsuariosCntr {
         if (!usuario.isPresent())
             return TemplateServicio.NOT_FOUND_TEMPLATE;
 
+        model.addAttribute("dateUtils",dateUtils);
         model.addAttribute("user", usuario.get());
         model.addAttribute("persona", usuario.get().getPersona());
         model.addAttribute("update", true);
+        model.addAttribute("configuracion", false);
         model.addAttribute("sexo", DatoServicio.consultarPorGrupo("Sexo"));
         model.addAttribute("sangre", DatoServicio.consultarPorGrupo("Tipos Sanguineos"));
         model.addAllAttributes(AccesoServicio.consultarAccesosPantallaUsuario("usr_mgr_registro"));
@@ -92,6 +97,8 @@ public class UsuariosCntr {
         model.addAttribute("user", usuarioLogueado);
         model.addAttribute("persona", usuarioLogueado.getPersona());
         model.addAttribute("update", true);
+        model.addAttribute("dateUtils",dateUtils);
+
         model.addAttribute("sexo", DatoServicio.consultarPorGrupo("Sexo"));
         model.addAttribute("sangre", DatoServicio.consultarPorGrupo("Tipos Sanguineos"));
         model.addAttribute("usr_mgr_registro", true);

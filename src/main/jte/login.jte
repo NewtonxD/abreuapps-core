@@ -63,18 +63,16 @@
                                                    >Contraseña</label
                                             >
                                         </div>
-                                        @if(error_msg != null) 
+                                        @if(error_msg != null)
                                             <div class="alert alert-danger">
                                                 <span>${error_msg}</span>
                                             </div>
                                         @endif
-
                                         @if(success_msg != null) 
                                             <div class="alert alert-success">
                                                 <span>${success_msg}</span>
                                             </div>
                                         @endif
-
                                         <div
                                             class="d-flex py-3 align-items-center justify-content-end mb-0"
                                             >

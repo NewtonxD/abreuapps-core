@@ -52,7 +52,19 @@
             <option value="0" selected disabled>--Seleccione--</option>
             @for(var g : sexo)
                 @if(g.act())
-                    <option value="${g.dat()}" >${g.dat()}</option>
+
+                    @if(!update)
+                        <option value="${g.dat()}">${g.dat()}</option>
+                    @else
+
+                        @if(g.dat().equals(persona.getSexo().getDato()))
+                            <option value="${g.dat()}" selected>${g.dat()}</option>
+                        @else
+                            <option value="${g.dat()}">${g.dat()}</option>
+                        @endif
+
+                    @endif
+
                 @endif
             @endfor
         </select>

@@ -1,10 +1,10 @@
 @import abreuapps.core.control.usuario.UsuarioDTO
 @import java.util.List
 
-@param boolean usr_mgr_principal
-@param boolean usr_mgr_registro
+@param Boolean usr_mgr_principal
+@param Boolean usr_mgr_registro
 @param String msg
-@param boolean status
+@param Boolean status
 @param List<UsuarioDTO> usuarios
 
 @template.shared.consulta(
