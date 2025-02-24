@@ -19,9 +19,9 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         
-        Usuario user = (Usuario) authentication.getPrincipal();
+        var user = (Usuario) authentication.getPrincipal();
         
-        if (user != null) {
+        if (!user.equals(null)) {
             if (user.isCredentialsNonExpired()) {
                 response.sendRedirect("/main/index");
             } else {

@@ -127,6 +127,8 @@ public class SSEServ {
     }*/
 
 /*
+
+        // STREAM + ASYNC = BAD!!!!
     public void publicarParadaInfo() {
         if (! pdaInfoEmitters.equals(null) ) {
             pdaInfoEmitters.entrySet().removeIf(entry -> {
@@ -147,7 +149,8 @@ public class SSEServ {
     }*/
 
     @Async
-    public void publicarParadaInfo(){        
+    public void publicarParadaInfo(){
+        // STREAM + ASYNC = BAD!!!!
         if(pdaInfoEmitters!=null){
             for (Map.Entry<String,SseEmitter> val : pdaInfoEmitters.entrySet()) {
                 Integer idParada=Integer.valueOf(val.getKey().split("-")[2]);
@@ -167,6 +170,7 @@ public class SSEServ {
     
     @Async
     public void publicarTransporteInfo(){
+        // STREAM + ASYNC = BAD!!!!
         /*if (! trpInfoEmitters.equals(null) ) {
             trpInfoEmitters.entrySet().removeIf(entry -> {
                 Integer idParada = Integer.valueOf(entry.getKey().split("-")[2]);

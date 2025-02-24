@@ -33,11 +33,11 @@ public class AuthFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
     @Override
     public void onAuthenticationFailure(final HttpServletRequest request, final HttpServletResponse response, final AuthenticationException exception) throws IOException, ServletException {
-        setDefaultFailureUrl("/auth/login?error=true");
+        //setDefaultFailureUrl("/auth/login?error=true");
 
         super.onAuthenticationFailure(request, response, exception);
 
-        final Locale locale = localeResolver.resolveLocale(request);
+        localeResolver.resolveLocale(request);
 
         String errorMessage = "";
 
