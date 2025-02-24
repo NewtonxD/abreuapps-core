@@ -39,7 +39,7 @@
         <script src="/content/js/lib/jquery.dataTables.min.js"></script>
         <script src="/content/js/lib/bootstrap.bundle.min.js"></script>
         <script type="text/javascript">
-            const SERVER_IP = '${server_ip}';
+            const SERVER_IP = '$unsafe{server_ip}';
         </script>
         <script src="/content/js/global_vars.js"></script>
         @template.shared.header( app_nombre = app_nombre )
@@ -54,13 +54,11 @@
                 <div aria-live="polite" aria-atomic="true" class="position-relative">
                     <div id="toast-container" class="toast-container top-0 end-0 p-3"></div>
                 </div>
-                <main>
-                    @template.shared.general(
-                        active_views = active_views,
-                        today_views = today_views,
-                        vhl_log = vhl_log
-                    )
-                </main>
+                @template.shared.general(
+                    active_views = active_views,
+                    today_views = today_views,
+                    vhl_log = vhl_log
+                )
             </div>
             <div class="overlay" onclick="hideSidebar()"></div>
         </div>

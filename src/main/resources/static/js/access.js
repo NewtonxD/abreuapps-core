@@ -1,4 +1,5 @@
 
+
         
 var notificacion=new Audio(`${SERVER_IP}/content/audio/n44.mp3`);
 notificacion.volume=1;
@@ -25,7 +26,8 @@ function createEventSource() {
     sse = new EventSource(`${SERVER_IP}${SSE_LINK}?clientId=${clientId}`,{withCredentials:true});
     sse.onmessage = function(event) {
   
-        var data = JSON.parse(event.data); 
+        var data = JSON.parse(event.data);
+        console.log(event);
         // Determinar si es una actualización o inserción basado en los datos recibidos
         if (data['U']!==undefined && data['U']!==null) {
             
@@ -38,9 +40,8 @@ function createEventSource() {
         } else if(data['I']!==undefined) { 
             if(! $(`#table tbody tr[data-id="${ data['I'][SSE_PK] }"]`).length){
                 if(SSE_FK==null || data['I']["fat_dat"]==SSE_FK){
-                    let t=$('#table').DataTable();
-                    t.row.add($(createTableRow(data["I"])));
-                    t.draw();
+                    table.row.add(createTableRow(data["I"]));
+                    table.draw();
                     notificacion.play();
                 }
             }
@@ -82,7 +83,7 @@ function post_plantilla(LINK,DATA){
     
     $("#content-page").css("overflow-y","hidden");
 
-    var fadeout=$("#content-page").hide().delay(100).promise();
+    let fadeout=$("#content-page").hide().delay(100).promise();
 
     $.post({
         url: `${SERVER_IP}${LINK}`,
@@ -90,12 +91,13 @@ function post_plantilla(LINK,DATA){
         data: DATA,
         dataType : 'html',
         success: function(response) {
+            console.log(response);
 
             if(response.indexOf('Login') !== -1 || response.indexOf('This session has been expired') !== -1)
                 window.location.href=`${SERVER_IP}/auth/login?logout=true`;
             
             fadeout.then(function(){
-                var fadein=$("#content-page").replaceWith(response).fadeIn(100).promise();
+                let fadein=$("#content-page").replaceWith(response).fadeIn(100).promise();
 
                 fadein.then(function(){
                     $("#content-page").css("overflow-y","hidden");
@@ -111,7 +113,7 @@ function post_plantilla(LINK,DATA){
                 
           fadeout.then(function(){
 
-                var fadein=$("#content-page").html(xhr.responseText).fadeIn(100).promise();
+                let fadein=$("#content-page").html(xhr.responseText).fadeIn(100).promise();
 
                 fadein.then(function(){
 
@@ -125,20 +127,21 @@ function post_plantilla(LINK,DATA){
 
 function get_plantilla(LINK){
     $("#content-page").css("overflow-y","hidden");
-    var fadeout=$("#content-page").hide().delay(100).promise();
+    let fadeout=$("#content-page").hide().delay(100).promise();
 
     $.get({
         url: `${SERVER_IP}${LINK}`,
         async:true,
         dataType : 'html',
         success: function(xhr, status, error) {
+            console.log(xhr)
 
             if(xhr.indexOf('Login') !== -1 || xhr.indexOf('This session has been expired') !== -1)
                 window.location.href=`${SERVER_IP}/auth/login?logout=true`;
 
             fadeout.then(function(){
 
-                var fadein=$("#content-page").replaceWith(xhr).fadeIn(100).promise();
+                let fadein=$("#content-page").replaceWith(xhr).fadeIn(100).promise();
 
                 fadein.then(function(){
                     $("#content-page").css("overflow-y","hidden");
@@ -152,7 +155,7 @@ function get_plantilla(LINK){
                 window.location.href=`${SERVER_IP}/auth/login?logout=true`;  
 
             fadeout.then(function(){
-                var fadein=$("#content-page").html(xhr.responseText).fadeIn(100).promise();
+                let fadein=$("#content-page").html(xhr.responseText).fadeIn(100).promise();
 
                 fadein.then(function(){
                     $("#content-page").css("overflow-y","hidden");
@@ -167,14 +170,15 @@ function get_plantilla(LINK){
 function cargar_contenido(id){
     
     if(typeof closeEventSource==='function') closeEventSource();
-    
-    $(document).off("click","tbody tr");
-    
-    var data={id:id};
-    
+
+    let data={id:id};
+
     post_plantilla("/main/content-page/",data);
     
-    
 }
+
+
+
+
     
             

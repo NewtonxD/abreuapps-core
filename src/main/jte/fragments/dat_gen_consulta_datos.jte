@@ -1,8 +1,8 @@
 @import abreuapps.core.control.general.DatoDTO
 @import java.util.List
 
-@param boolean dat_gen_consulta_datos
-@param boolean dat_gen_registro_datos
+@param Boolean dat_gen_consulta_datos
+@param Boolean dat_gen_registro_datos
 @param String msg
 @param Boolean status
 @param List<DatoDTO> datos
