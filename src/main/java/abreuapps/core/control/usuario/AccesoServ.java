@@ -63,17 +63,17 @@ public class AccesoServ {
                 .stream()
                 .collect(Collectors.toMap(
                         result -> (String) result[0],
-                        result -> (Boolean) result[1]
+                        result -> Boolean.valueOf(result[1].toString())
                 ));
     }
 
     @Cacheable("PermisosPantalla")
-    public Map<String, Object> consultarAccesosPantallaUsuario(String pantalla) {
+    public Map<String, Boolean> consultarAccesosPantallaUsuario(String pantalla) {
         return AccesoUsuarioRepo.ListadoAccesosPantallaUsuario(getUsuarioLogueado().getId(), pantalla)
                 .stream()
                 .collect(Collectors.toMap(
                         result -> (String) result[0],
-                        result -> result[1]
+                        result -> Boolean.valueOf(result[1].toString())
                 ));
     }
 

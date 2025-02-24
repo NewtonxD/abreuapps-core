@@ -1,4 +1,4 @@
-$(document).on("click","tbody tr",function(){
+$("#table").on("click","tbody tr",function(){
         
     let IdPublicidad=$(this).find('th').html();
 

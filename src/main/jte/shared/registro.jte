@@ -6,8 +6,8 @@
 @param boolean update
 @param Content content
 @param Content scripts_content
-@param boolean saveButton = true;
-@param boolean backButton = true;
+@param boolean saveButton = true
+@param boolean backButton = true
 
 <main id="content-page">
     @if(permiso_registro)

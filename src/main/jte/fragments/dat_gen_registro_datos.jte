@@ -3,7 +3,7 @@
 @import abreuapps.core.control.utils.DateUtils
 @import java.util.List
 
-@param boolean dat_gen_registro_datos
+@param Boolean dat_gen_registro_datos
 @param Boolean update
 @param DateUtils dateUtils
 @param List<DatoDTO> grupos
@@ -56,9 +56,7 @@
 
         <div class="mb-3 col-12">
             <label for="descripcion" class="form-label text-muted">Descripción:</label>
-            <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required maxlength="255">
-                ${update?dato.getDescripcion():""}
-            </textarea>
+            <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required maxlength="255">${update?dato.getDescripcion():""}</textarea>
         </div>
         <div class="col-6 d-flex justify-content-start">
             <div class="form-check">

@@ -1,5 +1,5 @@
 
-$(document).on("click","tbody tr",function(){
+$("#table").on("click","tbody tr",function(){
         
     let Placa=$(this).find('th').html();
 

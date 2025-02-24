@@ -1,5 +1,5 @@
 
-$(document).on("click","tbody tr",function(){
+$("#table").on("click","tbody tr",function(){
 
     let idUsuario=$(this).find('th').html();
 

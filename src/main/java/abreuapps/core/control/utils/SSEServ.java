@@ -71,7 +71,10 @@ public class SSEServ {
         };
     }
     //--------------------------------------------------------------------------
-    /*public void publicar(String nombre, HashMap<String, Object> Datos){
+
+
+    @Async
+    public void publicar(String nombre, HashMap<String, Object> Datos){
 
         var emitters = obtenerEmitter(nombre);
 
@@ -84,7 +87,7 @@ public class SSEServ {
             for (Map.Entry<String,SseEmitter> val : emitters.entrySet()) {
                 try {
                     val.getValue().send(Datos);
-                } catch (CloseNowException | AsyncRequestNotUsableException ex) {
+                } catch (RuntimeException | CloseNowException | AsyncRequestNotUsableException ex) {
                     val.getValue().complete();
                     emitters.remove(val.getKey());
                 } catch (IOException ex) {
@@ -94,10 +97,9 @@ public class SSEServ {
                 }
             }
         }
-    }*/
+    }
 
-    @Async
-    public void publicar(String nombre, HashMap<String, Object> Datos) {
+    /*public void publicar(String nombre, HashMap<String, Object> Datos) {
         var emitters = obtenerEmitter(nombre);
 
         if ("vis_log".equals(nombre)) {
@@ -122,10 +124,9 @@ public class SSEServ {
                 }
             );
         }
-    }
+    }*/
 
-
-    @Async
+/*
     public void publicarParadaInfo() {
         if (! pdaInfoEmitters.equals(null) ) {
             pdaInfoEmitters.entrySet().removeIf(entry -> {
@@ -143,8 +144,9 @@ public class SSEServ {
                 }
             });
         }
-    }
-/*
+    }*/
+
+    @Async
     public void publicarParadaInfo(){        
         if(pdaInfoEmitters!=null){
             for (Map.Entry<String,SseEmitter> val : pdaInfoEmitters.entrySet()) {
@@ -161,11 +163,11 @@ public class SSEServ {
                 }
             }
         }
-    }*/
+    }
     
     @Async
     public void publicarTransporteInfo(){
-        if (! trpInfoEmitters.equals(null) ) {
+        /*if (! trpInfoEmitters.equals(null) ) {
             trpInfoEmitters.entrySet().removeIf(entry -> {
                 Integer idParada = Integer.valueOf(entry.getKey().split("-")[2]);
                 try {
@@ -180,9 +182,9 @@ public class SSEServ {
                     return true;
                 }
             });
-        }
+        }*/
 
-        /*if(trpInfoEmitters!=null){
+        if(trpInfoEmitters!=null){
             for (Map.Entry<String,SseEmitter> val : trpInfoEmitters.entrySet()) {
                 try {
                     val.getValue().send(LocServicio.consultarDatosTransporteEnCamino());
@@ -195,7 +197,7 @@ public class SSEServ {
                     Logger.getLogger(SSEServ.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-        }*/
+        }
     }
     
     @Async

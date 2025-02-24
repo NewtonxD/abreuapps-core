@@ -1,0 +1,12 @@
+package gg.jte.generated.ondemand.error;
+@SuppressWarnings("unchecked")
+public final class Jte403Generated {
+	public static final String JTE_NAME = "error/403.jte";
+	public static final int[] JTE_LINE_INFO = {38,38,38,38,38,38,38,38,38,38,38,38};
+	public static void render(gg.jte.html.HtmlTemplateOutput jteOutput, gg.jte.html.HtmlInterceptor jteHtmlInterceptor) {
+		jteOutput.writeContent("<!DOCTYPE html>\n<html lang=\"es\">\n    <head>\n        <meta charset=\"utf-8\" />\n        <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\" />\n        <meta name=\"description\" content=\"\" />\n        <meta name=\"author\" content=\"\" />\n        <title>403 Error - Proyecto</title>\n        <link rel=\"icon\" type=\"image/x-icon\" href=\"/content/favicon.ico\">\n        <link href=\"/content/css/styles.css\" rel=\"stylesheet\" />\n        <link href=\"/content/css/bootstrap.min.css\" rel=\"stylesheet\" />\n        <link rel=\"stylesheet\" href=\"/content/css/font-awesome.min.css\" />\n    </head>\n    <body>\n        <div id=\"layoutError\">\n            <div id=\"layoutError_content\">\n                <main>\n                    <div class=\"container-fluid px-4\" id=\"error403\">\n                        <div class=\"row justify-content-center\">\n                            <div class=\"col-lg-6\">\n                                <div class=\"text-center mt-4\">\n                                    <h1 class=\"display-1\">403</h1>\n                                    <p class=\"lead\">Acceso No Autorizado!</p>\n                                    <p>El acceso a este recurso ha sido denegado.</p>\n                                    <a href=\"/auth/login\">\n                                        <i class=\"fa fa-arrow-left me-1\"></i>\n                                        Volver a Inicio\n                                    </a>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                </main>\n            </div>\n        </div>\n    </body>\n</html>\n");
+	}
+	public static void renderMap(gg.jte.html.HtmlTemplateOutput jteOutput, gg.jte.html.HtmlInterceptor jteHtmlInterceptor, java.util.Map<String, Object> params) {
+		render(jteOutput, jteHtmlInterceptor);
+	}
+}
