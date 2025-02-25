@@ -45,8 +45,8 @@ public class UsuariosCntr {
             @RequestParam("idPersona") Integer idPersona,
             @RequestParam(name = "fecha_actualizacionn", required = false) String fechaActualizacion
     ) {
-        if (!AccesoServicio.verificarPermisos("usr_mgr_registro") ||
-                !usuario.getId().equals(AccesoServicio.getUsuarioLogueado().getId())
+        if (! AccesoServicio.verificarPermisos("usr_mgr_registro") &&
+               ! usuario.getId().equals(AccesoServicio.getUsuarioLogueado().getId())
         ) return TemplateServicio.NOT_FOUND_TEMPLATE;
 
         var resultados = UsuarioServicio.guardar(usuario, idPersona, fechaActualizacion);

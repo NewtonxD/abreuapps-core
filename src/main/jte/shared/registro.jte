@@ -29,7 +29,7 @@
                                 @if(saveButton)
                                     <div class="col-6 d-flex justify-content-end">
 
-                                        <button type="submit" class="btn btn-primary">
+                                        <button type="submit" class="btn btn-primary" id="btn_guardar">
                                             @if(!update)
                                                 <b><i class="fa fa-save"></i>Guardar</b>
                                             @else

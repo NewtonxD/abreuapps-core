@@ -56,7 +56,7 @@
                     </div>
                     @if(update)
                         <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" value="${dateUtils.DateToFormato2(user.getFecha_actualizacion())}">
-                        <input  type="number" class="idusuario" name="id" id="id" value="${user.getId()}" style="display: none; width: 1px;height: 1px;" required>
+                        <input  type="number" class="idusuario" name="id" id="id" value="${user.getId()}" style="display: none; width: 1px;height: 1px;">
                     @endif
                     <div class="mb-3 col-12 col-md-6">
                         <label for="usuario" class="form-label text-muted">Usuario:</label>

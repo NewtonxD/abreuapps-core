@@ -52,16 +52,18 @@ public class MainCntr {
     public String MainPage(
         Model model
     ) {
-        Usuario u = AccesosServicio.getUsuarioLogueado();
-        
-        if (!UsuarioServicio.obtener(u.getUsername()).get().isCredentialsNonExpired())
+        var u =UsuarioServicio.obtener(AccesosServicio.getUsuarioLogueado().getUsername());
+        if (!u.isPresent())
+            return "redirect:/auth/logout";
+
+        if (!u.get().isCredentialsNonExpired())
             return "redirect:/main/changePwd";
         
         model.addAttribute("app_nombre",ConfiguracionServicio.consultar("appnombre"));
         model.addAttribute("vhl_log",LogVehiculoServicio.consultar(100));
         model.addAttribute("today_views",PublicidadServicio.getTotalViewsHoy());
         model.addAttribute("active_views",SSEServicio.obtenerTotalClientesActivos());
-        model.addAttribute("datos_personales",u.getPersona());
+        model.addAttribute("datos_personales",u.get().getPersona());
         model.addAttribute("conf",confServ.consultarConfMap());
         model.addAttribute("permisos",AccesosServicio.consultarAccesosMenuUsuario());
         model.addAttribute("server_ip",ConfiguracionServicio.consultar("serverip"));

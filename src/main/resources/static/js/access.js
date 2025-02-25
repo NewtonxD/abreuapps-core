@@ -14,6 +14,16 @@ function dataPrepare(idForm){
     return d;
 }
 
+function dataPrepareDiv(idElement){
+    let d=$("#"+idElement).find("input, select, textarea").serialize();
+    /*$("#"+idElement+" input[type=checkbox]").each(function() {
+        if (!$(this)[0].checked) {
+            d.push({name:$(this).attr("name"),value:"false"});
+        }
+    });*/
+    return d;
+}
+
 function generateClientId() {
     var millis = new Date().getTime();
     var randomNum = Math.floor(Math.random() * 1000000); // Generate a random number with 6 digits
@@ -27,7 +37,6 @@ function createEventSource() {
     sse.onmessage = function(event) {
   
         var data = JSON.parse(event.data);
-        console.log(event);
         // Determinar si es una actualización o inserción basado en los datos recibidos
         if (data['U']!==undefined && data['U']!==null) {
             
@@ -91,7 +100,6 @@ function post_plantilla(LINK,DATA){
         data: DATA,
         dataType : 'html',
         success: function(response) {
-            console.log(response);
 
             if(response.indexOf('Login') !== -1 || response.indexOf('This session has been expired') !== -1)
                 window.location.href=`${SERVER_IP}/auth/login?logout=true`;
@@ -134,7 +142,6 @@ function get_plantilla(LINK){
         async:true,
         dataType : 'html',
         success: function(xhr, status, error) {
-            console.log(xhr)
 
             if(xhr.indexOf('Login') !== -1 || xhr.indexOf('This session has been expired') !== -1)
                 window.location.href=`${SERVER_IP}/auth/login?logout=true`;

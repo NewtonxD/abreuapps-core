@@ -76,7 +76,7 @@ public final class Jteusr_mgr_registroGenerated {
 						jteOutput.setContext("input", null);
 						jteOutput.writeContent("\"");
 					}
-					jteOutput.writeContent(" style=\"display: none; width: 1px;height: 1px;\" required>\n                    ");
+					jteOutput.writeContent(" style=\"display: none; width: 1px;height: 1px;\">\n                    ");
 				}
 				jteOutput.writeContent("\n                    <div class=\"mb-3 col-12 col-md-6\">\n                        <label for=\"usuario\" class=\"form-label text-muted\">Usuario:</label>\n                        <input type=\"text\" name=\"username\" id=\"username\"");
 				var __jte_html_attribute_6 = user.getUsername();

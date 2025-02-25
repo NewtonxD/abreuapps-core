@@ -14,7 +14,7 @@ public final class JteregistroGenerated {
 			jteOutput.writeUserContent(content);
 			jteOutput.writeContent("\n\n                                ");
 			if (saveButton) {
-				jteOutput.writeContent("\n                                    <div class=\"col-6 d-flex justify-content-end\">\n\n                                        <button type=\"submit\" class=\"btn btn-primary\">\n                                            ");
+				jteOutput.writeContent("\n                                    <div class=\"col-6 d-flex justify-content-end\">\n\n                                        <button type=\"submit\" class=\"btn btn-primary\" id=\"btn_guardar\">\n                                            ");
 				if (!update) {
 					jteOutput.writeContent("\n                                                <b><i class=\"fa fa-save\"></i>Guardar</b>\n                                            ");
 				} else {
