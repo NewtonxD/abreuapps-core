@@ -31,8 +31,8 @@ public class ErrorCntr implements ErrorController{
 
         if(e403)
             return "error/403";
-
-        var statusCode = Integer.valueOf(request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE).toString());
+        ;
+        var statusCode = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE).equals(null) ? null : Integer.valueOf(request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE).toString());
         switch (statusCode){
             case 403 -> {
                 if(request.getAttribute("error_msg")!=null){

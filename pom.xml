@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.4.0</version>
+		<version>3.4.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>abreuapps.core</groupId>
@@ -38,12 +38,12 @@
                 <dependency>
                     <groupId>gg.jte</groupId>
                     <artifactId>jte-spring-boot-starter-3</artifactId>
-                    <version>3.1.15</version>
+                    <version>3.1.16</version>
                 </dependency>
                 <dependency>
                     <groupId>gg.jte</groupId>
                     <artifactId>jte</artifactId>
-                    <version>3.1.15</version>
+                    <version>3.1.16</version>
                 </dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -60,7 +60,7 @@
 		
 		<dependency>
 			<groupId>org.postgresql</groupId>
-                        <artifactId>postgresql</artifactId>
+            <artifactId>postgresql</artifactId>
 		</dependency>
                 
 		<dependency>
@@ -91,17 +91,17 @@
 			<version>${guava.version}</version>
 		</dependency>
                 
-                <dependency>
-                    <groupId>com.maxmind.geoip2</groupId>
-                    <artifactId>geoip2</artifactId>
-                    <version>2.15.0</version>
-                </dependency>
-                
-                <dependency>
-                   <groupId>net.sf.jasperreports</groupId>
-                   <artifactId>jasperreports</artifactId>
-                   <version>6.21.2</version>
-                </dependency>
+        <dependency>
+            <groupId>com.maxmind.geoip2</groupId>
+            <artifactId>geoip2</artifactId>
+            <version>2.15.0</version>
+        </dependency>
+
+        <dependency>
+           <groupId>net.sf.jasperreports</groupId>
+           <artifactId>jasperreports</artifactId>
+           <version>6.21.2</version>
+        </dependency>
          
 	</dependencies>
         <build>

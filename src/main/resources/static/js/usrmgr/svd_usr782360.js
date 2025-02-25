@@ -151,25 +151,32 @@ $(function(){
 
 function guardar_datos(){
     
-    let datosPersona=dataPrepare("inf_personal");
-    var idPersona=0;
+    let datosPersona=dataPrepareDiv("inf_personal");
     $.ajax({
         url:`${SERVER_IP}/infppl/save`,
         type:"POST",
+        dataType: "xml",
         async:false,
         data:datosPersona,
         success: function(res){
-            idPersona=res;
+            let datosUsuario=dataPrepareDiv("inf_usuario");
+            datosUsuario+="&idPersona="+parseInt($(res).find('Integer').text(), 10);
+            post_plantilla("/usrmgr/save",datosUsuario);
         },
         error: function(xhr, status, error){
-            idPersona=0;
+            if(xhr.responseText.indexOf('This session has been expired') !== -1)
+                window.location.href=`${SERVER_IP}/auth/login?logout=true`;
+
+            let fadein=$("#content-page").html(xhr.responseText).fadeIn(100).promise();
+
+            fadein.then(function(){
+                $("#content-page").css("overflow-y","hidden");
+
+            });
         }
     });
     
-    
-    let datosUsuario=dataPrepare("inf_usuario");
-    datosUsuario.push({name:"idPersona",value:idPersona});
-    post_plantilla("/usrmgr/save",datosUsuario);
+
     
 }
 
