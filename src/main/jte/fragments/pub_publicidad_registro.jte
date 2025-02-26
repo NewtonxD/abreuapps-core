@@ -3,13 +3,13 @@
 @import java.util.List
 @import abreuapps.core.control.general.DatoDTO
 
-@param boolean pub_publicidad_registro
+@param Boolean pub_publicidad_registro
 @param DateUtils dateUtils
 @param Publicidad publicidad
 @param List<DatoDTO> empresas
 
 
-!{boolean update = publicidad.getId()!=null;}
+!{boolean update =  (publicidad.getId()!=null) ;}
 
 
 @template.shared.registro(
@@ -20,9 +20,8 @@
     content = @`
         @if(update)
             <input type="text" style="display: none; width: 1px;height: 1px;" id="idPublicidad" name="id" value="${publicidad.getId()}" >
+            <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" value="${dateUtils.DateToFormato2(publicidad.getFecha_actualizacion())}">
         @endif
-
-        <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" value="${dateUtils.DateToFormato2(publicidad.getFecha_actualizacion())}">
 
 
         <div class="mb-3 col-12 col-md-6">
@@ -32,27 +31,37 @@
 
         <div class="mb-3 col-12 col-md-6">
             <label for="nom-dato" class="form-label text-muted">Empresa:</label>
-            <select required class="form-select custom-select" name="empresa" >
+            <select required class="form-select custom-select" name="empresa" id="empresa">
                 <option value="0" selected disabled>--Seleccione--</option>
-                @for(var c:empresas)
-                    @if(c.act())
-                        <option
-                                value="${c.dat()}"
-                                @if(update)
-                                    selected="${( publicidad.getEmpresa().getDato().equals(c.dat()) ) ? "selected" : "" }"
-                                @endif
-                        >
-                            ${c.dat()}
-                        </option>
-                    @endif
+                @for(var g : empresas )
+                    @if(g.act())
 
+                        @if(!update)
+                            <option value="${g.dat()}">${g.dat()}</option>
+                        @else
+
+                            @if( g.dat().equals(publicidad.getEmpresa().getDato()) )
+                                <option value="${g.dat()}" selected >${g.dat()}</option>
+                            @else
+                                <option value="${g.dat()}">${g.dat()}</option>
+                            @endif
+
+                        @endif
+
+                    @endif
                 @endfor
             </select>
         </div>
 
         <div class="mb-3 col-12 col-md-5">
             <label for="descripcion" class="form-label text-muted">Fecha Inicial:</label>
-            <input required class="form-control" value="${dateUtils.dateFormat.format(publicidad.getFecha_inicio())}" name="fecha_inicio" id="startDate" type="date"/>
+
+            @if(update)
+                <input required class="form-control" value="${dateUtils.dateFormat.format(publicidad.getFecha_inicio())}" name="fecha_inicio" id="startDate" type="date"/>
+            @else
+                <input required class="form-control" name="fecha_inicio" id="startDate" type="date"/>
+            @endif
+
             <div class="alert alert-warning" role="alert" id="dateDifference" style="display: none;" ></div>
         </div>
         <div class="mb-3 mt-3 col-12 col-md-2 text-center">
@@ -60,7 +69,11 @@
         </div>
         <div class="mb-3 col-12 col-md-5">
             <label for="descripcion" class="form-label text-muted">Fecha Final:</label>
-            <input required name="fecha_fin" value="${dateUtils.dateFormat.format(publicidad.getFecha_fin())}"  class="form-control" id="endDate" type="date"/>
+            @if(update)
+                <input required name="fecha_fin" value="${dateUtils.dateFormat.format(publicidad.getFecha_fin())}"  class="form-control" id="endDate" type="date"/>
+            @else
+                <input required name="fecha_fin" class="form-control" id="endDate" type="date"/>
+            @endif
         </div>
 
         <div class="mb-3 col-12">

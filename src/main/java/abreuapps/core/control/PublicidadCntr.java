@@ -5,6 +5,7 @@ import abreuapps.core.control.general.Publicidad;
 import abreuapps.core.control.general.PublicidadServ;
 import abreuapps.core.control.general.TemplateServ;
 import abreuapps.core.control.usuario.AccesoServ;
+import abreuapps.core.control.utils.DateUtils;
 import abreuapps.core.control.utils.RecursoServ;
 import abreuapps.core.control.utils.ReporteServ;
 
@@ -33,6 +34,8 @@ public class PublicidadCntr {
     private final AccesoServ AccesoServicio;
     
     private final PublicidadServ PublicidadServicio;
+
+    private final DateUtils FechaUtils;
     
     private final DatoServ DatoServicio;
     
@@ -87,6 +90,7 @@ public class PublicidadCntr {
         if (!publicidadDB.isPresent())
             return TemplateServicio.NOT_FOUND_TEMPLATE;
 
+        model.addAttribute("dateUtils",FechaUtils);
         model.addAttribute("publicidad", publicidadDB.get());
         model.addAllAttributes(AccesoServicio.consultarAccesosPantallaUsuario("pub_publicidad_registro" ));
         model.addAttribute("empresas", DatoServicio.consultarPorGrupo("Empresas"));
