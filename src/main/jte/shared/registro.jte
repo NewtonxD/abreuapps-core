@@ -23,7 +23,7 @@
                             backButton = backButton
                         )
                         <form class="form-group" id="form-guardar">
-                            <div class="row">
+                            <div class="row mt-4">
                                 ${content}
 
                                 @if(saveButton)
@@ -31,9 +31,9 @@
 
                                         <button type="submit" class="btn btn-primary" id="btn_guardar">
                                             @if(!update)
-                                                <b><i class="fa fa-save"></i>Guardar</b>
+                                                <b><i class="fa fa-save"></i> Guardar</b>
                                             @else
-                                                <b><i class="fa fa-pencil"></i>Editar</b>
+                                                <b><i class="fa fa-pencil"></i> Editar</b>
                                             @endif
                                         </button>
                                     </div>

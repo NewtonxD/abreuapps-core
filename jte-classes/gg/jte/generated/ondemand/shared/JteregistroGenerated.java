@@ -9,16 +9,16 @@ public final class JteregistroGenerated {
 		if (permiso_registro) {
 			jteOutput.writeContent("\n        <div class=\"container-fluid px-4\">\n            <div class=\"row d-flex align-items-center justify-content-center mt-5 mb-5\">\n                <div class=\"card col-12 col-md-10 col-lg-8\">\n                    <div class=\"card-body mt-3 mb-3\">\n\n                        ");
 			gg.jte.generated.ondemand.shared.Jtetitle_registroGenerated.render(jteOutput, jteHtmlInterceptor, titulo, id_consulta, update, backButton);
-			jteOutput.writeContent("\n                        <form class=\"form-group\" id=\"form-guardar\">\n                            <div class=\"row\">\n                                ");
+			jteOutput.writeContent("\n                        <form class=\"form-group\" id=\"form-guardar\">\n                            <div class=\"row mt-4\">\n                                ");
 			jteOutput.setContext("div", null);
 			jteOutput.writeUserContent(content);
 			jteOutput.writeContent("\n\n                                ");
 			if (saveButton) {
 				jteOutput.writeContent("\n                                    <div class=\"col-6 d-flex justify-content-end\">\n\n                                        <button type=\"submit\" class=\"btn btn-primary\" id=\"btn_guardar\">\n                                            ");
 				if (!update) {
-					jteOutput.writeContent("\n                                                <b><i class=\"fa fa-save\"></i>Guardar</b>\n                                            ");
+					jteOutput.writeContent("\n                                                <b><i class=\"fa fa-save\"></i> Guardar</b>\n                                            ");
 				} else {
-					jteOutput.writeContent("\n                                                <b><i class=\"fa fa-pencil\"></i>Editar</b>\n                                            ");
+					jteOutput.writeContent("\n                                                <b><i class=\"fa fa-pencil\"></i> Editar</b>\n                                            ");
 				}
 				jteOutput.writeContent("\n                                        </button>\n                                    </div>\n                                ");
 			}
