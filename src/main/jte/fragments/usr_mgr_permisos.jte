@@ -1,6 +1,6 @@
 @import abreuapps.core.control.usuario.Usuario
 
-@param boolean usr_mgr_registro
+@param Boolean usr_mgr_registro
 @param Usuario usuario
 
 @template.shared.registro(

@@ -12,7 +12,7 @@
 @param List<DatoDTO> sexo
 @param List<DatoDTO> sangre
 
-@param boolean update
+@param Boolean update
 
 @template.shared.registro(
     titulo = (configuracion ? "Editar Mi" : "" ) +" Usuario",

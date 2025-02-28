@@ -2,9 +2,8 @@ package abreuapps.core.control;
 
 import abreuapps.core.control.general.ConfServ;
 import abreuapps.core.control.general.PublicidadServ;
-import abreuapps.core.control.general.TemplateServ;
+import abreuapps.core.control.utils.TemplateServ;
 import abreuapps.core.control.transporte.LogVehiculoServ;
-import abreuapps.core.control.usuario.Usuario;
 import abreuapps.core.control.usuario.AccesoServ;
 import abreuapps.core.control.usuario.UsuarioServ;
 import abreuapps.core.control.utils.SSEServ;

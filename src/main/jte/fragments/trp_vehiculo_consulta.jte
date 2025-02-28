@@ -1,10 +1,10 @@
 @import abreuapps.core.control.transporte.VehiculoDTO
 @import java.util.List
 
-@param boolean trp_vehiculo_consulta
-@param boolean trp_vehiculo_registro
+@param Boolean trp_vehiculo_consulta
+@param Boolean trp_vehiculo_registro
 @param String msg
-@param boolean status
+@param Boolean status
 @param List<VehiculoDTO> vehiculos
 
 @template.shared.consulta(

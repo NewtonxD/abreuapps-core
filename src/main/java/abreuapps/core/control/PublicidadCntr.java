@@ -3,7 +3,7 @@ package abreuapps.core.control;
 import abreuapps.core.control.general.DatoServ;
 import abreuapps.core.control.general.Publicidad;
 import abreuapps.core.control.general.PublicidadServ;
-import abreuapps.core.control.general.TemplateServ;
+import abreuapps.core.control.utils.TemplateServ;
 import abreuapps.core.control.usuario.AccesoServ;
 import abreuapps.core.control.utils.DateUtils;
 import abreuapps.core.control.utils.RecursoServ;

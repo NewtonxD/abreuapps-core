@@ -1,8 +1,8 @@
 @import abreuapps.core.control.general.Dato
 @import abreuapps.core.control.utils.DateUtils
 
-@param boolean dat_gen_registro_empresa
-@param boolean update
+@param Boolean dat_gen_registro_empresa
+@param Boolean update
 @param DateUtils dateUtils
 @param Dato dato
 
@@ -37,9 +37,7 @@
 
         <div class="mb-3 col-12">
             <label for="descripcion" class="form-label text-muted">Descripción:</label>
-            <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required maxlength="255">
-                ${update?dato.getDescripcion():""}
-            </textarea>
+            <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required maxlength="255">${update?dato.getDescripcion():""}</textarea>
         </div>
 
         <div class="col-6 d-flex justify-content-start">

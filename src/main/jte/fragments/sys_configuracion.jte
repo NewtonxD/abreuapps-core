@@ -1,7 +1,7 @@
 @import abreuapps.core.control.general.ConfDTO
 @import java.util.List
 
-@param boolean sys_configuracion
+@param Boolean sys_configuracion
 @param String msg
 @param Boolean status
 @param List<ConfDTO> conf

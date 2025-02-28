@@ -27,7 +27,8 @@ public class ConfServ {
     public final String DEFAULT_NONE_PERMISSION = "n/a" ;
  
     public Map<String,String> consultarConfMap(){
-        return repo.customFindAll().stream()
+        return repo.customFindAll()
+                .stream()
                 .collect(Collectors.toMap(ConfDTO::cod, ConfDTO::val));
     }
     
@@ -45,21 +46,19 @@ public class ConfServ {
     public void GuardarTodosMap(Map<String,String> configuracion,Usuario usuario){
 
         repo.saveAllAndFlush(
-                configuracion
-                        .entrySet()
-                        .stream()
-                        .map(entry -> repo.findById(entry.getKey())
-                                .filter(conf -> !conf.getValor().equals(entry.getValue()))
-                                .map(conf -> new Conf(
-                                        entry.getKey(),
-                                        conf.getDescripcion(),
-                                        entry.getValue(),
-                                        usuario,
-                                        new Date()))
-                        )
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toList())
+            configuracion.entrySet()
+                    .stream()
+                    .map(entry -> repo.findById(entry.getKey())
+                            .filter(conf -> !conf.getValor().equals(entry.getValue()))
+                            .map(conf -> new Conf(
+                                    entry.getKey(),
+                                    conf.getDescripcion(),
+                                    entry.getValue(),
+                                    usuario,
+                                    new Date()))
+                    )
+                    .flatMap(Optional::stream)
+                    .collect(Collectors.toList())
         );
 
         /*List<Conf> listaConf = new ArrayList<>();

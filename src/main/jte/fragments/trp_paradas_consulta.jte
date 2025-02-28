@@ -1,8 +1,8 @@
 @import abreuapps.core.control.transporte.ParadaDTO
 @import java.util.List
 
-@param boolean trp_paradas_consulta
-@param boolean trp_paradas_registro
+@param Boolean trp_paradas_consulta
+@param Boolean trp_paradas_registro
 @param String msg
 @param Boolean status
 @param List<ParadaDTO> paradas

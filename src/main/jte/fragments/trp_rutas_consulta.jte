@@ -1,8 +1,8 @@
 @import abreuapps.core.control.transporte.RutaDTO
 @import java.util.List
 
-@param boolean trp_rutas_consulta
-@param boolean trp_rutas_registro
+@param Boolean trp_rutas_consulta
+@param Boolean trp_rutas_registro
 @param String msg
 @param Boolean status
 @param List<RutaDTO> rutas

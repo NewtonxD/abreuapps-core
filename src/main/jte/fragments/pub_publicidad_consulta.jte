@@ -1,8 +1,8 @@
 @import abreuapps.core.control.general.PublicidadDTO
 @import java.util.List
 
-@param boolean pub_publicidad_consulta
-@param boolean pub_publicidad_registro
+@param Boolean pub_publicidad_consulta
+@param Boolean pub_publicidad_registro
 @param String msg
 @param Boolean status
 @param List<PublicidadDTO> publicidades

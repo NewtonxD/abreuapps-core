@@ -3,7 +3,7 @@
 @import java.util.List
 @import abreuapps.core.control.general.DatoDTO
 
-@param boolean inv_producto_registro
+@param Boolean inv_producto_registro
 @param DateUtils dateUtils
 @param Producto producto
 @param List<DatoDTO> categorias
@@ -18,9 +18,8 @@
     content = @`
         @if(update)
             <input type="text" style="display: none; width: 1px;height: 1px;" id="idPublicidad" name="id" value="${producto.getId()}" placeholder=" ... " class="form-control" aria-describedby="basic-addon4">
+            <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" value="${dateUtils.DateToFormato2(producto.getFecha_actualizacion())}">
         @endif
-
-        <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" value="${dateUtils.DateToFormato2(producto.getFecha_actualizacion())}">
 
         <div class="mb-3 col-12">
             <label for="nom-dato" class="form-label text-muted">Nombre:</label>
@@ -38,14 +37,16 @@
                 <option value="0" selected disabled>--Seleccione--</option>
                 @for(var c:categorias)
                     @if(c.act())
-                        <option
+
+                        @if(update)
+                            <option
                                 value="${c.dat()}"
-                                @if(update)
-                                    selected="${( producto.getCategoria().getDato().equals(c.dat()) ) ? "selected" : "" }"
-                                @endif
-                        >
-                            ${c.dat()}
-                        </option>
+                                selected="${( producto.getCategoria().getDato().equals(c.dat()) ) }"
+                            >${c.dat()}</option>
+                        @else
+                            <option value="${c.dat()}">${c.dat()}</option>
+                        @endif
+
                     @endif
 
                 @endfor
@@ -79,7 +80,6 @@
     scripts_content = @`
         <script src="/content/js/prd/prd804952.js"></script>
         <script src="/content/js/prd/svd_prd754250.js"></script>
-
         @if(update)
             <script src="/content/js/prd/prd825153.js"></script>
         @endif
