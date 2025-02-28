@@ -1,13 +1,13 @@
-package abreuapps.core.control.general;
+package abreuapps.core.control.utils;
 
 
+import abreuapps.core.control.general.*;
 import abreuapps.core.control.inventario.Producto;
 import abreuapps.core.control.inventario.ProductoServ;
 import abreuapps.core.control.transporte.*;
 import abreuapps.core.control.usuario.AccesoServ;
 import abreuapps.core.control.usuario.Usuario;
 import abreuapps.core.control.usuario.UsuarioServ;
-import abreuapps.core.control.utils.DateUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,7 +30,7 @@ public class TemplateServ {
     private final RutaServ RutaServicio;
     private final PublicidadServ PublicidadServicio;
     private final ProductoServ ProductoServicio;
-    private final DatoRepo DatoRepo;
+    private final abreuapps.core.control.general.DatoRepo DatoRepo;
     private final AccesoServ AccesoServicio;
     public final String NOT_FOUND_TEMPLATE ="redirect:/error";
 

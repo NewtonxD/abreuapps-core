@@ -58,13 +58,7 @@
                     @if(!update)
                         <option value="${g.dat()}">${g.dat()}</option>
                     @else
-
-                        @if(g.dat().equals(persona.getSexo().getDato()))
-                            <option value="${g.dat()}" selected>${g.dat()}</option>
-                        @else
-                            <option value="${g.dat()}">${g.dat()}</option>
-                        @endif
-
+                        <option value="${g.dat()}" selected="${g.dat().equals(persona.getSexo().getDato())}">${g.dat()}</option>
                     @endif
 
                 @endif
@@ -111,13 +105,10 @@
                     @if(!update)
                         <option value="${g.dat()}">${g.dat()}</option>
                     @else
-
-                        @if(g.dat().equals(persona.getTipo_sangre().getDato()))
-                            <option value="${g.dat()}" selected>${g.dat()}</option>
-                        @else
-                            <option value="${g.dat()}">${g.dat()}</option>
-                        @endif
-
+                        <option
+                                value="${g.dat()}"
+                                selected="${g.dat().equals(persona.getTipo_sangre().getDato())}"
+                        >${g.dat()}</option>
                     @endif
                 @endif
             @endfor

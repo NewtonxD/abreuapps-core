@@ -1,8 +1,8 @@
 @import abreuapps.core.control.general.DatoDTO
 @import java.util.List
 
-@param boolean dat_gen_consulta_empresa
-@param boolean dat_gen_registro_empresa
+@param Boolean dat_gen_consulta_empresa
+@param Boolean dat_gen_registro_empresa
 @param String msg
 @param Boolean status
 @param List<DatoDTO> datos
@@ -24,7 +24,7 @@
         </thead>
         <tbody>
             @for(var d : datos)
-                <tr data-id=${d.dat()}>
+                <tr data-id="${d.dat()}">
                     <th scope="row">${d.dat()}</th>
                     <td>${d.dsc()}</td>
                     <td>${d.act()?"Activo":"Inactivo"}</td>

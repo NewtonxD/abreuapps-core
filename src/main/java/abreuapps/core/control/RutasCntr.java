@@ -1,6 +1,6 @@
 package abreuapps.core.control;
 
-import abreuapps.core.control.general.TemplateServ;
+import abreuapps.core.control.utils.TemplateServ;
 import abreuapps.core.control.transporte.LocRutaServ;
 import abreuapps.core.control.transporte.ParadaServ;
 import abreuapps.core.control.transporte.Ruta;

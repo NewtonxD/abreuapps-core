@@ -4,10 +4,10 @@
 @import java.util.List
 
 
-@param boolean trp_vehiculo_registro
+@param Boolean trp_vehiculo_registro
 @param DateUtils dateUtils
 @param Vehiculo vehiculo
-@param boolean last_loc
+@param Boolean last_loc
 @param List<DatoDTO> color
 @param List<DatoDTO> tipo_vehiculo
 @param List<DatoDTO> estado
@@ -26,8 +26,10 @@
     content = @`
     <div class="mb-3 col-12 col-md-6 col-lg-4">
         <label for="placa" class="form-label text-muted">Placa:</label>
-        <input type="text" @if(!update) name="placa" @endif value="${vehiculo.getPlaca()}" disabled="${update?"disabled":""}" placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">
-        @if(update) <input type="text" style="display: none; width: 1px;height: 1px;" id="Placa" name="placa" value="${vehiculo.getPlaca()}"> @endif
+        @if(update)
+            <input type="text" style="display: none; width: 1px;height: 1px;" id="Placa" name="placa" value="${vehiculo.getPlaca()}">
+        @endif
+        <input type="text" name="${!update?"placa":""}" value="${vehiculo.getPlaca()}" disabled="${update}" placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">
     </div>
 
     <div class="mb-3 col-12 col-md-6 col-lg-4">
@@ -35,12 +37,15 @@
         <select class="form-select custom-select" name="color" id="color" required>
             <option value="0" disabled>--Seleccione--</option>
             @for(var c : color)
-                @if(c.act())
-                    <option value="${c.dat()}"
-                        @if(update)
-                            selected="${( vehiculo.getColor().getDato().equals(c.dat()) ) ? "selected" : "" }"
-                        @endif
-                    > c.dat() </option>
+                @if(c.act()
+                    @if(update)
+                        <option
+                                value="${c.dat()}"
+                                selected="${vehiculo.getColor().getDato().equals(c.dat())}"
+                        > c.dat() </option>
+                    @else
+                        <option value="${c.dat()}"> c.dat()</option>
+                    @endif
                 @endif
             @endfor
         </select>
@@ -52,11 +57,15 @@
             <option value="0" disabled>--Seleccione--</option>
             @for(var t:tipo_vehiculo)
                 @if(t.act())
-                    <option value="${t.dat()}"
-                        @if(update)
-                            selected="${( vehiculo.getTipo_vehiculo().getDato().equals(t.dat()) ) ? "selected" : "" }"
-                        @endif
-                    >${t.dat()}</option>
+
+                    @if(update)
+                        <option value="${t.dat()}"
+                                selected="${ vehiculo.getTipo_vehiculo().getDato().equals(t.dat()) }"
+                        >${t.dat()}</option>
+                    @else
+                        <option value="${t.dat()}">${t.dat()}</option>
+                    @endif
+
                 @endif
             @endfor
         </select>
@@ -68,11 +77,14 @@
             <option value="0" disabled>--Seleccione--</option>
             @for(var e:estado)
                 @if(e.act())
-                    <option value="${e.dat()}"
-                            @if(update)
-                                selected="${( vehiculo.getEstado().getDato().equals(e.dat()) ) ? "selected" : "" }"
-                            @endif
-                    >${e.dat()}</option>
+                    @if(update)
+                        <option
+                            value="${e.dat()}"
+                            selected="${ vehiculo.getEstado().getDato().equals(e.dat()) }"
+                        >${e.dat()}</option>
+                    @else
+                        <option value="${e.dat()}">${e.dat()}</option>
+                    @endif
                 @endif
             @endfor
         </select>
@@ -84,11 +96,16 @@
             <option value="0" disabled>--Seleccione--</option>
             @for(var m:marca)
                 @if(m.act())
-                    <option value="${m.dat()}"
-                            @if(update)
-                                selected="${( vehiculo.getMarca().getDato().equals(m.dat()) ) ? "selected" : "" }"
-                            @endif
-                    >${m.dat()}</option>
+
+                    @if(update)
+                        <option
+                            value="${m.dat()}"
+                            selected="${ vehiculo.getMarca().getDato().equals(m.dat()) }"
+                        >${m.dat()}</option>
+                    @else
+                        <option value="${m.dat()}">${m.dat()}</option>
+                    @endif
+
                 @endif
             @endfor
         </select>
@@ -100,11 +117,16 @@
             <option value="0" disabled>--Seleccione--</option>
             @for(var m:modelo)
                 @if(m.act())
-                    <option value="${m.dat()}"
-                            @if(update)
-                                selected="${( vehiculo.getModelo().getDato().equals(m.dat()) ) ? "selected" : "" }"
-                            @endif
-                    >${m.dat()}</option>
+
+                    @if(update)
+                        <option
+                            value="${m.dat()}"
+                            selected="${ vehiculo.getModelo().getDato().equals(m.dat()) }"
+                        >${m.dat()}</option>
+                    @else
+                        <option value="${m.dat()}">${m.dat()}</option>
+                    @endif
+
                 @endif
             @endfor
         </select>
@@ -121,7 +143,9 @@
 
     </div>
 
-    <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" value="${dateUtils.DateToFormato2(vehiculo.getFecha_actualizacion())}">
+    @if(update)
+        <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" value="${dateUtils.DateToFormato2(vehiculo.getFecha_actualizacion())}">
+    @endif
 
     @if(update && last_loc)
         <div class="col-12  d-flex justify-content-center text-center ">

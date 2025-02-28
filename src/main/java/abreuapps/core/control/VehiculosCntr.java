@@ -1,7 +1,7 @@
 package abreuapps.core.control;
 
 import abreuapps.core.control.general.DatoServ;
-import abreuapps.core.control.general.TemplateServ;
+import abreuapps.core.control.utils.TemplateServ;
 import abreuapps.core.control.transporte.LocVehiculoServ;
 import abreuapps.core.control.transporte.Vehiculo;
 import abreuapps.core.control.transporte.VehiculoServ;
@@ -89,6 +89,7 @@ public class VehiculosCntr {
         model.addAttribute("estado", DatosServicio.consultarPorGrupo("Estados Vehiculo"));
         model.addAttribute("color", DatosServicio.consultarPorGrupo("Colores"));
         model.addAttribute("modelo", DatosServicio.consultarPorGrupo(vehiculo.get().getMarca().getDato()));
+        model.addAttribute("dateUtils",FechaUtils);
         model.addAllAttributes(AccesoServicio.consultarAccesosPantallaUsuario("trp_vehiculo_registro"));
 
         return "fragments/trp_vehiculo_registro";
@@ -121,7 +122,7 @@ public class VehiculosCntr {
             @RequestParam("placa") String placa
     ) {
 
-        if (AccesoServicio.verificarPermisos("trp_vehiculo_registro") )
+        if (!AccesoServicio.verificarPermisos("trp_vehiculo_registro") )
             return ResponseEntity.ok(null);
 
         Map<String, Object> respuesta = new HashMap<>();

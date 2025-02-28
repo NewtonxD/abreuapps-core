@@ -1,7 +1,7 @@
 @import abreuapps.core.control.transporte.Parada
 @import abreuapps.core.control.utils.DateUtils
 
-@param boolean trp_paradas_registro
+@param Boolean trp_paradas_registro
 @param DateUtils dateUtils
 @param Parada parada
 

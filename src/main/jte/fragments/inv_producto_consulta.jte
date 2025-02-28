@@ -1,8 +1,8 @@
 @import abreuapps.core.control.inventario.ProductoDTO
 @import java.util.List
 
-@param boolean inv_producto_consulta
-@param boolean inv_producto_registro
+@param Boolean inv_producto_consulta
+@param Boolean inv_producto_registro
 @param String msg
 @param Boolean status
 @param List<ProductoDTO> productos
@@ -24,7 +24,7 @@
         </thead>
         <tbody>
         @for(var d : productos)
-            <tr data-id=${d.id()}>
+            <tr data-id="${d.id()}">
                 <th scope="row">${d.id()}</th>
                 <td>${d.nom()}</td>
                 <td>${d.dsc()}</td>

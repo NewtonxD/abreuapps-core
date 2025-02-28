@@ -1,7 +1,7 @@
 let adInterval;
 let adTimeout;
 let adData;
-const time=9 * 60 * 1000;
+const adTimeMs=9 * 60 * 1000;
 
 function fetchAd() {
     adData=null;
@@ -70,11 +70,11 @@ function closeAd() {
 
 function initAdCycle() {
     fetchAd();  
-    adInterval = setInterval(fetchAd, time);
+    adInterval = setInterval(fetchAd, adTimeMs);
 }
 
 document.getElementById('closeAd').addEventListener('click', closeAd);
 
-setTimeout(initAdCycle,time/2);
+setTimeout(initAdCycle,adTimeMs/2);
 
 

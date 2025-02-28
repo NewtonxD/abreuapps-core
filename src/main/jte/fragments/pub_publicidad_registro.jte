@@ -39,12 +39,10 @@
                         @if(!update)
                             <option value="${g.dat()}">${g.dat()}</option>
                         @else
-
-                            @if( g.dat().equals(publicidad.getEmpresa().getDato()) )
-                                <option value="${g.dat()}" selected >${g.dat()}</option>
-                            @else
-                                <option value="${g.dat()}">${g.dat()}</option>
-                            @endif
+                            <option
+                                    value="${g.dat()}"
+                                    selected="${ g.dat().equals(publicidad.getEmpresa().getDato()) }"
+                            >${g.dat()}</option>
 
                         @endif
 

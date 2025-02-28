@@ -20,7 +20,7 @@
                         <div class="row justify-content-center">
                             <div class="col-lg-6">
                                 <div class="text-center mt-4">
-                                    <img class="mb-4 img-error" src="/content/assets/img/error-404-monochrome.svg" />
+                                    <img class="mb-4 img-error" width="250" height="250" src="/content/assets/img/error-404-monochrome.svg" />
                                     <p class="lead">La dirección URL no fue encontrada en el servidor</p>
                                     <a href="/auth/login">
                                         <i class="fa fa-arrow-left me-1"></i>

@@ -59,7 +59,8 @@ public class AccesoServ {
 
     @Cacheable("PermisosMenu")
     public Map<String, Boolean> consultarAccesosMenuUsuario() {
-        return AccesoUsuarioRepo.ListadoMenuUsuario(getUsuarioLogueado().getId())
+        return AccesoUsuarioRepo
+                .ListadoMenuUsuario(getUsuarioLogueado().getId())
                 .stream()
                 .collect(Collectors.toMap(
                         result -> (String) result[0],
@@ -87,48 +88,27 @@ public class AccesoServ {
     @CacheEvict(value ={"PermisosPantalla","PermisosMenu"}, allEntries = true)
     public void GuardarTodosMap( Map<String,String> accesos, Usuario usuario){
         AccesoUsuarioRepo.saveAll(
-            accesos
-                .entrySet()
-                .stream()
-                .map(entry -> {
-                    // Transformación del valor: "on" -> "true", "off" -> "false", o el valor original
-                    String valorTransformado = "on".equals(entry.getValue())
-                            ? "true"
-                            : ("off".equals(entry.getValue()) ? "false" : entry.getValue());
+            accesos.entrySet().stream()
+                    .map(entry -> {
+                        String valorTransformado = "on".equals(entry.getValue())
+                                ? "true"
+                                : "off".equals(entry.getValue()) ? "false" : entry.getValue();
 
-                    return DatoRepo
-                            .findById(entry.getKey())
-                            .flatMap(
-                                    dato -> AccesoRepo.findByPantalla(dato)
-                                                .flatMap(acceso -> {
-                                                    var accesoUsuario = AccesoUsuarioRepo.findAllByUsuarioAndAcceso(usuario, acceso);
-
-                                                    if (accesoUsuario.isPresent()) {
-                                                        var accesoBD = accesoUsuario.get();
-                                                        accesoBD.setActivo(true);
-                                                        accesoBD.setValor(valorTransformado);
-                                                        return Optional.of(accesoBD);
-                                                    }
-
-                                                    return Optional.of(new AccesoUsuario(
-                                                            null,
-                                                            valorTransformado,
-                                                            true,
-                                                            usuario,
-                                                            acceso
-                                                    ));
-
+                        return DatoRepo.findById(entry.getKey())
+                                .flatMap(dato -> AccesoRepo.findByPantalla(dato)
+                                        .flatMap(acceso -> AccesoUsuarioRepo.findAllByUsuarioAndAcceso(usuario, acceso)
+                                                .map(accesoBD -> {
+                                                    accesoBD.setActivo(true);
+                                                    accesoBD.setValor(valorTransformado);
+                                                    return accesoBD;
                                                 })
-                            );
-                })
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toList())
+                                                .or(() -> Optional.of(new AccesoUsuario(null, valorTransformado, true, usuario, acceso)))
+                                        )
+                                );
+                    })
+                    .flatMap(Optional::stream)
+                    .collect(Collectors.toList())
         );
-
-
-
-
 
         /*List<AccesoUsuario> listaAccesoNuevo = new ArrayList<>();
         List<AccesoUsuario> listaAccesoEdicion = new ArrayList<>();

@@ -1,6 +1,3 @@
-
-
-        
 var notificacion=new Audio(`${SERVER_IP}/content/audio/n44.mp3`);
 notificacion.volume=1;
 
@@ -89,87 +86,63 @@ function closeEventSource(){
 }
 
 function post_plantilla(LINK,DATA){
-    
-    $("#content-page").css("overflow-y","hidden");
 
-    let fadeout=$("#content-page").hide().delay(100).promise();
+    $("#content-page").fadeOut(150, function(){
 
-    $.post({
-        url: `${SERVER_IP}${LINK}`,
-        async:true,
-        data: DATA,
-        dataType : 'html',
-        success: function(response) {
+        $.post({
+            url: `${SERVER_IP}${LINK}`,
+            async:true,
+            data: DATA,
+            dataType : 'html',
+            success: function(response) {
 
-            if(response.indexOf('Login') !== -1 || response.indexOf('This session has been expired') !== -1)
-                window.location.href=`${SERVER_IP}/auth/login?logout=true`;
-            
-            fadeout.then(function(){
-                let fadein=$("#content-page").replaceWith(response).fadeIn(100).promise();
-
-                fadein.then(function(){
-                    $("#content-page").css("overflow-y","hidden");
-
-                }); 
-            });
-        },
-        error: function(xhr, status, error) {
-          // Maneja cualquier error que ocurra durante la llamada
-            
-            if(xhr.responseText.indexOf('This session has been expired') !== -1)
+                if(response.indexOf('Login') !== -1 || response.indexOf('This session has been expired') !== -1)
                     window.location.href=`${SERVER_IP}/auth/login?logout=true`;
-                
-          fadeout.then(function(){
 
-                let fadein=$("#content-page").html(xhr.responseText).fadeIn(100).promise();
+                $("#content-page")
+                    .html(response)
+                    .fadeIn(150);
+            },
+            error: function(xhr, status, error) {
+              // Maneja cualquier error que ocurra durante la llamada
 
-                fadein.then(function(){
+                if(xhr.responseText.indexOf('This session has been expired') !== -1)
+                        window.location.href=`${SERVER_IP}/auth/login?logout=true`;
 
-                    $("#content-page").css("overflow-y","hidden");
-                }); 
-            });
-        }
+                $("#content-page")
+                    .html(xhr.responseText)
+                    .fadeIn(150);
+            }
+        });
     });
     
 }
 
 function get_plantilla(LINK){
-    $("#content-page").css("overflow-y","hidden");
-    let fadeout=$("#content-page").hide().delay(100).promise();
+    $("#content-page").fadeOut(150,function(){
+        $.get({
+            url: `${SERVER_IP}${LINK}`,
+            async:true,
+            dataType : 'html',
+            success: function(response) {
 
-    $.get({
-        url: `${SERVER_IP}${LINK}`,
-        async:true,
-        dataType : 'html',
-        success: function(xhr, status, error) {
+                if(response.indexOf('Login') !== -1 || response.indexOf('This session has been expired') !== -1)
+                    window.location.href=`${SERVER_IP}/auth/login?logout=true`;
 
-            if(xhr.indexOf('Login') !== -1 || xhr.indexOf('This session has been expired') !== -1)
-                window.location.href=`${SERVER_IP}/auth/login?logout=true`;
+                $("#content-page")
+                    .html(response)
+                    .fadeIn(150);
+            },
+            error: function(xhr, status, error) {
 
-            fadeout.then(function(){
+                if(xhr.responseText.indexOf('This session has been expired') !== -1)
+                    window.location.href=`${SERVER_IP}/auth/login?logout=true`;
 
-                let fadein=$("#content-page").replaceWith(xhr).fadeIn(100).promise();
-
-                fadein.then(function(){
-                    $("#content-page").css("overflow-y","hidden");
-
-                }); 
-            });
-        },
-        error: function(xhr, status, error) {
-
-            if(xhr.responseText.indexOf('This session has been expired') !== -1)
-                window.location.href=`${SERVER_IP}/auth/login?logout=true`;  
-
-            fadeout.then(function(){
-                let fadein=$("#content-page").html(xhr.responseText).fadeIn(100).promise();
-
-                fadein.then(function(){
-                    $("#content-page").css("overflow-y","hidden");
-
-                }); 
-            });
-        }
+                $("#content-page")
+                    .html(xhr.responseText)
+                    .fadeIn(150);
+            }
+        });
     });
 }
 

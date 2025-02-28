@@ -1,7 +1,7 @@
 @import abreuapps.core.control.transporte.Ruta
 @import abreuapps.core.control.utils.DateUtils
 
-@param boolean trp_rutas_registro
+@param Boolean trp_rutas_registro
 @param DateUtils dateUtils
 @param Ruta ruta
 

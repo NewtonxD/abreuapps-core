@@ -1,7 +1,7 @@
 package abreuapps.core.control;
 
 import abreuapps.core.control.general.DatoServ;
-import abreuapps.core.control.general.TemplateServ;
+import abreuapps.core.control.utils.TemplateServ;
 import abreuapps.core.control.usuario.AccesoServ;
 import abreuapps.core.control.usuario.Usuario;
 import abreuapps.core.control.usuario.UsuarioServ;

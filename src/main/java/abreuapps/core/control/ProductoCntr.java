@@ -1,7 +1,8 @@
 package abreuapps.core.control;
 
 import abreuapps.core.control.general.DatoServ;
-import abreuapps.core.control.general.TemplateServ;
+import abreuapps.core.control.utils.DateUtils;
+import abreuapps.core.control.utils.TemplateServ;
 import abreuapps.core.control.inventario.Producto;
 import abreuapps.core.control.inventario.ProductoServ;
 import abreuapps.core.control.usuario.AccesoServ;
@@ -37,6 +38,8 @@ public class ProductoCntr {
 
     private final TemplateServ TemplateServicio;
 
+    private final DateUtils FechaUtils;
+
     private final AccesoServ AccesoServicio;
     
     private final ProductoServ ProductoServicio;
@@ -54,7 +57,7 @@ public class ProductoCntr {
         Producto producto,
         @RequestParam(name = "fecha_actualizacionn", required = false) String fechaActualizacion
     ) {
-        if(AccesoServicio.verificarPermisos("inv_producto_registro"))
+        if(!AccesoServicio.verificarPermisos("inv_producto_registro"))
             return TemplateServicio.NOT_FOUND_TEMPLATE;
 
         TemplateServicio.cargarDatosPagina("inv_producto_consulta", model);
@@ -79,7 +82,7 @@ public class ProductoCntr {
             @PathVariable("nombre") String nombre
     ){
         var archivo = ResourcesServicio.obtenerArchivo(URLDecoder.decode(nombre, StandardCharsets.UTF_8) );
-        return (! archivo.equals(null)) ?
+        return ( archivo!=(null) ) ?
                 ResponseEntity.ok()
                         .contentType( (MediaType) archivo.get("media-type") )
                         .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + ((Resource)archivo.get("body")).getFilename() + "\"")
@@ -100,6 +103,7 @@ public class ProductoCntr {
         if (!ProductoDB.isPresent())
             return TemplateServicio.NOT_FOUND_TEMPLATE;
 
+        model.addAttribute("dateUtils",FechaUtils);
         model.addAttribute("producto", ProductoDB.get());
         model.addAllAttributes( AccesoServicio.consultarAccesosPantallaUsuario("inv_producto_registro"));
         model.addAttribute("categorias", DatoServicio.consultarPorGrupo("Categoria Producto"));
