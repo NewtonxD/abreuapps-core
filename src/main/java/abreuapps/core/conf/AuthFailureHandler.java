@@ -25,8 +25,6 @@ import org.springframework.web.servlet.LocaleResolver;
 @RequiredArgsConstructor
 public class AuthFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
-    private final MessageSource messages;
-
     private final LocaleResolver localeResolver;
 
     private final LoginAttemptServ loginAttemptService;

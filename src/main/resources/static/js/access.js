@@ -13,11 +13,6 @@ function dataPrepare(idForm){
 
 function dataPrepareDiv(idElement){
     let d=$("#"+idElement).find("input, select, textarea").serialize();
-    /*$("#"+idElement+" input[type=checkbox]").each(function() {
-        if (!$(this)[0].checked) {
-            d.push({name:$(this).attr("name"),value:"false"});
-        }
-    });*/
     return d;
 }
 

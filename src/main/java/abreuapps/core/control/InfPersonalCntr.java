@@ -30,7 +30,7 @@ public class InfPersonalCntr {
 //----------------------------------------------------------------------------//
 //------------------ENDPOINTS INFORMACION PERSONAL----------------------------//
 //----------------------------------------------------------------------------//    
-    @PostMapping("/infppl/save")
+    @PostMapping(value = "/infppl/save")
     @ResponseBody
     public int GuardarPersona(
         Model model, 

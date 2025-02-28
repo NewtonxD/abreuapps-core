@@ -1,5 +1,6 @@
 package abreuapps.core.control;
 
+import abreuapps.core.control.utils.DateUtils;
 import abreuapps.core.control.utils.TemplateServ;
 import abreuapps.core.control.transporte.Parada;
 import abreuapps.core.control.transporte.ParadaServ;
@@ -33,6 +34,8 @@ public class ParadasCntr {
     private final ParadaServ ParadaServicio;
 
     private final TemplateServ TemplateServicio;
+
+    private final DateUtils FechaUtils;
         
 //----------------------------------------------------------------------------//
 //------------------ENDPOINTS PARADAS-----------------------------------------//
@@ -70,6 +73,7 @@ public class ParadasCntr {
         if (!parada.isPresent())
             return TemplateServicio.NOT_FOUND_TEMPLATE;
 
+        model.addAttribute("dateUtils",FechaUtils);
         model.addAttribute("parada", parada.get());
         model.addAllAttributes(
                 AccesoServicio.consultarAccesosPantallaUsuario("trp_paradas_registro")

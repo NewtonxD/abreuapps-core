@@ -16,7 +16,7 @@
             </a>
             <ul class="nav list-unstyled ps-0">
 
-                @if(permisos.get("trp_principal")) 
+                @if(permisos.getOrDefault("trp_principal",false)) 
                     <li class="mt-1">
                         <button
                             class="nav-link btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
@@ -36,7 +36,7 @@
                         >
                             <ul class="nav btn-toggle-nav list-unstyled fw-normal pb-1 d-block">
 
-                                @if(permisos.get("trp_vehiculo_consulta")) 
+                                @if(permisos.getOrDefault("trp_vehiculo_consulta",false)) 
                                     <li>
                                         <a class="nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded" href="#" id="trp_vehiculo_consulta">
                                             &MediumSpace; Vehículos
@@ -44,7 +44,7 @@
                                     </li>
                                 @endif
 
-                                @if(permisos.get("trp_rutas_consulta")) 
+                                @if(permisos.getOrDefault("trp_rutas_consulta",false)) 
                                     <li>
                                         <a class="nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded" href="#" id="trp_rutas_consulta">
                                             &MediumSpace; Rutas
@@ -52,7 +52,7 @@
                                     </li>
                                 @endif
 
-                                @if(permisos.get("trp_paradas_consulta")) 
+                                @if(permisos.getOrDefault("trp_paradas_consulta",false)) 
                                     <li>
                                         <a class="nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded" href="#" id="trp_paradas_consulta">
                                             &MediumSpace; Paradas
@@ -65,7 +65,7 @@
                     </li>
                 @endif
 
-                @if(permisos.get("con_principal"))
+                @if(permisos.getOrDefault("con_principal",false))
                     <li>
                         <button
                             class="nav-link btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
@@ -85,7 +85,7 @@
                             >
                             <ul class="nav btn-toggle-nav list-unstyled fw-normal pb-1 d-block">
                                 
-                                @if(permisos.get("con_registro_transacciones"))
+                                @if(permisos.getOrDefault("con_registro_transacciones",false))
                                     <li>
                                         <a
                                             class="nav-link acceso  link-body-emphasis d-inline-flex text-decoration-none rounded"
@@ -97,7 +97,7 @@
                                     </li>
                                 @endif
                                 
-                                @if(permisos.get("con_conciliacion_bancaria"))
+                                @if(permisos.getOrDefault("con_conciliacion_bancaria",false))
                                     <li>
                                         <a
                                             class="nav-link acceso  link-body-emphasis d-inline-flex text-decoration-none rounded"
@@ -109,7 +109,7 @@
                                     </li>
                                 @endif   
 
-                                @if(permisos.get("con_cuentas_bancarias"))
+                                @if(permisos.getOrDefault("con_cuentas_bancarias",false))
                                     <li>
                                         <a
                                             class="nav-link acceso  link-body-emphasis d-inline-flex text-decoration-none rounded"
@@ -121,7 +121,7 @@
                                     </li>
                                 @endif
 
-                                @if(permisos.get("con_presupuesto"))
+                                @if(permisos.getOrDefault("con_presupuesto",false))
                                     <li>
                                         <a
                                             class="nav-link acceso  link-body-emphasis d-inline-flex text-decoration-none rounded"
@@ -133,7 +133,7 @@
                                     </li>
                                 @endif
 
-                                @if(permisos.get("con_impuestos"))
+                                @if(permisos.getOrDefault("con_impuestos",false))
                                     <li>
                                         <a class="nav-link acceso  link-body-emphasis d-inline-flex text-decoration-none rounded" href="#" id="con_impuestos">
                                             &MediumSpace; Gestión de Impuestos
@@ -141,7 +141,7 @@
                                     </li>
                                 @endif
 
-                                @if(permisos.get("con_informes"))
+                                @if(permisos.getOrDefault("con_informes",false))
                                     <li>
                                         <a class="nav-link acceso  link-body-emphasis d-inline-flex text-decoration-none rounded" href="#" id="con_informes">
                                             &MediumSpace; Informes Financieros
@@ -153,7 +153,7 @@
                     </li>
                 @endif
 
-                @if(permisos.get("cxp_principal"))
+                @if(permisos.getOrDefault("cxp_principal",false))
                     <li>
                         <button
                             class="nav-link btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
@@ -173,7 +173,7 @@
                             >
                             <ul class="nav btn-toggle-nav list-unstyled fw-normal pb-1 d-block">
                                 
-                                @if(permisos.get("cxp_registro_facturas"))
+                                @if(permisos.getOrDefault("cxp_registro_facturas",false))
                                     <li>
                                         <a class="nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded " href="#" id="cxp_registro_facturas">
                                             &MediumSpace; Registro de Facturas
@@ -181,7 +181,7 @@
                                     </li>
                                 @endif
 
-                                @if(permisos.get("cxp_control_pagos"))
+                                @if(permisos.getOrDefault("cxp_control_pagos",false))
                                     <li>
                                         <a class="nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded " href="#" id="cxp_control_pagos">
                                             &MediumSpace; Control de Pagos
@@ -189,7 +189,7 @@
                                     </li>
                                 @endif
 
-                                @if(permisos.get("cxp_informes"))
+                                @if(permisos.getOrDefault("cxp_informes",false))
                                     <li>
                                         <a class="nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded " href="#" id="cxp_informes">
                                             &MediumSpace; Informes y Análisis
@@ -197,7 +197,7 @@
                                     </li>
                                 @endif
 
-                                @if(permisos.get("cxp_comunicacion_proveedores"))
+                                @if(permisos.getOrDefault("cxp_comunicacion_proveedores",false))
                                     <li>
                                         <a
                                             class="nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded "
@@ -209,7 +209,7 @@
                                     </li>
                                 @endif
 
-                                @if(permisos.get("cxp_autorizaciones_aprobaciones"))
+                                @if(permisos.getOrDefault("cxp_autorizaciones_aprobaciones",false))
                                     <li>
                                         <a
                                             class="nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded "
@@ -226,7 +226,7 @@
                     </li>
                 @endif
 
-                @if(permisos.get("inv_principal"))
+                @if(permisos.getOrDefault("inv_principal",false))
                     <li class="me-1">                       
                         <button
                             class="nav-link btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed "
@@ -246,7 +246,7 @@
                             >
                             <ul class="nav btn-toggle-nav list-unstyled fw-normal pb-1 d-block">
                                 
-                                @if(permisos.get("inv_producto_consulta"))
+                                @if(permisos.getOrDefault("inv_producto_consulta",false))
                                     <li>
                                         <a class="nav-link acceso link-body-emphasis text-decoration-none rounded " href="#" id="inv_producto_consulta">
                                             &MediumSpace; Productos
@@ -259,7 +259,7 @@
                     </li>
                 @endif
 
-                @if(permisos.get("pub_principal"))
+                @if(permisos.getOrDefault("pub_principal",false))
                     <li class="me-1">                       
                         <button
                             class="nav-link btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed "
@@ -279,7 +279,7 @@
                             >
                             <ul class="nav btn-toggle-nav list-unstyled fw-normal pb-1 d-block">
 
-                                @if(permisos.get("pub_publicidad_consulta"))
+                                @if(permisos.getOrDefault("pub_publicidad_consulta",false))
                                     <li>
                                         <a class="nav-link acceso link-body-emphasis text-decoration-none rounded " href="#" id="pub_publicidad_consulta">
                                             &MediumSpace; Publicidad
@@ -287,7 +287,7 @@
                                     </li>
                                 @endif
 
-                                @if(permisos.get("dat_gen_consulta_empresa"))
+                                @if(permisos.getOrDefault("dat_gen_consulta_empresa",false))
                                     <li>
                                         <a class="nav-link acceso link-body-emphasis text-decoration-none rounded " href="#" id="dat_gen_consulta_empresa">
                                             &MediumSpace; Empresas
@@ -295,7 +295,7 @@
                                     </li>
                                 @endif
 
-                                @if(permisos.get("pub_publicidad_reportes"))
+                                @if(permisos.getOrDefault("pub_publicidad_reportes",false))
                                     <li>
                                         <a class="nav-link acceso link-body-emphasis text-decoration-none rounded " href="#" id="pub_publicidad_reportes">
                                             &MediumSpace; Reportes
@@ -307,7 +307,7 @@
                     </li>
                 @endif
 
-                @if(permisos.get("sys_principal"))
+                @if(permisos.getOrDefault("sys_principal",false))
                     <li class="mb-1">                       
                         <button
                             class="nav-link btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed "
@@ -327,7 +327,7 @@
                             >
                             <ul class="nav btn-toggle-nav list-unstyled fw-normal pb-1 d-block">
 
-                                @if(permisos.get("dat_gen_consulta_datos"))
+                                @if(permisos.getOrDefault("dat_gen_consulta_datos",false))
                                     <li>
                                         <a class="nav-link acceso link-body-emphasis text-decoration-none rounded " href="#" id="dat_gen_consulta_datos">
                                             &MediumSpace; Mantenimientos de Datos
@@ -335,7 +335,7 @@
                                     </li>
                                 @endif
 
-                                @if(permisos.get("sys_configuracion"))
+                                @if(permisos.getOrDefault("sys_configuracion",false))
                                     <li>
                                         <a class="nav-link acceso link-body-emphasis text-decoration-none rounded " href="#" id="sys_configuracion">
                                             &MediumSpace; Configuración
@@ -343,7 +343,7 @@
                                     </li>
                                 @endif
 
-                                @if(permisos.get("usr_mgr_principal"))
+                                @if(permisos.getOrDefault("usr_mgr_principal",false))
                                     <li>
                                         <a class="nav-link acceso link-body-emphasis text-decoration-none rounded " href="#" id="usr_mgr_principal">
                                             &MediumSpace; Usuarios

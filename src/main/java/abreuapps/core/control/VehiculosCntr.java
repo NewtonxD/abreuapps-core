@@ -7,8 +7,8 @@ import abreuapps.core.control.transporte.Vehiculo;
 import abreuapps.core.control.transporte.VehiculoServ;
 import abreuapps.core.control.usuario.AccesoServ;
 
-import java.util.HashMap;
 import java.util.Map;
+import static java.util.Map.entry;
 
 import abreuapps.core.control.utils.DateUtils;
 import lombok.RequiredArgsConstructor;
@@ -57,11 +57,10 @@ public class VehiculosCntr {
         if (!AccesoServicio.verificarPermisos("trp_vehiculo_registro"))
             return TemplateServicio.NOT_FOUND_TEMPLATE;
 
-        TemplateServicio.cargarDatosPagina("trp_vehiculo_consulta", model);
-
         var resultados = VehiculoServicio.guardar(vehiculo, fechaActualizacion);
         model.addAttribute("status", resultados.get(0));
         model.addAttribute("msg", resultados.get(1));
+        TemplateServicio.cargarDatosPagina("trp_vehiculo_consulta", model);
 
         return "fragments/trp_vehiculo_consulta";
 
@@ -125,17 +124,18 @@ public class VehiculosCntr {
         if (!AccesoServicio.verificarPermisos("trp_vehiculo_registro") )
             return ResponseEntity.ok(null);
 
-        Map<String, Object> respuesta = new HashMap<>();
         var lastLoc = LocVehiculoServicio.consultarUltimaLocVehiculo(placa);
 
-        if (lastLoc.isPresent()) {
-            respuesta.put("placa", placa);
-            respuesta.put("lon", lastLoc.get().getLongitud());
-            respuesta.put("lat", lastLoc.get().getLatitud());
-            respuesta.put("fecha", FechaUtils.DateToFormato1(lastLoc.get().getFecha_registro()));
-        }
-
-        return ResponseEntity.ok(respuesta);
+        return ResponseEntity.ok(
+            !lastLoc.isPresent() ?
+                null :
+                Map.ofEntries(
+                    entry("placa", placa),
+                    entry("lon", lastLoc.get().getLongitud()),
+                    entry("lat", lastLoc.get().getLatitud()),
+                    entry("fecha", FechaUtils.DateToFormato1(lastLoc.get().getFecha_registro()))
+                )
+        );
     }
 
 }

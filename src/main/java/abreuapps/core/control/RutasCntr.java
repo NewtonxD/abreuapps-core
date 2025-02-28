@@ -1,5 +1,6 @@
 package abreuapps.core.control;
 
+import abreuapps.core.control.utils.DateUtils;
 import abreuapps.core.control.utils.TemplateServ;
 import abreuapps.core.control.transporte.LocRutaServ;
 import abreuapps.core.control.transporte.ParadaServ;
@@ -39,6 +40,8 @@ public class RutasCntr {
     private final ParadaServ ParadaServicio;
 
     private final TemplateServ TemplateServicio;
+
+    private final DateUtils FechaUtils;
     
 //----------------------------------------------------------------------------//
 //------------------ENDPOINTS RUTAS-------------------------------------------//
@@ -54,11 +57,11 @@ public class RutasCntr {
         if(! AccesoServicio.verificarPermisos("trp_rutas_registro"))
             return TemplateServicio.NOT_FOUND_TEMPLATE;
 
-        TemplateServicio.cargarDatosPagina("trp_rutas_consulta", model);
-
         var resultados = RutaServicio.guardar(ruta,data,fechaActualizacion);
         model.addAttribute("status", resultados.get(0));
         model.addAttribute("msg", resultados.get(1));
+
+        TemplateServicio.cargarDatosPagina("trp_rutas_consulta", model);
 
         return "fragments/trp_rutas_consulta";
 
@@ -77,6 +80,7 @@ public class RutasCntr {
         if (! ruta.isPresent())
             return TemplateServicio.NOT_FOUND_TEMPLATE;
 
+        model.addAttribute("dateUtils",FechaUtils);
         model.addAttribute("ruta", ruta.get());
         model.addAllAttributes(AccesoServicio.consultarAccesosPantallaUsuario("trp_rutas_registro"));
 

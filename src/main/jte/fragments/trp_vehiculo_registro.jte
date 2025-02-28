@@ -37,14 +37,14 @@
         <select class="form-select custom-select" name="color" id="color" required>
             <option value="0" disabled>--Seleccione--</option>
             @for(var c : color)
-                @if(c.act()
+                @if(c.act())
                     @if(update)
                         <option
                                 value="${c.dat()}"
                                 selected="${vehiculo.getColor().getDato().equals(c.dat())}"
-                        > c.dat() </option>
+                        >${c.dat()}</option>
                     @else
-                        <option value="${c.dat()}"> c.dat()</option>
+                        <option value="${c.dat()}">${c.dat()}</option>
                     @endif
                 @endif
             @endfor
@@ -151,7 +151,7 @@
         <div class="col-12  d-flex justify-content-center text-center ">
             <h6>Fecha Ultima Ubicación: <span id="date_last_loc"></span></h6>
         </div>
-        <div class="col-12 d-flex justify-content-center">
+        <div class="col-12 d-flex justify-content-center pb-2">
             <div id="map" class="map-regular"></div>
         </div>
     @endif
@@ -164,10 +164,10 @@
     </div>
     `,
     scripts_content = @`
-    <script src="/content/js/fetch_cache.js"></script>
     <script src="/content/js/trp/svd_vhl574702.js"></script>
     @if(update && last_loc)
         <script src="/content/js/lib/leaflet.js"></script>
+        <script src="/content/js/fetch_cache.js"></script>
         <script src="/content/js/trp/vhl544702lastloc.js"></script>
     @endif
     `
