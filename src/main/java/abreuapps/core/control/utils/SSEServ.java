@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.CloseNowException;
+import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.AsyncRequestNotUsableException;
@@ -74,7 +75,7 @@ public class SSEServ {
 
 
     @Async
-    public void publicar(String nombre, HashMap<String, Object> Datos){
+    public void publicar(String nombre, Map<String, Object> Datos){
 
         var emitters = obtenerEmitter(nombre);
 
@@ -86,7 +87,7 @@ public class SSEServ {
         if(!emitters.equals(null)){
             for (Map.Entry<String,SseEmitter> val : emitters.entrySet()) {
                 try {
-                    val.getValue().send(Datos);
+                    val.getValue().send(Datos, MediaType.APPLICATION_JSON);
                 } catch (RuntimeException | CloseNowException | AsyncRequestNotUsableException ex) {
                     val.getValue().complete();
                     emitters.remove(val.getKey());
@@ -155,7 +156,7 @@ public class SSEServ {
             for (Map.Entry<String,SseEmitter> val : pdaInfoEmitters.entrySet()) {
                 Integer idParada=Integer.valueOf(val.getKey().split("-")[2]);
                 try {
-                    val.getValue().send(ParadaServicio.getParadaInfo(idParada));
+                    val.getValue().send(ParadaServicio.getParadaInfo(idParada), MediaType.APPLICATION_JSON);
                 } catch (CloseNowException | AsyncRequestNotUsableException ex) {
                     val.getValue().complete();
                     pdaInfoEmitters.remove(val.getKey());
@@ -191,7 +192,7 @@ public class SSEServ {
         if(trpInfoEmitters!=null){
             for (Map.Entry<String,SseEmitter> val : trpInfoEmitters.entrySet()) {
                 try {
-                    val.getValue().send(LocServicio.consultarDatosTransporteEnCamino());
+                    val.getValue().send(LocServicio.consultarDatosTransporteEnCamino(), MediaType.APPLICATION_JSON);
                 } catch (CloseNowException | AsyncRequestNotUsableException ex) {
                     val.getValue().complete();
                     trpInfoEmitters.remove(val.getKey());

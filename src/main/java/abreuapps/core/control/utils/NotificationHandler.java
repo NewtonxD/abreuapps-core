@@ -17,6 +17,7 @@ import java.util.Map;
 import static java.util.Map.entry;
 import java.util.function.Consumer;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.postgresql.PGNotification;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Component;
  *
  * @author cabreu
  */
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class NotificationHandler implements Consumer<PGNotification> {
@@ -31,6 +33,9 @@ public class NotificationHandler implements Consumer<PGNotification> {
     private final SSEServ SSEServicio;
 
     private final DateUtils FechaUtils;
+
+    private static final ObjectMapper objectMapper = new ObjectMapper()
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     private final Map<String, String> DBNOMBRE_VS_DOMINIO = Map.ofEntries(
             entry("public.gnr_dat", "dtgnr"),
@@ -57,38 +62,38 @@ public class NotificationHandler implements Consumer<PGNotification> {
     );
 
     @Override
-    public void accept(PGNotification t) {
-        String RawData = t.getParameter();
+    public void accept(PGNotification notification) {
+        String rawData = notification.getParameter();
 
         try {
+            JsonNode jsonNode = objectMapper.readTree(rawData);
 
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode jsonNode = objectMapper.readTree(RawData);
+            String dbName = jsonNode.get("schema").asText() + "." + jsonNode.get("table").asText();
+            String domain = DBNOMBRE_VS_DOMINIO.getOrDefault(dbName, "");
 
-            String DBNombre = jsonNode.get("schema").asText() + "." + jsonNode.get("table").asText();
-            String Dominio = DBNOMBRE_VS_DOMINIO.getOrDefault(DBNombre, "");
-
-            if (!Dominio.isEmpty()) {
-
-                HashMap<String, Object> map = new HashMap<>();
-
-                char DBOperacion = jsonNode.get("operation").asText().charAt(0);
-                JsonNode DBData = jsonNode.get("data");
-
-                String DBDate = FechaUtils.FromLocalDTToFormato1(jsonNode.get("timestamp").asText());
-                map.put("date", DBDate);
-                if(DOMINIO_VS_DTO.get(Dominio).isRecord()){
-                    objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-                    map.put(String.valueOf(DBOperacion), objectMapper.treeToValue(DBData, DOMINIO_VS_DTO.get(Dominio)));
-                }
-
-                SSEServicio.publicar(Dominio, map);
-
+            if (domain.isEmpty()) {
+                return;
             }
 
+            Map<String, Object> responseMap = new HashMap<>();
+
+            char dbOperation = jsonNode.get("operation").asText().charAt(0);
+            JsonNode dbData = jsonNode.get("data");
+
+            String formattedDate = FechaUtils.FromLocalDTToFormato1(jsonNode.get("timestamp").asText());
+            responseMap.put("date", formattedDate);
+
+            if (DOMINIO_VS_DTO.get(domain).isRecord()) {
+                responseMap.put(String.valueOf(dbOperation), objectMapper.treeToValue(dbData, DOMINIO_VS_DTO.get(domain)));
+            }
+
+            SSEServicio.publicar(domain, responseMap);
+
         } catch (JsonProcessingException e) {
-            //log.error(e.getMessage());
+            // Log the error for troubleshooting
+            log.error("Error processing JSON: " + e.getMessage(), e);
         }
     }
+
 
 }

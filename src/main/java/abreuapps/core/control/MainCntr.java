@@ -85,6 +85,9 @@ public class MainCntr {
         Model model,
         @RequestParam("id") String idPage
     ) {
+        if(!AccesosServicio.verificarPermisos(idPage))
+            return TemplateServicio.NOT_FOUND_TEMPLATE;
+
         TemplateServicio.cargarDatosPagina(idPage, model);
         return "fragments/" + idPage ;
     }

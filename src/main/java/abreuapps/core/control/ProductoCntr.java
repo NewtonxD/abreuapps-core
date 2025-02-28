@@ -60,11 +60,12 @@ public class ProductoCntr {
         if(!AccesoServicio.verificarPermisos("inv_producto_registro"))
             return TemplateServicio.NOT_FOUND_TEMPLATE;
 
-        TemplateServicio.cargarDatosPagina("inv_producto_consulta", model);
 
         var resultados = ProductoServicio.guardar(producto,fechaActualizacion);
         model.addAttribute("status", resultados.get(0));
         model.addAttribute("msg", resultados.get(1));
+
+        TemplateServicio.cargarDatosPagina("inv_producto_consulta", model);
 
         return "fragments/inv_producto_consulta";
     }

@@ -24,7 +24,7 @@
         </thead>
         <tbody>
         @for(var d:rutas)
-            <tr data-id=${d.rta()}>
+            <tr data-id="${d.rta()}">
                 <th scope="row">${d.rta()}</th>
                 <td>${d.loc_ini()}</td>
                 <td>${d.loc_fin()}</td>

@@ -16,20 +16,20 @@
         <div class="mb-3 col-12 col-lg-8">
             <label for="ruta" class="form-label text-muted">Nombre de la Ruta:</label>
             @if(update)
+                <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" value="${dateUtils.DateToFormato2(ruta.getFecha_actualizacion())}">
                 <input type="text" style="display: none; width: 1px;height: 1px;" id="Ruta" name="ruta" value="${ruta.getRuta()}">
             @endif
-            <input type="text" name="ruta" disabled="${update?"disabled":""}" placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">
-            <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" value="${dateUtils.DateToFormato2(ruta.getFecha_actualizacion())}">
+            <input type="text" name="${update?"":"ruta"}" value="${ruta.getRuta()}" disabled="${update}" placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">
         </div>
 
         <div class="mb-3 col-12 col-lg-6">
             <label for="localizacion_inicial" class="form-label text-muted">Lugar donde inicia:</label>
-            <input type="text" name="localizacion_inicial" placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">
+            <input type="text" name="localizacion_inicial" value="${ruta.getLocalizacion_inicial()}" placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">
         </div>
 
         <div class="mb-3 col-12 col-lg-6">
             <label for="localizacion_final" class="form-label text-muted">Lugar donde termina:</label>
-            <input type="text" name="localizacion_final" placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">
+            <input type="text" name="localizacion_final" value="${ruta.getLocalizacion_final()}" placeholder=" ... " class="form-control" required aria-describedby="basic-addon4">
         </div>
 
         <div class="col-12 text-start ">

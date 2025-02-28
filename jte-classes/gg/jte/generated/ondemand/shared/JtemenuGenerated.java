@@ -10,109 +10,109 @@ public final class JtemenuGenerated {
 		jteOutput.setContext("span", null);
 		jteOutput.writeUserContent(app_nombre);
 		jteOutput.writeContent("</span>\n            </a>\n            <ul class=\"nav list-unstyled ps-0\">\n\n                ");
-		if (permisos.get("trp_principal")) {
+		if (permisos.getOrDefault("trp_principal",false)) {
 			jteOutput.writeContent(" \n                    <li class=\"mt-1\">\n                        <button\n                            class=\"nav-link btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed\"\n                            type=\"button\"\n                            data-bs-toggle=\"collapse\"\n                            data-bs-target=\"#collapseLayouts4\"\n                            aria-expanded=\"false\"\n                            aria-controls=\"collapseLayouts4\"\n                        >\n                            <i class=\"fa fa-car\"></i>&MediumSpace; Transporte\n                        </button>\n                        <div\n                            class=\"collapse\"\n                            id=\"collapseLayouts4\"\n                            aria-labelledby=\"headingFour\"\n                            data-bs-parent=\"#sidenavAccordion\"\n                        >\n                            <ul class=\"nav btn-toggle-nav list-unstyled fw-normal pb-1 d-block\">\n\n                                ");
-			if (permisos.get("trp_vehiculo_consulta")) {
+			if (permisos.getOrDefault("trp_vehiculo_consulta",false)) {
 				jteOutput.writeContent(" \n                                    <li>\n                                        <a class=\"nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded\" href=\"#\" id=\"trp_vehiculo_consulta\">\n                                            &MediumSpace; Vehículos\n                                        </a>\n                                    </li>\n                                ");
 			}
 			jteOutput.writeContent("\n\n                                ");
-			if (permisos.get("trp_rutas_consulta")) {
+			if (permisos.getOrDefault("trp_rutas_consulta",false)) {
 				jteOutput.writeContent(" \n                                    <li>\n                                        <a class=\"nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded\" href=\"#\" id=\"trp_rutas_consulta\">\n                                            &MediumSpace; Rutas\n                                        </a>\n                                    </li>\n                                ");
 			}
 			jteOutput.writeContent("\n\n                                ");
-			if (permisos.get("trp_paradas_consulta")) {
+			if (permisos.getOrDefault("trp_paradas_consulta",false)) {
 				jteOutput.writeContent(" \n                                    <li>\n                                        <a class=\"nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded\" href=\"#\" id=\"trp_paradas_consulta\">\n                                            &MediumSpace; Paradas\n                                        </a>\n                                    </li>\n                                ");
 			}
 			jteOutput.writeContent("\n\n                            </ul>\n                        </div>\n                    </li>\n                ");
 		}
 		jteOutput.writeContent("\n\n                ");
-		if (permisos.get("con_principal")) {
+		if (permisos.getOrDefault("con_principal",false)) {
 			jteOutput.writeContent("\n                    <li>\n                        <button\n                            class=\"nav-link btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed\"\n                            type=\"button\"\n                            data-bs-toggle=\"collapse\"\n                            data-bs-target=\"#collapseLayouts1\"\n                            aria-expanded=\"false\"\n                            aria-controls=\"collapseLayouts1\"\n                            >\n                            <i class=\"fa fa-calculator\"></i>&MediumSpace; Contabilidad\n                        </button>\n                        <div\n                            class=\"collapse\"\n                            id=\"collapseLayouts1\"\n                            aria-labelledby=\"headingOne\"\n                            data-bs-parent=\"#sidenavAccordion\"\n                            >\n                            <ul class=\"nav btn-toggle-nav list-unstyled fw-normal pb-1 d-block\">\n                                \n                                ");
-			if (permisos.get("con_registro_transacciones")) {
+			if (permisos.getOrDefault("con_registro_transacciones",false)) {
 				jteOutput.writeContent("\n                                    <li>\n                                        <a\n                                            class=\"nav-link acceso  link-body-emphasis d-inline-flex text-decoration-none rounded\"\n                                            href=\"#\"\n                                            id=\"con_registro_transacciones\"\n                                            >\n                                            &MediumSpace; Registro de Transacciones\n                                        </a>\n                                    </li>\n                                ");
 			}
 			jteOutput.writeContent("\n                                \n                                ");
-			if (permisos.get("con_conciliacion_bancaria")) {
+			if (permisos.getOrDefault("con_conciliacion_bancaria",false)) {
 				jteOutput.writeContent("\n                                    <li>\n                                        <a\n                                            class=\"nav-link acceso  link-body-emphasis d-inline-flex text-decoration-none rounded\"\n                                            href=\"#\"\n                                            id=\"con_conciliacion_bancaria\"\n                                            >\n                                            &MediumSpace; Conciliación Bancaría\n                                        </a>\n                                    </li>\n                                ");
 			}
 			jteOutput.writeContent("   \n\n                                ");
-			if (permisos.get("con_cuentas_bancarias")) {
+			if (permisos.getOrDefault("con_cuentas_bancarias",false)) {
 				jteOutput.writeContent("\n                                    <li>\n                                        <a\n                                            class=\"nav-link acceso  link-body-emphasis d-inline-flex text-decoration-none rounded\"\n                                            href=\"#\"\n                                            id=\"con_cuentas_bancarias\"\n                                            >\n                                            &MediumSpace; Cuentas Bancanrtías\n                                        </a>\n                                    </li>\n                                ");
 			}
 			jteOutput.writeContent("\n\n                                ");
-			if (permisos.get("con_presupuesto")) {
+			if (permisos.getOrDefault("con_presupuesto",false)) {
 				jteOutput.writeContent("\n                                    <li>\n                                        <a\n                                            class=\"nav-link acceso  link-body-emphasis d-inline-flex text-decoration-none rounded\"\n                                            href=\"#\"\n                                            id=\"con_presupuesto\"\n                                            >\n                                            &MediumSpace; Gestión de Presupuesto\n                                        </a>\n                                    </li>\n                                ");
 			}
 			jteOutput.writeContent("\n\n                                ");
-			if (permisos.get("con_impuestos")) {
+			if (permisos.getOrDefault("con_impuestos",false)) {
 				jteOutput.writeContent("\n                                    <li>\n                                        <a class=\"nav-link acceso  link-body-emphasis d-inline-flex text-decoration-none rounded\" href=\"#\" id=\"con_impuestos\">\n                                            &MediumSpace; Gestión de Impuestos\n                                        </a>\n                                    </li>\n                                ");
 			}
 			jteOutput.writeContent("\n\n                                ");
-			if (permisos.get("con_informes")) {
+			if (permisos.getOrDefault("con_informes",false)) {
 				jteOutput.writeContent("\n                                    <li>\n                                        <a class=\"nav-link acceso  link-body-emphasis d-inline-flex text-decoration-none rounded\" href=\"#\" id=\"con_informes\">\n                                            &MediumSpace; Informes Financieros\n                                        </a>\n                                    </li>\n                                ");
 			}
 			jteOutput.writeContent("\n                            </ul>\n                        </div>\n                    </li>\n                ");
 		}
 		jteOutput.writeContent("\n\n                ");
-		if (permisos.get("cxp_principal")) {
+		if (permisos.getOrDefault("cxp_principal",false)) {
 			jteOutput.writeContent("\n                    <li>\n                        <button\n                            class=\"nav-link btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed\"\n                            type=\"button\"\n                            data-bs-toggle=\"collapse\"\n                            data-bs-target=\"#collapseLayouts2\"\n                            aria-expanded=\"false\"\n                            aria-controls=\"collapseLayouts2\"\n                            >\n                            <i class=\"fa fa-list-alt\"></i>&MediumSpace; Cuentas x Pagar\n                        </button>\n                        <div\n                            class=\"collapse\"\n                            id=\"collapseLayouts2\"\n                            aria-labelledby=\"headingTwo\"\n                            data-bs-parent=\"#sidenavAccordion\"\n                            >\n                            <ul class=\"nav btn-toggle-nav list-unstyled fw-normal pb-1 d-block\">\n                                \n                                ");
-			if (permisos.get("cxp_registro_facturas")) {
+			if (permisos.getOrDefault("cxp_registro_facturas",false)) {
 				jteOutput.writeContent("\n                                    <li>\n                                        <a class=\"nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded \" href=\"#\" id=\"cxp_registro_facturas\">\n                                            &MediumSpace; Registro de Facturas\n                                        </a>\n                                    </li>\n                                ");
 			}
 			jteOutput.writeContent("\n\n                                ");
-			if (permisos.get("cxp_control_pagos")) {
+			if (permisos.getOrDefault("cxp_control_pagos",false)) {
 				jteOutput.writeContent("\n                                    <li>\n                                        <a class=\"nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded \" href=\"#\" id=\"cxp_control_pagos\">\n                                            &MediumSpace; Control de Pagos\n                                        </a>\n                                    </li>\n                                ");
 			}
 			jteOutput.writeContent("\n\n                                ");
-			if (permisos.get("cxp_informes")) {
+			if (permisos.getOrDefault("cxp_informes",false)) {
 				jteOutput.writeContent("\n                                    <li>\n                                        <a class=\"nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded \" href=\"#\" id=\"cxp_informes\">\n                                            &MediumSpace; Informes y Análisis\n                                        </a>\n                                    </li>\n                                ");
 			}
 			jteOutput.writeContent("\n\n                                ");
-			if (permisos.get("cxp_comunicacion_proveedores")) {
+			if (permisos.getOrDefault("cxp_comunicacion_proveedores",false)) {
 				jteOutput.writeContent("\n                                    <li>\n                                        <a\n                                            class=\"nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded \"\n                                            href=\"#\"\n                                            id=\"cxp_comunicacion_proveedores\"\n                                            >\n                                            &MediumSpace; Comunicación con Proveedores\n                                        </a>\n                                    </li>\n                                ");
 			}
 			jteOutput.writeContent("\n\n                                ");
-			if (permisos.get("cxp_autorizaciones_aprobaciones")) {
+			if (permisos.getOrDefault("cxp_autorizaciones_aprobaciones",false)) {
 				jteOutput.writeContent("\n                                    <li>\n                                        <a\n                                            class=\"nav-link acceso link-body-emphasis d-inline-flex text-decoration-none rounded \"\n                                            href=\"#\"\n                                            id=\"cxp_autorizaciones_aprobaciones\"\n                                            >\n                                            &MediumSpace; Autorizaciones y Aprobaciones\n                                        </a>\n                                    </li>\n                                ");
 			}
 			jteOutput.writeContent("\n\n                            </ul>\n                        </div> \n                    </li>\n                ");
 		}
 		jteOutput.writeContent("\n\n                ");
-		if (permisos.get("inv_principal")) {
+		if (permisos.getOrDefault("inv_principal",false)) {
 			jteOutput.writeContent("\n                    <li class=\"me-1\">                       \n                        <button\n                            class=\"nav-link btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed \"\n                            type=\"button\"\n                            data-bs-toggle=\"collapse\"\n                            data-bs-target=\"#collapseLayouts6\"\n                            aria-expanded=\"false\"\n                            aria-controls=\"collapseLayouts6\"\n                            >\n                            <i class=\"fa fa-solid fa-archive\"></i>&MediumSpace; Inventario\n                        </button>\n                        <div\n                            class=\"collapse\"\n                            id=\"collapseLayouts6\"\n                            aria-labelledby=\"headingSix\"\n                            data-bs-parent=\"#sidenavAccordion\"\n                            >\n                            <ul class=\"nav btn-toggle-nav list-unstyled fw-normal pb-1 d-block\">\n                                \n                                ");
-			if (permisos.get("inv_producto_consulta")) {
+			if (permisos.getOrDefault("inv_producto_consulta",false)) {
 				jteOutput.writeContent("\n                                    <li>\n                                        <a class=\"nav-link acceso link-body-emphasis text-decoration-none rounded \" href=\"#\" id=\"inv_producto_consulta\">\n                                            &MediumSpace; Productos\n                                        </a>\n                                    </li>\n                                ");
 			}
 			jteOutput.writeContent("\n\n                            </ul>\n                        </div>\n                    </li>\n                ");
 		}
 		jteOutput.writeContent("\n\n                ");
-		if (permisos.get("pub_principal")) {
+		if (permisos.getOrDefault("pub_principal",false)) {
 			jteOutput.writeContent("\n                    <li class=\"me-1\">                       \n                        <button\n                            class=\"nav-link btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed \"\n                            type=\"button\"\n                            data-bs-toggle=\"collapse\"\n                            data-bs-target=\"#collapseLayouts5\"\n                            aria-expanded=\"false\"\n                            aria-controls=\"collapseLayouts5\"\n                            >\n                            <i class=\"fa fa-solid fa-bullhorn\"></i>&MediumSpace; Publicidad\n                        </button>\n                        <div\n                            class=\"collapse\"\n                            id=\"collapseLayouts5\"\n                            aria-labelledby=\"headingFifth\"\n                            data-bs-parent=\"#sidenavAccordion\"\n                            >\n                            <ul class=\"nav btn-toggle-nav list-unstyled fw-normal pb-1 d-block\">\n\n                                ");
-			if (permisos.get("pub_publicidad_consulta")) {
+			if (permisos.getOrDefault("pub_publicidad_consulta",false)) {
 				jteOutput.writeContent("\n                                    <li>\n                                        <a class=\"nav-link acceso link-body-emphasis text-decoration-none rounded \" href=\"#\" id=\"pub_publicidad_consulta\">\n                                            &MediumSpace; Publicidad\n                                        </a>\n                                    </li>\n                                ");
 			}
 			jteOutput.writeContent("\n\n                                ");
-			if (permisos.get("dat_gen_consulta_empresa")) {
+			if (permisos.getOrDefault("dat_gen_consulta_empresa",false)) {
 				jteOutput.writeContent("\n                                    <li>\n                                        <a class=\"nav-link acceso link-body-emphasis text-decoration-none rounded \" href=\"#\" id=\"dat_gen_consulta_empresa\">\n                                            &MediumSpace; Empresas\n                                        </a>\n                                    </li>\n                                ");
 			}
 			jteOutput.writeContent("\n\n                                ");
-			if (permisos.get("pub_publicidad_reportes")) {
+			if (permisos.getOrDefault("pub_publicidad_reportes",false)) {
 				jteOutput.writeContent("\n                                    <li>\n                                        <a class=\"nav-link acceso link-body-emphasis text-decoration-none rounded \" href=\"#\" id=\"pub_publicidad_reportes\">\n                                            &MediumSpace; Reportes\n                                        </a>\n                                    </li>\n                                ");
 			}
 			jteOutput.writeContent("\n                            </ul>\n                        </div>\n                    </li>\n                ");
 		}
 		jteOutput.writeContent("\n\n                ");
-		if (permisos.get("sys_principal")) {
+		if (permisos.getOrDefault("sys_principal",false)) {
 			jteOutput.writeContent("\n                    <li class=\"mb-1\">                       \n                        <button\n                            class=\"nav-link btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed \"\n                            type=\"button\"\n                            data-bs-toggle=\"collapse\"\n                            data-bs-target=\"#collapseLayouts3\"\n                            aria-expanded=\"false\"\n                            aria-controls=\"collapseLayouts3\"\n                            >\n                            <i class=\"fa fa-solid fa-gear\"></i>&MediumSpace; Sistemas\n                        </button>\n                        <div\n                            class=\"collapse\"\n                            id=\"collapseLayouts3\"\n                            aria-labelledby=\"headingThree\"\n                            data-bs-parent=\"#sidenavAccordion\"\n                            >\n                            <ul class=\"nav btn-toggle-nav list-unstyled fw-normal pb-1 d-block\">\n\n                                ");
-			if (permisos.get("dat_gen_consulta_datos")) {
+			if (permisos.getOrDefault("dat_gen_consulta_datos",false)) {
 				jteOutput.writeContent("\n                                    <li>\n                                        <a class=\"nav-link acceso link-body-emphasis text-decoration-none rounded \" href=\"#\" id=\"dat_gen_consulta_datos\">\n                                            &MediumSpace; Mantenimientos de Datos\n                                        </a>\n                                    </li>\n                                ");
 			}
 			jteOutput.writeContent("\n\n                                ");
-			if (permisos.get("sys_configuracion")) {
+			if (permisos.getOrDefault("sys_configuracion",false)) {
 				jteOutput.writeContent("\n                                    <li>\n                                        <a class=\"nav-link acceso link-body-emphasis text-decoration-none rounded \" href=\"#\" id=\"sys_configuracion\">\n                                            &MediumSpace; Configuración\n                                        </a>\n                                    </li>\n                                ");
 			}
 			jteOutput.writeContent("\n\n                                ");
-			if (permisos.get("usr_mgr_principal")) {
+			if (permisos.getOrDefault("usr_mgr_principal",false)) {
 				jteOutput.writeContent("\n                                    <li>\n                                        <a class=\"nav-link acceso link-body-emphasis text-decoration-none rounded \" href=\"#\" id=\"usr_mgr_principal\">\n                                            &MediumSpace; Usuarios\n                                        </a>\n                                    </li>\n                                ");
 			}
 			jteOutput.writeContent("\n\n                            </ul>\n                        </div>\n                    </li>\n\n                ");

@@ -14,6 +14,7 @@
     update = update,
     content = @`
         @if(update)
+            <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" value="${dateUtils.DateToFormato2(parada.getFecha_actualizacion())}">
             <input type="text" style="display: none; width: 1px;height: 1px;" id="idParada" name="id" value="${parada.getId()}">
         @endif
 
@@ -21,8 +22,6 @@
             <label for="descripcion" class="form-label text-muted">Descripción:</label>
             <textarea class="form-control" name="descripción" rows="2" required maxlength="255">${parada.getDescripción()}</textarea>
         </div>
-
-        <input  type="datetime" name="fecha_actualizacionn" style="display: none; width: 1px;height: 1px;" value="${dateUtils.DateToFormato2(parada.getFecha_actualizacion())}">
 
         <div class="col-12 text-start ">
             <h5>Ubicación:</h5>

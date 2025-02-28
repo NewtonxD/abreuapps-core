@@ -41,7 +41,7 @@
                         @if(update)
                             <option
                                 value="${c.dat()}"
-                                selected="${( producto.getCategoria().getDato().equals(c.dat()) ) }"
+                                selected="${producto.getCategoria().getDato().equals(c.dat())}"
                             >${c.dat()}</option>
                         @else
                             <option value="${c.dat()}">${c.dat()}</option>

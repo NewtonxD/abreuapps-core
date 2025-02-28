@@ -58,12 +58,11 @@ public class PublicidadCntr {
         if(! AccesoServicio.verificarPermisos("pub_publicidad_registro"))
             return TemplateServicio.NOT_FOUND_TEMPLATE;
 
-
-        TemplateServicio.cargarDatosPagina("pub_publicidad_consulta", model);
-
         var resultados = PublicidadServicio.guardar(publicidad,fechaActualizacion);
         model.addAttribute("status", resultados.get(0));
         model.addAttribute("msg", resultados.get(1));
+
+        TemplateServicio.cargarDatosPagina("pub_publicidad_consulta", model);
 
         return "fragments/pub_publicidad_consulta";
 
