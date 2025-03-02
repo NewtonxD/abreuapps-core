@@ -1,6 +1,7 @@
 @param String error_msg
 @param String success_msg
 @param String app_nombre
+@param abreuapps.core.control.utils.Localizer localize
 
 <!DOCTYPE html>
 <html lang="es">
@@ -43,12 +44,10 @@
                                                 id="username"
                                                 name="username"
                                                 type="text"
-                                                placeholder="Nombre de Usuario"
+                                                placeholder="${localize.apply("username")}"
                                                 required="required"
                                                 />
-                                            <label for="username" class="text-muted"
-                                                   >Nombre de Usuario</label
-                                            >
+                                            <label for="username" class="text-muted">${localize.apply("username")}</label>
                                         </div>
                                         <div class="form-floating mb-3">
                                             <input
@@ -56,12 +55,10 @@
                                                 id="password"
                                                 name="password"
                                                 type="password"
-                                                placeholder="Password"
+                                                placeholder="${localize.apply("password")}"
                                                 required="required"
                                                 />
-                                            <label for="password" class="text-muted"
-                                                   >Contraseña</label
-                                            >
+                                            <label for="password" class="text-muted">${localize.apply("password")}</label>
                                         </div>
                                         @if(error_msg != null)
                                             <div class="alert alert-danger">
@@ -79,7 +76,7 @@
                                             <!--<a class="small" href="/password">Olvido su Contraseña?</a>-->
                                             <button type="submit" class="btn btn-primary">
                                                 <b>
-                                                    Iniciar Sesión
+                                                    ${localize.apply("login")}
                                                 </b>
                                             </button>
                                         </div>
