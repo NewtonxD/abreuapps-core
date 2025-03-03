@@ -2,6 +2,7 @@ package abreuapps.core.control;
 
 import abreuapps.core.control.general.ConfServ;
 import abreuapps.core.control.general.PublicidadServ;
+import abreuapps.core.control.utils.PasswordServ;
 import abreuapps.core.control.utils.TemplateServ;
 import abreuapps.core.control.transporte.LogVehiculoServ;
 import abreuapps.core.control.usuario.AccesoServ;
@@ -36,6 +37,8 @@ public class MainCntr {
     private final LogVehiculoServ LogVehiculoServicio;
     
     private final PublicidadServ PublicidadServicio;
+
+    private final PasswordServ PasswordServicio;
     
     private final SSEServ SSEServicio;
     
@@ -122,7 +125,7 @@ public class MainCntr {
         
         //si credenciales no estan expiradas verificar old pass
         if(usuario.isCredentialsNonExpired() &&
-                ! UsuarioServicio.coincidenPassword(
+                ! PasswordServicio.coincidenPassword(
                         AnteriorPassword, 
                         usuario.getId()
                 )
@@ -133,7 +136,7 @@ public class MainCntr {
         }
         
         usuario.setCambiarPassword(false);
-        UsuarioServicio.cambiarPassword(usuario,NuevaPassword,false);
+        PasswordServicio.cambiarPassword(usuario,NuevaPassword,false);
         
         respuesta.put("status", "success");
         respuesta.put("msg", "Contraseña fue guardada exitosamente! En breve lo redirigiremos.");

@@ -1,19 +1,13 @@
 package abreuapps.core.conf;
 
-import abreuapps.core.control.utils.LoginAttemptServ;
 import java.io.IOException;
-import java.util.Locale;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import org.springframework.context.MessageSource;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.WebAttributes;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.LocaleResolver;
 
 /**
  *
@@ -21,29 +15,13 @@ import org.springframework.web.servlet.LocaleResolver;
  */
 
 
-@Component("authenticationFailureHandler")
-@RequiredArgsConstructor
-public class AuthFailureHandler extends SimpleUrlAuthenticationFailureHandler {
-
-    private final LocaleResolver localeResolver;
-
-    private final LoginAttemptServ loginAttemptService;
+@Component
+public class AuthFailureHandler implements AuthenticationFailureHandler {
 
     @Override
-    public void onAuthenticationFailure(final HttpServletRequest request, final HttpServletResponse response, final AuthenticationException exception) throws IOException, ServletException {
-        //setDefaultFailureUrl("/auth/login?error=true");
-
-        super.onAuthenticationFailure(request, response, exception);
-
-        localeResolver.resolveLocale(request);
-
-        String errorMessage = "";
-
-        if (loginAttemptService.isBlocked()) {
-            errorMessage = "Ha sido bloqueado! Demasiados intentos de sesión. Intentelo más tarde.";
-        }
-
-        request.getSession()
-            .setAttribute(WebAttributes.AUTHENTICATION_EXCEPTION, errorMessage);
+    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
+                                        AuthenticationException exception) throws IOException, ServletException {
+        request.getSession().setAttribute("SPRING_SECURITY_LAST_EXCEPTION", exception.getMessage());
+        response.sendRedirect("/auth/login");
     }
 }

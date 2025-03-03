@@ -14,6 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 /**
@@ -154,7 +157,7 @@ public class AccesoServ {
         AccesoUsuarioRepo.saveAll(listaAccesoEdicion);
         AccesoUsuarioRepo.saveAll(listaAccesoNuevo);*/
     }
-    
+
     public Usuario getUsuarioLogueado(){
         return (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
@@ -163,5 +166,6 @@ public class AccesoServ {
         var permisos=consultarAccesosPantallaUsuario(permiso);
         return permisos.containsKey(permiso) ? (Boolean) permisos.get(permiso) : false;
     }
-    
+
+
 }

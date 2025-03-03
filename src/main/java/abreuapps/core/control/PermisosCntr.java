@@ -1,5 +1,6 @@
 package abreuapps.core.control;
 
+import abreuapps.core.control.utils.SessionServ;
 import abreuapps.core.control.utils.TemplateServ;
 import abreuapps.core.control.usuario.AccesoServ;
 import abreuapps.core.control.usuario.Usuario;
@@ -32,6 +33,8 @@ public class PermisosCntr {
     private final UsuarioServ UsuarioServicio;
 
     private final TemplateServ TemplateServicio;
+
+    private final SessionServ SessionServicio;
 
 //----------------------------------------------------------------------------//
     @PostMapping("/access")
@@ -91,7 +94,7 @@ public class PermisosCntr {
                     "No pudimos encontrar al usuario. Por favor, inténtalo otra vez. COD: 00545"
             );
         }else {
-            UsuarioServicio.cerrarSesion(usuarioBD.get().getUsername());
+            SessionServicio.cerrarSesion(usuarioBD.get().getUsername());
             AccesoServicio.GuardarTodosMap(data, usuarioBD.get());
             model.addAttribute("msg", "Permisos guardados exitosamente!");
             model.addAttribute("status", true);

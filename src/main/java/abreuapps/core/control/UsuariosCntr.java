@@ -1,6 +1,8 @@
 package abreuapps.core.control;
 
 import abreuapps.core.control.general.DatoServ;
+import abreuapps.core.control.utils.PasswordServ;
+import abreuapps.core.control.utils.SessionServ;
 import abreuapps.core.control.utils.TemplateServ;
 import abreuapps.core.control.usuario.AccesoServ;
 import abreuapps.core.control.usuario.Usuario;
@@ -34,6 +36,10 @@ public class UsuariosCntr {
 
     private final DateUtils dateUtils;
 
+    private final PasswordServ PasswordServicio;
+
+    private final SessionServ SessionServicio;
+
 //----------------------------------------------------------------------------//
 //-------------------------ENDPOINTS USUARIOS---------------------------------//
 //----------------------------------------------------------------------------//
@@ -52,6 +58,10 @@ public class UsuariosCntr {
         var resultados = UsuarioServicio.guardar(usuario, idPersona, fechaActualizacion);
         model.addAttribute("status", resultados.get(0));
         model.addAttribute("msg",resultados.get(1));
+        if((Boolean) resultados.get(2)){
+            PasswordServicio.generarPasswordNuevaCuenta((Usuario) resultados.get(3));
+        }
+        SessionServicio.cerrarSesion(usuario.getUsername());
 
         TemplateServicio.cargarDatosPagina("usr_mgr_principal", model);
 
@@ -133,7 +143,7 @@ public class UsuariosCntr {
     public boolean VerificarPassword(
             @RequestParam("pwd") String password
     ) {
-        return UsuarioServicio.coincidenPassword(password, AccesoServicio.getUsuarioLogueado().getId());
+        return PasswordServicio.coincidenPassword(password, AccesoServicio.getUsuarioLogueado().getId());
     }
 //----------------------------------------------------------------------------//
 
@@ -147,7 +157,7 @@ public class UsuariosCntr {
         if (!AccesoServicio.verificarPermisos("usr_mgr_registro"))
             return TemplateServicio.NOT_FOUND_TEMPLATE;
 
-        UsuarioServicio.cerrarSesion(nombreUsuario);
+        SessionServicio.cerrarSesion(nombreUsuario);
         model.addAttribute("status", true);
         model.addAttribute("msg", "Sesión Cerrada Exitosamente!");
         TemplateServicio.cargarDatosPagina("usr_mgr_principal", model);
@@ -169,8 +179,8 @@ public class UsuariosCntr {
         if (!usuarioBD.isPresent())
             return TemplateServicio.NOT_FOUND_TEMPLATE;
 
-        UsuarioServicio.cerrarSesion(nombreUsuario);
-        UsuarioServicio.cambiarPassword(usuarioBD.get(), UsuarioServicio.generarPassword(), true);
+        SessionServicio.cerrarSesion(nombreUsuario);
+        PasswordServicio.cambiarPassword(usuarioBD.get(), PasswordServicio.generarPassword(), true);
         model.addAttribute("status", true);
         model.addAttribute("msg", "Contraseña Reseteada Exitosamente! Comuniquese con el usuario para que revise su correo.");
         TemplateServicio.cargarDatosPagina("usr_mgr_principal", model);
