@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -17,16 +18,14 @@ public class LocalizationConf {
 
     public static class JteMessageLocale implements LocalizationSupport {
         private final MessageSource messageSource;
-        private final Locale locale;
 
-        public JteMessageLocale(MessageSource messageSource, Locale locale) {
+        public JteMessageLocale(MessageSource messageSource) {
             this.messageSource = messageSource;
-            this.locale = locale;
         }
 
         @Override
         public String lookup(String key) {
-            return messageSource.getMessage(key, null, locale);
+            return messageSource.getMessage(key, null, LocaleContextHolder.getLocale());
         }
     }
 

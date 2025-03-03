@@ -7,7 +7,11 @@ import abreuapps.core.control.utils.SSEServ;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -38,6 +42,8 @@ public class PublicCntr {
     
     private final ConfServ ConfiguracionServicio;
 
+    private final MessageSource messageSrc;
+
 //----------------------------------------------------------------------------//
 //--------------ENDPOINTS PUBLICIDAD PUBLICO----------------------------------//
 //----------------------------------------------------------------------------//
@@ -45,7 +51,7 @@ public class PublicCntr {
     @ResponseBody
     public PublicidadDTO consultarDatosActualPublicidad(){
         var p = PublicidadServicio.obtenerUltimo();
-        if(!p.equals(null)) PublicidadServicio.IncrementarVistas(p.id());
+        if(p!=null) PublicidadServicio.IncrementarVistas(p.id());
         return p;
     }
     
@@ -100,11 +106,10 @@ public class PublicCntr {
 //----------------------------------------------------------------------------//
     @GetMapping("/auth/login")
     public String Login(
-        @RequestParam(name = "invalidSession", required = false,defaultValue = "false") boolean invalidSession,
+        @RequestParam(name = "expiredSession", required = false,defaultValue = "false") boolean expiredSession,
         @RequestParam(name = "logout", required = false,defaultValue = "false") boolean logout,
-        @RequestParam(name = "error", required = false,defaultValue = "false") boolean error,
-
-        Model model
+        Model model,
+        HttpServletRequest request
     ) {
 
         if((SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken))
@@ -112,12 +117,17 @@ public class PublicCntr {
 
         model.addAttribute("app_nombre",ConfiguracionServicio.consultar("appnombre"));
 
-        if(invalidSession)
-            model.addAttribute("error_msg","Sesión abierta en otro dispositivo!, cierre la sesión o contacte al administrador.");
-        if(error)
-            model.addAttribute("error_msg","Usuario o Contraseña invalidos!");
+        String exception =(String) request.getSession().getAttribute("SPRING_SECURITY_LAST_EXCEPTION");
+        if (exception != null) {
+            model.addAttribute("error_msg", exception);
+            request.getSession().removeAttribute("SPRING_SECURITY_LAST_EXCEPTION");
+        }
+
+        if(expiredSession)
+            model.addAttribute("error_msg",messageSrc.getMessage("auth.expiredSession",null, LocaleContextHolder.getLocale()));
+
         if(logout)
-            model.addAttribute("success_msg","Sesión cerrada exitosamente!");
+            model.addAttribute("success_msg",messageSrc.getMessage("auth.closedSessionSuccessfull",null, LocaleContextHolder.getLocale()));
         
         return "login";
     }

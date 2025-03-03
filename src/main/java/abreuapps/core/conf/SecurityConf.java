@@ -9,16 +9,20 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.security.web.session.SessionInformationExpiredStrategy;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConf{
-        
-    @Bean
-    public AuthenticationSuccessHandler myAuthSuccessHandler(){
-        return new AuthSuccessHandler();
-    }
+
+    private final AuthSuccessHandler successHandler;
+
+    private final AuthFailureHandler failureHandler;
+
+    private final SessionAuthFailureHandler SessionFailureHandler;
+
+    private final LogoutSessionSuccessHandler logoutSuccessHandler;
     
     private final SpecificRLFilter RL1Filter;
     
@@ -36,21 +40,23 @@ public class SecurityConf{
             )
             .formLogin(form -> form
                 .loginPage("/auth/login")
-                .successHandler(myAuthSuccessHandler())
-                .failureUrl("/auth/login?error=true")
+                .successHandler(successHandler)
+                .failureHandler(failureHandler)
             )
             .sessionManagement(session -> session
-                .sessionFixation().migrateSession()
+                .sessionFixation()
+                .migrateSession()
                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-                .invalidSessionUrl("/auth/login?logout=true")
+                .sessionAuthenticationFailureHandler(SessionFailureHandler)
                 .maximumSessions(1)
                 .maxSessionsPreventsLogin(true)
+                .expiredUrl("/auth/login?expiredSession=true")
             )
             .logout(logout -> logout
                 .logoutUrl("/auth/logout")
                 .invalidateHttpSession(true)
                 .clearAuthentication(true)
-                .logoutSuccessUrl("/auth/login?logout=true")
+                .logoutSuccessHandler(logoutSuccessHandler)
             );
 
         return http.build();

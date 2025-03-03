@@ -1,20 +1,18 @@
 package abreuapps.core.conf;
 
-import abreuapps.core.control.utils.NotificationHandler;
+import abreuapps.core.control.usuario.UsuarioServ;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
-import abreuapps.core.control.usuario.UsuarioRepo;
 import abreuapps.core.control.utils.LocNotifierServ;
-import abreuapps.core.control.utils.LoginAttemptServ;
 import abreuapps.core.control.utils.NotifierServ;
 import abreuapps.core.control.utils.SSEServ;
 import com.github.benmanes.caffeine.cache.Caffeine;
@@ -38,24 +36,21 @@ import org.springframework.web.context.request.RequestContextListener;
 @RequiredArgsConstructor
 public class AppConf {
 
-    private final UsuarioRepo UsuarioRepositorio;
+    private final MessageSource messageSrc;
     
-    private final SSEServ SSEserv;
-    
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return username -> UsuarioRepositorio.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuario no existe!"));
-    }
+    private final SSEServ sseServ;
 
+    private final UsuarioServ userServ;
+
+    @Bean
     public AuthenticationProvider authenticationProvider() {
-        AuthProv authProvider = new AuthProv(userDetailsService(), passwordEncoder(), loginAttemptServ());
+        AuthProv authProvider = new AuthProv( passwordEncoder(), loginAttemptServ(), messageSrc, userServ);
         return authProvider;
     }
  
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) {
+        return new ProviderManager(authenticationProvider());
     }
     
     @Bean
@@ -64,9 +59,7 @@ public class AppConf {
     }
     
     @Bean
-    public LoginAttemptServ loginAttemptServ() {
-        return new LoginAttemptServ();
-    }
+    public LoginAttemptHandler loginAttemptServ() { return new LoginAttemptHandler(); }
 
     @Bean
     public HttpSessionEventPublisher httpSessionEventPublisher() {
@@ -91,7 +84,8 @@ public class AppConf {
            props.determineDriverClassName(),
            new Properties(), 
            props.determineUsername(),
-           props.determinePassword());
+           props.determinePassword()
+        );
         
         JdbcTemplate tpl = new JdbcTemplate(ds);
 
@@ -106,11 +100,12 @@ public class AppConf {
            props.determineDriverClassName(),
            new Properties(), 
            props.determineUsername(),
-           props.determinePassword());
+           props.determinePassword()
+        );
         
         JdbcTemplate tpl = new JdbcTemplate(ds);
 
-        return new LocNotifierServ(tpl,SSEserv);
+        return new LocNotifierServ(tpl, sseServ);
         
     }
     
@@ -134,10 +129,14 @@ public class AppConf {
     }
     
     private CaffeineCache buildCache(String name, Duration expireAfterWriteDuration) {
-        return new CaffeineCache(name, Caffeine.newBuilder()
-                .expireAfterWrite(expireAfterWriteDuration)
-                .weakKeys()
-                .build());
+        return new CaffeineCache(
+                name,
+                Caffeine
+                    .newBuilder()
+                    .expireAfterWrite(expireAfterWriteDuration)
+                    .weakKeys()
+                    .build()
+        );
     }
 
     @Bean

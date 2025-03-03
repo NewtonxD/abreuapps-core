@@ -1,6 +1,5 @@
 package abreuapps.core.conf;
 
-import abreuapps.core.control.utils.LoginAttemptServ;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationListener;
@@ -18,7 +17,7 @@ public class AuthFailureListener implements ApplicationListener<AuthenticationFa
     
     private final HttpServletRequest request;
     
-    private final LoginAttemptServ loginAttemptService;
+    private final LoginAttemptHandler loginAttemptService;
 
     @Override
     public void onApplicationEvent(AuthenticationFailureBadCredentialsEvent e) {

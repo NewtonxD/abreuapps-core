@@ -13,9 +13,9 @@
         content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
     <link rel="icon" type="image/x-icon" href="/content/favicon.ico">
-    <meta name="description" content="Login Sistema ERP ${app_nombre}" />
+    <meta name="description" content="${localize.apply("auth.login")} ${app_nombre}" />
     <meta name="author" content="Carlos Isaac Abreu Pérez" />
-    <title>Login ERP - ${app_nombre}</title>
+    <title>${localize.apply("auth.login")} ${app_nombre}</title>
     <link href="/content/css/styles.css" rel="stylesheet" />
     <link href="/content/css/bootstrap.min.css" rel="stylesheet" />
 </head>
@@ -44,10 +44,10 @@
                                                 id="username"
                                                 name="username"
                                                 type="text"
-                                                placeholder="${localize.apply("username")}"
+                                                placeholder="${localize.apply("auth.username")}"
                                                 required="required"
                                                 />
-                                            <label for="username" class="text-muted">${localize.apply("username")}</label>
+                                            <label for="username" class="text-muted">${localize.apply("auth.username")}</label>
                                         </div>
                                         <div class="form-floating mb-3">
                                             <input
@@ -55,10 +55,10 @@
                                                 id="password"
                                                 name="password"
                                                 type="password"
-                                                placeholder="${localize.apply("password")}"
+                                                placeholder="${localize.apply("auth.password")}"
                                                 required="required"
                                                 />
-                                            <label for="password" class="text-muted">${localize.apply("password")}</label>
+                                            <label for="password" class="text-muted">${localize.apply("auth.password")}</label>
                                         </div>
                                         @if(error_msg != null)
                                             <div class="alert alert-danger">
@@ -76,7 +76,7 @@
                                             <!--<a class="small" href="/password">Olvido su Contraseña?</a>-->
                                             <button type="submit" class="btn btn-primary">
                                                 <b>
-                                                    ${localize.apply("login")}
+                                                    ${localize.apply("auth.login")}
                                                 </b>
                                             </button>
                                         </div>

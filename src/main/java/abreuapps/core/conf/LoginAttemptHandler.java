@@ -1,4 +1,4 @@
-package abreuapps.core.control.utils;
+package abreuapps.core.conf;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,15 +15,15 @@ import org.springframework.stereotype.Service;
  * @author cabreu
  */
 @Service
-public class LoginAttemptServ {
+public class LoginAttemptHandler {
 
-    public static final int MAX_ATTEMPT = 10;
+    public static final int MAX_ATTEMPT = 6;
     private final LoadingCache<String, Integer> attemptsCache;
 
     @Autowired
     private HttpServletRequest request;
 
-    public LoginAttemptServ() {
+    public LoginAttemptHandler() {
         super();
         attemptsCache = CacheBuilder.newBuilder().expireAfterWrite(1, TimeUnit.DAYS).build(new CacheLoader<String, Integer>() {
             @Override
